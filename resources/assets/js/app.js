@@ -28,13 +28,13 @@
 					templateUrl: 'cases/view.html?NC=' + NC,
 					controller: 'CaseViewCtrl'
 				}).
-				when('/cases/:case_id/map', {
-					templateUrl: 'cases/view.html?NC=' + NC,
-					controller: 'CaseViewCtrl'
+				when('/users', {
+					templateUrl: 'users/list.html?NC=' + NC,
+					controller: 'UserSearchCtrl'
 				}).
-				when('/cases/:case_id/comments', {
-					templateUrl: 'cases/view.html?NC=' + NC,
-					controller: 'CaseViewCtrl'
+				when('/users/:user_id', {
+					templateUrl: 'users/view.html?NC=' + NC,
+					controller: 'UserViewCtrl'
 				}).
 				otherwise({
 					redirectTo: '/dashboard'
