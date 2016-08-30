@@ -1,4 +1,4 @@
-<div class="navbar navbar-info">
+<div id="app-navbar" class="navbar navbar-info">
 	<div class="navbar-container container">
 
 		<div class="navbar-header">
@@ -9,7 +9,7 @@
 				<span class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand" href="#">
-				<strong>Busca Ativa Escolar</strong><br />
+				<strong>Busca Ativa Escolar</strong>
 				<small ng-bind="cityName"></small>
 			</a>
 		</div>
@@ -21,18 +21,32 @@
 				<li><a href="#"><i class="material-icons">list</i> Fichas</a></li>
 				<li><a href="#"><i class="material-icons">show_chart</i> Relatórios</a></li>
 				<li><a href="#"><i class="material-icons">group</i> Usuários</a></li>
-				<li><a href="#"><i class="material-icons">dashboard</i> Configurações</a></li>
+				<li><a href="#"><i class="material-icons">settings</i> Configurações</a></li>
 			</ul>
 
 
-			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Aryel Tupinambá <span class="caret"></span></a>
-					<ul class="dropdown-menu">
-						<li><a href="#">Minhas preferências</a></li>
-						<li><a href="#">Notificações</a></li>
+			<ul class="nav navbar-nav navbar-right logged-user">
+				<li class="dropdown" uib-dropdown>
+					<a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						<i class="material-icons">account_circle</i>
+						<span class="user-details">
+							<strong ng-bind="user.name"></strong>
+							<small ng-bind="user.type"></small>
+						</span>
+						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" uib-dropdown-menu>
+						<li><a href="#"><i class="material-icons">settings</i> Minhas preferências</a></li>
+						<li><a href="#"><i class="material-icons">notifications</i> Notificações</a></li>
 						<li role="separator" class="divider"></li>
-						<li><a href="#">Sair</a></li>
+						<li><a href="#"><i class="material-icons">account_box</i> Debug: Agente Comunitário</a></li>
+						<li><a href="#"><i class="material-icons">account_box</i> Debug: Técnico Verificador</a></li>
+						<li><a href="#"><i class="material-icons">account_box</i> Debug: Supervisor Técnico</a></li>
+						<li><a href="#"><i class="material-icons">account_box</i> Debug: Coordenador Operacional</a></li>
+						<li><a href="#"><i class="material-icons">account_box</i> Debug: Gestor Político</a></li>
+						<li><a href="#"><i class="material-icons">account_box</i> Debug: Super Administrador</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#"><i class="material-icons">exit_to_app</i> Sair</a></li>
 					</ul>
 				</li>
 			</ul>

@@ -1,10 +1,22 @@
-.navbar {
-	.brand {
-		padding: 0 15px;
+#app-navbar {
+	.navbar-brand {
+		padding: 5px 15px;
 
-		strong, small { display: block; }
-			strong { height: 35px; line-height: 35px; }
-			small { height: 25px; line-height: 25px; }
+		strong, small { display: block; color: white; }
+			strong { height: 30px; line-height: 30px; }
+			small { height: 20px; line-height: 20px; }
 
+	}
+
+	.logged-user {
+
+		.dropdown-toggle { padding: 12px 15px; }
+
+		.user-details {
+			display: inline-block;
+			vertical-align: middle;
+
+			strong, small { display: block; }
+		}
 	}
 }

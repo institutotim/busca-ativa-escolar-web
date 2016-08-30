@@ -1,3 +1,27 @@
-
+#app-navbar .navbar-brand {
+  padding: 5px 15px;
+}
+#app-navbar .navbar-brand strong, #app-navbar .navbar-brand small {
+  display: block;
+  color: white;
+}
+#app-navbar .navbar-brand strong {
+  height: 30px;
+  line-height: 30px;
+}
+#app-navbar .navbar-brand small {
+  height: 20px;
+  line-height: 20px;
+}
+#app-navbar .logged-user .dropdown-toggle {
+  padding: 12px 15px;
+}
+#app-navbar .logged-user .user-details {
+  display: inline-block;
+  vertical-align: middle;
+}
+#app-navbar .logged-user .user-details strong, #app-navbar .logged-user .user-details small {
+  display: block;
+}
 
 /*# sourceMappingURL=app.css.map */
