@@ -15,9 +15,12 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="i in range(1, 24)">
-						<td width="5%">#{{12 + i}}</td>
+						<td width="5%">
+							<i class="material-icons">assignment</i><br />
+							<span>#{{12 + i}}</span>
+						</td>
 						<td width="30%">
-							<strong><i class="material-icons">child_care</i> Edward Doe</strong><br />
+							<strong>Edward Doe</strong><br />
 							<small>Jane Doe</small>
 						</td>
 						<td width="25%">
@@ -45,8 +48,8 @@
 		</div>
 		<div class="panel-body">
 			<div class="form-group" style="margin-top: 5px">
-				<label class="control-label" for="filter-email">Por nome</label>
-				<input type="name" class="form-control" id="filter-name" placeholder="Nome da criança...">
+				<label class="control-label" for="filter-name">Por nome</label>
+				<input type="text" class="form-control" id="filter-name" placeholder="Nome da criança...">
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-type">Por tipo</label>

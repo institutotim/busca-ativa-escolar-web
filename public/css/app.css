@@ -36,4 +36,13 @@
   vertical-align: middle;
 }
 
+.case-step-dropdown li a {
+  font-size: 16px;
+  padding: 13px 16px;
+}
+
+.dropdown .dropdown-menu li > a {
+  cursor: pointer;
+}
+
 /*# sourceMappingURL=app.css.map */

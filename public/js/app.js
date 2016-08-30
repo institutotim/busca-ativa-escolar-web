@@ -63,27 +63,6 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
-
-
-		function init(scope, element, attrs) {
-			scope.identity = Identity;
-			scope.cityName = 'São Paulo';
-			scope.user = {
-				name: 'Aryel Tupinambá',
-				type: 'Coordenador Operacional'
-			};
-		}
-
-		return {
-			link: init,
-			templateUrl: 'navbar.html'
-		};
-	});
-
-})();
-(function() {
-
 	angular.module('BuscaAtivaEscolar').controller('CaseSearchCtrl', function ($scope, $rootScope, MockData, Identity) {
 
 		$rootScope.section = 'cases';
@@ -104,7 +83,7 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('CaseViewCtrl', function ($scope, $rootScope, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('CaseViewCtrl', function ($scope, $rootScope, Modals, MockData, Identity) {
 
 		$rootScope.section = 'cases';
 
@@ -151,10 +130,17 @@
 			$scope.message = "";
 		};
 
+		$scope.sendToApp = function() {
+			Modals.show(Modals.Alert(
+				'Ficha enviada para seu dispositivo!',
+				'Ela estará disponível na área de Notificações do aplicativo Busca Ativa Escolar'
+			));
+		};
+
 		$scope.openForm = function(form) {
 
 			if(form != 'consolidada' && !$scope.isPastStep(form)) {
-				alert("Etapa ainda não liberada!");
+				Modals.show(Modals.Alert('Etapa ainda não liberada!', 'Você deve completar a etapa anterior para que a ficha da nova etapa seja liberada.'));
 				return;
 			}
 
@@ -301,6 +287,88 @@
 		}
 
 	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
+
+
+		function init(scope, element, attrs) {
+			scope.identity = Identity;
+			scope.cityName = 'São Paulo';
+			scope.user = {
+				name: 'Aryel Tupinambá',
+				type: 'Coordenador Operacional'
+			};
+		}
+
+		return {
+			link: init,
+			templateUrl: 'navbar.html'
+		};
+	});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
+
+			$scope.message = message;
+			$scope.details = details;
+
+			$scope.dismiss = function() {
+				$uibModalInstance.dismiss();
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, UI, Data, message, details, canDismiss) {
+
+			console.log("[modal] confirm_modal", message, details, canDismiss);
+
+			$scope.message = message;
+			$scope.details = details;
+			$scope.canDismiss = canDismiss;
+
+			$scope.agree = function() {
+				$uibModalInstance.close(true);
+			};
+
+			$scope.disagree = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, UI, Data, question, defaultAnswer, canDismiss) {
+
+			console.log("[modal] prompt_modal", question, canDismiss);
+
+			$scope.question = question;
+			$scope.answer = defaultAnswer;
+
+			$scope.ok = function() {
+				$uibModalInstance.close({response: $scope.answer});
+			};
+
+			$scope.cancel = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
 
 })();
 (function() {
@@ -489,5 +557,84 @@
 
 	});
 
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Modals', function($q, $uibModal) {
+
+			return {
+
+				show: function(params) {
+
+					var def = $q.defer();
+
+					var instance = $uibModal.open(params);
+
+					instance.result.then(function (data) {
+						def.resolve(data.response);
+					}, function (data) {
+						def.reject(data);
+					});
+
+					return def.promise;
+				},
+
+
+				Alert: function(message, details) {
+					return {
+						templateUrl: '/modals/alert.html',
+						controller: 'AlertModalCtrl',
+						size: 'sm',
+						resolve: {
+							message: function() { return message; },
+							details: function() { return details; }
+						}
+					};
+				},
+
+				Confirm: function(message, details, canDismiss) {
+					var params = {
+						templateUrl: '/modals/confirm.html',
+						controller: 'ConfirmModalCtrl',
+						size: 'sm',
+						resolve: {
+							message: function() { return message; },
+							details: function() { return details; },
+							canDismiss: function() { return canDismiss; }
+						}
+					};
+
+					if (!canDismiss) {
+						params.keyboard = false;
+						params.backdrop = 'static';
+					}
+
+					return params;
+				},
+
+				Prompt: function(question, defaultAnswer, canDismiss) {
+					var params = {
+						templateUrl: '/modals/prompt.html',
+						controller: 'PromptModalCtrl',
+						size: 'md',
+						resolve: {
+							question: function() { return question; },
+							defaultAnswer: function() { return defaultAnswer; },
+							canDismiss: function() { return canDismiss; }
+						}
+					};
+
+					if (!canDismiss) {
+						params.keyboard = false;
+						params.backdrop = 'static';
+					}
+
+					return params;
+				}
+
+			}
+		});
 })();
 //# sourceMappingURL=app.js.map

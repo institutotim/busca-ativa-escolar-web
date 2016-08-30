@@ -8,26 +8,25 @@
 			</div>
 
 			<h2 class="pull-right">#42</h2>
-			<div class="pull-right btn btn-raised btn-info btn-fab" style="margin: 5px 15px;"><i class="material-icons fa fa-mars"></i></div>
+			<div class="pull-right btn btn-raised btn-warning btn-fab" style="margin: 5px 15px;" uib-tooltip="Masculino"><i class="material-icons fa fa-mars"></i></div>
+			<div class="pull-right" style="margin: 8px 10px;">
+				<div class="dropdown case-step-dropdown" style="width: 100%;" uib-dropdown is-open="false">
+					<a class="btn btn-info btn-raised dropdown-toggle" uib-dropdown-toggle style="width: 100%">{{steps[currentStep].name}} <span class="caret"></span></a>
+					<ul class="dropdown-menu" uib-dropdown-menu>
+						<li ng-repeat="(i, step) in steps" ng-class="{'active': (currentStep == step.id)}"><a ng-click="setCaseStep(step.id)">{{step.name}}</a></li>
+					</ul>
+				</div>
+			</div>
 
 		</div>
 		<div class="panel-body">
 
 			<div class="row">
 				<div class="col-md-2 button-menu">
-					<h3><i class="material-icons">assignment</i> Etapa</h3>
+					<h3><i class="material-icons">assignment</i> Fichas</h3>
 					<hr />
 
-					<div class="dropdown" style="width: 100%;" uib-dropdown>
-						<a class="btn btn-info btn-raised dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" style="width: 100%">{{steps[currentStep].name}} <span class="caret"></span></a>
-						<ul class="dropdown-menu" uib-dropdown-menu>
-							<li ng-repeat="(i, step) in steps" ng-class="{'active': (currentStep == step.id)}"><a ng-click="setCaseStep(step.id)">{{step.name}}</a></li>
-						</ul>
-					</div>
-
-					<hr />
-
-					<a ng-click="openForm('consolidada')" class="btn btn-default btn-raised btn-sm" style="width: 100%"> Ficha consolidada</a>
+					<a ng-click="openForm('consolidada')" class="btn btn-default btn-raised btn-sm" style="width: 100%"> Ver ficha consolidada</a>
 
 					<div class="btn-group btn-group-vertical" style="width: 100%">
 						<a class="btn" ng-repeat="(i, step) in steps" ng-click="openForm(step.id)" ng-class="getCaseTimelineClass(step.id)"><i ng-show="currentStep == step.id" class="fa fa-circle-right"></i> {{step.name}}</a>
@@ -37,8 +36,8 @@
 					<h3><i class="material-icons">settings</i> Opções</h3>
 					<hr />
 
-						<a class="btn btn-default btn-raised btn-sm" style="width: 100%"><i class="material-icons">perm_device_information</i> Enviar p/ app</a>
-						<a class="btn btn-default btn-raised btn-sm" style="width: 100%"><i class="material-icons">print</i> Imprimir</a>
+						<a class="btn btn-default btn-raised btn-sm" style="width: 100%" ng-click="sendToApp()"><i class="material-icons">perm_device_information</i> Enviar p/ app</a>
+						<a class="btn btn-default btn-raised btn-sm" style="width: 100%" href="javascript:window.print()"><i class="material-icons">print</i> Imprimir</a>
 				</div>
 				<div class="col-md-7">
 					<h3><i class="material-icons">person</i> Ficha da criança <small ng-bind="getFormName()"></small></h3>

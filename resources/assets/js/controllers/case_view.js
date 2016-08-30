@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('CaseViewCtrl', function ($scope, $rootScope, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('CaseViewCtrl', function ($scope, $rootScope, Modals, MockData, Identity) {
 
 		$rootScope.section = 'cases';
 
@@ -47,10 +47,17 @@
 			$scope.message = "";
 		};
 
+		$scope.sendToApp = function() {
+			Modals.show(Modals.Alert(
+				'Ficha enviada para seu dispositivo!',
+				'Ela estará disponível na área de Notificações do aplicativo Busca Ativa Escolar'
+			));
+		};
+
 		$scope.openForm = function(form) {
 
 			if(form != 'consolidada' && !$scope.isPastStep(form)) {
-				alert("Etapa ainda não liberada!");
+				Modals.show(Modals.Alert('Etapa ainda não liberada!', 'Você deve completar a etapa anterior para que a ficha da nova etapa seja liberada.'));
 				return;
 			}
 
