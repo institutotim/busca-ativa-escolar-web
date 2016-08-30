@@ -16,12 +16,12 @@
 			var NC = (new Date()).getTime();
 
 			$routeProvider.
-			when('/dashboard/coordenador-operacional', {
-				templateUrl: 'dashboards/coordenador_operacional.html?NC=' + NC,
-				controller: 'DashboardCtrl'
-			}).
-			otherwise({
-				redirectTo: '/dashboard/coordenador-operacional'
-			});
+				when('/dashboard', {
+					templateUrl: 'dashboard.html?NC=' + NC,
+					controller: 'DashboardCtrl'
+				}).
+				otherwise({
+					redirectTo: '/dashboard'
+				});
 		}]);
 })();

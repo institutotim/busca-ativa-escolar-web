@@ -16,20 +16,21 @@
 			var NC = (new Date()).getTime();
 
 			$routeProvider.
-			when('/dashboard/coordenador-operacional', {
-				templateUrl: 'dashboards/coordenador_operacional.html?NC=' + NC,
-				controller: 'DashboardCtrl'
-			}).
-			otherwise({
-				redirectTo: '/dashboard/coordenador-operacional'
-			});
+				when('/dashboard', {
+					templateUrl: 'dashboard.html?NC=' + NC,
+					controller: 'DashboardCtrl'
+				}).
+				otherwise({
+					redirectTo: '/dashboard'
+				});
 		}]);
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function () {
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
 
 		function init(scope, element, attrs) {
+			scope.identity = Identity;
 			scope.cityName = 'São Paulo';
 			scope.user = {
 				name: 'Aryel Tupinambá',
@@ -46,10 +47,55 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, MockData) {
+	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, MockData, Identity) {
 
+		$scope.identity = Identity;
 		$scope.evolutionChart = MockData.evolutionChart;
 		$scope.typesChart = MockData.typesChart;
+
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').service('Identity', function () {
+
+		var mockUsers = {
+			'agente_comunitario': {name: 'Mary Smith', type: 'Agente Comunitário', can: ['dashboard']},
+			'tecnico_verificador': {name: 'Paul Atree', type: 'Técnico Verificador', can: ['dashboard','cases']},
+			'supervisor_institucional': {name: 'John Doe', type: 'Supervisor Institucional', can: ['dashboard','cases','reports']},
+			'coordenador_operacional': {name: 'Aryel Tupinambá', type: 'Coordenador Operacional', can: ['dashboard','cases','reports','users','settings']},
+			'gestor_politico': {name: 'João das Neves', type: 'Gestor Político', can: ['dashboard','reports','users','settings']},
+			'super_administrador': {name: 'Morgan Freeman', type: 'Super Administrador', can: ['dashboard','reports','cities','users','settings']}
+		};
+
+		var currentType = 'coordenador_operacional';
+		var currentUser = mockUsers[currentType];
+
+		function getCurrentUser() {
+			return currentUser;
+		}
+
+		function can(operation) {
+			if(!currentUser) return false;
+			return getCurrentUser().can.indexOf(operation) !== -1;
+		}
+
+		function getType() {
+			return currentType;
+		}
+
+		function setUserType(type) {
+			currentType = type;
+			currentUser = mockUsers[type];
+		}
+
+		return {
+			getCurrentUser: getCurrentUser,
+			getType: getType,
+			can: can,
+			setUserType: setUserType
+		}
 
 	});
 
