@@ -1,8 +1,3 @@
-angular
-	.module('BuscaAtivaEscolar', [])
-	.controller('TestCtrl', function ($scope) {
-		$scope.string = "Hello world!";
-	});
 (function() {
 
 	angular.module('BuscaAtivaEscolar').directive('appNavbar', function () {
@@ -18,4 +13,3 @@ angular
 	});
 
 })();
-//# sourceMappingURL=app.js.map

@@ -8,6 +8,8 @@
 		<link rel="stylesheet" type="text/css" href="css/vendor.css" />
 		<link rel="stylesheet" type="text/css" href="css/app.css" />
 
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 		<meta name="theme-color" content="#62c031">
 		<meta name="msapplication-navbutton-color" content="#62c031">
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -20,39 +22,12 @@
 	</head>
 	<body>
 
-		<div class="root-container">
-			<nav class="sidemenu col-md-2">
-				<div class="brand">
-					<strong>Busca Ativa Escolar</strong>
-					<small>SÃO PAULO</small>
-				</div>
-				<div class="logged-user">
-					<div class="user-name">Aryel Tupinambá</div>
-					<div class="user-profile">Gestor Operacional</div>
-				</div>
 
-				<ul class="menu nav nav-pills nav-stacked">
-					<li class="active"><a href="#">Dashboard</a></li>
-					<li><a href="#">Fichas</a></li>
-					<li><a href="#">Relatórios</a></li>
-					<li><a href="#">Usuários</a></li>
-					<li><a href="#">Configurações</a></li>
-				</ul>
+		<app-navbar></app-navbar>
 
-			</nav>
-			<div class="app-container col-md-10" ng-view>
-				<div class="panel panel-default">
-					<div class="panel-body">
-						Basic panel example
-					</div>
-				</div>
 
-				<ul class="nav nav-tabs">
-					<li role="presentation" class="active"><a href="#">Home</a></li>
-					<li role="presentation"><a href="#">Profile</a></li>
-					<li role="presentation"><a href="#">Messages</a></li>
-				</ul>
-			</div>
+		<div class="container app-container" ng-view>
+
 		</div>
 
 		<script type="text/javascript" src="js/vendor.js"></script>
