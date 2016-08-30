@@ -22,7 +22,19 @@
 				}).
 				when('/cases', {
 					templateUrl: 'cases/list.html?NC=' + NC,
-					controller: 'CasesCtrl'
+					controller: 'CaseSearchCtrl'
+				}).
+				when('/cases/:case_id', {
+					templateUrl: 'cases/view.html?NC=' + NC,
+					controller: 'CaseViewCtrl'
+				}).
+				when('/cases/:case_id/map', {
+					templateUrl: 'cases/view.html?NC=' + NC,
+					controller: 'CaseViewCtrl'
+				}).
+				when('/cases/:case_id/comments', {
+					templateUrl: 'cases/view.html?NC=' + NC,
+					controller: 'CaseViewCtrl'
 				}).
 				otherwise({
 					redirectTo: '/dashboard'

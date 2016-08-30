@@ -1,7 +1,8 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('CasesCtrl', function ($scope, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('CaseSearchCtrl', function ($scope, $rootScope, MockData, Identity) {
 
+		$rootScope.section = 'cases';
 		$scope.identity = Identity;
 
 		$scope.range = function (start, end) {

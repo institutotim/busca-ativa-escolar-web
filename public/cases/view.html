@@ -1,0 +1,182 @@
+<div class="wnd-view">
+	<div class="panel panel-default">
+		<div class="panel-heading clearfix">
+			<div class="pull-left">
+				<h1>
+					<i class="material-icons" style="font-size: 36px;">folder_shared</i> Edward Doe <small>Jane Doe</small>
+				</h1>
+			</div>
+
+			<h2 class="pull-right">#42</h2>
+			<div class="pull-right btn btn-raised btn-info btn-fab" style="margin: 5px 15px;"><i class="material-icons fa fa-mars"></i></div>
+
+		</div>
+		<div class="panel-body">
+
+			<div class="row">
+				<div class="col-md-2">
+					<h3><i class="material-icons">assignment</i> Etapa</h3>
+					<hr />
+
+					<div class="btn-group btn-group-justified" style="width: 100%" uib-dropdown>
+						<a class="btn btn-info btn-raised dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown">Parecer <span class="caret"></span></a>
+						<ul class="dropdown-menu" uib-dropdown-menu>
+							<li><a href="#">Pesquisa</a></li>
+							<li class="active"><a href="#">Parecer</a></li>
+							<li><a href="#">Consolidação</a></li>
+							<li><a href="#">Reinserção</a></li>
+							<li><a href="#">1&deg; observação</a></li>
+							<li><a href="#">2&deg; observação</a></li>
+							<li><a href="#">3&deg; observação</a></li>
+							<li><a href="#">4&deg; observação</a></li>
+						</ul>
+					</div>
+
+					<hr />
+
+					<div class="btn-group btn-group-vertical" style="width: 100%">
+						<a class="btn btn-success">Pesquisa</a>
+						<a class="btn btn-info"><i class="fa fa-circle-right"></i> Parecer</a>
+						<a class="btn btn-default">Consolidação</a>
+						<a class="btn btn-default">Reinserção</a>
+						<a class="btn btn-default">1&deg; observação</a>
+						<a class="btn btn-default">2&deg; observação</a>
+						<a class="btn btn-default">3&deg; observação</a>
+						<a class="btn btn-default">4&deg; observação</a>
+					</div>
+
+					<hr />
+					<h3><i class="material-icons">settings</i> Opções</h3>
+					<hr />
+
+						<a class="btn btn-default btn-raised btn-sm" style="width: 100%"><i class="material-icons">perm_device_information</i> Enviar p/ app</a>
+						<a class="btn btn-default btn-raised btn-sm" style="width: 100%"><i class="material-icons">print</i> Imprimir</a>
+				</div>
+				<div class="col-md-7">
+					<h3><i class="material-icons">person</i> Ficha da criança <small>consolidada</small></h3>
+					<hr />
+
+					<div class="panel panel-default">
+						<div class="panel-heading">Informações pessoas</div>
+						<div class="panel-body">
+							<div class="form-group col-md-6">
+								<label class="control-label" for="fld-name">Nome da criança</label>
+								<input type="text" class="form-control" id="fld-name" value="Edward Doe">
+							</div>
+							<div class="form-grouo col-md-3">
+								<label class="control-label" for="fld-gender">Gênero</label>
+								<select id="fld-gender" class="form-control">
+									<option selected>Masculino</option>
+									<option>Feminino</option>
+									<option>Indefinido</option>
+								</select>
+							</div>
+							<div class="form-grouo col-md-3">
+								<label class="control-label" for="fld-raca">Raça / Etnia</label>
+								<select id="fld-raca" class="form-control">
+									<option selected>Caucasiano</option>
+								</select>
+							</div>
+							<div class="form-group col-md-6">
+								<label class="control-label" for="fld-type">Nome da mãe</label>
+								<input type="text" class="form-control" id="fld-type" value="Jane Doe">
+							</div>
+							<div class="form-group col-md-6">
+								<label class="control-label" for="fld-dob">Data de nascimento</label>
+								<input type="date" class="form-control" id="fld-dob" value="25/08/1991">
+							</div>
+							<div class="form-group col-md-4">
+								<label class="control-label" for="fld-rg">RG</label>
+								<input type="text" class="form-control" id="fld-rg" value="12.345.678-X">
+							</div>
+							<div class="form-group col-md-4">
+								<label class="control-label" for="fld-cpf">CPF</label>
+								<input type="text" class="form-control" id="fld-cpf" value="123.456.789-00">
+							</div>
+							<div class="form-group col-md-4">
+								<label class="control-label" for="fld-codsus">Código SUS</label>
+								<input type="text" class="form-control" id="fld-codsus" value="12345678">
+							</div>
+							<div class="form-group col-md-12">
+								<label class="control-label">Motivos de estar fora da escola</label>
+								<div class="checkbox" ng-repeat="(i, reason) in reasons">
+									<label>
+										<input type="checkbox"> {{reason}}
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="panel-heading">Dados de localização</div>
+						<div class="panel-body">
+							<div class="form-group col-md-8">
+								<label class="control-label" for="fld-address">Endereço</label>
+								<input type="text" class="form-control" id="fld-address" value="Alameda Barão de Piracicaba, 500">
+							</div>
+							<div class="form-group col-md-4">
+								<label class="control-label" for="fld-cep">CEP</label>
+								<input type="text" class="form-control" id="fld-cep" value="01234-567">
+							</div>
+							<div class="form-group col-md-12">
+								<label class="control-label" for="fld-cep">Referência geográfica</label>
+								<input type="text" class="form-control" id="fld-cep" value="Esquina com a Rua ABCD, em frente a loja XYZ">
+							</div>
+							<div class="form-group col-md-5">
+								<label class="control-label" for="fld-neighborhood">Bairro</label>
+								<input type="text" class="form-control" id="fld-neighborhood" value="Campos Elíseos">
+							</div>
+							<div class="form-group col-md-5">
+								<label class="control-label" for="fld-city">Cidade</label>
+								<input type="text" class="form-control" id="fld-city" value="São Paulo">
+							</div>
+							<div class="form-group col-md-2">
+								<label class="control-label" for="fld-uf">UF</label>
+								<input type="text" class="form-control" id="fld-uf" value="SP">
+							</div>
+							<div class="form-group col-md-6">
+								<label class="control-label" for="fld-phone">Telefone residencial</label>
+								<input type="text" class="form-control" id="fld-phone" value="(11) 2222-3333">
+							</div>
+							<div class="form-group col-md-6">
+								<label class="control-label" for="fld-mobile">Telefone celular</label>
+								<input type="text" class="form-control" id="fld-mobile" value="(11) 98888-4444">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<h3><i class="material-icons">comment</i> Anotações</h3>
+					<hr />
+
+					<div class="list-group">
+						<div ng-repeat="i in [1,2,3,4]">
+							<div class="list-group-item">
+								<div class="row-content">
+									<div class="least-content">8m</div>
+									<p class="list-group-item-text">
+										<strong>John Doe</strong><br />
+										Donec id elit non mi porta gravida at eget metus
+									</p>
+								</div>
+							</div>
+							<hr />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label" for="fld-register-comment">Registrar anotação</label>
+						<div class="row">
+							<div class="col-md-9">
+								<input type="text" class="form-control" id="fld-register-comment" placeholder="Digite sua mensagem...">
+							</div>
+							<div class="col-md-3 btn-group-sm">
+								<a class="btn btn-raised btn-success btn-fab"><i class="material-icons">send</i></a>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

@@ -17,12 +17,12 @@
 		<div class="collapse navbar-collapse" id="navbar-items">
 
 			<ul class="nav navbar-nav">
-				<li ng-show="identity.can('dashboard')" class="active"><a href="#"><i class="material-icons">dashboard</i> Dashboard</a></li>
-				<li ng-show="identity.can('cases')"><a href="#/cases"><i class="material-icons">list</i> Casos</a></li>
-				<li ng-show="identity.can('reports')"><a href="#/reports"><i class="material-icons">show_chart</i> Relatórios</a></li>
-				<li ng-show="identity.can('users')"><a href="#/users"><i class="material-icons">group</i> Usuários</a></li>
-				<li ng-show="identity.can('cities')"><a href="#/cities"><i class="material-icons">account_balance</i> Cidades</a></li>
-				<li ng-show="identity.can('settings')"><a href="#/settings"><i class="material-icons">settings</i> Configurações</a></li>
+				<li ng-show="identity.can('dashboard')" ng-class="{'active': (section == 'dashboard')}"><a href="#"><i class="material-icons">dashboard</i> Dashboard</a></li>
+				<li ng-show="identity.can('cases')" ng-class="{'active': (section == 'cases')}"><a href="#/cases"><i class="material-icons">list</i> Casos</a></li>
+				<li ng-show="identity.can('reports')" ng-class="{'active': (section == 'reports')}"><a href="#/reports"><i class="material-icons">show_chart</i> Relatórios</a></li>
+				<li ng-show="identity.can('users')" ng-class="{'active': (section == 'users')}"><a href="#/users"><i class="material-icons">group</i> Usuários</a></li>
+				<li ng-show="identity.can('cities')" ng-class="{'active': (section == 'cities')}"><a href="#/cities"><i class="material-icons">account_balance</i> Cidades</a></li>
+				<li ng-show="identity.can('settings')" ng-class="{'active': (section == 'settings')}"><a href="#/settings"><i class="material-icons">settings</i> Configurações</a></li>
 			</ul>
 
 

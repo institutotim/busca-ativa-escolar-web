@@ -22,7 +22,19 @@
 				}).
 				when('/cases', {
 					templateUrl: 'cases/list.html?NC=' + NC,
-					controller: 'CasesCtrl'
+					controller: 'CaseSearchCtrl'
+				}).
+				when('/cases/:case_id', {
+					templateUrl: 'cases/view.html?NC=' + NC,
+					controller: 'CaseViewCtrl'
+				}).
+				when('/cases/:case_id/map', {
+					templateUrl: 'cases/view.html?NC=' + NC,
+					controller: 'CaseViewCtrl'
+				}).
+				when('/cases/:case_id/comments', {
+					templateUrl: 'cases/view.html?NC=' + NC,
+					controller: 'CaseViewCtrl'
 				}).
 				otherwise({
 					redirectTo: '/dashboard'
@@ -32,6 +44,7 @@
 (function() {
 
 	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
+
 
 		function init(scope, element, attrs) {
 			scope.identity = Identity;
@@ -51,8 +64,9 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('CasesCtrl', function ($scope, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('CaseSearchCtrl', function ($scope, $rootScope, MockData, Identity) {
 
+		$rootScope.section = 'cases';
 		$scope.identity = Identity;
 
 		$scope.range = function (start, end) {
@@ -70,8 +84,20 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('CaseViewCtrl', function ($scope, $rootScope, MockData, Identity) {
 
+		$rootScope.section = 'cases';
+		$scope.identity = Identity;
+		$scope.reasons = MockData.alertReasons;
+
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $rootScope, MockData, Identity) {
+
+		$rootScope.section = 'dashboard';
 		$scope.identity = Identity;
 		$scope.evolutionChart = MockData.evolutionChart;
 		$scope.typesChart = MockData.typesChart;
@@ -128,6 +154,24 @@
 	angular.module('BuscaAtivaEscolar').factory('MockData', function () {
 
 		return {
+
+			alertReasons: [
+				"Adolescente em conflito com a lei",
+				"Criança e adolescente em abrigos ou em situação de rua",
+				"Criança ou adolescente com deficiência(s)",
+				"Criança ou adolescente com doença(s) que impeça(m) ou dificulte(m) a frequência à escola",
+				"Criança ou adolescente vítima de abuso / violência sexual",
+				"Evasão porque sente a escola desinteressante",
+				"Falta de documentação da criança ou adolescente",
+				"Falta de infraestrutura escolar",
+				"Falta de transporte escolar",
+				"Gravidez na adolescência",
+				"Racismo",
+				"Trabalho infantil",
+				"Violência familiar",
+				"Violência na escola"
+			],
+
 			typesChart: {
 				type: "PieChart",
 				data: {

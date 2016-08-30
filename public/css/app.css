@@ -24,4 +24,12 @@
   display: block;
 }
 
+.form-group {
+  margin-top: 10px;
+}
+
+.material-icons {
+  vertical-align: middle;
+}
+
 /*# sourceMappingURL=app.css.map */
