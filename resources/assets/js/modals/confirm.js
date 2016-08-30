@@ -2,7 +2,7 @@
 
 	angular
 		.module('BuscaAtivaEscolar')
-		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, UI, Data, message, details, canDismiss) {
+		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
 
 			console.log("[modal] confirm_modal", message, details, canDismiss);
 

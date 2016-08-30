@@ -14,13 +14,13 @@
 		$scope.messages = [];
 
 		$scope.steps = {
-			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'location']},
-			'parecer': {id: 'parecer', name: 'Parecer', opens: ['parecer']},
-			'consolidacao': {id: 'consolidacao', name: 'Consolidação'},
-			'reinsercao': {id: 'reinsercao', name: 'Reinserção'},
-			'1obs': {id: '1obs', name: '1a observação'},
-			'2obs': {id: '2obs', name: '2a observação'},
-			'3obs': {id: '3obs', name: '3a observação'},
+			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'location'], next: 'parecer'},
+			'parecer': {id: 'parecer', name: 'Parecer', opens: ['parecer'], next: 'consolidacao'},
+			'consolidacao': {id: 'consolidacao', name: 'Consolidação', next: 'reinsercao'},
+			'reinsercao': {id: 'reinsercao', name: 'Reinserção', next: '1obs'},
+			'1obs': {id: '1obs', name: '1a observação', next: '2obs'},
+			'2obs': {id: '2obs', name: '2a observação', next: '3obs'},
+			'3obs': {id: '3obs', name: '3a observação', next: '4obs'},
 			'4obs': {id: '4obs', name: '4a observação'}
 		};
 
@@ -28,6 +28,11 @@
 			$scope.setCaseStep('pesquisa');
 			$scope.openForm('pesquisa');
 		}
+
+		$scope.hasNextStep = function() {
+			if(!$scope.steps[$scope.currentStep]) return false;
+			return !!$scope.steps[$scope.currentStep].next
+		};
 
 		$scope.setCaseStep = function(step) {
 			$scope.currentStep = step;
@@ -52,6 +57,18 @@
 				'Ficha enviada para seu dispositivo!',
 				'Ela estará disponível na área de Notificações do aplicativo Busca Ativa Escolar'
 			));
+		};
+
+		$scope.saveAndProceed = function() {
+			if(!$scope.hasNextStep()) return;
+
+			Modals.show(Modals.Confirm('Tem certeza que deseja prosseguir de etapa?', 'Ao progredir de etapa, a etapa anterior será marcada como concluída.')).then(function () {
+				var next = $scope.steps[$scope.currentStep].next;
+
+				$scope.setCaseStep(next);
+				$scope.openForm(next);
+			})
+
 		};
 
 		$scope.openForm = function(form) {

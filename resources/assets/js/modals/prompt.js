@@ -2,7 +2,7 @@
 
 	angular
 		.module('BuscaAtivaEscolar')
-		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, UI, Data, question, defaultAnswer, canDismiss) {
+		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, question, defaultAnswer, canDismiss) {
 
 			console.log("[modal] prompt_modal", question, canDismiss);
 
