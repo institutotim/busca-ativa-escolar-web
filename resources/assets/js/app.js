@@ -3,6 +3,8 @@
 		.module('BuscaAtivaEscolar', [
 
 			'ngRoute',
+			'ngToast',
+			'ngAnimate',
 			'googlechart',
 			'ui.bootstrap'
 		])
@@ -10,6 +12,17 @@
 		.run(function() {
 			$.material.init();
 		})
+
+		.config(['ngToastProvider', function(ngToast) {
+			ngToast.configure({
+				verticalPosition: 'top',
+				horizontalPosition: 'right',
+				maxNumber: 3,
+				animation: 'slide',
+				dismissButton: true,
+				timeout: 3000
+			});
+		}])
 
 		.config(['$routeProvider', function($routeProvider) {
 

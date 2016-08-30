@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('CaseViewCtrl', function ($scope, $rootScope, Modals, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('CaseViewCtrl', function ($scope, $rootScope, ngToast, Modals, MockData, Identity) {
 
 		$rootScope.section = 'cases';
 
@@ -25,7 +25,7 @@
 		};
 
 		function init() {
-			$scope.setCaseStep('pesquisa');
+			$scope.setCaseStep('pesquisa', true);
 			$scope.openForm('pesquisa');
 		}
 
@@ -34,13 +34,20 @@
 			return !!$scope.steps[$scope.currentStep].next;
 		};
 
-		$scope.setCaseStep = function(step) {
+		$scope.setCaseStep = function(step, skipNotification) {
 			$scope.currentStep = step;
 			$scope.isPanelOpen = {};
 
 			for(var i in $scope.steps[step].opens) {
 				$scope.isPanelOpen[$scope.steps[step].opens[i]] = true;
 			}
+
+			if(skipNotification) return;
+
+			ngToast.create({
+				className: 'success',
+				content: 'Caso progredido para a etapa ' + $scope.steps[step].name
+			});
 		};
 
 		$scope.sendMessage = function () {
@@ -59,11 +66,23 @@
 			));
 		};
 
+		$scope.save = function() {
+			ngToast.create({
+				className: 'success',
+				content: 'Dados salvos na ficha de ' + $scope.steps[$scope.currentStep].name
+			});
+		};
+
 		$scope.saveAndProceed = function() {
 			if(!$scope.hasNextStep()) return;
 
 			Modals.show(Modals.Confirm('Tem certeza que deseja prosseguir de etapa?', 'Ao progredir de etapa, a etapa anterior será marcada como concluída.')).then(function () {
 				var next = $scope.steps[$scope.currentStep].next;
+
+				ngToast.create({
+					className: 'success',
+					content: 'Dados salvos na ficha de ' + $scope.steps[$scope.currentStep].name
+				});
 
 				$scope.setCaseStep(next);
 				$scope.openForm(next);
