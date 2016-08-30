@@ -63,6 +63,27 @@
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
+
+
+		function init(scope, element, attrs) {
+			scope.identity = Identity;
+			scope.cityName = 'São Paulo';
+			scope.user = {
+				name: 'Aryel Tupinambá',
+				type: 'Coordenador Operacional'
+			};
+		}
+
+		return {
+			link: init,
+			templateUrl: 'navbar.html'
+		};
+	});
+
+})();
+(function() {
+
 	angular.module('BuscaAtivaEscolar').controller('CaseSearchCtrl', function ($scope, $rootScope, MockData, Identity) {
 
 		$rootScope.section = 'cases';
@@ -97,13 +118,13 @@
 		$scope.messages = [];
 
 		$scope.steps = {
-			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'location']},
-			'parecer': {id: 'parecer', name: 'Parecer', opens: ['parecer']},
-			'consolidacao': {id: 'consolidacao', name: 'Consolidação'},
-			'reinsercao': {id: 'reinsercao', name: 'Reinserção'},
-			'1obs': {id: '1obs', name: '1a observação'},
-			'2obs': {id: '2obs', name: '2a observação'},
-			'3obs': {id: '3obs', name: '3a observação'},
+			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'location'], next: 'parecer'},
+			'parecer': {id: 'parecer', name: 'Parecer', opens: ['parecer'], next: 'consolidacao'},
+			'consolidacao': {id: 'consolidacao', name: 'Consolidação', next: 'reinsercao'},
+			'reinsercao': {id: 'reinsercao', name: 'Reinserção', next: '1obs'},
+			'1obs': {id: '1obs', name: '1a observação', next: '2obs'},
+			'2obs': {id: '2obs', name: '2a observação', next: '3obs'},
+			'3obs': {id: '3obs', name: '3a observação', next: '4obs'},
 			'4obs': {id: '4obs', name: '4a observação'}
 		};
 
@@ -111,6 +132,11 @@
 			$scope.setCaseStep('pesquisa');
 			$scope.openForm('pesquisa');
 		}
+
+		$scope.hasNextStep = function() {
+			if(!$scope.steps[$scope.currentStep]) return false;
+			return !!$scope.steps[$scope.currentStep].next;
+		};
 
 		$scope.setCaseStep = function(step) {
 			$scope.currentStep = step;
@@ -135,6 +161,18 @@
 				'Ficha enviada para seu dispositivo!',
 				'Ela estará disponível na área de Notificações do aplicativo Busca Ativa Escolar'
 			));
+		};
+
+		$scope.saveAndProceed = function() {
+			if(!$scope.hasNextStep()) return;
+
+			Modals.show(Modals.Confirm('Tem certeza que deseja prosseguir de etapa?', 'Ao progredir de etapa, a etapa anterior será marcada como concluída.')).then(function () {
+				var next = $scope.steps[$scope.currentStep].next;
+
+				$scope.setCaseStep(next);
+				$scope.openForm(next);
+			})
+
 		};
 
 		$scope.openForm = function(form) {
@@ -291,27 +329,6 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
-
-
-		function init(scope, element, attrs) {
-			scope.identity = Identity;
-			scope.cityName = 'São Paulo';
-			scope.user = {
-				name: 'Aryel Tupinambá',
-				type: 'Coordenador Operacional'
-			};
-		}
-
-		return {
-			link: init,
-			templateUrl: 'navbar.html'
-		};
-	});
-
-})();
-(function() {
-
 	angular
 		.module('BuscaAtivaEscolar')
 		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
@@ -330,7 +347,7 @@
 
 	angular
 		.module('BuscaAtivaEscolar')
-		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, UI, Data, message, details, canDismiss) {
+		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
 
 			console.log("[modal] confirm_modal", message, details, canDismiss);
 
@@ -353,7 +370,7 @@
 
 	angular
 		.module('BuscaAtivaEscolar')
-		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, UI, Data, question, defaultAnswer, canDismiss) {
+		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, question, defaultAnswer, canDismiss) {
 
 			console.log("[modal] prompt_modal", question, canDismiss);
 

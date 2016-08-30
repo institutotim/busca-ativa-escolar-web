@@ -31,7 +31,7 @@
 
 		$scope.hasNextStep = function() {
 			if(!$scope.steps[$scope.currentStep]) return false;
-			return !!$scope.steps[$scope.currentStep].next
+			return !!$scope.steps[$scope.currentStep].next;
 		};
 
 		$scope.setCaseStep = function(step) {
