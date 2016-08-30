@@ -10,6 +10,8 @@
 		$scope.isPanelOpen = {};
 		$scope.currentStep = null;
 		$scope.currentForm = null;
+		$scope.message = "";
+		$scope.messages = [];
 
 		$scope.steps = {
 			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'location']},
@@ -34,6 +36,15 @@
 			for(var i in $scope.steps[step].opens) {
 				$scope.isPanelOpen[$scope.steps[step].opens[i]] = true;
 			}
+		};
+
+		$scope.sendMessage = function () {
+			$scope.messages.push({
+				user: Identity.getCurrentUser(),
+				body: $scope.message
+			});
+
+			$scope.message = "";
 		};
 
 		$scope.openForm = function(form) {

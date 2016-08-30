@@ -1,0 +1,104 @@
+<div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3><i class="material-icons">add_alert</i> Novo alerta</h3>
+		</div>
+		<div class="panel-body">
+
+			<div class="panel panel-default">
+				<div class="panel-heading"><i class="material-icons">person</i> Informações pessoas</div>
+				<div class="panel-body">
+					<div class="form-group col-md-6">
+						<label class="control-label" for="fld-name">Nome da criança</label>
+						<input type="text" class="form-control" id="fld-name" value="Edward Doe">
+					</div>
+					<div class="form-grouo col-md-3">
+						<label class="control-label" for="fld-gender">Gênero</label>
+						<select id="fld-gender" class="form-control">
+							<option selected>Masculino</option>
+							<option>Feminino</option>
+							<option>Indefinido</option>
+						</select>
+					</div>
+					<div class="form-grouo col-md-3">
+						<label class="control-label" for="fld-raca">Raça / Etnia</label>
+						<select id="fld-raca" class="form-control">
+							<option selected>Caucasiano</option>
+						</select>
+					</div>
+					<div class="form-group col-md-6">
+						<label class="control-label" for="fld-type">Nome da mãe</label>
+						<input type="text" class="form-control" id="fld-type" value="Jane Doe">
+					</div>
+					<div class="form-group col-md-6">
+						<label class="control-label" for="fld-dob">Data de nascimento</label>
+						<input type="date" class="form-control" id="fld-dob" value="25/08/1991">
+					</div>
+					<div class="form-group col-md-4">
+						<label class="control-label" for="fld-rg">RG</label>
+						<input type="text" class="form-control" id="fld-rg" value="12.345.678-X">
+					</div>
+					<div class="form-group col-md-4">
+						<label class="control-label" for="fld-cpf">CPF</label>
+						<input type="text" class="form-control" id="fld-cpf" value="123.456.789-00">
+					</div>
+					<div class="form-group col-md-4">
+						<label class="control-label" for="fld-codsus">Código SUS</label>
+						<input type="text" class="form-control" id="fld-codsus" value="12345678">
+					</div>
+					<div class="form-group col-md-12">
+						<label class="control-label">Motivos de estar fora da escola</label>
+						<div class="checkbox" ng-repeat="(i, reason) in reasons">
+							<label>
+								<input type="checkbox"> {{reason}}
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading"><i class="material-icons">map</i> Dados de localização</div>
+				<div class="panel-body">
+					<div class="form-group col-md-8">
+						<label class="control-label" for="fld-address">Endereço</label>
+						<input type="text" class="form-control" id="fld-address" value="Alameda Barão de Piracicaba, 500">
+					</div>
+					<div class="form-group col-md-4">
+						<label class="control-label" for="fld-cep">CEP</label>
+						<input type="text" class="form-control" id="fld-cep" value="01234-567">
+					</div>
+					<div class="form-group col-md-12">
+						<label class="control-label" for="fld-reference">Referência geográfica</label>
+						<input type="text" class="form-control" id="fld-reference" value="Esquina com a Rua ABCD, em frente a loja XYZ">
+					</div>
+					<div class="form-group col-md-5">
+						<label class="control-label" for="fld-neighborhood">Bairro</label>
+						<input type="text" class="form-control" id="fld-neighborhood" value="Campos Elíseos">
+					</div>
+					<div class="form-group col-md-5">
+						<label class="control-label" for="fld-city">Cidade</label>
+						<input type="text" class="form-control" id="fld-city" value="São Paulo">
+					</div>
+					<div class="form-group col-md-2">
+						<label class="control-label" for="fld-uf">UF</label>
+						<input type="text" class="form-control" id="fld-uf" value="SP">
+					</div>
+					<div class="form-group col-md-6">
+						<label class="control-label" for="fld-phone">Telefone residencial</label>
+						<input type="text" class="form-control" id="fld-phone" value="(11) 2222-3333">
+					</div>
+					<div class="form-group col-md-6">
+						<label class="control-label" for="fld-mobile">Telefone celular</label>
+						<input type="text" class="form-control" id="fld-mobile" value="(11) 98888-4444">
+					</div>
+				</div>
+			</div>
+
+			<hr />
+
+			<a class="btn btn-raised btn-info pull-right" href="#/dashboard">Criar alerta</a>
+
+		</div>
+	</div>
+</div>

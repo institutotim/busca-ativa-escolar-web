@@ -1,0 +1,64 @@
+<div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3><i class="material-icons">settings</i> Configurações</h3>
+		</div>
+		<div class="panel-body">
+
+			<div class="row">
+				<div class="col-md-4">
+					<h4><i class="material-icons">info</i> Perfil da cidade</h4>
+					<hr />
+
+					<div class="form-group col-md-12">
+						<label class="control-label" for="fld-num-habitants">Número de habitantes</label>
+						<input type="text" class="form-control" id="fld-num-habitants" value="432.256">
+					</div>
+					<div class="form-group col-md-12">
+						<label class="control-label" for="fld-inep">Código INEP</label>
+						<input type="date" class="form-control" id="fld-inep" value="7688452">
+					</div>
+					<div class="form-group col-md-12">
+						<label class="control-label" for="fld-mayor-name">Nome do prefeito</label>
+						<input type="text" class="form-control" id="fld-mayor-name" value="João das Neves">
+					</div>
+
+					<hr />
+
+					<a class="btn btn-raised btn-info pull-right">Salvar</a>
+				</div>
+				<div class="col-md-8">
+					<h4>
+						<i class="material-icons">group</i> Grupos de usuários
+
+						<a class="btn btn-xs btn-info pull-right" style="margin: 0;"><i class="material-icons">group_add</i> Novo</a>
+					</h4>
+					<hr />
+
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Nome</th>
+								<th>Qtd. usuários</th>
+								<th>Opções</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="i in [1,2,3,4,5,6,7,8]">
+								<td>Secretaria dos Transportes</td>
+								<td>5 usuários</td>
+								<td>
+									<a href="#/settings/parameterize_group/{{i}}" class="btn btn-success btn-xs" style="margin: 0 5px;"><i class="material-icons">settings_input_component</i> Parametrizar</a>
+									<a class="btn btn-danger btn-xs" style="margin: 0 5px;"><i class="material-icons">delete</i> Excluir</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+</div>

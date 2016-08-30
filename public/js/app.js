@@ -24,6 +24,10 @@
 					templateUrl: 'cases/list.html?NC=' + NC,
 					controller: 'CaseSearchCtrl'
 				}).
+				when('/cases/create_alert', {
+					templateUrl: 'cases/create_alert.html?NC=' + NC,
+					controller: 'CreateAlertCtrl'
+				}).
 				when('/cases/:case_id', {
 					templateUrl: 'cases/view.html?NC=' + NC,
 					controller: 'CaseViewCtrl'
@@ -35,6 +39,22 @@
 				when('/users/:user_id', {
 					templateUrl: 'users/view.html?NC=' + NC,
 					controller: 'UserViewCtrl'
+				}).
+				when('/cities', {
+					templateUrl: 'cities/list.html?NC=' + NC,
+					controller: 'CitySearchCtrl'
+				}).
+				when('/settings', {
+					templateUrl: 'settings/manage_settings.html?NC=' + NC,
+					controller: 'SettingsCtrl'
+				}).
+				when('/settings/parameterize_group/:group_id', {
+					templateUrl: 'settings/parameterize_group.html?NC=' + NC,
+					controller: 'ParameterizeGroupCtrl'
+				}).
+				when('/reports', {
+					templateUrl: 'reports/home.html?NC=' + NC,
+					controller: 'ReportsCtrl'
 				}).
 				otherwise({
 					redirectTo: '/dashboard'
@@ -94,6 +114,8 @@
 		$scope.isPanelOpen = {};
 		$scope.currentStep = null;
 		$scope.currentForm = null;
+		$scope.message = "";
+		$scope.messages = [];
 
 		$scope.steps = {
 			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'location']},
@@ -118,6 +140,15 @@
 			for(var i in $scope.steps[step].opens) {
 				$scope.isPanelOpen[$scope.steps[step].opens[i]] = true;
 			}
+		};
+
+		$scope.sendMessage = function () {
+			$scope.messages.push({
+				user: Identity.getCurrentUser(),
+				body: $scope.message
+			});
+
+			$scope.message = "";
 		};
 
 		$scope.openForm = function(form) {
@@ -178,12 +209,76 @@
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar').controller('CitySearchCtrl', function ($scope, $rootScope, MockData, Identity) {
+
+		$rootScope.section = 'cities';
+		$scope.identity = Identity;
+
+		$scope.range = function (start, end) {
+			var arr = [];
+
+			for(var i = start; i <= end; i++) {
+				arr.push(i);
+			}
+
+			return arr;
+		}
+
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').controller('CreateAlertCtrl', function ($scope, $rootScope, MockData, Identity) {
+
+		$rootScope.section = 'dashboard';
+
+		$scope.identity = Identity;
+		$scope.reasons = MockData.alertReasons;
+
+	});
+
+})();
+(function() {
+
 	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $rootScope, MockData, Identity) {
 
 		$rootScope.section = 'dashboard';
 		$scope.identity = Identity;
 		$scope.evolutionChart = MockData.evolutionChart;
 		$scope.typesChart = MockData.typesChart;
+
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').controller('ParameterizeGroupCtrl', function ($scope, $rootScope, MockData, Identity) {
+
+		$rootScope.section = 'settings';
+		$scope.identity = Identity;
+
+		$scope.reasons = MockData.alertReasons;
+
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').controller('ReportsCtrl', function ($scope, $rootScope, MockData, Identity) {
+
+		$rootScope.section = 'reports';
+		$scope.identity = Identity;
+
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').controller('SettingsCtrl', function ($scope, $rootScope, MockData, Identity) {
+
+		$rootScope.section = 'settings';
+		$scope.identity = Identity;
 
 	});
 
