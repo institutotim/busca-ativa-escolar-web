@@ -1,0 +1,73 @@
+<div class="col-md-9">
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3><i class="material-icons">list</i> Casos</h3>
+		</div>
+		<div class="panel-body">
+
+			<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Nome</th>
+						<th>Técnico responsável</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="i in range(1, 24)">
+						<td width="5%">#{{12 + i}}</td>
+						<td width="30%">
+							<strong><i class="material-icons">child_care</i> Edward Doe</strong><br />
+							<small>Jane Doe</small>
+						</td>
+						<td width="25%">
+							<i class="material-icons">person</i> Aryel Tupinambá
+							<small>Coordenador Operacional</small>
+						</td>
+						<td width="40%">
+							<div class="btn-group">
+								<a class="btn btn-info btn-xs"><i class="material-icons">mode_edit</i> Ficha</a>
+								<a class="btn btn-success btn-xs"><i class="material-icons">person_pin_circle</i> Mapa</a>
+								<a class="btn btn-warning btn-xs"><i class="material-icons">comment</i> Registro</a>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+</div>
+<div class="col-md-3">
+	<div class="panel info">
+		<div class="panel-heading">
+			<i class="material-icons">filter_list</i> Buscar e filtrar
+		</div>
+		<div class="panel-body">
+			<div class="form-group" style="margin-top: 5px">
+				<label class="control-label" for="filter-email">Por nome</label>
+				<input type="email" class="form-control" id="filter-email" placeholder="Nome da criança...">
+			</div>
+			<div class="form-group" style="margin-top: 5px">
+				<label class="control-label" for="filter-type">Por tipo</label>
+				<input type="text" class="form-control" id="filter-type" placeholder="Tipo do caso...">
+			</div>
+			<div class="form-group" style="margin-top: 5px">
+				<label class="control-label" for="filter-stage">Por etapa</label>
+				<input type="text" class="form-control" id="filter-stage" placeholder="Etapa do caso...">
+			</div>
+			<div class="form-group" style="margin-top: 5px">
+				<label class="control-label" for="filter-assigned-user">Por técnico responsável</label>
+				<input type="text" class="form-control" id="filter-assigned-user" placeholder="Nome do técnico...">
+			</div>
+		</div>
+		<div class="panel-footer">
+			<div>
+				<strong>0</strong> casos encontrados
+			</div>
+			<div>
+				<a class="btn btn-raised btn-sm btn-info"><i class="material-icons">search</i> Filtrar</a>
+			</div>
+		</div>
+	</div>
+</div>

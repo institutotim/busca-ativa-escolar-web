@@ -20,6 +20,10 @@
 					templateUrl: 'dashboard.html?NC=' + NC,
 					controller: 'DashboardCtrl'
 				}).
+				when('/cases', {
+					templateUrl: 'cases/list.html?NC=' + NC,
+					controller: 'CasesCtrl'
+				}).
 				otherwise({
 					redirectTo: '/dashboard'
 				});
@@ -42,6 +46,25 @@
 			link: init,
 			templateUrl: 'navbar.html'
 		};
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').controller('CasesCtrl', function ($scope, MockData, Identity) {
+
+		$scope.identity = Identity;
+
+		$scope.range = function (start, end) {
+			var arr = [];
+
+			for(var i = start; i <= end; i++) {
+				arr.push(i);
+			}
+
+			return arr;
+		}
+
 	});
 
 })();

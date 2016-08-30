@@ -20,6 +20,10 @@
 					templateUrl: 'dashboard.html?NC=' + NC,
 					controller: 'DashboardCtrl'
 				}).
+				when('/cases', {
+					templateUrl: 'cases/list.html?NC=' + NC,
+					controller: 'CasesCtrl'
+				}).
 				otherwise({
 					redirectTo: '/dashboard'
 				});
