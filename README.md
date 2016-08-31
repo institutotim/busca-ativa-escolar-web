@@ -23,7 +23,7 @@ A plataforma estará em uso em diversos municipios através da url http://forada
 Busca Ativa Escolar é uma aplicação web server-side baseada em linguagem PHP e banco de dados Postgres, com front-end em AngularJS, entre outras tecnologias e componentes, que propicia um ambiente virtual para busca, pesquisa, geolocalização e acompanhamento de caso de crianças e adolescentes que estejam em situação ausência escolar entre 04 e 17 anos de idade. A aplicação
 
 ### Documentação 
-Toda documentação da aplicação está na pasta [doc](doc). Esta aplicação usa o Principais referências:
+Toda documentação da aplicação está na pasta [doc](doc). Esta aplicação usa o Jekyll como engine de documentação:
 - [Deploy](doc/bae_deploy.md)
 
 ### [Software] Requisitos para Instalação
