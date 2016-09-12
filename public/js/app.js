@@ -6,11 +6,34 @@
 			'ngToast',
 			'ngAnimate',
 			'googlechart',
+			'highcharts-ng',
 			'ui.bootstrap'
 		])
 
 		.run(function() {
 			$.material.init();
+
+			Highcharts.setOptions({
+				lang: {
+					months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+					shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+					weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+					loading: ['Atualizando o gráfico...'],
+					contextButtonTitle: 'Exportar gráfico',
+					decimalPoint: ',',
+					thousandsSep: '.',
+					downloadJPEG: 'Baixar imagem JPEG',
+					downloadPDF: 'Baixar arquivo PDF',
+					downloadPNG: 'Baixar imagem PNG',
+					downloadSVG: 'Baixar vetor SVG',
+					printChart: 'Imprimir gráfico',
+					rangeSelectorFrom: 'De',
+					rangeSelectorTo: 'Para',
+					rangeSelectorZoom: 'Zoom',
+					resetZoom: 'Voltar zoom',
+					resetZoomTitle: 'Voltar zoom para nível 1:1'
+				}
+			});
 		})
 
 		.config(['ngToastProvider', function(ngToast) {
@@ -303,6 +326,7 @@
 		$scope.identity = Identity;
 		$scope.evolutionChart = MockData.evolutionChart;
 		$scope.typesChart = MockData.typesChart;
+		$scope.caseTypesChart = MockData.caseTypesChart;
 
 	});
 
@@ -431,7 +455,7 @@
 			'coordenador_operacional': {name: 'Aryel Tupinambá', type: 'Coordenador Operacional', can: ['dashboard','cases','reports','users', 'users.edit','settings']},
 			'gestor_politico': {name: 'João das Neves', type: 'Gestor Político', can: ['dashboard','reports','users']},
 			'unicef': {name: 'Jane Doe', type: 'Gestor UNICEF', can: ['dashboard','reports','cities']},
-			'super_administrador': {name: 'Morgan Freeman', type: 'Super Administrador', can: ['dashboard','reports','cities','users','users.edit','settings']}
+			'super_administrador': {name: 'Morgan Freeman', type: 'Super Administrador', can: ['dashboard','reports','cities','cities.edit','users','users.edit','settings']}
 		};
 
 		var currentType = 'coordenador_operacional';
@@ -469,24 +493,94 @@
 
 	angular.module('BuscaAtivaEscolar').factory('MockData', function () {
 
+		var alertReasons = [
+			"Adolescente em conflito com a lei",
+			"Criança e adolescente em abrigos ou em situação de rua",
+			"Criança ou adolescente com deficiência(s)",
+			"Criança ou adolescente com doença(s) que impeça(m) ou dificulte(m) a frequência à escola",
+			"Criança ou adolescente vítima de abuso / violência sexual",
+			"Evasão porque sente a escola desinteressante",
+			"Falta de documentação da criança ou adolescente",
+			"Falta de infraestrutura escolar",
+			"Falta de transporte escolar",
+			"Gravidez na adolescência",
+			"Racismo",
+			"Trabalho infantil",
+			"Violência familiar",
+			"Violência na escola"
+		];
+
 		return {
 
-			alertReasons: [
-				"Adolescente em conflito com a lei",
-				"Criança e adolescente em abrigos ou em situação de rua",
-				"Criança ou adolescente com deficiência(s)",
-				"Criança ou adolescente com doença(s) que impeça(m) ou dificulte(m) a frequência à escola",
-				"Criança ou adolescente vítima de abuso / violência sexual",
-				"Evasão porque sente a escola desinteressante",
-				"Falta de documentação da criança ou adolescente",
-				"Falta de infraestrutura escolar",
-				"Falta de transporte escolar",
-				"Gravidez na adolescência",
-				"Racismo",
-				"Trabalho infantil",
-				"Violência familiar",
-				"Violência na escola"
-			],
+			alertReasons: alertReasons,
+
+			caseTypesChart: {
+				options: {
+					chart: {
+						type: 'bar'
+					},
+					title: {
+						text: ''
+					},
+					subtitle: {
+						text: ''
+					}
+				},
+				xAxis: {
+					categories: alertReasons,
+					title: {
+						text: null
+					}
+				},
+				yAxis: {
+					min: 0,
+					title: {
+						text: 'Quantidade de casos',
+						align: 'high'
+					},
+					labels: {
+						overflow: 'justify'
+					}
+				},
+				tooltip: {
+					valueSuffix: ' casos'
+				},
+				plotOptions: {
+					bar: {
+						dataLabels: {
+							enabled: true
+						}
+					}
+				},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'top',
+					x: -40,
+					y: 80,
+					floating: true,
+					borderWidth: 1,
+					backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+					shadow: true
+				},
+				credits: {
+					enabled: false
+				},
+				series: [
+					{
+						name: 'Alerta',
+						data: [105, 95, 42, 74, 38, 10, 12, 50, 70, 60, 40, 122, 78, 47]
+					},
+					{
+						name: 'Concluídos',
+						data: [107, 31, 63, 20, 2, 50, 74, 38, 10, 12, 5, 10, 6, 40]
+					},
+					{
+						name: 'Em andamento',
+						data: [13, 15, 94, 40, 6, 5, 8, 3, 9, 10, 12, 4, 5, 1]
+					}
+				]
+			},
 
 			typesChart: {
 				type: "PieChart",
