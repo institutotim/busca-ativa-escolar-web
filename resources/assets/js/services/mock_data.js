@@ -19,9 +19,35 @@
 			"Violência na escola"
 		];
 
+		var states = [
+			{id: 'SP', name: 'São Paulo'},
+			{id: 'MG', name: 'Minas Gerais'},
+			{id: 'RJ', name: 'Rio de Janeiro'},
+			{id: 'DF', name: 'Distrito Federal'}
+		];
+
+		var cities = [
+			{id: 1, state: 'SP', name: 'São Paulo'},
+			{id: 2, state: 'SP', name: 'Campinas'},
+			{id: 3, state: 'MG', name: 'Belo Horizonte'},
+			{id: 4, state: 'RJ', name: 'Rio de Janeiro'},
+			{id: 5, state: 'DF', name: 'Brasília'}
+		];
+
+		var groups = [
+			{id: 1, name: 'Secretaria de Segurança Pública'},
+			{id: 2, name: 'Secretaria da Educação'},
+			{id: 3, name: 'Secretaria do Verde e Meio Ambiente'},
+			{id: 4, name: 'Secretaria dos Transportes'}
+		];
+
 		return {
 
 			alertReasons: alertReasons,
+
+			states: states,
+			cities: cities,
+			groups: groups,
 
 			caseTypesChart: {
 				options: {

@@ -5,12 +5,16 @@
 			'ngRoute',
 			'ngToast',
 			'ngAnimate',
+
 			'googlechart',
 			'highcharts-ng',
-			'ui.bootstrap'
+
+			'ui.bootstrap',
+			'ui.select',
 		])
 
 		.run(function() {
+
 			$.material.init();
 
 			Highcharts.setOptions({
