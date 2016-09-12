@@ -158,8 +158,8 @@
 		$scope.messages = [];
 
 		$scope.steps = {
-			'alerta': {id: 'alerta', name: 'Alerta', opens: ['info'], next: 'pesquisa'},
-			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'location'], next: 'analise_tecnica'},
+			'alerta': {id: 'alerta', name: 'Alerta', opens: ['info', 'parents'], next: 'pesquisa'},
+			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'parents', 'location'], next: 'analise_tecnica'},
 			'analise_tecnica': {id: 'analise_tecnica', name: 'Análise Técnica', opens: ['analise_tecnica'], next: 'consolidacao'},
 			'consolidacao': {id: 'consolidacao', name: 'Consolidação', next: 'reinsercao'},
 			'reinsercao': {id: 'reinsercao', name: 'Reinserção', next: '1obs'},
