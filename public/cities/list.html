@@ -20,8 +20,8 @@
 						<td width="40%"><strong><i class="material-icons">account_balance</i> São Paulo</strong><br /></td>
 						<td width="20%">João das Neves</td>
 						<td width="35%">
-							<a href="#/users" class="btn btn-success btn-xs" style="margin: 0 5px;"><i class="material-icons">group</i> Usuários</a>
-							<a href="#/settings" class="btn btn-info btn-xs" style="margin: 0 5px;"><i class="material-icons">settings</i> Configurações</a>
+							<a ng-show="identity.can('cities.edit')" href="#/users" class="btn btn-success btn-xs" style="margin: 0 5px;"><i class="material-icons">group</i> Usuários</a>
+							<a ng-show="identity.can('cities.edit')" href="#/settings" class="btn btn-info btn-xs" style="margin: 0 5px;"><i class="material-icons">settings</i> Configurações</a>
 						</td>
 					</tr>
 				</tbody>
