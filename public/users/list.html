@@ -1,7 +1,8 @@
 <div>
 	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3><i class="material-icons">group</i> Usuários</h3>
+		<div class="panel-heading clearfix">
+			<h3 class="pull-left"><i class="material-icons">group</i> Usuários</h3>
+			<a ng-show="identity.can('users.create')" href="#/users/1" class="btn btn-primary btn-raised pull-right"><i class="fa fa-plus"></i> Novo</a>
 		</div>
 		<div class="panel-body">
 
