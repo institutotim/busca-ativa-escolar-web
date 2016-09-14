@@ -120,12 +120,12 @@
 		};
 
 		$scope.getFormName = function() {
-			if($scope.currentForm == "consolidada") return "com dados consolidados";
-			return "na etapa " + $scope.steps[$scope.currentForm].name;
+			if($scope.currentForm == "consolidada") return "Dados consolidados";
+			return $scope.steps[$scope.currentForm].name;
 		};
 
-		$scope.isPastStep = function(step) {
-			if($scope.currentStep == step) return true;
+		$scope.isPastStep = function(step, skipCurrentStep) {
+			if($scope.currentStep == step) return !skipCurrentStep;
 
 			for(var i in $scope.steps) {
 				if($scope.steps[i].id == step) return true;
@@ -134,11 +134,11 @@
 		};
 
 		$scope.getCaseTimelineClass = function(step) {
-			if($scope.currentStep == step) return 'btn-info';
+			if($scope.currentStep == step) return 'step-current';
 
 			for(var i in $scope.steps) {
-				if($scope.steps[i].id == step) return 'btn-success';
-				if($scope.steps[i].id == $scope.currentStep) return 'btn-default';
+				if($scope.steps[i].id == step) return 'step-completed';
+				if($scope.steps[i].id == $scope.currentStep) return 'step-pending';
 			}
 		};
 

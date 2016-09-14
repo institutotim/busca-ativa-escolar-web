@@ -69,7 +69,7 @@
 					controller: 'CreateAlertCtrl'
 				}).
 				when('/cases/:case_id', {
-					templateUrl: 'cases/view.html?NC=' + NC,
+					templateUrl: 'cases/view/main.html?NC=' + NC,
 					controller: 'CaseViewCtrl'
 				}).
 				when('/users', {
