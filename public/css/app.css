@@ -1,3 +1,17 @@
+@media (max-width: 768px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .show-on-mobile {
+    display: none !important;
+  }
+}
+
+/* ANIMATION */
+/* SHADOWS */
 #app-navbar .navbar-brand {
   padding: 5px 15px;
 }
@@ -22,6 +36,86 @@
 }
 #app-navbar .logged-user .user-details strong, #app-navbar .logged-user .user-details small {
   display: block;
+}
+
+.step-list {
+  display: block;
+  position: relative;
+}
+.step-list .step {
+  display: block;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 60px;
+  padding: 10px 10px 10px 40px;
+}
+.step-list .step strong, .step-list .step small {
+  display: block;
+  width: 100%;
+  height: 20px;
+  line-height: 20px;
+}
+.step-list .step .btn-complete-step {
+  margin: 5px 0;
+}
+.step-list .step.step-pending strong {
+  height: 40px;
+  line-height: 40px;
+}
+.step-list .step::before {
+  position: absolute;
+  left: 20px;
+  top: 0;
+  width: 1px;
+  height: 60px;
+  border-left: 1px solid #ccc;
+  content: '';
+}
+.step-list .step::after {
+  position: absolute;
+  left: 10px;
+  top: 20px;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #ccc;
+  border-radius: 20px;
+  z-index: 10;
+  content: '';
+}
+.step-list .step.active strong {
+  color: dodgerblue;
+}
+.step-list .step.active::after {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+.step-list .step:first-child::before {
+  top: 20px;
+  height: 40px;
+}
+.step-list .step:last-child::before {
+  height: 20px;
+}
+.step-list .step.step-current::after {
+  background: dodgerblue;
+}
+.step-list .step.step-completed::after {
+  background: greenyellow;
+}
+.step-list .step.step-pending::after {
+  background: #ddd;
+}
+
+.has-subnav-tabs .nav-tabs {
+  background: #00b8ed;
+}
+.has-subnav-tabs .nav-tabs .uib-tab {
+  margin-top: 5px;
+  transition: all 0.2s ease;
+}
+.has-subnav-tabs .nav-tabs .uib-tab.active a {
+  background: white !important;
+  color: #333 !important;
 }
 
 .form-group {

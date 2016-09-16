@@ -1,5 +1,6 @@
 @import "../../vendor/bootstrap/dist/css/bootstrap";
-@import "../../vendor/bootstrap-material-design/dist/css/bootstrap-material-design";
+@import "shared/bootstrap_config";
+@import "../../vendor/bootstrap-material-design/sass/bootstrap-material-design";
 @import "../../vendor/bootstrap-material-design/dist/css/ripples";
 @import "../../vendor/ngToast/dist/ngToast";
 @import "../../vendor/ngToast/dist/ngToast-animations";
