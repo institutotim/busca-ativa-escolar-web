@@ -1,0 +1,63 @@
+.step-list {
+	display: block;
+	position: relative;
+
+	.step {
+		display: block;
+		overflow: hidden;
+		position: relative;
+
+		width: 100%;
+		height: 60px;
+
+		padding: 10px 10px 10px 40px;
+
+		strong, small {
+			display: block;
+			width: 100%;
+			height: 20px;
+			line-height: 20px;
+		}
+
+		.btn-complete-step { margin: 5px 0; }
+
+		&.step-pending {
+			strong { height: 40px; line-height: 40px; }
+		}
+
+		&::before {
+			@include place-at(20px, 0, left, top);
+			width: 1px;
+			height: 60px;
+
+			border-left: 1px solid #ccc;
+
+			content: '';
+		}
+
+		&::after {
+			@include place-at(10px, 20px, left, top);
+			width: 20px;
+			height: 20px;
+
+			border: 3px solid #ccc;
+			border-radius: 20px;
+
+			z-index: 10;
+			content: '';
+		}
+
+		&.active {
+			strong { color: dodgerblue; }
+			&::after { box-shadow: 0 2px 5px rgba(black, 0.25); }
+		}
+
+		&:first-child::before { top: 20px; height: 40px; }
+		&:last-child::before { height: 20px; }
+
+		&.step-current::after { background: dodgerblue; }
+		&.step-completed::after { background: greenyellow; }
+		&.step-pending::after { background: #ddd; }
+
+	}
+}

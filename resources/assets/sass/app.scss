@@ -1,6 +1,13 @@
 @import 'compass/css3';
 
+@import 'shared/util_mixins';
+@import 'shared/util_classes';
+
+@import 'shared/bootstrap_config';
+
 @import 'components/navbar';
+@import 'components/case_steps';
+@import 'components/subnav_tabs';
 
 .form-group { margin-top: 10px; }
 .button-menu .btn { padding: 8px 0; }
