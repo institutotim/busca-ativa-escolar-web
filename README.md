@@ -1,10 +1,6 @@
 # Busca Ativa Escolar
 
-<<<<<<< HEAD
-Garantir que cada criança e adolescente dos 4 aos 17 anos esteja na escola – e aprendendo – é, hoje, um dos principais desafios do Brasil. Também é parte da Agenda 2030, um conjunto de programas, ações e diretrizes das Nações Unidas que devem ser implantados por todos os países nos próximos 15 anos para alcançar o desenvolvimento sustentável.
-=======
 Garantir que cada criança e adolescente dos 4 aos 17 anos esteja na escola – e aprendendo – é, hoje, um dos principais desafios do Brasil. Também é parte da Agenda 2030 das Nações Unidas, um conjunto de programas, ações e diretrizes que devem ser implantados por todos os países nos próximos 15 anos para alcançar o desenvolvimento sustentável.
->>>>>>> 68e5e707ec929c94bd63a75098f17f05d7ad0a77
 
 Pensando nisso, o UNICEF, a União Nacional dos Dirigentes Municipais de Educação (Undime), o Colegiado Nacional de Gestores Municipais de Assistência Social (Congemas) e o Instituto TIM desenvolveram o Projeto de Busca Ativa de Crianças e Adolescentes. O projeto disponibiliza gratuitamente aos municípios uma ferramenta tecnológica e uma metodologia social que permitem à sociedade local (governos municipais) fazer com que isso aconteça na prática.
 
