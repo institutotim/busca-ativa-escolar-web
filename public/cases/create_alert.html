@@ -8,11 +8,11 @@
 			<div class="panel panel-default">
 				<div class="panel-heading"><i class="material-icons">person</i> Informações pessoas</div>
 				<div class="panel-body">
-					<div class="form-group col-md-6">
+					<div class="form-group col-md-12">
 						<label class="control-label" for="fld-name">Nome da criança</label>
 						<input type="text" class="form-control" id="fld-name" value="Edward Doe">
 					</div>
-					<div class="form-grouo col-md-3">
+					<div class="form-grouo col-md-4">
 						<label class="control-label" for="fld-gender">Gênero</label>
 						<select id="fld-gender" class="form-control">
 							<option selected>Masculino</option>
@@ -20,17 +20,14 @@
 							<option>Indefinido</option>
 						</select>
 					</div>
-					<div class="form-grouo col-md-3">
+					<div class="form-grouo col-md-4">
 						<label class="control-label" for="fld-raca">Raça / Etnia</label>
 						<select id="fld-raca" class="form-control">
 							<option selected>Caucasiano</option>
 						</select>
 					</div>
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-type">Nome da mãe</label>
-						<input type="text" class="form-control" id="fld-type" value="Jane Doe">
-					</div>
-					<div class="form-group col-md-6">
+
+					<div class="form-group col-md-4">
 						<label class="control-label" for="fld-dob">Data de nascimento</label>
 						<input type="date" class="form-control" id="fld-dob" value="25/08/1991">
 					</div>
@@ -43,16 +40,41 @@
 						<input type="text" class="form-control" id="fld-cpf" value="123.456.789-00">
 					</div>
 					<div class="form-group col-md-4">
-						<label class="control-label" for="fld-codsus">Código SUS</label>
-						<input type="text" class="form-control" id="fld-codsus" value="12345678">
+						<label class="control-label" for="fld-codnis">NIS (Número de Identificação Social)</label>
+						<input type="text" class="form-control" id="fld-codnis" value="12345678">
 					</div>
 					<div class="form-group col-md-12">
 						<label class="control-label">Motivos de estar fora da escola</label>
-						<div class="checkbox" ng-repeat="(i, reason) in reasons">
+						<div class="radio" ng-repeat="(i, reason) in reasons">
 							<label>
-								<input type="checkbox"> {{reason}}
+								<input name="type" value="{{i}}" type="radio"> {{reason}}
 							</label>
 						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading"><i class="material-icons">person</i> Dados do responsável</div>
+				<div class="panel-body">
+					<div class="form-group col-md-6">
+						<label class="control-label" for="fld-mother-name">Nome da mãe</label>
+						<input type="text" class="form-control" id="fld-mother-name" value="Jane Doe">
+					</div>
+
+					<div class="form-group col-md-6">
+						<label class="control-label" for="fld-father-name">Nome do pai</label>
+						<input type="text" class="form-control" id="fld-father-name" value="John Doe">
+					</div>
+
+					<div class="form-group col-md-6">
+						<label class="control-label" for="fld-mother-rg">RG da mãe</label>
+						<input type="text" class="form-control" id="fld-mother-rg" value="12.345.678-9">
+					</div>
+
+					<div class="form-group col-md-6">
+						<label class="control-label" for="fld-father-rg">RG  do pai</label>
+						<input type="text" class="form-control" id="fld-father-rg" value="23.456.789-0">
 					</div>
 				</div>
 			</div>

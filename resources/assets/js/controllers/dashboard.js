@@ -6,6 +6,7 @@
 		$scope.identity = Identity;
 		$scope.evolutionChart = MockData.evolutionChart;
 		$scope.typesChart = MockData.typesChart;
+		$scope.caseTypesChart = MockData.caseTypesChart;
 
 	});
 

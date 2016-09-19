@@ -5,12 +5,39 @@
 			'ngRoute',
 			'ngToast',
 			'ngAnimate',
+
 			'googlechart',
-			'ui.bootstrap'
+			'highcharts-ng',
+
+			'ui.bootstrap',
+			'ui.select',
 		])
 
 		.run(function() {
+
 			$.material.init();
+
+			Highcharts.setOptions({
+				lang: {
+					months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+					shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+					weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+					loading: ['Atualizando o gráfico...'],
+					contextButtonTitle: 'Exportar gráfico',
+					decimalPoint: ',',
+					thousandsSep: '.',
+					downloadJPEG: 'Baixar imagem JPEG',
+					downloadPDF: 'Baixar arquivo PDF',
+					downloadPNG: 'Baixar imagem PNG',
+					downloadSVG: 'Baixar vetor SVG',
+					printChart: 'Imprimir gráfico',
+					rangeSelectorFrom: 'De',
+					rangeSelectorTo: 'Para',
+					rangeSelectorZoom: 'Zoom',
+					resetZoom: 'Voltar zoom',
+					resetZoomTitle: 'Voltar zoom para nível 1:1'
+				}
+			});
 		})
 
 		.config(['ngToastProvider', function(ngToast) {
@@ -42,7 +69,7 @@
 					controller: 'CreateAlertCtrl'
 				}).
 				when('/cases/:case_id', {
-					templateUrl: 'cases/view.html?NC=' + NC,
+					templateUrl: 'cases/view/main.html?NC=' + NC,
 					controller: 'CaseViewCtrl'
 				}).
 				when('/users', {
@@ -131,8 +158,9 @@
 		$scope.messages = [];
 
 		$scope.steps = {
-			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'location'], next: 'parecer'},
-			'parecer': {id: 'parecer', name: 'Parecer', opens: ['parecer'], next: 'consolidacao'},
+			'alerta': {id: 'alerta', name: 'Alerta', opens: ['info', 'parents'], next: 'pesquisa'},
+			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'parents', 'location'], next: 'analise_tecnica'},
+			'analise_tecnica': {id: 'analise_tecnica', name: 'Análise Técnica', opens: ['analise_tecnica'], next: 'consolidacao'},
 			'consolidacao': {id: 'consolidacao', name: 'Consolidação', next: 'reinsercao'},
 			'reinsercao': {id: 'reinsercao', name: 'Reinserção', next: '1obs'},
 			'1obs': {id: '1obs', name: '1a observação', next: '2obs'},
@@ -236,12 +264,12 @@
 		};
 
 		$scope.getFormName = function() {
-			if($scope.currentForm == "consolidada") return "com dados consolidados";
-			return "na etapa " + $scope.steps[$scope.currentForm].name;
+			if($scope.currentForm == "consolidada") return "Dados consolidados";
+			return $scope.steps[$scope.currentForm].name;
 		};
 
-		$scope.isPastStep = function(step) {
-			if($scope.currentStep == step) return true;
+		$scope.isPastStep = function(step, skipCurrentStep) {
+			if($scope.currentStep == step) return !skipCurrentStep;
 
 			for(var i in $scope.steps) {
 				if($scope.steps[i].id == step) return true;
@@ -250,11 +278,11 @@
 		};
 
 		$scope.getCaseTimelineClass = function(step) {
-			if($scope.currentStep == step) return 'btn-info';
+			if($scope.currentStep == step) return 'step-current';
 
 			for(var i in $scope.steps) {
-				if($scope.steps[i].id == step) return 'btn-success';
-				if($scope.steps[i].id == $scope.currentStep) return 'btn-default';
+				if($scope.steps[i].id == step) return 'step-completed';
+				if($scope.steps[i].id == $scope.currentStep) return 'step-pending';
 			}
 		};
 
@@ -303,6 +331,7 @@
 		$scope.identity = Identity;
 		$scope.evolutionChart = MockData.evolutionChart;
 		$scope.typesChart = MockData.typesChart;
+		$scope.caseTypesChart = MockData.caseTypesChart;
 
 	});
 
@@ -345,6 +374,10 @@
 
 		$rootScope.section = 'users';
 		$scope.identity = Identity;
+
+		$scope.cities = MockData.cities;
+		$scope.states = MockData.states;
+		$scope.groups = MockData.groups;
 
 		$scope.range = function (start, end) {
 			var arr = [];
@@ -428,9 +461,10 @@
 			'agente_comunitario': {name: 'Mary Smith', type: 'Agente Comunitário', can: ['dashboard']},
 			'tecnico_verificador': {name: 'Paul Atree', type: 'Técnico Verificador', can: ['dashboard','cases']},
 			'supervisor_institucional': {name: 'John Doe', type: 'Supervisor Institucional', can: ['dashboard','cases','reports']},
-			'coordenador_operacional': {name: 'Aryel Tupinambá', type: 'Coordenador Operacional', can: ['dashboard','cases','reports','users','settings']},
-			'gestor_politico': {name: 'João das Neves', type: 'Gestor Político', can: ['dashboard','reports','users','settings']},
-			'super_administrador': {name: 'Morgan Freeman', type: 'Super Administrador', can: ['dashboard','reports','cities','users','settings']}
+			'coordenador_operacional': {name: 'Aryel Tupinambá', type: 'Coordenador Operacional', can: ['dashboard','cases','reports','users', 'users.edit', 'users.create', 'settings']},
+			'gestor_politico': {name: 'João das Neves', type: 'Gestor Político', can: ['dashboard','reports','users']},
+			'unicef': {name: 'Jane Doe', type: 'Gestor UNICEF', can: ['dashboard','reports','cities']},
+			'super_administrador': {name: 'Morgan Freeman', type: 'Super Administrador', can: ['dashboard','reports','cities','cities.edit','users','users.edit', 'users.create', 'settings']}
 		};
 
 		var currentType = 'coordenador_operacional';
@@ -468,24 +502,120 @@
 
 	angular.module('BuscaAtivaEscolar').factory('MockData', function () {
 
+		var alertReasons = [
+			"Adolescente em conflito com a lei",
+			"Criança e adolescente em abrigos ou em situação de rua",
+			"Criança ou adolescente com deficiência(s)",
+			"Criança ou adolescente com doença(s) que impeça(m) ou dificulte(m) a frequência à escola",
+			"Criança ou adolescente vítima de abuso / violência sexual",
+			"Evasão porque sente a escola desinteressante",
+			"Falta de documentação da criança ou adolescente",
+			"Falta de infraestrutura escolar",
+			"Falta de transporte escolar",
+			"Gravidez na adolescência",
+			"Racismo",
+			"Trabalho infantil",
+			"Violência familiar",
+			"Violência na escola"
+		];
+
+		var states = [
+			{id: 'SP', name: 'São Paulo'},
+			{id: 'MG', name: 'Minas Gerais'},
+			{id: 'RJ', name: 'Rio de Janeiro'},
+			{id: 'DF', name: 'Distrito Federal'}
+		];
+
+		var cities = [
+			{id: 1, state: 'SP', name: 'São Paulo'},
+			{id: 2, state: 'SP', name: 'Campinas'},
+			{id: 3, state: 'MG', name: 'Belo Horizonte'},
+			{id: 4, state: 'RJ', name: 'Rio de Janeiro'},
+			{id: 5, state: 'DF', name: 'Brasília'}
+		];
+
+		var groups = [
+			{id: 1, name: 'Secretaria de Segurança Pública'},
+			{id: 2, name: 'Secretaria da Educação'},
+			{id: 3, name: 'Secretaria do Verde e Meio Ambiente'},
+			{id: 4, name: 'Secretaria dos Transportes'}
+		];
+
 		return {
 
-			alertReasons: [
-				"Adolescente em conflito com a lei",
-				"Criança e adolescente em abrigos ou em situação de rua",
-				"Criança ou adolescente com deficiência(s)",
-				"Criança ou adolescente com doença(s) que impeça(m) ou dificulte(m) a frequência à escola",
-				"Criança ou adolescente vítima de abuso / violência sexual",
-				"Evasão porque sente a escola desinteressante",
-				"Falta de documentação da criança ou adolescente",
-				"Falta de infraestrutura escolar",
-				"Falta de transporte escolar",
-				"Gravidez na adolescência",
-				"Racismo",
-				"Trabalho infantil",
-				"Violência familiar",
-				"Violência na escola"
-			],
+			alertReasons: alertReasons,
+
+			states: states,
+			cities: cities,
+			groups: groups,
+
+			caseTypesChart: {
+				options: {
+					chart: {
+						type: 'bar'
+					},
+					title: {
+						text: ''
+					},
+					subtitle: {
+						text: ''
+					}
+				},
+				xAxis: {
+					categories: alertReasons,
+					title: {
+						text: null
+					}
+				},
+				yAxis: {
+					min: 0,
+					title: {
+						text: 'Quantidade de casos',
+						align: 'high'
+					},
+					labels: {
+						overflow: 'justify'
+					}
+				},
+				tooltip: {
+					valueSuffix: ' casos'
+				},
+				plotOptions: {
+					bar: {
+						dataLabels: {
+							enabled: true
+						}
+					}
+				},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'top',
+					x: -40,
+					y: 80,
+					floating: true,
+					borderWidth: 1,
+					backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+					shadow: true
+				},
+				credits: {
+					enabled: false
+				},
+				series: [
+					{
+						name: 'Alerta',
+						data: [105, 95, 42, 74, 38, 10, 12, 50, 70, 60, 40, 122, 78, 47]
+					},
+					{
+						name: 'Concluídos',
+						data: [107, 31, 63, 20, 2, 50, 74, 38, 10, 12, 5, 10, 6, 40]
+					},
+					{
+						name: 'Em andamento',
+						data: [13, 15, 94, 40, 6, 5, 8, 3, 9, 10, 12, 4, 5, 1]
+					}
+				]
+			},
 
 			typesChart: {
 				type: "PieChart",

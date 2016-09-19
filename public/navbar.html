@@ -1,4 +1,4 @@
-<div id="app-navbar" class="navbar navbar-info">
+<div id="app-navbar" class="navbar navbar-primary">
 	<div class="navbar-container container">
 
 		<div class="navbar-header">
@@ -17,7 +17,7 @@
 		<div class="collapse navbar-collapse" id="navbar-items">
 
 			<ul class="nav navbar-nav">
-				<li ng-show="identity.can('dashboard')" ng-class="{'active': (section == 'dashboard')}"><a href="#"><i class="material-icons">dashboard</i> Dashboard</a></li>
+				<li ng-show="identity.can('dashboard')" ng-class="{'active': (section == 'dashboard')}"><a href="#"><i class="material-icons">dashboard</i> Painel</a></li>
 				<li ng-show="identity.can('cases')" ng-class="{'active': (section == 'cases')}"><a href="#/cases"><i class="material-icons">list</i> Casos</a></li>
 				<li ng-show="identity.can('reports')" ng-class="{'active': (section == 'reports')}"><a href="#/reports"><i class="material-icons">show_chart</i> Relatórios</a></li>
 				<li ng-show="identity.can('users')" ng-class="{'active': (section == 'users')}"><a href="#/users"><i class="material-icons">group</i> Usuários</a></li>
@@ -47,6 +47,7 @@
 						<li><a ng-click="identity.setUserType('supervisor_institucional')"><i class="material-icons">account_box</i> Debug: Supervisor Institucional</a></li>
 						<li><a ng-click="identity.setUserType('coordenador_operacional')"><i class="material-icons">account_box</i> Debug: Coordenador Operacional</a></li>
 						<li><a ng-click="identity.setUserType('gestor_politico')"><i class="material-icons">account_box</i> Debug: Gestor Político</a></li>
+						<li><a ng-click="identity.setUserType('unicef')"><i class="material-icons">account_box</i> Debug: Gestor UNICEF</a></li>
 						<li><a ng-click="identity.setUserType('super_administrador')"><i class="material-icons">account_box</i> Debug: Super Administrador</a></li>
 						<li role="separator" class="divider"></li>
 						<li><a href="#"><i class="material-icons">exit_to_app</i> Sair</a></li>

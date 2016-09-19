@@ -5,6 +5,10 @@
 		$rootScope.section = 'users';
 		$scope.identity = Identity;
 
+		$scope.cities = MockData.cities;
+		$scope.states = MockData.states;
+		$scope.groups = MockData.groups;
+
 		$scope.range = function (start, end) {
 			var arr = [];
 

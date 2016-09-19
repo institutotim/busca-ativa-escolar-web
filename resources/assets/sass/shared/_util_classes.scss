@@ -1,0 +1,11 @@
+.hide-on-mobile {
+	@media (max-width: 768px) {
+		display: none !important;
+	}
+}
+
+.show-on-mobile {
+	@media (min-width: 768px) {
+		display: none !important;
+	}
+}

@@ -1,0 +1,193 @@
+@mixin place-at($x, $y, $ax: left, $ay: top) {
+	position: absolute;
+	#{$ax}: $x;
+	#{$ay}: $y;
+}
+
+@mixin abs-box($x, $y, $width, $height, $ax: left, $ay: top) {
+	position: absolute;
+	#{$ax}: $x;
+	#{$ay}: $y;
+	width: $width;
+	height: $height;
+}
+
+@mixin sprite($img, $width: img_w, $height: img_h, $size: contain) {
+	display: inline-block;
+
+	@if($width == img_w) {
+		$width: image_width($img);
+	}
+
+	@if($height == img_h) {
+		$height: image_height($img);
+	}
+
+	width: $width;
+	height: $height;
+
+	vertical-align: middle;
+
+	background-image: image_url($img);
+	background-position: center center;
+	background-size: $size;
+	background-repeat: no-repeat;
+}
+
+@mixin clear-edge-margins() {
+	&:first-child { margin-left: 0; }
+	&:last-child { margin-right: 0; }
+}
+
+@mixin clear-edge-paddings() {
+	&:first-child { padding-left: 0; }
+	&:last-child { padding-right: 0; }
+}
+
+@mixin is-panel-in-container($attachTo: bottom, $size: 100px, $padding: 0) {
+	overflow: hidden;
+	position: absolute;
+
+	$anchors: (top, left, right, bottom);
+	$opposites: (bottom, right, left, top);
+
+	@for $i from 1 through length($anchors) {
+		$anchor: nth($anchors, $i);
+		$opposite: nth($opposites, $i);
+
+		#{$anchor}: $padding;
+
+		@if $attachTo == $anchor {
+			#{$opposite}: auto !important;
+		}
+
+	}
+
+	@if $attachTo == left or $attachTo == right {
+		width: $size;
+	}
+
+	@if $attachTo == top or $attachTo == bottom {
+		height: $size;
+	}
+}
+
+@mixin center-image-on-container($centerAt: max-width) {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	@include transform(translateY(-50%) translateX(-50%));
+	#{$centerAt}: 100%;
+}
+
+@mixin contain-image-on-container($maxSize: 100%) {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+
+	@include transform(translateY(-50%) translateX(-50%));
+
+	max-width: $maxSize;
+	max-height: $maxSize;
+}
+
+@mixin has-inline-icon($icon, $width: img_w, $height: img_h, $margin: 10px) {
+	&::before {
+		display: inline-block;
+
+		@if $width == img_w {
+			$width: image_width($icon);
+		}
+
+		@if $height == img_h {
+			$height: image_height($icon);
+		}
+
+		width: $width;
+		height: $height;
+
+		margin-right: $margin;
+
+		background: image_url($icon) center center no-repeat;
+
+		content: '';
+		vertical-align: middle;
+	}
+}
+
+@mixin is-pseudo-arrow-top($x, $y, $width, $height, $color) {
+	position: absolute;
+	top: $y;
+	left: $x;
+
+	height: 0;
+	width: 0;
+
+	border-left: $width solid transparent;
+	border-right: $width solid transparent;
+	border-bottom: $height solid $color;
+
+	content: '';
+}
+
+@mixin scale-to-parent-edges {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+@mixin fixed-size-box($width, $height) {
+	overflow: hidden;
+
+	width: $width;
+	height: $height;
+}
+
+@mixin font($name, $weight: normal, $size: 12px, $fontStyle: normal, $textTransform: none, $textDecoration: none) {
+	font-family: $name;
+	font-size: $size;
+	font-weight: $weight;
+
+	font-style: $fontStyle;
+	text-transform: $textTransform;
+	text-decoration: $textDecoration;
+}
+
+@mixin hidden-text-box() {
+	overflow: hidden;
+	text-indent: 1000%;
+	white-space: nowrap;
+}
+
+@mixin grid-box($span, $height) {
+
+	display: block;
+	position: relative;
+	float: left;
+
+	width: span($span);
+	min-height: $height;
+
+	margin-right: gutter();
+
+	$itemsPerRow: ceil(12 / $span);
+
+	&:nth-child(#{$itemsPerRow}n + #{$itemsPerRow}) { margin-right: 0; }
+
+}
+
+@mixin title-line-color($color) {
+	span {
+		&::before, &::after {
+			border-color: $color;
+		}
+	}
+}
+
+@mixin background-frame {
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+}

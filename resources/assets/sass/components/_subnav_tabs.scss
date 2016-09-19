@@ -1,0 +1,9 @@
+.has-subnav-tabs .nav-tabs {
+	background: $brand-info;
+
+	.uib-tab {
+		margin-top: 5px;
+		transition: all 0.2s ease;
+		&.active a { background: white !important; color: #333 !important; }
+	}
+}

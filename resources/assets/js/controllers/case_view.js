@@ -14,8 +14,9 @@
 		$scope.messages = [];
 
 		$scope.steps = {
-			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'location'], next: 'parecer'},
-			'parecer': {id: 'parecer', name: 'Parecer', opens: ['parecer'], next: 'consolidacao'},
+			'alerta': {id: 'alerta', name: 'Alerta', opens: ['info', 'parents'], next: 'pesquisa'},
+			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'parents', 'location'], next: 'analise_tecnica'},
+			'analise_tecnica': {id: 'analise_tecnica', name: 'Análise Técnica', opens: ['analise_tecnica'], next: 'consolidacao'},
 			'consolidacao': {id: 'consolidacao', name: 'Consolidação', next: 'reinsercao'},
 			'reinsercao': {id: 'reinsercao', name: 'Reinserção', next: '1obs'},
 			'1obs': {id: '1obs', name: '1a observação', next: '2obs'},
@@ -119,12 +120,12 @@
 		};
 
 		$scope.getFormName = function() {
-			if($scope.currentForm == "consolidada") return "com dados consolidados";
-			return "na etapa " + $scope.steps[$scope.currentForm].name;
+			if($scope.currentForm == "consolidada") return "Dados consolidados";
+			return $scope.steps[$scope.currentForm].name;
 		};
 
-		$scope.isPastStep = function(step) {
-			if($scope.currentStep == step) return true;
+		$scope.isPastStep = function(step, skipCurrentStep) {
+			if($scope.currentStep == step) return !skipCurrentStep;
 
 			for(var i in $scope.steps) {
 				if($scope.steps[i].id == step) return true;
@@ -133,11 +134,11 @@
 		};
 
 		$scope.getCaseTimelineClass = function(step) {
-			if($scope.currentStep == step) return 'btn-info';
+			if($scope.currentStep == step) return 'step-current';
 
 			for(var i in $scope.steps) {
-				if($scope.steps[i].id == step) return 'btn-success';
-				if($scope.steps[i].id == $scope.currentStep) return 'btn-default';
+				if($scope.steps[i].id == step) return 'step-completed';
+				if($scope.steps[i].id == $scope.currentStep) return 'step-pending';
 			}
 		};
 

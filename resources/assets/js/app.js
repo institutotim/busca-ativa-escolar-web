@@ -5,12 +5,39 @@
 			'ngRoute',
 			'ngToast',
 			'ngAnimate',
+
 			'googlechart',
-			'ui.bootstrap'
+			'highcharts-ng',
+
+			'ui.bootstrap',
+			'ui.select',
 		])
 
 		.run(function() {
+
 			$.material.init();
+
+			Highcharts.setOptions({
+				lang: {
+					months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+					shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+					weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+					loading: ['Atualizando o gráfico...'],
+					contextButtonTitle: 'Exportar gráfico',
+					decimalPoint: ',',
+					thousandsSep: '.',
+					downloadJPEG: 'Baixar imagem JPEG',
+					downloadPDF: 'Baixar arquivo PDF',
+					downloadPNG: 'Baixar imagem PNG',
+					downloadSVG: 'Baixar vetor SVG',
+					printChart: 'Imprimir gráfico',
+					rangeSelectorFrom: 'De',
+					rangeSelectorTo: 'Para',
+					rangeSelectorZoom: 'Zoom',
+					resetZoom: 'Voltar zoom',
+					resetZoomTitle: 'Voltar zoom para nível 1:1'
+				}
+			});
 		})
 
 		.config(['ngToastProvider', function(ngToast) {
@@ -42,7 +69,7 @@
 					controller: 'CreateAlertCtrl'
 				}).
 				when('/cases/:case_id', {
-					templateUrl: 'cases/view.html?NC=' + NC,
+					templateUrl: 'cases/view/main.html?NC=' + NC,
 					controller: 'CaseViewCtrl'
 				}).
 				when('/users', {
