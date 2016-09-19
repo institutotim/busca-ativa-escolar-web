@@ -1,3 +1,7 @@
 node_modules
 .sass-cache
 .idea
+# files of jekill
+doc/_site
+doc/.sass-cache
+doc/.jekyll-metadata
