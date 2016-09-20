@@ -74,7 +74,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="dependecy in AppDependencies">
+					<tr ng-repeat="(i, dependency) in appDependencies">
 						<td ng-bind="dependency[0]"></td>
 						<td ng-bind="dependency[1]"></td>
 						<td ng-bind="dependency[2]"></td>
