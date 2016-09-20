@@ -901,11 +901,16 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').service('Notifications', function ($rootScope, $http) {
+	angular.module('BuscaAtivaEscolar').service('Notifications', function ($rootScope, $http, ngToast) {
 
 		$rootScope.notifications = [];
 
 		function push(messageClass, messageBody) {
+			ngToast.create({
+				className: messageClass,
+				content: messageBody
+			});
+
 			$rootScope.notifications.push({
 				class: messageClass,
 				contents: messageBody,
