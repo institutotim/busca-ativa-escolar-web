@@ -1,36 +1,25 @@
-<h3><i class="material-icons">comment</i> Anotações</h3>
+<div>
+	<div class="col-md-12">
+		<h3><i class="material-icons">comment</i> Anotações</h3>
 
-<div class="list-group">
-	<div ng-repeat="i in [1,2,3]">
-		<hr />
-		<div class="list-group-item">
-			<div class="row-picture">
-				<img class="circle" src="http://lorempixel.com/56/56/people/1" alt="icon">
-			</div>
-			<div class="row-content">
-
-				<h4 class="list-group-item-heading">John Doe</h4>
-				<div class="least-content">8m</div>
-
-				<p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus</p>
-			</div>
-		</div>
-	</div>
-
-	<div ng-repeat="(i, message) in messages">
-		<hr />
-		<div class="list-group-item">
-			<div class="row-picture">
-				<img class="circle" src="http://lorempixel.com/56/56/people/1" alt="icon">
-			</div>
-			<div class="row-content">
-
-				<h4 class="list-group-item-heading">{{message.user.name}}</h4>
-				<div class="least-content">1s</div>
-
-				<p class="list-group-item-text">{{message.body}}</p>
-			</div>
-		</div>
+		<table class="table">
+			<thead>
+			<tr>
+				<th>Cód</th>
+				<th>Data</th>
+				<th>Usuário</th>
+				<th>Anotação</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr ng-repeat="i in [1,2,3,4]">
+				<td>#{{i * 12345}}</td>
+				<td>2016/Ago/25 15:22</td>
+				<td><i class="fa fa-user"></i> John doe</td>
+				<td>Aasdasd asdajshdg jahsdg jashd ajshdg ajshdgajshdga<br />sdfhgds jhsdfhsdf s<br />ashd jasgdjh gajsdh ajhsdgajshdg asda</td>
+			</tr>
+			</tbody>
+		</table>
 	</div>
 </div>
 

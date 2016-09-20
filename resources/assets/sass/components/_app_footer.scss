@@ -1,0 +1,32 @@
+footer.app-footer {
+
+	border-top: 15px solid $brand-primary;
+	padding: 25px 0;
+
+	small {
+		display: block;
+
+		margin: 15px 0;
+
+		font-family: $mdb-font-family;
+		font-size: 12px;
+		font-weight: lighter;
+
+		color: $brand-primary;
+	}
+
+	a.credits-btn {
+		display: block;
+
+		margin-top: 30px;
+
+		font-family: $mdb-font-family;
+		font-size: 10px;
+		font-weight: lighter;
+
+		text-align: center;
+
+		color: $brand-primary;
+	}
+
+}

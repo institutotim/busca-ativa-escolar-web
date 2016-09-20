@@ -10,7 +10,7 @@
 			'highcharts-ng',
 
 			'ui.bootstrap',
-			'ui.select',
+			'ui.select'
 		])
 
 		.run(function() {
@@ -95,6 +95,10 @@
 				when('/reports', {
 					templateUrl: 'reports/home.html?NC=' + NC,
 					controller: 'ReportsCtrl'
+				}).
+				when('/credits', {
+					templateUrl: 'static/credits.html?NC=' + NC,
+					controller: 'CreditsCtrl'
 				}).
 				otherwise({
 					redirectTo: '/dashboard'

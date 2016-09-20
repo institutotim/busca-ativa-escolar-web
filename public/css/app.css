@@ -118,6 +118,28 @@
   color: #333 !important;
 }
 
+footer.app-footer {
+  border-top: 15px solid #0c5e8e;
+  padding: 25px 0;
+}
+footer.app-footer small {
+  display: block;
+  margin: 15px 0;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 12px;
+  font-weight: lighter;
+  color: #0c5e8e;
+}
+footer.app-footer a.credits-btn {
+  display: block;
+  margin-top: 30px;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 10px;
+  font-weight: lighter;
+  text-align: center;
+  color: #0c5e8e;
+}
+
 .form-group {
   margin-top: 10px;
 }
