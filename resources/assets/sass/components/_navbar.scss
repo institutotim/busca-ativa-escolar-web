@@ -19,4 +19,41 @@
 			strong, small { display: block; }
 		}
 	}
+
+	.dropdown-menu {
+		padding-bottom: 0;
+	}
+
+	.notification-center {
+		border-top: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+
+		padding: 15px;
+		max-height: 250px;
+		overflow-y: scroll;
+
+		box-shadow: inset 3px 3px 5px rgba(black, 0.25);
+		background: #ddd;
+
+		& > span { color: #333; margin: 10px 0; text-align: center;}
+
+		.navbar-notification {
+			cursor: pointer;
+		}
+	}
+
+	.divider.over-split-btn {
+		margin-bottom: 0;
+	}
+
+	.split-btn {
+
+		overflow: hidden;
+		text-align: center;
+		clear: none !important;
+
+		border-right: 1px solid #ccc;
+		&:last-child { border-right: 0; }
+
+	}
 }

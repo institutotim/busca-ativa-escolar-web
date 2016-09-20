@@ -64,6 +64,10 @@
 					templateUrl: 'preferences/manage.html?NC=' + NC,
 					controller: 'PreferencesCtrl'
 				}).
+				when('/developer_mode', {
+					templateUrl: 'developer/developer_dashboard.html?NC=' + NC,
+					controller: 'DeveloperCtrl'
+				}).
 				when('/cases', {
 					templateUrl: 'cases/list.html?NC=' + NC,
 					controller: 'CaseSearchCtrl'

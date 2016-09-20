@@ -1,0 +1,42 @@
+<div>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3><i class="fa fa-code"></i> Área do Desenvolvedor</h3>
+		</div>
+		<div class="panel-body">
+
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Alterar perfil de acesso</div>
+					<div class="panel-body">
+
+						<div class="list-group">
+							<a class="list-group-item" ng-click="identity.setUserType('agente_comunitario')"><i class="material-icons">account_box</i> Alterar perfil para: Agente Comunitário</a>
+							<a class="list-group-item" ng-click="identity.setUserType('tecnico_verificador')"><i class="material-icons">account_box</i> Alterar perfil para: Técnico Verificador</a>
+							<a class="list-group-item" ng-click="identity.setUserType('supervisor_institucional')"><i class="material-icons">account_box</i> Alterar perfil para: Supervisor Institucional</a>
+							<a class="list-group-item" ng-click="identity.setUserType('coordenador_operacional')"><i class="material-icons">account_box</i> Alterar perfil para: Coordenador Operacional</a>
+							<a class="list-group-item" ng-click="identity.setUserType('gestor_politico')"><i class="material-icons">account_box</i> Alterar perfil para: Gestor Político</a>
+							<a class="list-group-item" ng-click="identity.setUserType('unicef')"><i class="material-icons">account_box</i> Alterar perfil para: Gestor UNICEF</a>
+							<a class="list-group-item" ng-click="identity.setUserType('super_administrador')"><i class="material-icons">account_box</i> Alterar perfil para: Super Administrador</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Testar notificação</div>
+					<div class="panel-body">
+						<button type="button" ng-click="testNotification('danger')" class="btn btn-raised btn-danger">Testar (urgente)</button>
+						<button type="button" ng-click="testNotification('warning')" class="btn btn-raised btn-warning">Testar (aviso)</button>
+						<button type="button" ng-click="testNotification('success')" class="btn btn-raised btn-success">Testar (sucesso)</button>
+						<button type="button" ng-click="testNotification('info')" class="btn btn-raised btn-info">Testar (informação)</button>
+						<button type="button" ng-click="testNotification('primary')" class="btn btn-raised btn-primary">Testar (normal)</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

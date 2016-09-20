@@ -36,21 +36,26 @@
 						</span>
 						<span class="caret"></span>
 					</a>
-					<ul class="dropdown-menu" uib-dropdown-menu>
-						<li><a href="#/preferences"><i class="material-icons">settings</i> Minhas preferências</a></li>
-						<li><a href="#/notifications"><i class="material-icons">notifications</i> Notificações</a></li>
-						<li role="separator" class="divider"></li>
+					<ul uib-dropdown-menu class="dropdown-menu" style="min-width: 270px">
+						<li><a ng-click="toggleNotifications($event)"><i class="material-icons">notifications</i> Notificações</a></li>
+
+						<li class="notification-center" uib-collapse="!showNotifications">
+							<span ng-show="!notifications.length">Nenhuma notificação recente.</span>
+							<div ng-click="notification.open($event, i)" ng-repeat="(i, notification) in notifications" class="navbar-notification alert alert-{{notification.class}}">
+								<button ng-click="notification.hide($event, i)" type="button" class="close" data-dismiss="alert" aria-label="Esconder"><span aria-hidden="true">&times;</span></button>
+								{{notification.contents}}
+							</div>
+						</li>
+
 						<li><a href="#/cases/create_alert"><i class="material-icons">add_alert</i> Novo alerta</a></li>
-						<li role="separator" class="divider"></li>
-						<li><a ng-click="identity.setUserType('agente_comunitario')"><i class="material-icons">account_box</i> Debug: Agente Comunitário</a></li>
-						<li><a ng-click="identity.setUserType('tecnico_verificador')"><i class="material-icons">account_box</i> Debug: Técnico Verificador</a></li>
-						<li><a ng-click="identity.setUserType('supervisor_institucional')"><i class="material-icons">account_box</i> Debug: Supervisor Institucional</a></li>
-						<li><a ng-click="identity.setUserType('coordenador_operacional')"><i class="material-icons">account_box</i> Debug: Coordenador Operacional</a></li>
-						<li><a ng-click="identity.setUserType('gestor_politico')"><i class="material-icons">account_box</i> Debug: Gestor Político</a></li>
-						<li><a ng-click="identity.setUserType('unicef')"><i class="material-icons">account_box</i> Debug: Gestor UNICEF</a></li>
-						<li><a ng-click="identity.setUserType('super_administrador')"><i class="material-icons">account_box</i> Debug: Super Administrador</a></li>
-						<li role="separator" class="divider"></li>
-						<li><a href="#"><i class="material-icons">exit_to_app</i> Sair</a></li>
+						<li><a href="#/developer_mode" class="text-danger"><i class="fa fa-code"></i> Área do desenvolvedor</a></li>
+
+						<li role="separator" class="divider over-split-btn"></li>
+
+						<li class="has-split-btn">
+							<a class="col-md-7 split-btn" href="#/preferences"><i class="material-icons">settings</i> Preferências</a>
+							<a class="col-md-5 split-btn" href="#"><i class="material-icons">exit_to_app</i> Sair</a>
+						</li>
 					</ul>
 				</li>
 			</ul>

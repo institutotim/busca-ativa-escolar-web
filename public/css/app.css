@@ -37,6 +37,38 @@
 #app-navbar .logged-user .user-details strong, #app-navbar .logged-user .user-details small {
   display: block;
 }
+#app-navbar .dropdown-menu {
+  padding-bottom: 0;
+}
+#app-navbar .notification-center {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 15px;
+  max-height: 250px;
+  overflow-y: scroll;
+  box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.25);
+  background: #ddd;
+}
+#app-navbar .notification-center > span {
+  color: #333;
+  margin: 10px 0;
+  text-align: center;
+}
+#app-navbar .notification-center .navbar-notification {
+  cursor: pointer;
+}
+#app-navbar .divider.over-split-btn {
+  margin-bottom: 0;
+}
+#app-navbar .split-btn {
+  overflow: hidden;
+  text-align: center;
+  clear: none !important;
+  border-right: 1px solid #ccc;
+}
+#app-navbar .split-btn:last-child {
+  border-right: 0;
+}
 
 .step-list {
   display: block;

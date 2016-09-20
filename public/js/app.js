@@ -60,6 +60,14 @@
 					templateUrl: 'dashboard.html?NC=' + NC,
 					controller: 'DashboardCtrl'
 				}).
+				when('/preferences', {
+					templateUrl: 'preferences/manage.html?NC=' + NC,
+					controller: 'PreferencesCtrl'
+				}).
+				when('/developer_mode', {
+					templateUrl: 'developer/developer_dashboard.html?NC=' + NC,
+					controller: 'DeveloperCtrl'
+				}).
 				when('/cases', {
 					templateUrl: 'cases/list.html?NC=' + NC,
 					controller: 'CaseSearchCtrl'
@@ -113,10 +121,22 @@
 		function init(scope, element, attrs) {
 			scope.identity = Identity;
 			scope.cityName = 'São Paulo';
+			scope.showNotifications = true;
+
 			scope.user = {
 				name: 'Aryel Tupinambá',
 				type: 'Coordenador Operacional'
 			};
+
+			scope.toggleNotifications = function($event) {
+				scope.showNotifications = !scope.showNotifications;
+
+				$event.stopPropagation();
+				$event.stopImmediatePropagation();
+				$event.preventDefault();
+
+				return false;
+			}
 		}
 
 		return {
@@ -348,6 +368,26 @@
 		$scope.evolutionChart = MockData.evolutionChart;
 		$scope.typesChart = MockData.typesChart;
 		$scope.caseTypesChart = MockData.caseTypesChart;
+
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').controller('DeveloperCtrl', function ($scope, $rootScope, Notifications) {
+
+		var messages = [
+			'asdasd asd as das das dsd fasdf as',
+			'sdg sdf gfdgh dfthdfg hdfgh dfgh ',
+			'rtye rtertg heriufh iurfaisug faisugf as',
+			'ksjf hkdsuf oiaweua bfieubf iasuef iauegh',
+			'jkb viubiurbviesubvisueb iseubv',
+			'askjdfh aiufeiuab biausf biu iubfa iub fseiuse bfsaef'
+		];
+
+		$scope.testNotification = function (messageClass) {
+			Notifications.push(messageClass, messages.clone().shuffle().pop())
+		}
 
 	});
 
@@ -858,5 +898,73 @@
 
 			}
 		});
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').service('Notifications', function ($rootScope, $http) {
+
+		$rootScope.notifications = [];
+
+		function push(messageClass, messageBody) {
+			$rootScope.notifications.push({
+				class: messageClass,
+				contents: messageBody,
+				hide: hide,
+				open: open
+			});
+		}
+
+		function open($event, index) {
+			location.hash = '#/cases';
+			return false;
+		}
+
+		function hide($event, index) {
+			$rootScope.notifications.splice(index, 1);
+
+			$event.stopPropagation();
+			$event.stopImmediatePropagation();
+			$event.preventDefault();
+
+			return false;
+		}
+
+		function get() {
+			return $rootScope.notifications;
+		}
+
+		function clear() {
+			$rootScope.notifications = [];
+		}
+
+		return {
+			push: push,
+			get: get,
+			clear: clear
+		}
+
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').run(function() {
+		Array.prototype.shuffle = function() {
+			var i = this.length, j, temp;
+			if ( i == 0 ) return this;
+			while ( --i ) {
+				j = Math.floor( Math.random() * ( i + 1 ) );
+				temp = this[i];
+				this[i] = this[j];
+				this[j] = temp;
+			}
+			return this;
+		}
+
+		Array.prototype.clone = function() {
+			return this.slice(0);
+		};
+	});
+
 })();
 //# sourceMappingURL=app.js.map
