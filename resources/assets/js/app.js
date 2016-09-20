@@ -60,6 +60,10 @@
 					templateUrl: 'dashboard.html?NC=' + NC,
 					controller: 'DashboardCtrl'
 				}).
+				when('/preferences', {
+					templateUrl: 'preferences/manage.html?NC=' + NC,
+					controller: 'PreferencesCtrl'
+				}).
 				when('/cases', {
 					templateUrl: 'cases/list.html?NC=' + NC,
 					controller: 'CaseSearchCtrl'
