@@ -13,7 +13,7 @@
 			'ui.select'
 		])
 
-		.run(function() {
+		.run(function($rootScope, Identity) {
 
 			$.material.init();
 
@@ -112,40 +112,6 @@
 					redirectTo: '/dashboard'
 				});
 		}]);
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
-
-
-		function init(scope, element, attrs) {
-			scope.identity = Identity;
-			scope.cityName = 'São Paulo';
-			scope.cityUF = 'SP';
-			scope.showNotifications = true;
-
-			scope.user = {
-				name: 'Aryel Tupinambá',
-				type: 'Coordenador Operacional'
-			};
-
-			scope.toggleNotifications = function($event) {
-				scope.showNotifications = !scope.showNotifications;
-
-				$event.stopPropagation();
-				$event.stopImmediatePropagation();
-				$event.preventDefault();
-
-				return false;
-			}
-		}
-
-		return {
-			link: init,
-			templateUrl: 'navbar.html'
-		};
-	});
-
 })();
 (function() {
 
@@ -451,6 +417,40 @@
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
+
+
+		function init(scope, element, attrs) {
+			scope.identity = Identity;
+			scope.cityName = 'São Paulo';
+			scope.cityUF = 'SP';
+			scope.showNotifications = true;
+
+			scope.user = {
+				name: 'Aryel Tupinambá',
+				type: 'Coordenador Operacional'
+			};
+
+			scope.toggleNotifications = function($event) {
+				scope.showNotifications = !scope.showNotifications;
+
+				$event.stopPropagation();
+				$event.stopImmediatePropagation();
+				$event.preventDefault();
+
+				return false;
+			}
+		}
+
+		return {
+			link: init,
+			templateUrl: 'navbar.html'
+		};
+	});
+
+})();
+(function() {
+
 	angular
 		.module('BuscaAtivaEscolar')
 		.factory('AppDependencies', function() {
@@ -542,13 +542,48 @@
 	angular.module('BuscaAtivaEscolar').service('Identity', function () {
 
 		var mockUsers = {
-			'agente_comunitario': {name: 'Mary Smith', type: 'Agente Comunitário', can: ['dashboard']},
-			'tecnico_verificador': {name: 'Paul Atree', type: 'Técnico Verificador', can: ['preferences', 'dashboard','cases']},
-			'supervisor_institucional': {name: 'John Doe', type: 'Supervisor Institucional', can: ['preferences', 'dashboard','cases','reports', 'users']},
-			'coordenador_operacional': {name: 'Aryel Tupinambá', type: 'Coordenador Operacional', can: ['preferences', 'dashboard','cases','reports','users', 'users.edit', 'users.create', 'settings']},
-			'gestor_politico': {name: 'João das Neves', type: 'Gestor Político', can: ['preferences', 'dashboard','reports','users']},
-			'gestor_nacional': {name: 'Jane Doe', type: 'Gestor Nacional', can: ['preferences', 'dashboard','reports','cities', 'users.filter_by_city']},
-			'super_administrador': {name: 'Morgan Freeman', type: 'Super Administrador', can: ['preferences', 'dashboard','reports','cities','cities.edit','users','users.edit', 'users.create', 'settings', 'users.filter_by_city']}
+			'agente_comunitario': {
+				name: 'Mary Smith',
+				email: 'mary.smith@saopaulo.sp.gov.br',
+				type: 'Agente Comunitário',
+				can: ['dashboard']
+			},
+			'tecnico_verificador': {
+				name: 'Paul Atree',
+				email: 'paul.atree@saopaulo.sp.gov.br',
+				type: 'Técnico Verificador',
+				can: ['preferences', 'dashboard','cases']
+			},
+			'supervisor_institucional': {
+				name: 'John Doe',
+				email: 'john.doe@saopaulo.sp.gov.br',
+				type: 'Supervisor Institucional',
+				can: ['preferences', 'dashboard','cases','reports', 'users']
+			},
+			'coordenador_operacional': {
+				name: 'Aryel Tupinambá',
+				email: 'atupinamba@saopaulo.sp.gov.br',
+				type: 'Coordenador Operacional',
+				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit', 'users.create', 'settings']
+			},
+			'gestor_politico': {
+				name: 'João das Neves',
+				email: 'jneves@saopaulo.sp.gov.br',
+				type: 'Gestor Político',
+				can: ['preferences', 'dashboard','reports','users']
+			},
+			'gestor_nacional': {
+				name: 'Jane Doe',
+				email: 'fdenp@unicef.org.br',
+				type: 'Gestor Nacional',
+				can: ['preferences', 'dashboard','reports','cities', 'users.filter_by_city']
+			},
+			'super_administrador': {
+				name: 'Morgan Freeman',
+				email: 'dev@lqdi.net',
+				type: 'Super Administrador',
+				can: ['preferences', 'dashboard','reports','cities','cities.edit','users','users.edit', 'users.create', 'settings', 'users.filter_by_city']
+			}
 		};
 
 		var currentType = 'coordenador_operacional';
@@ -570,6 +605,13 @@
 		function setUserType(type) {
 			currentType = type;
 			currentUser = mockUsers[type];
+
+			if(window.zE) {
+				zE.identify({
+					name: currentUser.name,
+					email: currentUser.email
+				});
+			}
 		}
 
 		return {

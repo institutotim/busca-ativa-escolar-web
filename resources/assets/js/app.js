@@ -13,7 +13,7 @@
 			'ui.select'
 		])
 
-		.run(function() {
+		.run(function($rootScope, Identity) {
 
 			$.material.init();
 
