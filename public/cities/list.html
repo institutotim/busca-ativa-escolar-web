@@ -10,18 +10,24 @@
 					<tr>
 						<th>ID</th>
 						<th>Nome</th>
+						<th>Data de adesão</th>
+						<th>Num. habitantes</th>
 						<th>Gestor político</th>
-						<th>Opções</th>
+						<th>Gestor operacional</th>
+						<th ng-show="identity.can('cities.edit')">Opções</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="i in range(1, 4)">
 						<td width="5%">#{{2 + i}}</td>
-						<td width="40%"><strong><i class="material-icons">account_balance</i> São Paulo</strong><br /></td>
-						<td width="20%">João das Neves</td>
-						<td width="35%">
-							<a ng-show="identity.can('cities.edit')" href="#/users" class="btn btn-success btn-xs" style="margin: 0 5px;"><i class="material-icons">group</i> Usuários</a>
-							<a ng-show="identity.can('cities.edit')" href="#/settings" class="btn btn-info btn-xs" style="margin: 0 5px;"><i class="material-icons">settings</i> Configurações</a>
+						<td width="30%"><strong><i class="material-icons">account_balance</i> São Paulo</strong><br /></td>
+						<td width="10%">2016-08-25</td>
+						<td width="10%">16.245.236</td>
+						<td width="5%">João das Neves <span class="label label-default"><i class="fa fa-envelope"></i> jneves@saopaulo.sp.gov.br</span></td>
+						<td width="5%">John Doe <span class="label label-default"><i class="fa fa-envelope"></i> john.doe@saopaulo.sp.gov.br</span></td>
+						<td width="35%" ng-show="identity.can('cities.edit')">
+							<a href="#/users" class="btn btn-success btn-xs" style="margin: 0 5px;"><i class="material-icons">group</i> Usuários</a>
+							<a href="#/settings" class="btn btn-info btn-xs" style="margin: 0 5px;"><i class="material-icons">settings</i> Configurações</a>
 						</td>
 					</tr>
 				</tbody>

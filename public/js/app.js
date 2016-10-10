@@ -121,6 +121,7 @@
 		function init(scope, element, attrs) {
 			scope.identity = Identity;
 			scope.cityName = 'São Paulo';
+			scope.cityUF = 'SP';
 			scope.showNotifications = true;
 
 			scope.user = {
@@ -542,12 +543,12 @@
 
 		var mockUsers = {
 			'agente_comunitario': {name: 'Mary Smith', type: 'Agente Comunitário', can: ['dashboard']},
-			'tecnico_verificador': {name: 'Paul Atree', type: 'Técnico Verificador', can: ['dashboard','cases']},
-			'supervisor_institucional': {name: 'John Doe', type: 'Supervisor Institucional', can: ['dashboard','cases','reports']},
-			'coordenador_operacional': {name: 'Aryel Tupinambá', type: 'Coordenador Operacional', can: ['dashboard','cases','reports','users', 'users.edit', 'users.create', 'settings']},
-			'gestor_politico': {name: 'João das Neves', type: 'Gestor Político', can: ['dashboard','reports','users']},
-			'unicef': {name: 'Jane Doe', type: 'Gestor UNICEF', can: ['dashboard','reports','cities']},
-			'super_administrador': {name: 'Morgan Freeman', type: 'Super Administrador', can: ['dashboard','reports','cities','cities.edit','users','users.edit', 'users.create', 'settings']}
+			'tecnico_verificador': {name: 'Paul Atree', type: 'Técnico Verificador', can: ['preferences', 'dashboard','cases']},
+			'supervisor_institucional': {name: 'John Doe', type: 'Supervisor Institucional', can: ['preferences', 'dashboard','cases','reports', 'users']},
+			'coordenador_operacional': {name: 'Aryel Tupinambá', type: 'Coordenador Operacional', can: ['preferences', 'dashboard','cases','reports','users', 'users.edit', 'users.create', 'settings']},
+			'gestor_politico': {name: 'João das Neves', type: 'Gestor Político', can: ['preferences', 'dashboard','reports','users']},
+			'gestor_nacional': {name: 'Jane Doe', type: 'Gestor Nacional', can: ['preferences', 'dashboard','reports','cities', 'users.filter_by_city']},
+			'super_administrador': {name: 'Morgan Freeman', type: 'Super Administrador', can: ['preferences', 'dashboard','reports','cities','cities.edit','users','users.edit', 'users.create', 'settings', 'users.filter_by_city']}
 		};
 
 		var currentType = 'coordenador_operacional';

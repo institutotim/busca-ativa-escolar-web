@@ -14,7 +14,7 @@
 
 				<div class="panel-body">
 
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-6" ng-show="identity.can('users.filter_by_city')">
 						<label><i class="fa fa-folder"></i> Estado</label>
 						<ui-select ng-model="input.state">
 							<ui-select-match allow-clear="true" placeholder="Todas">{{$select.selected.name}}</ui-select-match>
@@ -24,7 +24,7 @@
 						</ui-select>
 					</div>
 
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-6" ng-show="identity.can('users.filter_by_city')">
 						<label><i class="fa fa-map-marker"></i> Cidade</label>
 						<ui-select ng-model="input.city">
 							<ui-select-match allow-clear="true" placeholder="Todas">{{$select.selected.state}} / {{$select.selected.name}}</ui-select-match>
@@ -34,7 +34,7 @@
 						</ui-select>
 					</div>
 
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-6">
 						<label><i class="fa fa-users"></i> Grupo</label>
 						<ui-select ng-model="input.group">
 							<ui-select-match allow-clear="true" placeholder="Todas">{{$select.selected.name}}</ui-select-match>
@@ -44,12 +44,12 @@
 						</ui-select>
 					</div>
 
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-6">
 						<label><i class="fa fa-envelope"></i> E-mail</label>
 						<input type="search" ng-model="input.email" class="form-control" placeholder="Buscar por e-mail" />
 					</div>
 
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-6">
 
 						<label><i class="fa fa-list-ol"></i> Limite de exibição</label>
 						<ul class="nav nav-pills adm-max-results-filter">
@@ -62,7 +62,7 @@
 						<p ng-show="users.length > 0">Total de registros: {{total}}</p>
 					</div>
 
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-6">
 
 						<label><i class="fa fa-list-ol"></i> Opções</label><br />
 						<div class="btn-group">
@@ -81,7 +81,7 @@
 						<th>E-mail</th>
 						<th>Tipo</th>
 						<th>Grupo</th>
-						<th>Opções</th>
+						<th ng-show="identity.can('users.edit')">Opções</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -91,8 +91,8 @@
 						<td width="20%">aryel.tupinamba@lqdi.net</td>
 						<td width="20%">Coordenador Operacional</td>
 						<td width="20%">Secretaria dos Transportes</td>
-						<td width="10%">
-							<a href="#/users/5" ng-show="identity.can('users.edit')" class="btn btn-info btn-xs" style="margin: 0;"><i class="material-icons">mode_edit</i> Editar</a>
+						<td width="10%" ng-show="identity.can('users.edit')">
+							<a href="#/users/5"  class="btn btn-info btn-xs" style="margin: 0;"><i class="material-icons">mode_edit</i> Editar</a>
 						</td>
 					</tr>
 				</tbody>

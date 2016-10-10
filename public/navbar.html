@@ -10,7 +10,7 @@
 			</button>
 			<a class="navbar-brand" href="#/dashboard">
 				<strong>Busca Ativa Escolar</strong>
-				<small ng-bind="cityName"></small>
+				<small ng-bind="(cityName + '/' + cityUF)"></small>
 			</a>
 		</div>
 
@@ -48,14 +48,16 @@
 						</li>
 
 						<li><a href="#/cases/create_alert"><i class="material-icons">add_alert</i> Novo alerta</a></li>
-						<li><a href="#/developer_mode" class="text-danger"><i class="fa fa-code"></i> Área do desenvolvedor</a></li>
+						<li><a href="#/developer_mode"><i class="fa fa-code"></i> Área do desenvolvedor</a></li>
 
 						<li role="separator" class="divider over-split-btn"></li>
 
-						<li class="has-split-btn">
+						<li class="has-split-btn" ng-if="identity.can('preferences')">
 							<a class="col-md-7 split-btn" href="#/preferences"><i class="material-icons">settings</i> Preferências</a>
 							<a class="col-md-5 split-btn" href="#"><i class="material-icons">exit_to_app</i> Sair</a>
 						</li>
+
+						<li ng-if="!identity.can('preferences')"><a href="#"><i class="material-icons">exit_to_app</i> Sair</a></li>
 					</ul>
 				</li>
 			</ul>
