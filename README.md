@@ -1,4 +1,8 @@
-# Busca Ativa Escolar
+# Busca Ativa Escolar - Cliente Web
+
+## Repositórios do projeto
+- [lqdi/busca-ativa-escolar-api](https://github.com/lqdi/busca-ativa-escolar-api) - Back-end / API
+- [lqdi/busca-ativa-escolar-web](https://github.com/lqdi/busca-ativa-escolar-web) - Front-end / Cliente Web (este repositório)
 
 Garantir que cada criança e adolescente dos 4 aos 17 anos esteja na escola – e aprendendo – é, hoje, um dos principais desafios do Brasil. Também é parte da Agenda 2030 das Nações Unidas, um conjunto de programas, ações e diretrizes que devem ser implantados por todos os países nos próximos 15 anos para alcançar o desenvolvimento sustentável.
 
