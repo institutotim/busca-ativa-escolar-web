@@ -8,26 +8,35 @@
 			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
-						<th>ID</th>
-						<th>Nome da criança ou adolescente</th>
-						<th>Responsável pelo caso</th>
+						<th>ID <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
+						<th>Nome <i class="fa fa-arrow-down"></i><br /><small>da criança ou adolescente</small></th>
+						<th>Responsável <i class="fa fa-arrow-down"></i><br /><small>pelo caso</small></th>
+						<th>Status <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
+						<th>Idade <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
+						<th class="text-center">Opções <br />&nbsp;</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="i in range(1, 24)">
-						<td width="5%">
+						<td width="8%">
 							<i class="material-icons">assignment</i><br />
 							<span>#{{12 + i}}</span>
 						</td>
 						<td width="30%">
-							<strong>Edward Doe</strong><br />
-							<small>Jane Doe</small>
+							<strong><i class="fa fa-mars"></i> Edward Doe</strong><br />
+							<small><i class="fa fa-venus"></i> Jane Doe / <i class="fa fa-mars"></i> John Doe</small>
 						</td>
-						<td width="25%">
-							<i class="material-icons">person</i> Aryel Tupinambá
+						<td width="30%">
+							<i class="material-icons">person</i> Aryel Tupinambá <br />
 							<small>Coordenador Operacional</small>
 						</td>
-						<td width="40%">
+						<td width="18%">
+							Pesquisa
+						</td>
+						<td width="10%">
+							12 anos
+						</td>
+						<td width="10%" class="text-center">
 							<div class="btn-group">
 								<a href="#/cases/52" class="btn btn-info btn-xs"><i class="material-icons">mode_edit</i> Acessar</a>
 							</div>
@@ -50,8 +59,8 @@
 				<input type="text" class="form-control" id="filter-name" placeholder="Nome da criança...">
 			</div>
 			<div class="form-group" style="margin-top: 5px">
-				<label class="control-label" for="filter-type">Por tipo</label>
-				<input type="text" class="form-control" id="filter-type" placeholder="Tipo do caso...">
+				<label class="control-label" for="filter-type">Por causa</label>
+				<input type="text" class="form-control" id="filter-type" placeholder="Causa do caso...">
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-stage">Por etapa</label>
@@ -60,6 +69,35 @@
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-assigned-user">Por responsável pelo caso</label>
 				<input type="text" class="form-control" id="filter-assigned-user" placeholder="Nome do usuário...">
+			</div>
+			<div class="form-group" style="margin-top: 5px">
+				<label class="control-label" for="filter-status-normal">Por status</label>
+				<div class="checkbox"><label for="filter-status-normal"><input type="checkbox" id="filter-status-normal" name="filter-status-normal" checked> Normal</label></div>
+				<div class="checkbox"><label for="filter-status-delayed"><input type="checkbox" id="filter-status-delayed" name="filter-status-delayed" checked> Em atraso</label></div>
+			</div>
+			<div class="form-group" style="margin-top: 5px">
+				<label class="control-label" for="filter-age-from">Por idade</label>
+				<div class="form-inline">
+					<span> de </span>
+					<input type="number" style="width: 40px; text-align: center" min="0" max="20" class="form-control" id="filter-age-from" placeholder="0">
+					<span> a </span>
+					<input type="number" style="width: 40px; text-align: center" min="0" max="21" class="form-control" id="filter-age-to" placeholder="21">
+					<span> anos </span>
+				</div>
+			</div>
+			<div class="form-group" style="margin-top: 5px">
+				<label class="control-label" for="filter-gender-male">Por sexo</label>
+				<div class="form-inline row">
+					<div class="checkbox col-md-6"><label for="filter-gender-male"><input type="checkbox" id="filter-gender-male" name="filter-gender-male" checked> <i class="fa fa-mars"></i> Masc.</label></div>
+					<div class="checkbox col-md-6"><label for="filter-gender-female"><input type="checkbox" id="filter-gender-female" name="filter-gender-female" checked> <i class="fa fa-venus"></i> Fem.</label></div>
+				</div>
+			</div>
+			<div class="form-group" style="margin-top: 5px">
+				<label class="control-label" for="filter-zone-rural">Por zona</label>
+				<div class="form-inline row">
+					<div class="checkbox col-md-6"><label for="filter-zone-rural"><input type="checkbox" id="filter-zone-rural" name="filter-zone-rural" checked> Rural</label></div>
+					<div class="checkbox col-md-6"><label for="filter-zone-urban"><input type="checkbox" id="filter-zone-urban" name="filter-zone-urban" checked> Urbana</label></div>
+				</div>
 			</div>
 		</div>
 		<div class="panel-footer">
