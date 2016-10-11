@@ -13,19 +13,26 @@
 /* ANIMATION */
 /* SHADOWS */
 #app-navbar .navbar-brand {
-  padding: 5px 15px;
-}
-#app-navbar .navbar-brand strong, #app-navbar .navbar-brand small {
-  display: block;
-  color: white;
+  padding: 0;
+  background-image: url('../images/logo_bae_header.png?1476203987');
+  background-position: top left;
+  background-size: contain;
+  background-repeat: no-repeat;
+  min-width: 170px;
 }
 #app-navbar .navbar-brand strong {
-  height: 30px;
-  line-height: 30px;
+  display: none !important;
 }
 #app-navbar .navbar-brand small {
-  height: 20px;
-  line-height: 20px;
+  display: block;
+  height: 18px;
+  line-height: 18px;
+  -webkit-font-smoothing: antialiased;
+  font-weight: bold;
+  font-size: 10px;
+  color: white;
+  margin-top: 43px;
+  margin-left: 73px;
 }
 #app-navbar .logged-user .dropdown-toggle {
   padding: 12px 15px;
