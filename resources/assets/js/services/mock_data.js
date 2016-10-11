@@ -104,53 +104,22 @@
 				},
 				series: [
 					{
-						name: 'Alerta',
+						name: 'Alertas realizados',
 						data: [105, 95, 42, 74, 38, 10, 12, 50, 70, 60, 40, 122, 78, 47]
 					},
 					{
-						name: 'Concluídos',
+						name: 'Crianças (re)matriculadas',
 						data: [107, 31, 63, 20, 2, 50, 74, 38, 10, 12, 5, 10, 6, 40]
 					},
 					{
-						name: 'Em andamento',
+						name: 'Crianças dentro da escola consolidadas',
+						data: [50, 20, 10, 25, 212, 40, 91, 12, 16, 20, 22, 21, 20, 23]
+					},
+					{
+						name: 'Casos em andamento',
 						data: [13, 15, 94, 40, 6, 5, 8, 3, 9, 10, 12, 4, 5, 1]
 					}
 				]
-			},
-
-			typesChart: {
-				type: "PieChart",
-				data: {
-					"cols": [
-						{id: "t", label: "Tipo de caso", type: "string"},
-						{id: "s", label: "Casos em aberto", type: "number"}
-					], "rows": [
-						{
-							c: [
-								{v: "Trabalho infantil"},
-								{v: 250},
-							]
-						},
-						{
-							c: [
-								{v: "Abuso sexual"},
-								{v: 40}
-							]
-						},
-						{
-							c: [
-								{v: "Falta de transporte"},
-								{v: 50},
-							]
-						},
-						{
-							c: [
-								{v: "Outros"},
-								{v: 120},
-							]
-						}
-					]
-				}
 			},
 
 			evolutionChart: {
@@ -178,15 +147,15 @@
 						type: "string"
 					}, {
 						id: "open-cases",
-						label: "Em aberto",
+						label: "Alertas realizados",
 						type: "number"
 					}, {
 						id: "pending-cases",
-						label: "Em progresso",
+						label: "Casos em andamento",
 						type: "number"
 					}, {
 						id: "closed-cases",
-						label: "Encerrados",
+						label: "Crianças (re)matriculadas",
 						type: "number"
 					}],
 					"rows": [{
