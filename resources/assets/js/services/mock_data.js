@@ -4,16 +4,17 @@
 
 		var alertReasons = [
 			"Adolescente em conflito com a lei",
-			"Criança e adolescente em abrigos ou em situação de rua",
 			"Criança ou adolescente com deficiência(s)",
 			"Criança ou adolescente com doença(s) que impeça(m) ou dificulte(m) a frequência à escola",
+			"Criança ou adolescente em abrigo",
+			"Criança ou adolescente em situação de rua",
 			"Criança ou adolescente vítima de abuso / violência sexual",
 			"Evasão porque sente a escola desinteressante",
 			"Falta de documentação da criança ou adolescente",
 			"Falta de infraestrutura escolar",
 			"Falta de transporte escolar",
 			"Gravidez na adolescência",
-			"Racismo",
+			"Preconceito ou discriminação racial",
 			"Trabalho infantil",
 			"Violência familiar",
 			"Violência na escola"
