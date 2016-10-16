@@ -1843,9 +1843,9 @@ Highcharts.maps["countries/br/br-all"] = {
 				var numDays = 30;
 
 				for(var i = 0; i < 30; i++) {
-					settings.series[0].data.push(Math.floor(160 + (Math.random() * numDays)));
-					settings.series[1].data.push(Math.floor(150 + (Math.random() * numDays)));
-					settings.series[2].data.push(Math.floor(120 + (Math.random() * numDays)));
+					settings.series[0].data.push(Math.floor(160 + (Math.random() * (numDays / 2))));
+					settings.series[1].data.push(Math.floor(150 + (Math.random() * (numDays / 2))));
+					settings.series[2].data.push(Math.floor(120 + (Math.random() * (numDays / 2))));
 				}
 
 				return settings;
