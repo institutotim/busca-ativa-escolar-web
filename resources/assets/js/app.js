@@ -101,7 +101,7 @@
 					controller: 'ParameterizeGroupCtrl'
 				}).
 				when('/reports', {
-					templateUrl: 'reports/home.html?NC=' + NC,
+					templateUrl: 'reports/browser.html?NC=' + NC,
 					controller: 'ReportsCtrl'
 				}).
 				when('/credits', {

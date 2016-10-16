@@ -7,6 +7,7 @@
 		$scope.evolutionChart = MockData.evolutionChart;
 		$scope.typesChart = MockData.typesChart;
 		$scope.caseTypesChart = MockData.caseTypesChart;
+		$scope.casesTimelineChart = MockData.generateCasesTimelineChart();
 
 	});
 

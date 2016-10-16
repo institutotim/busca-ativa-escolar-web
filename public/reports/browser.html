@@ -1,0 +1,95 @@
+<div>
+
+	<div class="col-md-3">
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<i class="material-icons">filter_list</i> Buscar e filtrar
+			</div>
+			<div class="panel-body">
+				<div class="form-group" style="margin-top: 5px">
+					<label class="control-label" for="filter-date-start">Por período</label>
+					<div class="form-inline">
+						<span style="width: 25px; text-align: center; display: inline-block;"> de </span>
+						<input type="date" style="width: 145px; text-align: center" class="form-control" id="filter-date-start"> <br />
+						<span style="width: 25px; text-align: center; display: inline-block;"> a </span>
+						<input type="date" style="width: 145px; text-align: center" class="form-control" id="filter-date-end">
+					</div>
+				</div>
+				<div class="form-group" style="margin-top: 5px">
+					<label class="control-label" for="filter-type">Por causa</label>
+					<input type="text" class="form-control" id="filter-type" placeholder="Causa do caso...">
+				</div>
+				<div class="form-group" style="margin-top: 5px">
+					<label class="control-label" for="filter-stage">Por etapa</label>
+					<input type="text" class="form-control" id="filter-stage" placeholder="Etapa do caso...">
+				</div>
+				<div class="form-group" style="margin-top: 5px">
+					<label class="control-label" for="filter-status-normal">Por status</label>
+					<div class="checkbox"><label for="filter-status-normal"><input type="checkbox" id="filter-status-normal" name="filter-status-normal" checked> Normal</label></div>
+					<div class="checkbox"><label for="filter-status-delayed"><input type="checkbox" id="filter-status-delayed" name="filter-status-delayed" checked> Em atraso</label></div>
+				</div>
+				<div class="form-group" style="margin-top: 5px">
+					<label class="control-label" for="filter-age-from">Por idade</label>
+					<div class="form-inline">
+						<span> de </span>
+						<input type="number" style="width: 40px; text-align: center" min="0" max="20" class="form-control" id="filter-age-from" placeholder="0">
+						<span> a </span>
+						<input type="number" style="width: 40px; text-align: center" min="0" max="21" class="form-control" id="filter-age-to" placeholder="21">
+						<span> anos </span>
+					</div>
+				</div>
+				<div class="form-group" style="margin-top: 5px">
+					<label class="control-label" for="filter-gender-male">Por sexo</label>
+					<div class="form-inline row">
+						<div class="checkbox col-md-6"><label for="filter-gender-male"><input type="checkbox" id="filter-gender-male" name="filter-gender-male" checked> <i class="fa fa-mars"></i> Masc.</label></div>
+						<div class="checkbox col-md-6"><label for="filter-gender-female"><input type="checkbox" id="filter-gender-female" name="filter-gender-female" checked> <i class="fa fa-venus"></i> Fem.</label></div>
+					</div>
+				</div>
+				<div class="form-group" style="margin-top: 5px">
+					<label class="control-label" for="filter-zone-rural">Por zona</label>
+					<div class="form-inline row">
+						<div class="checkbox col-md-6"><label for="filter-zone-rural"><input type="checkbox" id="filter-zone-rural" name="filter-zone-rural" checked> Rural</label></div>
+						<div class="checkbox col-md-6"><label for="filter-zone-urban"><input type="checkbox" id="filter-zone-urban" name="filter-zone-urban" checked> Urbana</label></div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<div>
+					<a class="btn btn-raised btn-info" style="width: 100%; padding: 8px 0"><i class="material-icons">search</i> Filtrar</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-9">
+
+		<div class="panel has-subnav-tabs panel-default">
+			<div class="panel-heading">
+				<h3><i class="material-icons">show_chart</i> Relatórios <small>Quantidade de casos</small></h3>
+			</div>
+
+			<uib-tabset active="activeTab" class="tab-content">
+				<uib-tab index="0">
+					<uib-tab-heading><i class='fa fa-map'></i> Por região</uib-tab-heading>
+					<div class="panel-body">
+						<highchart style="width: 800px; height: 600px" id="map-chart" config="brazilMapSettings"></highchart>
+					</div>
+				</uib-tab>
+				<uib-tab index="1">
+					<uib-tab-heading><i class='fa fa-bar-chart'></i> Por causa</uib-tab-heading>
+					<div class="panel-body">
+						<highchart style="width: 800px; height: 600px" id="causes-chart" config="caseTypesChart"></highchart>
+					</div>
+				</uib-tab>
+				<uib-tab index="2" >
+					<uib-tab-heading><i class='fa fa-calendar'></i> Por histórico</uib-tab-heading>
+					<div class="panel-body">
+						<highchart style="width: 800px; height: 600px" id="timeline-chart" config="casesTimelineChart"></highchart>
+					</div>
+				</uib-tab>
+			</uib-tabset>
+
+		</div>
+
+	</div>
+</div>
