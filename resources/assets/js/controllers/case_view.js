@@ -25,6 +25,29 @@
 			'4obs': {id: '4obs', name: '4a observação'}
 		};
 
+		$scope.lastStep2014 = '1obs';
+		$scope.steps2014Collapsed = true;
+		$scope.steps2016Collapsed = false;
+
+		$scope.steps2014 = {
+			'alerta': {id: 'alerta', name: 'Alerta', opens: ['info', 'parents'], next: 'pesquisa'},
+			'pesquisa': {
+				id: 'pesquisa',
+				name: 'Pesquisa',
+				opens: ['info', 'parents', 'location'],
+				next: 'analise_tecnica'
+			},
+			'analise_tecnica': {
+				id: 'analise_tecnica',
+				name: 'Análise Técnica',
+				opens: ['analise_tecnica'],
+				next: 'consolidacao'
+			},
+			'consolidacao': {id: 'consolidacao', name: 'Consolidação', next: 'reinsercao'},
+			'reinsercao': {id: 'reinsercao', name: 'Reinserção', next: '1obs'},
+			'1obs': {id: '1obs', name: '1a observação', next: '2obs'},
+		}
+
 		function init() {
 			$scope.setCaseStep('pesquisa', true);
 			$scope.openForm('pesquisa');
@@ -133,12 +156,13 @@
 			}
 		};
 
-		$scope.getCaseTimelineClass = function(step) {
-			if($scope.currentStep == step) return 'step-current';
+		$scope.getCaseTimelineClass = function(step, current) {
+			if(!current) current = $scope.currentStep;
+			if(current == step) return 'step-current';
 
 			for(var i in $scope.steps) {
 				if($scope.steps[i].id == step) return 'step-completed';
-				if($scope.steps[i].id == $scope.currentStep) return 'step-pending';
+				if($scope.steps[i].id == current) return 'step-pending';
 			}
 		};
 
