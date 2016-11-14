@@ -226,19 +226,19 @@
 					{
 						name: 'Alertas realizados',
 						data: [105, 95, 42, 74, 38, 10, 12, 50, 70, 60, 40, 122, 78, 47]
-					},
-					{
-						name: 'Crianças (re)matriculadas',
-						data: [107, 31, 63, 20, 2, 50, 74, 38, 10, 12, 5, 10, 6, 40]
-					},
-					{
-						name: 'Crianças dentro da escola consolidadas',
-						data: [50, 20, 10, 25, 212, 40, 91, 12, 16, 20, 22, 21, 20, 23]
-					},
-					{
-						name: 'Casos em andamento',
-						data: [13, 15, 94, 40, 6, 5, 8, 3, 9, 10, 12, 4, 5, 1]
-					}
+					}//,
+					//{
+					//	name: 'Crianças (re)matriculadas',
+					//	data: [107, 31, 63, 20, 2, 50, 74, 38, 10, 12, 5, 10, 6, 40]
+					//},
+					//{
+					//	name: 'Crianças dentro da escola consolidadas',
+					//	data: [50, 20, 10, 25, 212, 40, 91, 12, 16, 20, 22, 21, 20, 23]
+					//},
+					//{
+					//	name: 'Casos em andamento',
+					//	data: [13, 15, 94, 40, 6, 5, 8, 3, 9, 10, 12, 4, 5, 1]
+					//}
 				]
 			},
 
