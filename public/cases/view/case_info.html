@@ -39,7 +39,7 @@
 			<label class="control-label">Motivos de estar fora da escola</label>
 			<div class="radio" ng-repeat="(i, reason) in reasons">
 				<label>
-					<input name="type" value="{{i}}" type="radio"> {{reason}}
+					<input name="type" value="{{i}}" type="radio"> <strong ng-if="(i == 3)" class="label label-default">Motivo indicado no alerta</strong> {{reason}}
 				</label>
 			</div>
 		</div>
@@ -48,7 +48,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e ir para próxima etapa</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e ir para {{getNextStepName()}}</a>
 		</div>
 
 	</div>
@@ -81,7 +81,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e ir para próxima etapa</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e ir para {{getNextStepName()}}</a>
 		</div>
 
 	</div>
@@ -131,7 +131,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e ir para próxima etapa</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e ir para {{getNextStepName()}}</a>
 		</div>
 
 	</div>

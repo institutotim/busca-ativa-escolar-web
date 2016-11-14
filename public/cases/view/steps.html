@@ -37,7 +37,7 @@
 		<h3><i class="material-icons">person</i> <span ng-bind="getFormName()"></span></h3>
 		<hr />
 
-		<div ng-include="'/cases/view/case_info.html'" ng-init="editable = true"></div>
+		<div ng-hide="isPastStep('analise_tecnica')" ng-include="'/cases/view/case_info.html'" ng-init="editable = true"></div>
 
 		<div class="panel" ng-class="{'panel-warning': currentStep == 'analise_tecnica'}" ng-show="isPastStep('analise_tecnica')">
 			<div class="panel-heading"  ng-click="togglePanel('analise_tecnica')"><i class="material-icons">info</i> Relatório da análise técnica</div>
@@ -56,7 +56,7 @@
 				<hr />
 
 				<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-				<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e concluir etapa <span ng-bind="getFormName()"></span></a>
+				<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e enviar para o supervisor institucional</a>
 			</div>
 		</div>
 	</div>

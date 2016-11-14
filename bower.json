@@ -39,6 +39,7 @@
     "ngToast": "ngtoast#^2.0.0",
     "angular-animate": "^1.5.8",
     "highcharts": "^4.2.6",
-    "highcharts-ng": "^0.0.12"
+    "highcharts-ng": "^0.0.12",
+    "angular-cookies": "^1.5.8"
   }
 }

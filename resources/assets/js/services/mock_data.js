@@ -151,11 +151,20 @@
 				"hc-key": "br-ro",
 				"value": 26
 			}
-		]
+		];
+
+		var caseStatuses = [
+			'Em andamento',
+			'Em atraso',
+			'Concluído',
+			'Dentro da escola',
+			'Fora da escola'
+		];
 
 		return {
 
 			alertReasons: alertReasons,
+			caseStatuses: caseStatuses,
 
 			states: states,
 			cities: cities,

@@ -5,6 +5,7 @@
 			'ngRoute',
 			'ngToast',
 			'ngAnimate',
+			'ngCookies',
 
 			'googlechart',
 			'highcharts-ng',

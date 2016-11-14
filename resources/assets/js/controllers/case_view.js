@@ -58,6 +58,16 @@
 			return !!$scope.steps[$scope.currentStep].next;
 		};
 
+		$scope.getNextStepName = function() {
+			if(!$scope.steps[$scope.currentStep]) return '';
+			return $scope.steps[$scope.steps[$scope.currentStep].next].name || '';
+		};
+
+		$scope.getCurrentStepName = function() {
+			if(!$scope.steps[$scope.currentStep]) return '';
+			return $scope.steps[$scope.currentStep].name || '';
+		};
+
 		$scope.setCaseStep = function(step, skipNotification) {
 			$scope.currentStep = step;
 			$scope.isPanelOpen = {};
@@ -100,7 +110,15 @@
 		$scope.saveAndProceed = function() {
 			if(!$scope.hasNextStep()) return;
 
-			Modals.show(Modals.Confirm('Tem certeza que deseja prosseguir de etapa?', 'Ao progredir de etapa, a etapa anterior será marcada como concluída.')).then(function () {
+			var question = 'Tem certeza que deseja prosseguir para a etapa ' + $scope.getNextStepName() + '?';
+			var explanation = 'Ao progredir de etapa, a etapa ' + $scope.getCurrentStepName() + ' será marcada como concluída.';
+
+			if($scope.currentStep == "analise_tecnica") {
+				question = 'Tem certeza que deseja concluir a Análise Técnica?';
+				explanation = 'Ao dizer SIM, a Análise Técnica será marcada como concluída e nenhuma informação poderá ser editada.';
+			}
+
+			Modals.show(Modals.Confirm(question, explanation)).then(function () {
 				var next = $scope.steps[$scope.currentStep].next;
 
 				ngToast.create({

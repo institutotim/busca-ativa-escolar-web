@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').service('Identity', function () {
+	angular.module('BuscaAtivaEscolar').service('Identity', function ($cookies) {
 
 		var mockUsers = {
 			'agente_comunitario': {
@@ -47,7 +47,7 @@
 			}
 		};
 
-		var currentType = 'coordenador_operacional';
+		var currentType = $cookies.get('FDENP_Dev_UserType') || 'coordenador_operacional';
 		var currentUser = mockUsers[currentType];
 
 		function getCurrentUser() {
@@ -66,6 +66,8 @@
 		function setUserType(type) {
 			currentType = type;
 			currentUser = mockUsers[type];
+
+			$cookies.put('FDENP_Dev_UserType', type);
 
 			if(window.zE) {
 				zE.identify({

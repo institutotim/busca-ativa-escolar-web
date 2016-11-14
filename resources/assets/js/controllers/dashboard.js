@@ -4,6 +4,8 @@
 
 		$rootScope.section = 'dashboard';
 		$scope.identity = Identity;
+		$scope.mockData = MockData;
+
 		$scope.evolutionChart = MockData.evolutionChart;
 		$scope.typesChart = MockData.typesChart;
 		$scope.caseTypesChart = MockData.caseTypesChart;
