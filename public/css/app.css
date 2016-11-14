@@ -196,6 +196,10 @@ footer.app-footer a.credits-btn {
   padding: 13px 16px;
 }
 
+.list-group .list-group-item.timeline-item {
+  overflow: visible;
+}
+
 .dropdown .dropdown-menu li > a {
   cursor: pointer;
 }

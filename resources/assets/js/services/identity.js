@@ -13,19 +13,19 @@
 				name: 'Paul Atree',
 				email: 'paul.atree@saopaulo.sp.gov.br',
 				type: 'Técnico Verificador',
-				can: ['preferences', 'dashboard','cases']
+				can: ['preferences', 'dashboard','cases', 'preferences.notifications']
 			},
 			'supervisor_institucional': {
 				name: 'John Doe',
 				email: 'john.doe@saopaulo.sp.gov.br',
 				type: 'Supervisor Institucional',
-				can: ['preferences', 'dashboard','cases','reports', 'users', 'users.create', 'users.edit']
+				can: ['preferences', 'dashboard','cases','reports', 'users', 'users.create', 'users.edit', 'preferences.notifications']
 			},
 			'coordenador_operacional': {
 				name: 'Aryel Tupinambá',
 				email: 'atupinamba@saopaulo.sp.gov.br',
 				type: 'Coordenador Operacional',
-				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit',  'users.deactivate', 'users.create', 'settings']
+				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit',  'users.deactivate', 'users.create', 'settings', 'preferences.notifications']
 			},
 			'gestor_politico': {
 				name: 'João das Neves',

@@ -5,95 +5,98 @@
 		</div>
 		<div class="panel-body">
 
-			<h4><i class="fa fa-envelope"></i> Notificações</h4>
-			<p>Quais tipos de notificações você deseja receber?</p>
+			<div ng-show="identity.can('preferences.notifications')">
+				<h4><i class="fa fa-envelope"></i> Notificações</h4>
+				<p>Quais tipos de notificações você deseja receber?</p>
 
-			<table class="table">
-				<thead>
-					<tr>
-						<th>Origem</th>
-						<th>Não receber</th>
-						<th>Via sistema</th>
-						<th>Via sistema + E-mail</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Casos dos quais sou responsável</td>
-						<td>
-							<div class="radio radio-primary">
-								<label style="width: 100%">
-									<input type="radio" name="assigned_to_me" value="none" />
-								</label>
-							</div>
-						</td>
-						<td>
-							<div class="radio radio-primary">
-								<label style="width: 100%">
-									<input type="radio" name="assigned_to_me" value="system" />
-								</label>
-							</div>
-						</td>
-						<td>
-							<div class="radio radio-primary">
-								<label style="width: 100%">
-									<input type="radio" name="assigned_to_me" value="system_and_email" checked />
-								</label>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td>Casos atribuidos ao meu grupo</td>
-						<td>
-							<div class="radio radio-primary">
-								<label style="width: 100%">
-									<input type="radio" name="assigned_to_group" value="none" />
-								</label>
-							</div>
-						</td>
-						<td>
-							<div class="radio radio-primary">
-								<label style="width: 100%">
-									<input type="radio" name="assigned_to_group" value="system" checked />
-								</label>
-							</div>
-						</td>
-						<td>
-							<div class="radio radio-primary">
-								<label style="width: 100%">
-									<input type="radio" name="assigned_to_group" value="system_and_email" />
-								</label>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td>Todos os casos do município</td>
-						<td>
-							<div class="radio radio-primary">
-								<label style="width: 100%">
-									<input type="radio" name="all" value="none" checked />
-								</label>
-							</div>
-						</td>
-						<td>
-							<div class="radio radio-primary">
-								<label style="width: 100%">
-									<input type="radio" name="all" value="system" />
-								</label>
-							</div>
-						</td>
-						<td>
-							<div class="radio radio-primary">
-								<label style="width: 100%">
-									<input type="radio" name="all" value="system_and_email" />
-								</label>
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Origem</th>
+							<th>Não receber</th>
+							<th>Via sistema</th>
+							<th>Via sistema + E-mail</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Casos dos quais sou responsável</td>
+							<td>
+								<div class="radio radio-primary">
+									<label style="width: 100%">
+										<input type="radio" name="assigned_to_me" value="none" disabled />
+									</label>
+								</div>
+							</td>
+							<td>
+								<div class="radio radio-primary">
+									<label style="width: 100%">
+										<input type="radio" name="assigned_to_me" value="system" />
+									</label>
+								</div>
+							</td>
+							<td>
+								<div class="radio radio-primary">
+									<label style="width: 100%">
+										<input type="radio" name="assigned_to_me" value="system_and_email" checked />
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>Casos atribuidos ao meu grupo</td>
+							<td>
+								<div class="radio radio-primary">
+									<label style="width: 100%">
+										<input type="radio" name="assigned_to_group" value="none" disabled />
+									</label>
+								</div>
+							</td>
+							<td>
+								<div class="radio radio-primary">
+									<label style="width: 100%">
+										<input type="radio" name="assigned_to_group" value="system" checked />
+									</label>
+								</div>
+							</td>
+							<td>
+								<div class="radio radio-primary">
+									<label style="width: 100%">
+										<input type="radio" name="assigned_to_group" value="system_and_email" />
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>Todos os casos do município</td>
+							<td>
+								<div class="radio radio-primary">
+									<label style="width: 100%">
+										<input type="radio" name="all" value="none" checked />
+									</label>
+								</div>
+							</td>
+							<td>
+								<div class="radio radio-primary">
+									<label style="width: 100%">
+										<input type="radio" name="all" value="system" />
+									</label>
+								</div>
+							</td>
+							<td>
+								<div class="radio radio-primary">
+									<label style="width: 100%">
+										<input type="radio" name="all" value="system_and_email" />
+									</label>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 
-			<button type="button" class="btn btn-primary btn-raised"><i class="fa fa-save"></i> Salvar</button>
+				<button type="button" class="btn btn-primary btn-raised"><i class="fa fa-save"></i> Salvar</button>
+
+			</div>
 
 
 		</div>
