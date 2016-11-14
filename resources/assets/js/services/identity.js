@@ -19,7 +19,7 @@
 				name: 'John Doe',
 				email: 'john.doe@saopaulo.sp.gov.br',
 				type: 'Supervisor Institucional',
-				can: ['preferences', 'dashboard','cases','reports', 'users']
+				can: ['preferences', 'dashboard','cases','reports', 'users', 'users.create', 'users.edit']
 			},
 			'coordenador_operacional': {
 				name: 'Aryel Tupinambá',
