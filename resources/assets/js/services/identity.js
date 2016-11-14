@@ -25,25 +25,25 @@
 				name: 'Aryel Tupinambá',
 				email: 'atupinamba@saopaulo.sp.gov.br',
 				type: 'Coordenador Operacional',
-				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit', 'users.create', 'settings']
+				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit',  'users.deactivate', 'users.create', 'settings']
 			},
 			'gestor_politico': {
 				name: 'João das Neves',
 				email: 'jneves@saopaulo.sp.gov.br',
 				type: 'Gestor Político',
-				can: ['preferences', 'dashboard','reports','users']
+				can: ['preferences', 'dashboard','reports', 'users', 'users.deactivate']
 			},
 			'gestor_nacional': {
 				name: 'Jane Doe',
 				email: 'fdenp@unicef.org.br',
 				type: 'Gestor Nacional',
-				can: ['preferences', 'dashboard','reports','cities', 'users.filter_by_city']
+				can: ['preferences', 'dashboard', 'reports', 'cities', 'users.filter_by_city']
 			},
 			'super_administrador': {
 				name: 'Morgan Freeman',
 				email: 'dev@lqdi.net',
 				type: 'Super Administrador',
-				can: ['preferences', 'dashboard','reports','cities','cities.edit','users','users.edit', 'users.create', 'settings', 'users.filter_by_city']
+				can: ['preferences', 'dashboard','reports','cities','cities.edit','users','users.edit', 'users.deactivate', 'users.create', 'settings', 'users.filter_by_city']
 			}
 		};
 
