@@ -68,8 +68,9 @@
 			});
 		};
 
-		$scope.assignUserToStep = function() {
-			Modals.show(Modals.UserPicker('Selecione o Técnico Verificador responsável:', 'O Técnico Verificador selecionado ficará responsável pela execução da etapa ' + $scope.steps[$scope.currentStep].name + '.')).then(function() {
+		$scope.assignUserToStep = function(stepName) {
+			stepName = stepName || $scope.currentStep;
+			Modals.show(Modals.UserPicker('Selecione o Técnico Verificador responsável:', 'O Técnico Verificador selecionado ficará responsável pela execução da etapa ' + $scope.steps[stepName].name + '.')).then(function() {
 				ngToast.create({
 					className: 'success',
 					content: 'Responsável atribuído!'

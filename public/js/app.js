@@ -238,8 +238,9 @@
 			});
 		};
 
-		$scope.assignUserToStep = function() {
-			Modals.show(Modals.UserPicker('Selecione o Técnico Verificador responsável:', 'O Técnico Verificador selecionado ficará responsável pela execução da etapa ' + $scope.steps[$scope.currentStep].name + '.')).then(function() {
+		$scope.assignUserToStep = function(stepName) {
+			stepName = stepName || $scope.currentStep;
+			Modals.show(Modals.UserPicker('Selecione o Técnico Verificador responsável:', 'O Técnico Verificador selecionado ficará responsável pela execução da etapa ' + $scope.steps[stepName].name + '.')).then(function() {
 				ngToast.create({
 					className: 'success',
 					content: 'Responsável atribuído!'
@@ -530,103 +531,6 @@
 		}
 
 	});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
-
-			$scope.message = message;
-			$scope.details = details;
-
-			$scope.dismiss = function() {
-				$uibModalInstance.dismiss();
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('CaseActivityLogEntryCtrl', function CaseActivityLogEntryCtrl($scope, $q, $uibModalInstance) {
-
-			// TODO: receive case ID, fetch details and show
-
-			console.log("[modal] case_activity_log_entry");
-
-			$scope.close = function() {
-				$uibModalInstance.close(true);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
-
-			console.log("[modal] confirm_modal", message, details, canDismiss);
-
-			$scope.message = message;
-			$scope.details = details;
-			$scope.canDismiss = canDismiss;
-
-			$scope.agree = function() {
-				$uibModalInstance.close(true);
-			};
-
-			$scope.disagree = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, question, defaultAnswer, canDismiss) {
-
-			console.log("[modal] prompt_modal", question, canDismiss);
-
-			$scope.question = question;
-			$scope.answer = defaultAnswer;
-
-			$scope.ok = function() {
-				$uibModalInstance.close({response: $scope.answer});
-			};
-
-			$scope.cancel = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, $q, $uibModalInstance, title, message, canDismiss) {
-
-			console.log("[modal] user_picker", title, message);
-
-			$scope.title = title;
-			$scope.message = message;
-			$scope.canDismiss = canDismiss;
-
-			$scope.onSelect = function() {
-				$uibModalInstance.close({response: $scope.selectedUser});
-			};
-
-		});
 
 })();
 (function() {
@@ -1487,6 +1391,103 @@ Highcharts.maps["countries/br/br-all"] = {
 		}
 	}]
 };
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
+
+			$scope.message = message;
+			$scope.details = details;
+
+			$scope.dismiss = function() {
+				$uibModalInstance.dismiss();
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('CaseActivityLogEntryCtrl', function CaseActivityLogEntryCtrl($scope, $q, $uibModalInstance) {
+
+			// TODO: receive case ID, fetch details and show
+
+			console.log("[modal] case_activity_log_entry");
+
+			$scope.close = function() {
+				$uibModalInstance.close(true);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
+
+			console.log("[modal] confirm_modal", message, details, canDismiss);
+
+			$scope.message = message;
+			$scope.details = details;
+			$scope.canDismiss = canDismiss;
+
+			$scope.agree = function() {
+				$uibModalInstance.close(true);
+			};
+
+			$scope.disagree = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, question, defaultAnswer, canDismiss) {
+
+			console.log("[modal] prompt_modal", question, canDismiss);
+
+			$scope.question = question;
+			$scope.answer = defaultAnswer;
+
+			$scope.ok = function() {
+				$uibModalInstance.close({response: $scope.answer});
+			};
+
+			$scope.cancel = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, $q, $uibModalInstance, title, message, canDismiss) {
+
+			console.log("[modal] user_picker", title, message);
+
+			$scope.title = title;
+			$scope.message = message;
+			$scope.canDismiss = canDismiss;
+
+			$scope.onSelect = function() {
+				$uibModalInstance.close({response: $scope.selectedUser});
+			};
+
+		});
+
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar').service('Identity', function ($cookies) {
