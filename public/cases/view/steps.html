@@ -17,7 +17,10 @@
 		</div>
 
 		<div class="panel panel-default">
-			<div class="panel-heading" ng-click="steps2016Collapsed = !steps2016Collapsed">#2016-01 <span class="label label-success">Em andamento</span></div>
+			<div class="panel-heading" ng-click="steps2016Collapsed = !steps2016Collapsed">#2016-01
+				<span ng-show="!isCaseClosed" class="label label-success">Em andamento</span>
+				<span ng-show="isCaseClosed" class="label label-info">Caso encerrado</span>
+			</div>
 			<div class="panel-body" uib-collapse="steps2016Collapsed">
 				<div class="step-list" style="width: 100%">
 					<div class="step {{getCaseTimelineClass(step.id)}}" ng-repeat="(i, step) in steps" ng-click="openForm(step.id)" ng-class="{active: (currentForm == step.id)}">
@@ -30,6 +33,8 @@
 			</div>
 
 		</div>
+
+		<a class="btn btn-danger btn-raised" ng-show="identity.can('case.close') && !isCaseClosed" ng-click="closeCase()">Encerrar caso</a>
 
 	</div>
 

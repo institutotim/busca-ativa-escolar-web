@@ -7,6 +7,7 @@
 		$scope.identity = Identity;
 		$scope.reasons = MockData.alertReasons;
 
+		$scope.isCaseClosed = false;
 		$scope.isPanelOpen = {};
 		$scope.currentStep = null;
 		$scope.currentForm = null;
@@ -52,6 +53,20 @@
 			$scope.setCaseStep('pesquisa', true);
 			$scope.openForm('pesquisa');
 		}
+
+		$scope.closeCase = function() {
+			Modals.show(Modals.Confirm('Tem certeza que deseja encerrar esse caso?', 'Essa operação não pode ser desfeita. Ao encerrar o caso, nenhuma informação poderá ser alterada, e a progressão do caso será interrompida.', true)).then(function() {
+				$scope.steps2016Collapsed = true;
+				$scope.isCaseClosed = true;
+
+				ngToast.create({
+					className: 'success',
+					content: 'Caso encerrado!'
+				});
+
+				location.hash = '/cases';
+			});
+		};
 
 		$scope.openActivityLogEntry = function() {
 			Modals.show(Modals.CaseActivityLogEntry());

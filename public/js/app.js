@@ -177,6 +177,7 @@
 		$scope.identity = Identity;
 		$scope.reasons = MockData.alertReasons;
 
+		$scope.isCaseClosed = false;
 		$scope.isPanelOpen = {};
 		$scope.currentStep = null;
 		$scope.currentForm = null;
@@ -222,6 +223,20 @@
 			$scope.setCaseStep('pesquisa', true);
 			$scope.openForm('pesquisa');
 		}
+
+		$scope.closeCase = function() {
+			Modals.show(Modals.Confirm('Tem certeza que deseja encerrar esse caso?', 'Essa operação não pode ser desfeita. Ao encerrar o caso, nenhuma informação poderá ser alterada, e a progressão do caso será interrompida.', true)).then(function() {
+				$scope.steps2016Collapsed = true;
+				$scope.isCaseClosed = true;
+
+				ngToast.create({
+					className: 'success',
+					content: 'Caso encerrado!'
+				});
+
+				location.hash = '/cases';
+			});
+		};
 
 		$scope.openActivityLogEntry = function() {
 			Modals.show(Modals.CaseActivityLogEntry());
@@ -1460,13 +1475,13 @@ Highcharts.maps["countries/br/br-all"] = {
 				name: 'John Doe',
 				email: 'john.doe@saopaulo.sp.gov.br',
 				type: 'Supervisor Institucional',
-				can: ['preferences', 'dashboard','cases','reports', 'users', 'users.create', 'users.edit', 'preferences.notifications']
+				can: ['preferences', 'dashboard','cases','reports', 'users', 'users.create', 'users.edit', 'preferences.notifications', 'case.close']
 			},
 			'coordenador_operacional': {
 				name: 'Aryel Tupinambá',
 				email: 'atupinamba@saopaulo.sp.gov.br',
 				type: 'Coordenador Operacional',
-				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit',  'users.deactivate', 'users.create', 'settings', 'preferences.notifications']
+				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit',  'users.deactivate', 'users.create', 'settings', 'preferences.notifications', 'case.close']
 			},
 			'gestor_politico': {
 				name: 'João das Neves',
