@@ -72,6 +72,24 @@
 					}
 
 					return params;
+				},
+
+				CaseActivityLogEntry: function() {
+					var params = {
+						templateUrl: '/modals/case_activity_log_entry.html',
+						controller: 'CaseActivityLogEntryCtrl',
+						size: 'md',
+						resolve: {
+
+						}
+					};
+
+					//if (!canDismiss) {
+						//params.keyboard = false;
+						//params.backdrop = 'static';
+					//}
+
+					return params;
 				}
 
 			}

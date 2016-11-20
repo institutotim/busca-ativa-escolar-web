@@ -53,6 +53,10 @@
 			$scope.openForm('pesquisa');
 		}
 
+		$scope.openActivityLogEntry = function() {
+			Modals.show(Modals.CaseActivityLogEntry());
+		};
+
 		$scope.hasNextStep = function() {
 			if(!$scope.steps[$scope.currentStep]) return false;
 			return !!$scope.steps[$scope.currentStep].next;
