@@ -185,7 +185,7 @@
 
 		$scope.steps = {
 			'alerta': {id: 'alerta', name: 'Alerta', opens: ['info', 'parents'], next: 'pesquisa'},
-			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'parents', 'location'], next: 'analise_tecnica'},
+			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'parents', 'location', 'education'], next: 'analise_tecnica'},
 			'analise_tecnica': {id: 'analise_tecnica', name: 'Análise Técnica', opens: ['analise_tecnica'], next: 'consolidacao'},
 			'consolidacao': {id: 'consolidacao', name: 'Consolidação', next: 'reinsercao'},
 			'reinsercao': {id: 'reinsercao', name: 'Reinserção', next: '1obs'},
@@ -216,7 +216,7 @@
 			'consolidacao': {id: 'consolidacao', name: 'Consolidação', next: 'reinsercao'},
 			'reinsercao': {id: 'reinsercao', name: 'Reinserção', next: '1obs'},
 			'1obs': {id: '1obs', name: '1a observação', next: '2obs'},
-		}
+		};
 
 		function init() {
 			$scope.setCaseStep('pesquisa', true);
