@@ -48,7 +48,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e ir para {{getNextStepName()}}</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
 		</div>
 
 	</div>
@@ -58,30 +58,78 @@
 	<div class="panel-heading" ng-click="togglePanel('parents')"><i class="material-icons">person</i> Dados do responsável</div>
 	<div class="panel-body" uib-collapse="!isOpen('parents')">
 		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-mother-name">Nome da mãe</label>
+			<label class="control-label" for="fld-mother-name">Nome da mãe ou responsável</label>
 			<input type="text" class="form-control" id="fld-mother-name" value="Jane Doe">
 		</div>
 
 		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-father-name">Nome do responsável</label>
+			<label class="control-label" for="fld-father-name">Nome do pai ou responsável</label>
 			<input type="text" class="form-control" id="fld-father-name" value="John Doe">
 		</div>
 
 		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-mother-rg">RG da mãe</label>
+			<label class="control-label" for="fld-mother-rg">RG da mãe ou responsável</label>
 			<input type="text" class="form-control" id="fld-mother-rg" value="12.345.678-9">
 		</div>
 
 		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-father-rg">RG do responsável</label>
+			<label class="control-label" for="fld-father-rg">RG do pai ou responsável</label>
 			<input type="text" class="form-control" id="fld-father-rg" value="23.456.789-0">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-mother-contact">Contato da mãe ou responsável</label>
+			<input type="text" class="form-control" id="fld-mother-contact" value="(11) 2222-3333">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-father-contact">Contato do pai ou responsável</label>
+			<input type="text" class="form-control" id="fld-father-contact" value="(11) 2222-3333">
 		</div>
 
 		<div ng-show="editable">
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e ir para {{getNextStepName()}}</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
+		</div>
+
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading" ng-click="togglePanel('education')"><i class="fa fa-graduation-cap"></i> Educação</div>
+	<div class="panel-body" uib-collapse="!isOpen('education')">
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-has-been-at-school-yes">Já frequentou a escola alguma vez?</label>
+			<div class="radio">
+				<label><input id="fld-has-been-at-school-yes" name="has-been-at-school" value="yes" type="radio" checked> Sim</label>
+			</div>
+			<div class="radio">
+				<label><input id="fld-has-been-at-school-no" name="has-been-at-school" value="no" type="radio"> Não</label>
+			</div>
+		</div>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-last-school-year">Qual o último ano que frequentou?</label>
+			<input type="text" class="form-control" id="fld-last-school-year" value="Ensino Fundamental / 4&ordm; ano">
+		</div>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-last-school-year-status-completed">Qual o status do último ano escolar?</label>
+			<div class="radio">
+				<label><input id="fld-last-school-year-status-completed" name="last-school-year-status" value="completed" type="radio" checked> Completo</label>
+			</div>
+			<div class="radio">
+				<label><input id="fld-last-school-year-status-pending" name="last-school-year-status" value="pending" type="radio"> Incompleto</label>
+			</div>
+		</div>
+
+		<div ng-show="editable">
+			<hr />
+
+			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
 		</div>
 
 	</div>
@@ -114,11 +162,15 @@
 			<label class="control-label" for="fld-uf">UF</label>
 			<input type="text" class="form-control" id="fld-uf" value="SP">
 		</div>
-		<div class="form-group col-md-6">
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-zone">Zona</label>
+			<input type="text" class="form-control" id="fld-zone" value="Rural">
+		</div>
+		<div class="form-group col-md-4">
 			<label class="control-label" for="fld-phone">Telefone residencial</label>
 			<input type="text" class="form-control" id="fld-phone" value="(11) 2222-3333">
 		</div>
-		<div class="form-group col-md-6">
+		<div class="form-group col-md-4">
 			<label class="control-label" for="fld-mobile">Telefone celular</label>
 			<input type="text" class="form-control" id="fld-mobile" value="(11) 98888-4444">
 		</div>
@@ -131,7 +183,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e ir para {{getNextStepName()}}</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
 		</div>
 
 	</div>

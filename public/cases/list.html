@@ -8,7 +8,7 @@
 			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
-						<th># <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
+						<th>N&ordm; <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
 						<th>Nome <i class="fa fa-arrow-down"></i><br /><small>da criança ou adolescente</small></th>
 						<th>Idade <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
 						<th>Responsável <i class="fa fa-arrow-down"></i><br /><small>pelo caso</small></th>
@@ -19,12 +19,12 @@
 				<tbody>
 					<tr ng-repeat="i in range(1, 24)">
 						<td width="8%">
-							<i class="material-icons">assignment</i><br />
-							<span>#{{12 + i}}</span>
+							<div class="text-center"><i class="material-icons">assignment</i></div>
+							<div class="text-center">{{12 + i}}</div>
 						</td>
 						<td width="30%">
 							<strong><i class="fa fa-mars"></i> Edward Doe</strong><br />
-							<small><i class="fa fa-venus"></i> Jane Doe / <i class="fa fa-mars"></i> John Doe</small>
+							<small>Jane Doe / John Doe</small>
 						</td>
 						<td width="10%">
 							12 anos
@@ -34,13 +34,14 @@
 							<small>Coordenador Operacional</small>
 						</td>
 						<td width="18%">
-							Pesquisa <br />
+							{{(i == 4) ? 'Análise Técnica' : 'Pesquisa'}} <br />
 							<span class="label label-danger" ng-show="(i % 3) == 0">Em atraso!</span>
 							<span class="label label-info" ng-show="(i % 3) != 0">Em andamento</span>
 						</td>
 						<td width="10%" class="text-center">
 							<div class="btn-group">
-								<a href="#/cases/52" class="btn btn-info btn-xs"><i class="material-icons">mode_edit</i> Acessar</a>
+								<a ng-show="(i != 4)" href="#/cases/52" class="btn btn-info btn-sm"><i class="fa fa-edit"></i> Editar</a>
+								<a ng-show="(i == 4)" href="#/cases/52" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> Ver</a>
 							</div>
 						</td>
 					</tr>
