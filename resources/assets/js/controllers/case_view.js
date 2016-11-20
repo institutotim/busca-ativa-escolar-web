@@ -68,6 +68,15 @@
 			});
 		};
 
+		$scope.assignUserToStep = function() {
+			Modals.show(Modals.UserPicker('Selecione o Técnico Verificador responsável:', 'O Técnico Verificador selecionado ficará responsável pela execução da etapa ' + $scope.steps[$scope.currentStep].name + '.')).then(function() {
+				ngToast.create({
+					className: 'success',
+					content: 'Responsável atribuído!'
+				});
+			});
+		};
+
 		$scope.openActivityLogEntry = function() {
 			Modals.show(Modals.CaseActivityLogEntry());
 		};
@@ -147,6 +156,11 @@
 
 				$scope.setCaseStep(next);
 				$scope.openForm(next);
+
+				// previous step was pesquisa; this step assigned user defaults to the previous one
+				if($scope.currentStep == "analise_tecnica" || !Identity.can('case.assign')) return;
+
+				$scope.assignUserToStep();
 			})
 
 		};

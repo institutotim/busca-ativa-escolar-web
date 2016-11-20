@@ -74,6 +74,26 @@
 					return params;
 				},
 
+				UserPicker: function(title, message, canDismiss) {
+					var params = {
+						templateUrl: '/modals/user_picker.html',
+						controller: 'UserPickerModalCtrl',
+						size: 'md',
+						resolve: {
+							title: function() { return title; },
+							message: function() { return message; },
+							canDismiss: function() { return canDismiss; }
+						}
+					};
+
+					if (!canDismiss) {
+						params.keyboard = false;
+						params.backdrop = 'static';
+					}
+
+					return params;
+				},
+
 				CaseActivityLogEntry: function() {
 					var params = {
 						templateUrl: '/modals/case_activity_log_entry.html',

@@ -19,13 +19,13 @@
 				name: 'John Doe',
 				email: 'john.doe@saopaulo.sp.gov.br',
 				type: 'Supervisor Institucional',
-				can: ['preferences', 'dashboard','cases','reports', 'users', 'users.create', 'users.edit', 'preferences.notifications', 'case.close']
+				can: ['preferences', 'dashboard','cases','reports', 'users', 'users.create', 'users.edit', 'preferences.notifications', 'case.close', 'case.assign']
 			},
 			'coordenador_operacional': {
 				name: 'Aryel Tupinambá',
 				email: 'atupinamba@saopaulo.sp.gov.br',
 				type: 'Coordenador Operacional',
-				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit',  'users.deactivate', 'users.create', 'settings', 'preferences.notifications', 'case.close']
+				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit',  'users.deactivate', 'users.create', 'settings', 'preferences.notifications', 'case.close', 'case.assign']
 			},
 			'gestor_politico': {
 				name: 'João das Neves',

@@ -238,6 +238,15 @@
 			});
 		};
 
+		$scope.assignUserToStep = function() {
+			Modals.show(Modals.UserPicker('Selecione o Técnico Verificador responsável:', 'O Técnico Verificador selecionado ficará responsável pela execução da etapa ' + $scope.steps[$scope.currentStep].name + '.')).then(function() {
+				ngToast.create({
+					className: 'success',
+					content: 'Responsável atribuído!'
+				});
+			});
+		};
+
 		$scope.openActivityLogEntry = function() {
 			Modals.show(Modals.CaseActivityLogEntry());
 		};
@@ -317,6 +326,11 @@
 
 				$scope.setCaseStep(next);
 				$scope.openForm(next);
+
+				// previous step was pesquisa; this step assigned user defaults to the previous one
+				if($scope.currentStep == "analise_tecnica" || !Identity.can('case.assign')) return;
+
+				$scope.assignUserToStep();
 			})
 
 		};
@@ -516,6 +530,103 @@
 		}
 
 	});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
+
+			$scope.message = message;
+			$scope.details = details;
+
+			$scope.dismiss = function() {
+				$uibModalInstance.dismiss();
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('CaseActivityLogEntryCtrl', function CaseActivityLogEntryCtrl($scope, $q, $uibModalInstance) {
+
+			// TODO: receive case ID, fetch details and show
+
+			console.log("[modal] case_activity_log_entry");
+
+			$scope.close = function() {
+				$uibModalInstance.close(true);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
+
+			console.log("[modal] confirm_modal", message, details, canDismiss);
+
+			$scope.message = message;
+			$scope.details = details;
+			$scope.canDismiss = canDismiss;
+
+			$scope.agree = function() {
+				$uibModalInstance.close(true);
+			};
+
+			$scope.disagree = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, question, defaultAnswer, canDismiss) {
+
+			console.log("[modal] prompt_modal", question, canDismiss);
+
+			$scope.question = question;
+			$scope.answer = defaultAnswer;
+
+			$scope.ok = function() {
+				$uibModalInstance.close({response: $scope.answer});
+			};
+
+			$scope.cancel = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, $q, $uibModalInstance, title, message, canDismiss) {
+
+			console.log("[modal] user_picker", title, message);
+
+			$scope.title = title;
+			$scope.message = message;
+			$scope.canDismiss = canDismiss;
+
+			$scope.onSelect = function() {
+				$uibModalInstance.close({response: $scope.selectedUser});
+			};
+
+		});
 
 })();
 (function() {
@@ -1378,84 +1489,6 @@ Highcharts.maps["countries/br/br-all"] = {
 };
 (function() {
 
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
-
-			$scope.message = message;
-			$scope.details = details;
-
-			$scope.dismiss = function() {
-				$uibModalInstance.dismiss();
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('CaseActivityLogEntryCtrl', function CaseActivityLogEntryCtrl($scope, $q, $uibModalInstance) {
-
-			// TODO: receive case ID, fetch details and show
-
-			console.log("[modal] case_activity_log_entry");
-
-			$scope.close = function() {
-				$uibModalInstance.close(true);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
-
-			console.log("[modal] confirm_modal", message, details, canDismiss);
-
-			$scope.message = message;
-			$scope.details = details;
-			$scope.canDismiss = canDismiss;
-
-			$scope.agree = function() {
-				$uibModalInstance.close(true);
-			};
-
-			$scope.disagree = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, question, defaultAnswer, canDismiss) {
-
-			console.log("[modal] prompt_modal", question, canDismiss);
-
-			$scope.question = question;
-			$scope.answer = defaultAnswer;
-
-			$scope.ok = function() {
-				$uibModalInstance.close({response: $scope.answer});
-			};
-
-			$scope.cancel = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
 	angular.module('BuscaAtivaEscolar').service('Identity', function ($cookies) {
 
 		var mockUsers = {
@@ -1475,13 +1508,13 @@ Highcharts.maps["countries/br/br-all"] = {
 				name: 'John Doe',
 				email: 'john.doe@saopaulo.sp.gov.br',
 				type: 'Supervisor Institucional',
-				can: ['preferences', 'dashboard','cases','reports', 'users', 'users.create', 'users.edit', 'preferences.notifications', 'case.close']
+				can: ['preferences', 'dashboard','cases','reports', 'users', 'users.create', 'users.edit', 'preferences.notifications', 'case.close', 'case.assign']
 			},
 			'coordenador_operacional': {
 				name: 'Aryel Tupinambá',
 				email: 'atupinamba@saopaulo.sp.gov.br',
 				type: 'Coordenador Operacional',
-				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit',  'users.deactivate', 'users.create', 'settings', 'preferences.notifications', 'case.close']
+				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit',  'users.deactivate', 'users.create', 'settings', 'preferences.notifications', 'case.close', 'case.assign']
 			},
 			'gestor_politico': {
 				name: 'João das Neves',
@@ -2039,6 +2072,26 @@ Highcharts.maps["countries/br/br-all"] = {
 						resolve: {
 							question: function() { return question; },
 							defaultAnswer: function() { return defaultAnswer; },
+							canDismiss: function() { return canDismiss; }
+						}
+					};
+
+					if (!canDismiss) {
+						params.keyboard = false;
+						params.backdrop = 'static';
+					}
+
+					return params;
+				},
+
+				UserPicker: function(title, message, canDismiss) {
+					var params = {
+						templateUrl: '/modals/user_picker.html',
+						controller: 'UserPickerModalCtrl',
+						size: 'md',
+						resolve: {
+							title: function() { return title; },
+							message: function() { return message; },
 							canDismiss: function() { return canDismiss; }
 						}
 					};
