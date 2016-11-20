@@ -1451,13 +1451,13 @@ Highcharts.maps["countries/br/br-all"] = {
 				name: 'João das Neves',
 				email: 'jneves@saopaulo.sp.gov.br',
 				type: 'Gestor Político',
-				can: ['preferences', 'dashboard','reports', 'users', 'users.deactivate']
+				can: ['dashboard','reports', 'users', 'users.deactivate']
 			},
 			'gestor_nacional': {
 				name: 'Jane Doe',
 				email: 'fdenp@unicef.org.br',
 				type: 'Gestor Nacional',
-				can: ['preferences', 'dashboard', 'reports', 'cities', 'users.filter_by_city']
+				can: ['dashboard', 'reports', 'cities', 'users.filter_by_city']
 			},
 			'super_administrador': {
 				name: 'Morgan Freeman',

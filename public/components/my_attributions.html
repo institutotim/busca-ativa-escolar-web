@@ -4,7 +4,7 @@
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<th># <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
+					<th>N&ordm; <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
 					<th>Nome <i class="fa fa-arrow-down"></i><br /><small>da criança ou adolescente</small></th>
 					<th>Etapa <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
 					<th>Status <i class="fa fa-arrow-down"></i><br />&nbsp;</th>
@@ -15,12 +15,12 @@
 			<tbody>
 				<tr ng-repeat="i in [1,2,3,4,5,6,7,8]">
 					<td width="8%">
-						<i class="material-icons">assignment</i><br />
-						<span>#{{12 + i}}</span>
+						<div><i class="material-icons">assignment</i><br /></div>
+						<div class="text-center"><span>{{12 + i}}</span></div>
 					</td>
 					<td width="40%">
 						<strong><i class="fa fa-mars"></i> Edward Doe</strong><br />
-						<small><i class="fa fa-venus"></i> Jane Doe / <i class="fa fa-mars"></i> John Doe</small>
+						<small>Jane Doe / John Doe</small>
 					</td>
 					<td width="18%">
 						Pesquisa

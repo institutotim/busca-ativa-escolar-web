@@ -27,6 +27,7 @@
 					<th>N&deg;</th>
 					<th>Nome</th>
 					<th>Etapa atual</th>
+					<th>Status</th>
 					<th>Data de abertura</th>
 				</tr>
 				</thead>
@@ -35,6 +36,7 @@
 					<td>#{{42 + i}}</td>
 					<td>Edward Doe</td>
 					<td>Pesquisa</td>
+					<td>{{i == 3 ? 'Em atraso' : 'Em andamento'}}</td>
 					<td>25/08/2016</td>
 				</tr>
 				</tbody>
@@ -42,8 +44,9 @@
 		</div>
 
 		<div class="col-md-12">
-			<h2><i class="material-icons">insert_chart</i> Visão geral do programa <small>São Paulo/SP</small></h2>
+			<h2><i class="material-icons">insert_chart</i> Visão geral dos alertas <small>São Paulo/SP</small></h2>
 			<div ng-include="'components/metrics_overview.html'"></div>
+			<div ng-include="'components/metrics_progress.html'"></div>
 		</div>
 	</div>
 
