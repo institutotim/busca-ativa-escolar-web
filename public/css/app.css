@@ -200,6 +200,10 @@ footer.app-footer a.credits-btn {
   overflow: visible;
 }
 
+.panel-header-label {
+  color: #777 !important;
+}
+
 .dropdown .dropdown-menu li > a {
   cursor: pointer;
 }
