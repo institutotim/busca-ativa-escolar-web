@@ -9,42 +9,48 @@
 				<thead>
 					<tr>
 						<th>N&ordm; <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
+						<th>Risco <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
 						<th>Nome <i class="fa fa-arrow-down"></i><br /><small>da criança ou adolescente</small></th>
 						<th>Idade <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
 						<th>Responsável <i class="fa fa-arrow-down"></i><br /><small>pelo caso</small></th>
 						<th>Etapa <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
 						<th>Status <i class="fa fa-arrow-down"></i> <br /><small>do caso</small></th>
-						<th class="text-center">Opções <br />&nbsp;</th>
+						<th class="text-center"><br />&nbsp;</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="i in range(1, 24)">
-						<td width="8%">
+						<td width="8%" style="vertical-align: middle;">
 							<div class="text-center"><i class="material-icons">assignment</i></div>
 							<div class="text-center">{{12 + i}}</div>
 						</td>
-						<td width="30%">
-							<strong><i class="fa fa-mars"></i> Edward Doe</strong><br />
-							<small>Jane Doe / John Doe</small>
+						<td width="10%" style="vertical-align: middle;">
+							<div class="label label-danger" uib-tooltip="Alto Risco" ng-show="(i == 7)">A</div>
+							<div class="label label-warning" uib-tooltip="Médio Risco" ng-show="(i == 8 || i == 9)">M</div>
+							<div class="label label-default" uib-tooltip="Baixo Risco" ng-show="(i < 7 || i > 9)">B</div>
 						</td>
-						<td width="10%">
+						<td width="26%" style="vertical-align: middle;">
+							<strong><i class="fa fa-mars"></i> Edward Doe</strong><br />
+							<small><span uib-tooltip="Pais ou responsáveis"><i class="fa fa-male"></i><i class="fa fa-female"></i></span> Jane Doe / John Doe</small>
+						</td>
+						<td width="10%" style="vertical-align: middle;">
 							12 anos
 						</td>
-						<td width="30%">
+						<td width="28%" style="vertical-align: middle;">
 							<i class="material-icons">person</i> Aryel Tupinambá <br />
 							<small>Coordenador Operacional</small>
 						</td>
-						<td width="10%">
+						<td width="10%" style="vertical-align: middle;">
 							{{(i == 4) ? 'Análise Técnica' : 'Pesquisa'}} <br />
 						</td>
-						<td width="8%">
+						<td width="8%" style="vertical-align: middle;">
 							<span class="label label-danger" ng-show="(i % 3) == 0">Em atraso!</span>
 							<span class="label label-info" ng-show="(i % 3) != 0">Em andamento</span>
 						</td>
-						<td width="10%" class="text-center">
+						<td width="6%" class="text-center" style="vertical-align: middle;">
 							<div class="btn-group">
-								<a ng-show="(i != 4)" href="#/cases/52" class="btn btn-info btn-sm"><i class="fa fa-edit"></i> Editar</a>
-								<a ng-show="(i == 4)" href="#/cases/52" class="btn btn-info btn-sm"><i class="fa fa-eye"></i> Ver</a>
+								<a ng-show="(i != 4)" href="#/cases/52" class="btn btn-info btn-sm btn-raised" style="padding: 8px 10px" uib-tooltip="Editar"><i class="fa fa-edit"></i></a>
+								<a ng-show="(i == 4)" href="#/cases/52" class="btn btn-info btn-sm btn-raised" style="padding: 8px 10px" uib-tooltip="Ver"><i class="fa fa-eye"></i></a>
 							</div>
 						</td>
 					</tr>
@@ -84,6 +90,12 @@
 				<label class="control-label" for="filter-status-normal">Por status</label>
 				<div class="checkbox"><label for="filter-status-normal"><input type="checkbox" id="filter-status-normal" name="filter-status-normal" checked> Normal</label></div>
 				<div class="checkbox"><label for="filter-status-delayed"><input type="checkbox" id="filter-status-delayed" name="filter-status-delayed" checked> Em atraso</label></div>
+			</div>
+			<div class="form-group" style="margin-top: 5px">
+				<label class="control-label" for="filter-risk-level-low">Por grau de risco</label>
+				<div class="checkbox"><label for="filter-risk-level-low"><input type="checkbox" id="filter-risk-level-low" name="filter-risk-level-low" checked> Baixo</label></div>
+				<div class="checkbox"><label for="filter-risk-level-medium"><input type="checkbox" id="filter-risk-level-medium" name="filter-risk-level-medium" checked> Médio</label></div>
+				<div class="checkbox"><label for="filter-risk-level-high"><input type="checkbox" id="filter-risk-level-high" name="filter-risk-level-high" checked> Alto</label></div>
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-age-from">Por idade</label>
