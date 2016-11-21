@@ -49,8 +49,8 @@
 						</td>
 						<td width="6%" class="text-center" style="vertical-align: middle;">
 							<div class="btn-group">
-								<a ng-show="(i != 4)" href="#/cases/52" class="btn btn-default btn-sm btn-raised" style="padding: 8px 10px" uib-tooltip="Editar"><i class="fa fa-edit"></i></a>
-								<a ng-show="(i == 4)" href="#/cases/52" class="btn btn-default btn-sm btn-raised" style="padding: 8px 10px" uib-tooltip="Ver"><i class="fa fa-eye"></i></a>
+								<a ng-show="(i != 4)" href="#/cases/52" class="btn btn-default btn-sm btn-raised" style="padding: 8px 10px" uib-tooltip="Incluir informações"><i class="fa fa-edit"></i></a>
+								<a ng-show="(i == 4)" href="#/cases/52" class="btn btn-default btn-sm btn-raised" style="padding: 8px 10px" uib-tooltip="Ver informações"><i class="fa fa-eye"></i></a>
 							</div>
 						</td>
 					</tr>
@@ -87,12 +87,16 @@
 				<input type="text" class="form-control" id="filter-full-address" placeholder="Bairro, CEP, nome da rua...">
 			</div>
 			<div class="form-group" style="margin-top: 5px">
-				<label class="control-label" for="filter-status-progress">Por status</label>
+				<label class="control-label" for="filter-status-sent">Por status do alerta</label>
+				<div class="checkbox"><label for="filter-status-sent"><input type="checkbox" id="filter-status-sent" name="filter-status-sent" checked> Enviado</label></div>
 				<div class="checkbox"><label for="filter-status-rejected"><input type="checkbox" id="filter-status-rejected" name="filter-status-rejected"> Improcedente</label></div>
+			</div>
+			<div class="form-group" style="margin-top: 5px">
+				<label class="control-label" for="filter-status-progress">Por status do caso</label>
 				<div class="checkbox"><label for="filter-status-progress"><input type="checkbox" id="filter-status-progress" name="filter-status-progress" checked> Em andamento</label></div>
 				<div class="checkbox"><label for="filter-status-delayed"><input type="checkbox" id="filter-status-delayed" name="filter-status-delayed" checked> Em atraso</label></div>
 				<div class="checkbox"><label for="filter-status-completed"><input type="checkbox" id="filter-status-completed" name="filter-status-completed" checked> Dentro da Escola</label></div>
-				<div class="checkbox"><label for="filter-status-closed"><input type="checkbox" id="filter-status-closed" name="filter-status-closed"> Dentro da Escola Consolidado</label></div>
+				<div class="checkbox"><label for="filter-status-closed"><input type="checkbox" id="filter-status-closed" name="filter-status-closed"> Concluído</label></div>
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-risk-level-low">Por grau de risco</label>
