@@ -14,6 +14,10 @@
 				$uibModalInstance.close({response: $scope.selectedUser});
 			};
 
+			$scope.close = function() {
+				$uibModalInstance.close(false);
+			}
+
 		});
 
 })();

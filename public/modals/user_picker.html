@@ -16,6 +16,7 @@
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-primary" type="button" ng-click="onSelect()">Selecionar</button>
+		<button class="btn btn-default" type="button" ng-show="canDismiss" ng-click="close()">Cancelar</button>
+		<button class="btn btn-primary btn-raised" type="button" ng-click="onSelect()">Selecionar</button>
 	</div>
 </div>

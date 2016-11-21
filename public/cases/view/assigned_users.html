@@ -27,7 +27,7 @@
 				<td><i class="fa fa-user"></i> John Doe</td>
 				<td>Secretaria dos Transportes</td>
 				<td ng-show="identity.can('case.assign')">
-					<a ng-show="$scope.currentStep == 'pesquisa' || !isPastStep('pesquisa', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('pesquisa')"><i class="fa fa-refresh"></i> Alterar</a>
+					<a ng-show="$scope.currentStep == 'pesquisa' || !isPastStep('pesquisa', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('pesquisa', true)"><i class="fa fa-refresh"></i> Alterar</a>
 				</td>
 			</tr>
 
@@ -37,7 +37,7 @@
 				<td><i class="fa fa-user"></i> John Doe</td>
 				<td>Secretaria dos Transportes</td>
 				<td ng-show="identity.can('case.assign')">
-					<a ng-show="$scope.currentStep == 'analise_tecnica' || !isPastStep('analise_tecnica', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('analise_tecnica')"><i class="fa fa-refresh"></i> Alterar</a>
+					<a ng-show="$scope.currentStep == 'analise_tecnica' || !isPastStep('analise_tecnica', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('analise_tecnica', true)"><i class="fa fa-refresh"></i> Alterar</a>
 				</td>
 			</tr>
 
@@ -47,7 +47,7 @@
 				<td></td>
 				<td></td>
 				<td ng-show="identity.can('case.assign')">
-					<a ng-show="$scope.currentStep == 'consolidacao' || !isPastStep('consolidacao', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('consolidacao')"><i class="fa fa-refresh"></i> Alterar</a>
+					<a ng-show="$scope.currentStep == 'consolidacao' || !isPastStep('consolidacao', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('consolidacao', true)"><i class="fa fa-refresh"></i> Alterar</a>
 				</td>
 			</tr>
 
@@ -57,7 +57,7 @@
 				<td></td>
 				<td></td>
 				<td ng-show="identity.can('case.assign')">
-					<a ng-show="$scope.currentStep == '1obs' || !isPastStep('1obs', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('1obs')"><i class="fa fa-refresh"></i> Alterar</a>
+					<a ng-show="$scope.currentStep == '1obs' || !isPastStep('1obs', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('1obs', true)"><i class="fa fa-refresh"></i> Alterar</a>
 				</td>
 			</tr>
 
@@ -67,7 +67,7 @@
 				<td></td>
 				<td></td>
 				<td ng-show="identity.can('case.assign')">
-					<a ng-show="$scope.currentStep == '2obs' || !isPastStep('2obs', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('2obs')"><i class="fa fa-refresh"></i> Alterar</a>
+					<a ng-show="$scope.currentStep == '2obs' || !isPastStep('2obs', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('2obs', true)"><i class="fa fa-refresh"></i> Alterar</a>
 				</td>
 			</tr>
 
@@ -77,7 +77,7 @@
 				<td></td>
 				<td></td>
 				<td ng-show="identity.can('case.assign')">
-					<a ng-show="$scope.currentStep == '3obs' || !isPastStep('3obs', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('3obs')"><i class="fa fa-refresh"></i> Alterar</a>
+					<a ng-show="$scope.currentStep == '3obs' || !isPastStep('3obs', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('3obs', true)"><i class="fa fa-refresh"></i> Alterar</a>
 				</td>
 			</tr>
 
@@ -87,7 +87,7 @@
 				<td></td>
 				<td></td>
 				<td ng-show="identity.can('case.assign')">
-					<a ng-show="$scope.currentStep == '4obs' || !isPastStep('4obs', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('4obs')"><i class="fa fa-refresh"></i> Alterar</a>
+					<a ng-show="$scope.currentStep == '4obs' || !isPastStep('4obs', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('4obs', true)"><i class="fa fa-refresh"></i> Alterar</a>
 				</td>
 			</tr>
 			</tbody>
