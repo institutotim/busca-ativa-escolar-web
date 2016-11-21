@@ -13,10 +13,10 @@
 			<div class="pull-right btn btn-raised btn-default btn-fab" style="margin: 10px 15px;" uib-tooltip="Masculino"><i class="material-icons fa fa-mars"></i></div>
 
 			<div class="pull-right" style="margin: 0 10px;">
-				<label class="control-label panel-header-label" style="margin: 0;">Prioridade do caso</label>
+				<label class="control-label panel-header-label" style="margin: 0;">Grau de risco</label>
 				<div class="dropdown case-step-dropdown" uib-dropdown is-open="false">
-					<a class="btn btn-warning btn-raised dropdown-toggle" uib-dropdown-toggle style="width: 100%">Alta <span class="caret"></span></a>
-					<ul class="dropdown-menu" uib-dropdown-menu>
+					<a class="btn btn-warning btn-raised dropdown-toggle" uib-dropdown-toggle style="width: 100%">Alta <span ng-show="identity.can('case.change_risk_level')" class="caret"></span></a>
+					<ul class="dropdown-menu" uib-dropdown-menu ng-show="identity.can('case.change_risk_level')">
 						<li><a>Alta</a></li>
 						<li><a>Média</a></li>
 						<li><a>Baixa</a></li>
