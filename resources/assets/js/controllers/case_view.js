@@ -17,9 +17,9 @@
 		$scope.steps = {
 			'alerta': {id: 'alerta', name: 'Alerta', opens: ['info', 'parents'], next: 'pesquisa'},
 			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'parents', 'location', 'education'], next: 'analise_tecnica'},
-			'analise_tecnica': {id: 'analise_tecnica', name: 'Análise Técnica', opens: ['analise_tecnica'], next: 'consolidacao'},
-			'consolidacao': {id: 'consolidacao', name: 'Consolidação', next: 'reinsercao'},
-			'reinsercao': {id: 'reinsercao', name: 'Reinserção', next: '1obs'},
+			'analise_tecnica': {id: 'analise_tecnica', name: 'Análise Técnica', opens: ['analise_tecnica'], next: 'gestao_do_caso'},
+			'gestao_do_caso': {id: 'gestao_do_caso', name: 'Gestão do Caso', next: 'rematricula'},
+			'rematricula': {id: 'rematricula', name: '(Re)matrícula', next: '1obs'},
 			'1obs': {id: '1obs', name: '1a observação', next: '2obs'},
 			'2obs': {id: '2obs', name: '2a observação', next: '3obs'},
 			'3obs': {id: '3obs', name: '3a observação', next: '4obs'},
@@ -42,10 +42,10 @@
 				id: 'analise_tecnica',
 				name: 'Análise Técnica',
 				opens: ['analise_tecnica'],
-				next: 'consolidacao'
+				next: 'gestao_do_caso'
 			},
-			'consolidacao': {id: 'consolidacao', name: 'Consolidação', next: 'reinsercao'},
-			'reinsercao': {id: 'reinsercao', name: 'Reinserção', next: '1obs'},
+			'gestao_do_caso': {id: 'gestao_do_caso', name: 'Consolidação', next: 'rematricula'},
+			'rematricula': {id: 'rematricula', name: 'Reinserção', next: '1obs'},
 			'1obs': {id: '1obs', name: '1a observação', next: '2obs'},
 		};
 

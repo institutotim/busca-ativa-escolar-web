@@ -42,12 +42,22 @@
 			</tr>
 
 			<tr>
-				<td>Consolidação</td>
+				<td>Gestão do Caso</td>
 				<td></td>
 				<td></td>
 				<td></td>
 				<td ng-show="identity.can('case.assign')">
-					<a ng-show="$scope.currentStep == 'consolidacao' || !isPastStep('consolidacao', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('consolidacao', true)"><i class="fa fa-refresh"></i> Alterar</a>
+					<a ng-show="$scope.currentStep == 'gestao_do_caso' || !isPastStep('gestao_do_caso', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('gestao_do_caso', true)"><i class="fa fa-refresh"></i> Alterar</a>
+				</td>
+			</tr>
+
+			<tr>
+				<td>(Re)matrícula</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td ng-show="identity.can('case.assign')">
+					<a ng-show="$scope.currentStep == 'rematricula' || !isPastStep('rematricula', false)" style="margin: 0" class="btn btn-sm btn-default btn-raised" ng-click="assignUserToStep('rematricula', true)"><i class="fa fa-refresh"></i> Alterar</a>
 				</td>
 			</tr>
 
