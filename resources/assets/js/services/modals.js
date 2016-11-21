@@ -94,6 +94,19 @@
 					return params;
 				},
 
+				CaseRestart: function() {
+					var params = {
+						templateUrl: '/modals/case_restart.html',
+						controller: 'CaseRestartModalCtrl',
+						size: 'md',
+						resolve: {
+
+						}
+					};
+
+					return params;
+				},
+
 				CaseActivityLogEntry: function() {
 					var params = {
 						templateUrl: '/modals/case_activity_log_entry.html',

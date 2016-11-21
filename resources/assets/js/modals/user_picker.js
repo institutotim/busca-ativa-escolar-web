@@ -15,7 +15,7 @@
 			};
 
 			$scope.close = function() {
-				$uibModalInstance.close(false);
+				$uibModalInstance.dismiss(false);
 			}
 
 		});

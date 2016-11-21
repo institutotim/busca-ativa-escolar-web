@@ -225,7 +225,7 @@
 		}
 
 		$scope.closeCase = function() {
-			Modals.show(Modals.Confirm('Tem certeza que deseja encerrar esse caso?', 'Essa operação não pode ser desfeita. Ao encerrar o caso, nenhuma informação poderá ser alterada, e a progressão do caso será interrompida.', true)).then(function() {
+			Modals.show(Modals.CaseRestart()).then(function() {
 				$scope.steps2016Collapsed = true;
 				$scope.isCaseClosed = true;
 
@@ -1420,7 +1420,29 @@ Highcharts.maps["countries/br/br-all"] = {
 			console.log("[modal] case_activity_log_entry");
 
 			$scope.close = function() {
-				$uibModalInstance.close(true);
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('CaseRestartModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance) {
+
+			console.log("[modal] case_restart");
+
+			$scope.step = 1;
+			$scope.reason = "";
+
+			$scope.ok = function() {
+				$uibModalInstance.close({response: $scope.reason});
+			};
+
+			$scope.cancel = function() {
+				$uibModalInstance.dismiss(false);
 			};
 
 		});
@@ -1488,7 +1510,7 @@ Highcharts.maps["countries/br/br-all"] = {
 			};
 
 			$scope.close = function() {
-				$uibModalInstance.close(false);
+				$uibModalInstance.dismiss(false);
 			}
 
 		});
@@ -2107,6 +2129,19 @@ Highcharts.maps["countries/br/br-all"] = {
 						params.keyboard = false;
 						params.backdrop = 'static';
 					}
+
+					return params;
+				},
+
+				CaseRestart: function() {
+					var params = {
+						templateUrl: '/modals/case_restart.html',
+						controller: 'CaseRestartModalCtrl',
+						size: 'md',
+						resolve: {
+
+						}
+					};
 
 					return params;
 				},

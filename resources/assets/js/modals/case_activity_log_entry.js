@@ -9,7 +9,7 @@
 			console.log("[modal] case_activity_log_entry");
 
 			$scope.close = function() {
-				$uibModalInstance.close(true);
+				$uibModalInstance.dismiss(false);
 			};
 
 		});

@@ -55,7 +55,7 @@
 		}
 
 		$scope.closeCase = function() {
-			Modals.show(Modals.Confirm('Tem certeza que deseja encerrar esse caso?', 'Essa operação não pode ser desfeita. Ao encerrar o caso, nenhuma informação poderá ser alterada, e a progressão do caso será interrompida.', true)).then(function() {
+			Modals.show(Modals.CaseRestart()).then(function() {
 				$scope.steps2016Collapsed = true;
 				$scope.isCaseClosed = true;
 
