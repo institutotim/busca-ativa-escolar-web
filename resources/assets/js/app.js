@@ -109,6 +109,10 @@
 					templateUrl: 'static/credits.html?NC=' + NC,
 					controller: 'CreditsCtrl'
 				}).
+				when('/sign_up', {
+					templateUrl: 'sign_up/main.html?NC=' + NC,
+					controller: 'SignUpCtrl'
+				}).
 				otherwise({
 					redirectTo: '/dashboard'
 				});

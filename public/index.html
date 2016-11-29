@@ -27,7 +27,7 @@
 	</head>
 	<body>
 
-		<app-navbar></app-navbar>
+		<app-navbar ng-show="identity.isLoggedIn()"></app-navbar>
 		<toast></toast>
 
 		<div class="container app-container" ng-view></div>

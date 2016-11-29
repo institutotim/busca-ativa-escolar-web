@@ -37,3 +37,31 @@
 }
 
 .dropdown .dropdown-menu li > a { cursor: pointer; }
+
+.sign-up-wizard-pills {
+
+	border-radius: 4px;
+	overflow: hidden;
+
+	li { width: calc(100% / 6); margin: 0 !important; }
+	li a { border-radius: 0; text-align: center; color: $brand-info; }
+
+	li.active a { background-color: $brand-info; }
+	li.completed a { background-color: $brand-success; color: white; }
+
+}
+
+.deadline-input {
+	text-align: center;
+	font-weight: bold;
+	border: 1px solid #eee;
+	padding: 4px;
+	border-radius: 4px;
+}
+
+.sign-up-groups {
+	tbody tr td {
+		border-top: none;
+		padding: 0 8px;
+	}
+}

@@ -1,9 +1,8 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('SettingsCtrl', function ($scope, $rootScope, $window, ngToast, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('SignUpCtrl', function ($scope, $rootScope, $window, Modals, MockData, Identity) {
 
-		$rootScope.section = 'settings';
-		$scope.identity = Identity;
+		$rootScope.section = 'sign_up';
 
 		$scope.identity = Identity;
 		$scope.step = 1;
@@ -16,6 +15,8 @@
 			'Secretaria dos Direitos Humanos e Cidadania',
 			'Secretaria da Saúde'
 		];
+
+		Identity.clearLogin();
 
 		$scope.goToStep = function (step) {
 			$scope.step = step;
@@ -44,9 +45,12 @@
 		};
 
 		$scope.finish = function() {
-			ngToast.create({
-				className: 'success',
-				content: 'Configurações salvas!'
+			Modals.show(Modals.Confirm(
+				'Tem certeza que deseja prosseguir com o cadastro?',
+				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
+			)).then(function(res) {
+				Identity.login();
+				location.hash = '/dashboard';
 			});
 		};
 

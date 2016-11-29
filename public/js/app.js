@@ -109,6 +109,10 @@
 					templateUrl: 'static/credits.html?NC=' + NC,
 					controller: 'CreditsCtrl'
 				}).
+				when('/sign_up', {
+					templateUrl: 'sign_up/main.html?NC=' + NC,
+					controller: 'SignUpCtrl'
+				}).
 				otherwise({
 					redirectTo: '/dashboard'
 				});
@@ -503,10 +507,114 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('SettingsCtrl', function ($scope, $rootScope, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('SettingsCtrl', function ($scope, $rootScope, $window, ngToast, MockData, Identity) {
 
 		$rootScope.section = 'settings';
 		$scope.identity = Identity;
+
+		$scope.identity = Identity;
+		$scope.step = 1;
+		$scope.causes = MockData.alertReasons;
+		$scope.newGroupName = "";
+		$scope.groups = [
+			'Secretaria dos Transportes',
+			'Secretaria de Assistência Social',
+			'Secretaria da Educação',
+			'Secretaria dos Direitos Humanos e Cidadania',
+			'Secretaria da Saúde'
+		];
+
+		$scope.goToStep = function (step) {
+			$scope.step = step;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.nextStep = function() {
+			$scope.step++;
+			$window.scrollTo(0, 0);
+			if($scope.step > 6) $scope.step = 6;
+		};
+
+		$scope.prevStep = function() {
+			$scope.step--;
+			$window.scrollTo(0, 0);
+			if($scope.step < 1) $scope.step = 1;
+		};
+
+		$scope.removeGroup = function(i) {
+			$scope.groups.splice(i, 1);
+		};
+
+		$scope.addGroup = function() {
+			$scope.groups.push($scope.newGroupName);
+			$scope.newGroupName = "";
+		};
+
+		$scope.finish = function() {
+			ngToast.create({
+				className: 'success',
+				content: 'Configurações salvas!'
+			});
+		};
+
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').controller('SignUpCtrl', function ($scope, $rootScope, $window, Modals, MockData, Identity) {
+
+		$rootScope.section = 'sign_up';
+
+		$scope.identity = Identity;
+		$scope.step = 1;
+		$scope.causes = MockData.alertReasons;
+		$scope.newGroupName = "";
+		$scope.groups = [
+			'Secretaria dos Transportes',
+			'Secretaria de Assistência Social',
+			'Secretaria da Educação',
+			'Secretaria dos Direitos Humanos e Cidadania',
+			'Secretaria da Saúde'
+		];
+
+		Identity.clearLogin();
+
+		$scope.goToStep = function (step) {
+			$scope.step = step;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.nextStep = function() {
+			$scope.step++;
+			$window.scrollTo(0, 0);
+			if($scope.step > 6) $scope.step = 6;
+		};
+
+		$scope.prevStep = function() {
+			$scope.step--;
+			$window.scrollTo(0, 0);
+			if($scope.step < 1) $scope.step = 1;
+		};
+
+		$scope.removeGroup = function(i) {
+			$scope.groups.splice(i, 1);
+		};
+
+		$scope.addGroup = function() {
+			$scope.groups.push($scope.newGroupName);
+			$scope.newGroupName = "";
+		};
+
+		$scope.finish = function() {
+			Modals.show(Modals.Confirm(
+				'Tem certeza que deseja prosseguir com o cadastro?',
+				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
+			)).then(function(res) {
+				Identity.login();
+				location.hash = '/dashboard';
+			});
+		};
 
 	});
 
@@ -1520,6 +1628,8 @@ Highcharts.maps["countries/br/br-all"] = {
 
 	angular.module('BuscaAtivaEscolar').service('Identity', function ($cookies) {
 
+		var hasLoggedIn = true;
+
 		var mockUsers = {
 			'agente_comunitario': {
 				name: 'Mary Smith',
@@ -1595,11 +1705,32 @@ Highcharts.maps["countries/br/br-all"] = {
 			}
 		}
 
+		function isLoggedIn() {
+			return !!hasLoggedIn;
+		}
+
+		function login() {
+			hasLoggedIn = true;
+		}
+
+		function logout() {
+			clearLogin();
+			location.hash = '/sign_up';
+		}
+
+		function clearLogin() {
+			hasLoggedIn = false;
+		}
+
 		return {
 			getCurrentUser: getCurrentUser,
 			getType: getType,
 			can: can,
-			setUserType: setUserType
+			setUserType: setUserType,
+			isLoggedIn: isLoggedIn,
+			login: login,
+			logout: logout,
+			clearLogin: clearLogin
 		}
 
 	});

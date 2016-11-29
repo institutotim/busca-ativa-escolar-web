@@ -2,6 +2,8 @@
 
 	angular.module('BuscaAtivaEscolar').service('Identity', function ($cookies) {
 
+		var hasLoggedIn = true;
+
 		var mockUsers = {
 			'agente_comunitario': {
 				name: 'Mary Smith',
@@ -77,11 +79,32 @@
 			}
 		}
 
+		function isLoggedIn() {
+			return !!hasLoggedIn;
+		}
+
+		function login() {
+			hasLoggedIn = true;
+		}
+
+		function logout() {
+			clearLogin();
+			location.hash = '/sign_up';
+		}
+
+		function clearLogin() {
+			hasLoggedIn = false;
+		}
+
 		return {
 			getCurrentUser: getCurrentUser,
 			getType: getType,
 			can: can,
-			setUserType: setUserType
+			setUserType: setUserType,
+			isLoggedIn: isLoggedIn,
+			login: login,
+			logout: logout,
+			clearLogin: clearLogin
 		}
 
 	});

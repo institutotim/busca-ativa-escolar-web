@@ -54,10 +54,10 @@
 
 						<li class="has-split-btn" ng-if="identity.can('preferences')">
 							<a class="col-md-7 split-btn" href="#/preferences"><i class="material-icons">settings</i> Preferências</a>
-							<a class="col-md-5 split-btn" href="#"><i class="material-icons">exit_to_app</i> Sair</a>
+							<a class="col-md-5 split-btn" ng-click="identity.logout()"><i class="material-icons">exit_to_app</i> Sair</a>
 						</li>
 
-						<li ng-if="!identity.can('preferences')"><a href="#"><i class="material-icons">exit_to_app</i> Sair</a></li>
+						<li ng-if="!identity.can('preferences')"><a ng-click="identity.logout()"><i class="material-icons">exit_to_app</i> Sair</a></li>
 					</ul>
 				</li>
 			</ul>

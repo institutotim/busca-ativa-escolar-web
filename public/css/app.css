@@ -216,4 +216,38 @@ footer.app-footer a.credits-btn {
   cursor: pointer;
 }
 
+.sign-up-wizard-pills {
+  border-radius: 4px;
+  overflow: hidden;
+}
+.sign-up-wizard-pills li {
+  width: calc(100% / 6);
+  margin: 0 !important;
+}
+.sign-up-wizard-pills li a {
+  border-radius: 0;
+  text-align: center;
+  color: #00b8ed;
+}
+.sign-up-wizard-pills li.active a {
+  background-color: #00b8ed;
+}
+.sign-up-wizard-pills li.completed a {
+  background-color: #5cb85c;
+  color: white;
+}
+
+.deadline-input {
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid #eee;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.sign-up-groups tbody tr td {
+  border-top: none;
+  padding: 0 8px;
+}
+
 /*# sourceMappingURL=app.css.map */
