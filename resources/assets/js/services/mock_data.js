@@ -411,7 +411,7 @@
 					data : brazilMapData,
 					mapData: Highcharts.maps['countries/br/br-all'],
 					joinBy: 'hc-key',
-					name: 'Casos (demonstração)',
+					name: 'Quantidade (abs)',
 					states: {
 						hover: {
 							color: '#BADA55'
