@@ -1,4 +1,126 @@
-<div class="panel panel-default">
+<div class="panel panel-default" ng-show="currentForm == 'alerta'">
+	<div class="panel-heading"><i class="material-icons">person</i> Informações da criança ou adolescente</div>
+	<div class="panel-body">
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-alert-name">Nome da criança ou adolescente*</label>
+			<input type="text" class="form-control" id="fld-alert-name" value="Edward Doe">
+		</div>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-alert-gender">Gênero</label>
+			<select id="fld-alert-gender" class="form-control">
+				<option selected>Masculino</option>
+				<option>Feminino</option>
+				<option>Indefinido</option>
+			</select>
+		</div>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-alert-raca">Raça / Etnia</label>
+			<select id="fld-alert-raca" class="form-control">
+				<option selected>Caucasiano</option>
+			</select>
+		</div>
+
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-alert-dob">Data de nascimento</label>
+			<input type="date" class="form-control" id="fld-alert-dob" value="25/08/1991">
+		</div>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-alert-rg">RG</label>
+			<input type="text" class="form-control" id="fld-alert-rg" value="12.345.678-X">
+		</div>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-alert-cpf">CPF</label>
+			<input type="text" class="form-control" id="fld-alert-cpf" value="123.456.789-00">
+		</div>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-alert-codnis">NIS (Número de Identificação Social)</label>
+			<input type="text" class="form-control" id="fld-alert-codnis" value="12345678">
+		</div>
+		<div class="form-group col-md-12">
+			<label class="control-label">Por que a criança ou adolescente está fora da escola?* <br />Selecione a principal causa identificada:</label>
+			<div class="radio" ng-repeat="(i, reason) in reasons">
+				<label>
+					<input name="type" value="{{i}}" type="radio"> {{reason}}
+				</label>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default" ng-show="currentForm == 'alerta'">
+	<div class="panel-heading"><i class="material-icons">person</i> Dados do responsável</div>
+	<div class="panel-body">
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-alert-mother-name">Nome da mãe ou responsável*</label>
+			<input type="text" class="form-control" id="fld-alert-mother-name" value="Jane Doe">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-alert-father-name">Nome do pai ou responsável</label>
+			<input type="text" class="form-control" id="fld-alert-father-name" value="John Doe">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-alert-mother-rg">RG da mãe ou responsável</label>
+			<input type="text" class="form-control" id="fld-alert-mother-rg" value="12.345.678-9">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-alert-father-rg">RG do pai ou responsável</label>
+			<input type="text" class="form-control" id="fld-alert-father-rg" value="23.456.789-0">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-alert-mother-phone">Telefone da mãe ou responsável</label>
+			<input type="text" class="form-control" id="fld-alert-mother-phone" value="(11) 92283-0000">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-alert-father-phone">Telefone do pai ou responsável</label>
+			<input type="text" class="form-control" id="fld-alert-father-phone" value="(11) 92283-0000">
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default" ng-show="currentForm == 'alerta'">
+	<div class="panel-heading"><i class="material-icons">map</i> Dados de localização</div>
+	<div class="panel-body">
+		<div class="form-group col-md-8">
+			<label class="control-label" for="fld-alert-address">Endereço*</label>
+			<input type="text" class="form-control" id="fld-alert-address" value="Alameda Barão de Piracicaba, 500">
+		</div>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-alert-cep">CEP</label>
+			<input type="text" class="form-control" id="fld-alert-cep" value="01234-567">
+		</div>
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-alert-reference">Referência geográfica</label>
+			<input type="text" class="form-control" id="fld-alert-reference" value="Esquina com a Rua ABCD, em frente a loja XYZ">
+		</div>
+		<div class="form-group col-md-5">
+			<label class="control-label" for="fld-alert-neighborhood">Bairro*</label>
+			<input type="text" class="form-control" id="fld-alert-neighborhood" value="Campos Elíseos">
+		</div>
+		<div class="form-group col-md-5">
+			<label class="control-label" for="fld-alert-city">Município*</label>
+			<input type="text" class="form-control" id="fld-alert-city" value="São Paulo">
+		</div>
+		<div class="form-group col-md-2">
+			<label class="control-label" for="fld-alert-uf">UF*</label>
+			<input type="text" class="form-control" id="fld-alert-uf" value="SP">
+		</div>
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-alert-phone">Telefone residencial</label>
+			<input type="text" class="form-control" id="fld-alert-phone" value="(11) 2222-3333">
+		</div>
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-alert-mobile">Telefone celular</label>
+			<input type="text" class="form-control" id="fld-alert-mobile" value="(11) 98888-4444">
+		</div>
+	</div>
+</div>
+
+<div class="panel panel-default" ng-show="showAll || currentForm == 'pesquisa'">
 	<div class="panel-heading" ng-click="togglePanel('info')"><i class="material-icons">person</i> Dados da criança ou adolescente</div>
 	<div class="panel-body" uib-collapse="!isOpen('info')">
 		<div class="form-group col-md-12">
@@ -16,33 +138,24 @@
 		<div class="form-grouo col-md-4">
 			<label class="control-label" for="fld-raca">Raça / Etnia</label>
 			<select id="fld-raca" class="form-control">
-				<option selected>Caucasiano</option>
+				<option>Indígena</option>
+				<option selected>Branca</option>
+				<option>Preta (pretos e pardos)</option>
+				<option>Amarela</option>
 			</select>
 		</div>
 		<div class="form-group col-md-4">
 			<label class="control-label" for="fld-dob">Data de nascimento</label>
 			<input type="date" class="form-control" id="fld-dob" value="25/08/1991">
 		</div>
-		<div class="form-group col-md-4">
+		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-rg">RG</label>
 			<input type="text" class="form-control" id="fld-rg" value="12.345.678-X">
 		</div>
-		<div class="form-group col-md-4">
+		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-cpf">CPF</label>
 			<input type="text" class="form-control" id="fld-cpf" value="123.456.789-00">
 		</div>
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-codnis">NIS (Número de Identificação Social)</label>
-			<input type="text" class="form-control" id="fld-codnis" value="12345678">
-		</div>
-		<div class="form-group col-md-12">
-			<label class="control-label">Motivos de estar fora da escola*</label>
-			<div class="radio" ng-repeat="(i, reason) in reasons">
-				<label>
-					<input name="type" value="{{i}}" type="radio"> <strong ng-if="(i == 3)" class="label label-default">Motivo indicado no alerta</strong> {{reason}}
-				</label>
-			</div>
-		</div>
 
 		<div ng-show="editable">
 			<hr />
@@ -54,68 +167,50 @@
 	</div>
 </div>
 
-<div class="panel panel-default">
-	<div class="panel-heading" ng-click="togglePanel('parents')"><i class="material-icons">person</i> Dados do responsável</div>
-	<div class="panel-body" uib-collapse="!isOpen('parents')">
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-mother-name">Nome da mãe ou responsável*</label>
-			<input type="text" class="form-control" id="fld-mother-name" value="Jane Doe">
-		</div>
-
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-father-name">Nome do pai ou responsável</label>
-			<input type="text" class="form-control" id="fld-father-name" value="John Doe">
-		</div>
-
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-mother-rg">RG da mãe ou responsável</label>
-			<input type="text" class="form-control" id="fld-mother-rg" value="12.345.678-9">
-		</div>
-
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-father-rg">RG do pai ou responsável</label>
-			<input type="text" class="form-control" id="fld-father-rg" value="23.456.789-0">
-		</div>
-
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-mother-contact">Contato da mãe ou responsável</label>
-			<input type="text" class="form-control" id="fld-mother-contact" value="(11) 2222-3333">
-		</div>
-
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-father-contact">Contato do pai ou responsável</label>
-			<input type="text" class="form-control" id="fld-father-contact" value="(11) 2222-3333">
-		</div>
-
-		<div ng-show="editable">
-			<hr />
-
-			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
-		</div>
-
-	</div>
-</div>
-
-<div class="panel panel-default">
+<div class="panel panel-default" ng-show="showAll || currentForm == 'pesquisa'">
 	<div class="panel-heading" ng-click="togglePanel('education')"><i class="fa fa-graduation-cap"></i> Educação</div>
 	<div class="panel-body" uib-collapse="!isOpen('education')">
 		<div class="form-group col-md-12">
 			<label class="control-label" for="fld-has-been-at-school-yes">Já frequentou a escola alguma vez?</label>
 			<div class="radio">
-				<label><input id="fld-has-been-at-school-yes" name="has-been-at-school" value="yes" type="radio" checked> Sim</label>
+				<label><input id="fld-has-been-at-school-yes" ng-model="input.hasBeenAtSchool" ng-value="1" name="has-been-at-school" value="yes" type="radio" checked> Sim</label>
 			</div>
 			<div class="radio">
-				<label><input id="fld-has-been-at-school-no" name="has-been-at-school" value="no" type="radio"> Não</label>
+				<label><input id="fld-has-been-at-school-no" ng-model="input.hasBeenAtSchool" ng-value="0" name="has-been-at-school" value="no" type="radio"> Não</label>
 			</div>
 		</div>
 
-		<div class="form-group col-md-12">
+		<div class="form-group col-md-12" ng-show="!input.hasBeenAtSchool">
+		<label class="control-label" for="fld-reason-not-enrolled">Qual a justificativa de não ter frequentado?</label>
+			<input type="text" class="form-control" id="fld-reason-not-enrolled" value="Lorem ipsum dolor sit amet">
+		</div>
+
+		<div class="form-group col-md-12" ng-show="input.hasBeenAtSchool">
 			<label class="control-label" for="fld-last-school-year">Qual o último ano que frequentou?</label>
 			<input type="text" class="form-control" id="fld-last-school-year" value="Ensino Fundamental / 4&ordm; ano">
 		</div>
 
-		<div class="form-group col-md-12">
+		<div class="form-group col-md-12" ng-show="input.hasBeenAtSchool">
+			<label class="control-label" for="fld-year-last-enrolled">Em qual ano foi cursado o último ano escolar?</label>
+			<input type="text" class="form-control" id="fld-year-last-enrolled" value="2015">
+		</div>
+
+		<div class="form-group col-md-12" ng-show="input.hasBeenAtSchool">
+			<label class="control-label" for="fld-age-last-enrolled">Com qual idade foi cursado o último ano escolar?</label>
+			<input type="text" class="form-control" id="fld-age-last-enrolled" value="11">
+		</div>
+
+		<div class="form-group col-md-12" ng-show="input.hasBeenAtSchool">
+			<label class="control-label" for="fld-last-school-name">Nome da última escola cursada</label>
+			<input type="text" class="form-control" id="fld-last-school-name" value="EM Lorem Ipsum Dolor">
+		</div>
+
+		<div class="form-group col-md-12" ng-show="input.hasBeenAtSchool">
+			<label class="control-label" for="fld-last-school-address">Endereço da última escola cursada</label>
+			<input type="text" class="form-control" id="fld-last-school-address" value="Rua Lorem Ipsum, 123">
+		</div>
+
+		<div class="form-group col-md-12" ng-show="input.hasBeenAtSchool">
 			<label class="control-label" for="fld-last-school-year-status-completed">Qual o status do último ano escolar?</label>
 			<div class="radio">
 				<label><input id="fld-last-school-year-status-completed" name="last-school-year-status" value="completed" type="radio" checked> Completo</label>
@@ -135,7 +230,176 @@
 	</div>
 </div>
 
-<div class="panel panel-default">
+<div class="panel panel-default" ng-show="showAll || currentForm == 'pesquisa'">
+	<div class="panel-heading" ng-click="togglePanel('work')"><i class="fa fa-briefcase"></i> Trabalho</div>
+	<div class="panel-body" uib-collapse="!isOpen('work')">
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-does-work-yes">Esta criança ou adolescente está trabalhando?</label>
+			<div class="radio">
+				<label><input id="fld-does-work-yes" ng-model="input.doesWork" ng-value="1" name="does-work" value="yes" type="radio" checked> Sim</label>
+			</div>
+			<div class="radio">
+				<label><input id="does-work-no" ng-model="input.doesWork" ng-value="0" name="does-work" value="no" type="radio"> Não</label>
+			</div>
+		</div>
+
+		<div class="form-group col-md-12" ng-show="!input.doesWork">
+			<label class="control-label" for="fld-work-activity">Se trabalha, qual a atividade econômica?</label>
+			<input type="text" class="form-control" id="fld-work-activity" value="Serviço doméstico">
+		</div>
+
+		<div class="form-group col-md-12" ng-show="input.doesWork">
+			<label class="control-label" for="fld-work-is-paid-yes">O trabalho é remunerado?</label>
+			<div class="radio">
+				<label><input id="fld-work-is-paid-yes" ng-model="input.workIsPaid" ng-value="1" name="work-is-paid" value="yes" type="radio" checked> Sim</label>
+			</div>
+			<div class="radio">
+				<label><input id="work-is-paid-no" ng-model="input.workIsPaid" ng-value="0" name="work-is-paid" value="no" type="radio"> Não</label>
+			</div>
+		</div>
+
+		<div class="form-group col-md-12" ng-show="input.doesWork">
+			<label class="control-label" for="fld-work-hours">Quais as horas semanais trabalhadas?</label>
+			<input type="text" class="form-control" id="fld-work-hours" value="40">
+		</div>
+
+		<div ng-show="editable">
+			<hr />
+
+			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
+		</div>
+
+	</div>
+</div>
+
+<div class="panel panel-default" ng-show="showAll || currentForm == 'pesquisa'">
+	<div class="panel-heading" ng-click="togglePanel('parents')"><i class="fa fa-users"></i> Sobre os pais ou responsáveis</div>
+	<div class="panel-body" uib-collapse="!isOpen('parents')">
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-available-parents-mother">Quais são os familiares presentes?</label>
+			<div class="checkbox">
+				<label><input id="fld-available-parents-father" name="available-parents-father" value="father" type="checkbox" checked> Pai</label>
+			</div>
+			<div class="checkbox">
+				<label><input id="fld-available-parents-mother" name="available-parents-mother" value="mother" type="checkbox" checked> Mãe</label>
+			</div>
+			<div class="checkbox">
+				<label><input id="fld-available-parents-siblings" name="available-parents-siblings" value="siblings" type="checkbox"> Irmãos</label>
+			</div>
+		</div>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-who-is-responsible-father">Quem é o responsável?</label>
+			<div class="radio">
+				<label><input id="fld-who-is-responsible-father" name="who-is-responsible-father" value="father" type="radio" checked> Pai</label>
+			</div>
+			<div class="radio">
+				<label><input id="fld-who-is-responsible-mother" name="who-is-responsible-mother" value="mother" type="radio"> Mãe</label>
+			</div>
+			<div class="radio">
+				<label><input id="fld-who-is-responsible-siblings" name="who-is-responsible-siblings" value="siblings" type="radio"> Irmão/Irmã</label>
+			</div>
+			<div class="radio">
+				<label><input id="fld-who-is-responsible-other" name="who-is-responsible-other" value="other" type="radio"> Outros familiares</label>
+			</div>
+		</div>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-parent-name">Nome completo do responsável*</label>
+			<input type="text" class="form-control" id="fld-parent-name" value="Jane Doe">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-parent-rg">RG do responsável</label>
+			<input type="text" class="form-control" id="fld-parent-rg" value="12.345.678-9">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-parent-cpf">CPF do responsável</label>
+			<input type="text" class="form-control" id="fld-parent-cpf" value="23.456.789-0">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-parent-dob">Data de nascimento do responsável</label>
+			<input type="text" class="form-control" id="fld-parent-dob" value="17/09/1985">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-parent-contact">Contato do pai ou responsável</label>
+			<input type="text" class="form-control" id="fld-parent-contact" value="(11) 2222-3333">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-parent-race">Raça ou etnia do responsável</label>
+			<input type="text" class="form-control" id="fld-parent-race" value="Branca">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-parent-scholarity">Escolaridade do responsável</label>
+			<input type="text" class="form-control" id="fld-parent-scholarity" value="Ensino médio completo">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-parent-profession">Ocupação do responsável</label>
+			<input type="text" class="form-control" id="fld-parent-profession" value="Comerciante">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-family-income">Renda familiar per capita</label>
+			<input type="text" class="form-control" id="fld-family-income" value="Entre ½ e 1 salário mínimo">
+		</div>
+
+		<div ng-show="editable">
+			<hr />
+
+			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
+		</div>
+
+	</div>
+</div>
+
+<div class="panel panel-default" ng-show="showAll || currentForm == 'pesquisa'">
+	<div class="panel-heading" ng-click="togglePanel('causes')"><i class="fa fa-question-circle"></i> Sobre a causa de exclusão escolar</div>
+	<div class="panel-body" uib-collapse="!isOpen('causes')">
+		<div class="form-group col-md-12">
+			<label class="control-label">Motivos de estar fora da escola*</label>
+			<div class="radio" ng-repeat="(i, reason) in reasons">
+				<label>
+					<input name="type_{{i}}" ng-model="input.reasons[i]" ng-true-value="1" ng-false-value="0" value="1" type="checkbox" {{(i == 3) ? 'checked' : ''}}> <strong ng-if="(i == 3)" class="label label-default">Motivo indicado no alerta</strong> {{reason}}
+				</label>
+			</div>
+		</div>
+
+		<div class="form-group col-md-12" ng-show="input.reasons[1]">
+			<label class="control-label" for="fld-handicapped-at-sus-yes">A criança ou adolescente é atendida pelo SUS (Sistema Único de Saúde)?</label>
+			<div class="radio">
+				<label><input id="fld-handicapped-at-sus-yes" name="handicapped-at-sus" value="yes" type="radio" checked> Sim</label>
+			</div>
+			<div class="radio">
+				<label><input id="fld-handicapped-at-sus-no" name="handicapped-at-sus" value="no" type="radio"> Não</label>
+			</div>
+		</div>
+
+		<div class="form-group col-md-12" ng-show="input.reasons[1]">
+			<label class="control-label" for="fld-handicapped-reason">Por qual motivo a matrícula não foi realizada?</label>
+			<input type="text" class="form-control" id="fld-handicapped-reason" value="A escola não tem acessibilidade para receber criança com deficiência ou Transtornos Globais de Desenvolvimento (TGD)">
+		</div>
+
+		<div ng-show="editable">
+			<hr />
+
+			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
+		</div>
+
+	</div>
+</div>
+
+<div class="panel panel-default" ng-show="showAll || currnetStep == 'pesquisa'">
 	<div class="panel-heading" ng-click="togglePanel('location')"><i class="material-icons">map</i> Dados de localização</div>
 	<div class="panel-body" uib-collapse="!isOpen('location')">
 		<div class="form-group col-md-8">
@@ -184,6 +448,191 @@
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
+		</div>
+
+	</div>
+</div>
+
+<div class="panel panel-default" ng-show="currentForm == 'analise_tecnica'">
+	<div class="panel-heading"><i class="fa fa-info-circle"></i> Análise técnica</div>
+	<div class="panel-body">
+		<div class="form-group col-md-12">
+			<label class="control-label">Causas identificadas*</label>
+			<div class="radio" ng-repeat="(i, reason) in reasons">
+				<label ng-if="input.reasons[i]">
+					<i class="fa fa-check"></i> {{reason}}
+				</label>
+			</div>
+		</div>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-handicapped-reason">Grau de risco</label>
+			<p>
+				<div class="label label-danger">Alto</div>
+			</p>
+		</div>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-analysis-details">Detalhamento da análise</label>
+			<textarea style="height: 100px" class="form-control" id="fld-analysis-details"></textarea>
+		</div>
+
+
+		<div ng-show="editable">
+			<hr />
+
+			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e enviar para o supervisor institucional</a>
+		</div>
+
+	</div>
+</div>
+
+<div class="panel panel-default" ng-show="currentForm == 'gestao_do_caso'">
+	<div class="panel-heading"><i class="fa fa-info-circle"></i> Relatório de gestão do caso</div>
+	<div class="panel-body">
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-management-report">Descreva as atividades realizadas</label>
+			<textarea style="height: 200px" class="form-control" id="fld-management-report"></textarea>
+		</div>
+
+
+		<div ng-show="editable">
+			<hr />
+
+			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
+		</div>
+
+	</div>
+</div>
+
+<div class="panel panel-default" ng-show="(showAll && isPastStep('rematricula')) || currentForm == 'rematricula'">
+	<div class="panel-heading"><i class="fa fa-building"></i> Dados da escola da (re)matrícula</div>
+	<div class="panel-body">
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-enroll-school-name">Nome da escola</label>
+			<input type="text" class="form-control" id="fld-enroll-school-name" value="EM Lorem Ipsum Dolor">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-enroll-date">Data da (re)matrícula</label>
+			<input type="date" class="form-control" id="fld-enroll-date" value="02/12/2016">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-enroll-school-code">Código da escola no Censo Escolar</label>
+			<input type="text" class="form-control" id="fld-enroll-school-code" value="7362824-3">
+		</div>
+
+		<div class="form-group col-md-8">
+			<label class="control-label" for="fld-enroll-school-address">Endereço*</label>
+			<input type="text" class="form-control" id="fld-enroll-school-address" value="Alameda Barão de Piracicaba, 500">
+		</div>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-enroll-school-cep">CEP</label>
+			<input type="text" class="form-control" id="fld-enroll-school-cep" value="01234-567">
+		</div>
+		<div class="form-group col-md-5">
+			<label class="control-label" for="fld-enroll-school-neighborhood">Bairro*</label>
+			<input type="text" class="form-control" id="fld-enroll-school-neighborhood" value="Campos Elíseos">
+		</div>
+		<div class="form-group col-md-5">
+			<label class="control-label" for="fld-enroll-school-city">Município*</label>
+			<input type="text" class="form-control" id="fld-enroll-school-city" value="São Paulo">
+		</div>
+		<div class="form-group col-md-2">
+			<label class="control-label" for="fld-enroll-school-uf">UF*</label>
+			<input type="text" class="form-control" id="fld-enroll-school-uf" value="SP">
+		</div>
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-enroll-school-contact-name">Nome do contato da gestão da escola</label>
+			<input type="text" class="form-control" id="fld-enroll-school-contact-name" value="Maria das Neves">
+		</div>
+		<div class="form-group col-md-3">
+			<label class="control-label" for="fld-enroll-school-contact-email">E-mail</label>
+			<input type="text" class="form-control" id="fld-enroll-school-contact-email" value="mnevessp@gmail.com">
+		</div>
+		<div class="form-group col-md-3">
+			<label class="control-label" for="fld-enroll-school-contact-position">Cargo</label>
+			<input type="text" class="form-control" id="fld-enroll-school-contact-position" value="Diretora">
+		</div>
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-enroll-school-phone">Telefone da escola</label>
+			<input type="text" class="form-control" id="fld-enroll-school-phone" value="(11) 2222-3333">
+		</div>
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-enroll-school-email">E-mail da escola</label>
+			<input type="email" class="form-control" id="fld-enroll-school-email" value="emloremipsum@emesp.sp.gov.br">
+		</div>
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-enroll-year">Escolha abaixo em que etapa de ensino e série que a criança ou adolescente foi (re)matriculada</label>
+			<input type="email" class="form-control" id="fld-enroll-year" value="Ensino Fundamental - Anos iniciais (4º ano)
+">
+		</div>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-enroll-details">Observações sobre a (re)matrícula</label>
+			<textarea style="height: 100px" class="form-control" id="fld-enroll-details"></textarea>
+		</div>
+
+		<hr />
+
+		<div ng-show="editable">
+			<hr />
+
+			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
+		</div>
+
+	</div>
+</div>
+
+<div class="panel panel-default" ng-show="currentForm == '1obs' || currentForm == '2obs' || currentForm == '3obs' || currentForm == '4obs'">
+	<div class="panel-heading"><i class="fa fa-info-circle"></i> Relatório do período de observação</div>
+	<div class="panel-body">
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-handicapped-reason">Data da (re)matrícula</label>
+			<p>
+				<div class="label label-default">2016-11-30</div>
+			</p>
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-obs-report-date">Data de registro do relatório</label>
+			<input type="date" class="form-control" id="fld-obs-report-date" value="02/12/2016">
+		</div>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-obs-still-at-school-yes">A criança ou adolescente continua na escola?</label>
+			<div class="radio">
+				<label><input id="fld-obs-still-at-school-yes" ng-model="input.obsStillAtSchool" ng-value="1" name="obs-still-at-school" value="yes" type="radio" checked> Sim</label>
+			</div>
+			<div class="radio">
+				<label><input id="fld-obs-still-at-school-no" ng-model="input.obsStillAtSchool" ng-value="0" name="obs-still-at-school" value="no" type="radio"> Não</label>
+			</div>
+		</div>
+
+		<div class="form-group col-md-12" ng-show="!input.obsStillAtSchool">
+			<label class="control-label" for="fld-obs-evasion-reason">Descreva o motivo da nova evasão</label>
+			<textarea style="height: 100px" class="form-control" id="fld-obs-evasion-reason"></textarea>
+		</div>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-observation-details">Observações gerais</label>
+			<textarea style="height: 100px" class="form-control" id="fld-observation-details"></textarea>
+		</div>
+
+
+		<div ng-show="editable">
+			<hr />
+
+			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
+			<a class="btn btn-raised btn-success" ng-click="resolveCase()" ng-show="currentForm == '4obs'"><i class="fa fa-check"></i> Salvar e encerrar caso</a>
 		</div>
 
 	</div>

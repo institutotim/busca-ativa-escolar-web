@@ -181,6 +181,13 @@
 		$scope.identity = Identity;
 		$scope.reasons = MockData.alertReasons;
 
+		$scope.input = {
+			hasBeenAtSchool: 1,
+			doesWork: 1,
+			reasons: {3: 1},
+			obsStillAtSchool: 1,
+		};
+
 		$scope.isCaseClosed = false;
 		$scope.isPanelOpen = {};
 		$scope.currentStep = null;
@@ -189,8 +196,8 @@
 		$scope.messages = [];
 
 		$scope.steps = {
-			'alerta': {id: 'alerta', name: 'Alerta', opens: ['info', 'parents'], next: 'pesquisa'},
-			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'parents', 'location', 'education'], next: 'analise_tecnica'},
+			'alerta': {id: 'alerta', name: 'Alerta', opens: [], next: 'pesquisa'},
+			'pesquisa': {id: 'pesquisa', name: 'Pesquisa', opens: ['info', 'parents', 'location', 'education', 'work', 'causes'], next: 'analise_tecnica'},
 			'analise_tecnica': {id: 'analise_tecnica', name: 'Análise Técnica', opens: ['analise_tecnica'], next: 'gestao_do_caso'},
 			'gestao_do_caso': {id: 'gestao_do_caso', name: 'Gestão do Caso', next: 'rematricula'},
 			'rematricula': {id: 'rematricula', name: '(Re)matrícula', next: '1obs'},
@@ -236,6 +243,20 @@
 				ngToast.create({
 					className: 'success',
 					content: 'Caso encerrado!'
+				});
+
+				location.hash = '/cases';
+			});
+		};
+
+		$scope.resolveCase = function() {
+			Modals.show(Modals.Confirm(
+				'Tem certeza que deseja finalizar esse caso?',
+				'Ao finalizar o caso, essa criança será registrada como "Dentro da Escola", e deixará de aparecer nas listas de pendências. Essa operação não pode ser desfeita.'))
+			.then(function() {
+				ngToast.create({
+					className: 'success',
+					content: 'Caso finalizado!'
 				});
 
 				location.hash = '/cases';
