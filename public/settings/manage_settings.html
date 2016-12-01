@@ -5,15 +5,23 @@
 		</div>
 		<div class="panel-body">
 
-			<div ng-include="'/sign_up/header.html'"></div>
+			<div class="sign-up-header">
+				<ul class="nav nav-pills sign-up-wizard-pills">
+					<li ng-class="{'active': (step == 3)}"><a ng-click="goToStep(3)"><i class="fa fa-sitemap"></i> Gestores</a></li>
+					<li ng-class="{'active': (step == 4)}"><a ng-click="goToStep(4)"><i class="fa fa-users"></i> Grupos</a></li>
+					<li ng-class="{'active': (step == 5)}"><a ng-click="goToStep(5)"><i class="fa fa-random"></i> Parametrização</a></li>
+					<li ng-class="{'active': (step == 6)}"><a ng-click="goToStep(6)"><i class="fa fa-calendar"></i> Prazos</a></li>
+				</ul>
+				<hr style="margin-top: 0; margin-bottom: 30px;" />
+			</div>
+
+
 
 			<div class="steps">
-				<div ng-show="step == 1" ng-include="'/sign_up/step_1.html'"></div>
-				<div ng-show="step == 2" ng-include="'/sign_up/step_2.html'"></div>
-				<div ng-show="step == 3" ng-include="'/sign_up/step_3.html'"></div>
-				<div ng-show="step == 4" ng-include="'/sign_up/step_4.html'"></div>
-				<div ng-show="step == 5" ng-include="'/sign_up/step_5.html'"></div>
-				<div ng-show="step == 6" ng-include="'/sign_up/step_6.html'"></div>
+				<div ng-show="step == 3" ng-include="'/first_time_setup/step_3.html'"></div>
+				<div ng-show="step == 4" ng-include="'/first_time_setup/step_4.html'"></div>
+				<div ng-show="step == 5" ng-include="'/first_time_setup/step_5.html'"></div>
+				<div ng-show="step == 6" ng-include="'/first_time_setup/step_6.html'"></div>
 			</div>
 
 		</div>

@@ -6,51 +6,45 @@
 
 		$scope.identity = Identity;
 		$scope.step = 1;
-		$scope.causes = MockData.alertReasons;
-		$scope.newGroupName = "";
-		$scope.groups = [
-			'Secretaria dos Transportes',
-			'Secretaria de Assistência Social',
-			'Secretaria da Educação',
-			'Secretaria dos Direitos Humanos e Cidadania',
-			'Secretaria da Saúde'
-		];
+		$scope.agreeTOS = 0;
 
 		Identity.clearLogin();
 
 		$scope.goToStep = function (step) {
+			if(!$scope.agreeTOS) return;
+			if($scope.step >= 4) return;
+
 			$scope.step = step;
 			$window.scrollTo(0, 0);
 		};
 
 		$scope.nextStep = function() {
+			if(!$scope.agreeTOS) return;
+			if($scope.step >= 4) return;
+
 			$scope.step++;
 			$window.scrollTo(0, 0);
-			if($scope.step > 6) $scope.step = 6;
+			if($scope.step > 3) $scope.step = 3;
 		};
 
 		$scope.prevStep = function() {
+			if(!$scope.agreeTOS) return;
+			if($scope.step >= 4) return;
+
 			$scope.step--;
 			$window.scrollTo(0, 0);
 			if($scope.step < 1) $scope.step = 1;
 		};
 
-		$scope.removeGroup = function(i) {
-			$scope.groups.splice(i, 1);
-		};
-
-		$scope.addGroup = function() {
-			$scope.groups.push($scope.newGroupName);
-			$scope.newGroupName = "";
-		};
-
 		$scope.finish = function() {
+			if(!$scope.agreeTOS) return;
+			if($scope.step >= 4) return;
+
 			Modals.show(Modals.Confirm(
 				'Tem certeza que deseja prosseguir com o cadastro?',
-				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
+				'Os dados informados serão enviados para validação e aprovação de nossa equipe. Caso aprovado, você receberá uma mensagem em seu e-mail institucional com os dados para acesso à plataforma, e instruções de como configurá-la.'
 			)).then(function(res) {
-				Identity.login();
-				location.hash = '/dashboard';
+				$scope.step = 4;
 			});
 		};
 

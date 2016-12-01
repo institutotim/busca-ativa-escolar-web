@@ -1,12 +1,12 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('SettingsCtrl', function ($scope, $rootScope, $window, ngToast, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('FirstTimeSetupCtrl', function ($scope, $rootScope, $window, Modals, MockData, Identity) {
 
-		$rootScope.section = 'settings';
+		$rootScope.section = 'first_time_setup';
+
 		$scope.identity = Identity;
-
-		$scope.step = 3;
-		$scope.isEditing = true;
+		$scope.step = 3; // Steps 1 and 2 are from sign up
+		$scope.isEditing = false;
 
 		$scope.causes = MockData.alertReasons;
 		$scope.newGroupName = "";
@@ -17,6 +17,8 @@
 			'Secretaria dos Direitos Humanos e Cidadania',
 			'Secretaria da Saúde'
 		];
+
+		Identity.clearLogin();
 
 		$scope.goToStep = function (step) {
 			$scope.step = step;
@@ -44,10 +46,13 @@
 			$scope.newGroupName = "";
 		};
 
-		$scope.save = function() {
-			ngToast.create({
-				className: 'success',
-				content: 'Configurações salvas!'
+		$scope.finish = function() {
+			Modals.show(Modals.Confirm(
+				'Tem certeza que deseja prosseguir com o cadastro?',
+				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
+			)).then(function(res) {
+				Identity.login();
+				location.hash = '/dashboard';
 			});
 		};
 

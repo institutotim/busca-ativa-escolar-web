@@ -113,6 +113,10 @@
 					templateUrl: 'sign_up/main.html?NC=' + NC,
 					controller: 'SignUpCtrl'
 				}).
+				when('/first_time_setup', {
+					templateUrl: 'first_time_setup/main.html?NC=' + NC,
+					controller: 'FirstTimeSetupCtrl'
+				}).
 				otherwise({
 					redirectTo: '/dashboard'
 				});
