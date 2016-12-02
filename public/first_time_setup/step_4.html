@@ -5,8 +5,8 @@
 	<div class="panel-body">
 		<p>
 			Os grupos de trabalho são grupos de usuários que respondem por diferentes causas de evasão escolar.
-			Os grupos que você cadastrar aqui poderão ser parametrizados para receber um ou mais alertas e casos, de acordo com sua causa.
-			Sugerimos que os grupos cadastrados sejam as secretarias municipais que irão atuar na reinserção das crianças e adolescentes.
+			Os grupos que você cadastrar aqui poderão ser customizados para receber um ou mais alertas e casos, de acordo com sua causa.
+			Sugerimos que os grupos cadastrados sejam as secretarias municipais ou orgãos da administração pública que irão atuar na (re)matrícula das crianças e adolescentes.
 		</p>
 
 		<table class="table sign-up-groups">
@@ -17,13 +17,16 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="(i, name) in groups track by i">
-					<td><input type="text" ng-model="name" class="form-control" placeholder="Nome da secretaria..." /></td>
-					<td><a class="btn btn-danger" ng-click="removeGroup(i);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a></td>
+				<tr ng-repeat="(i, group) in groups track by i">
+					<td><input type="text" ng-model="group.name" class="form-control" placeholder="Nome da secretaria..." /></td>
+					<td>
+						<a class="btn btn-raised btn-danger" ng-show="group.canChange" ng-click="removeGroup(i);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+						<span class="btn btn-raised btn-default" ng-show="!group.canChange" uib-tooltip="Esse grupo é responsável pelas atividades de (re)matrícula e observação, e não pode ser apagado ou editado.">Obrigatório</span>
+					</td>
 				</tr>
 				<tr>
 					<td><input type="text" ng-model="$parent.newGroupName" class="form-control" placeholder="Nome da secretaria..." /></td>
-					<td><a class="btn btn-success" ng-click="addGroup()" uib-tooltip="Adicionar grupo"><i class="fa fa-plus-circle"></i></a></td>
+					<td><a class="btn btn-raised btn-success" ng-click="addGroup()" uib-tooltip="Adicionar grupo"><i class="fa fa-plus-circle"></i></a></td>
 				</tr>
 			</tbody>
 		</table>

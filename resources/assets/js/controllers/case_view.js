@@ -93,7 +93,9 @@
 			stepName = stepName || $scope.currentStep;
 			canDismiss = !!canDismiss;
 
-			Modals.show(Modals.UserPicker('Selecione o Técnico Verificador responsável:', 'O Técnico Verificador selecionado ficará responsável pela execução da etapa ' + $scope.steps[stepName].name + '.', canDismiss)).then(function() {
+			var userType = (stepName == 'pesquisa' || stepName == 'analise_tecnica') ? 'Técnico Verificador' : 'usuário';
+
+			Modals.show(Modals.UserPicker('Selecione o ' + userType + ' responsável:', 'O ' + userType + ' selecionado ficará responsável pela execução da etapa ' + $scope.steps[stepName].name + '.', canDismiss)).then(function() {
 				ngToast.create({
 					className: 'success',
 					content: 'Responsável atribuído!'
