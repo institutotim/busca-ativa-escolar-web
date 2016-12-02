@@ -835,11 +835,9 @@
 		$scope.causes = MockData.alertReasons;
 		$scope.newGroupName = "";
 		$scope.groups = [
-			'Secretaria dos Transportes',
-			'Secretaria de Assistência Social',
-			'Secretaria da Educação',
-			'Secretaria dos Direitos Humanos e Cidadania',
-			'Secretaria da Saúde'
+			{name: 'Secretaria Municipal de Educação', canChange: false},
+			{name: 'Secretaria Municipal de Assistência Social', canChange: true},
+			{name: 'Secretaria Municipal da Saúde', canChange: true}
 		];
 
 		$scope.goToStep = function (step) {
@@ -864,7 +862,7 @@
 		};
 
 		$scope.addGroup = function() {
-			$scope.groups.push($scope.newGroupName);
+			$scope.groups.push({name: $scope.newGroupName, canChange: true});
 			$scope.newGroupName = "";
 		};
 
