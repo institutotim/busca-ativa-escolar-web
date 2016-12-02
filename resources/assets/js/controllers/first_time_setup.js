@@ -40,7 +40,7 @@
 		};
 
 		$scope.addGroup = function() {
-			$scope.groups.push($scope.newGroupName);
+			$scope.groups.push({name: $scope.newGroupName, canChange: true});
 			$scope.newGroupName = "";
 		};
 
