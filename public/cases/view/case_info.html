@@ -15,9 +15,12 @@
 		</div>
 		<div class="form-group col-md-4">
 			<label class="control-label" for="fld-alert-raca">Raça / Etnia</label>
-			<select id="fld-alert-raca" class="form-control">
-				<option selected>Caucasiano</option>
-			</select>
+			<select type="text" class="form-control" id="fld-alert-raca" value="Selecione">
+				<option>Indígena</option>
+				<option>Branca</option>
+				<option>Preta (pretos e pardos)</option>
+				<option>Amarela</option>
+			</select>	
 		</div>
 
 		<div class="form-group col-md-4">
@@ -210,10 +213,7 @@
 
 		<div class="form-group col-md-6" ng-show="input.hasBeenAtSchool">
 			<label class="control-label" for="fld-year-last-enrolled">Em qual ano foi cursado o último ano escolar?</label>
-			<select type="text" class="form-control" id="fld-year-last-enrolled" value="2015">
-				<option>Completo</option>
-				<option>Incompleto</option>
-			</select>
+			<input type="text" class="form-control" id="fld-year-last-enrolled" value="2015">
 		</div>
 
 		<div class="form-group col-md-12" ng-show="input.hasBeenAtSchool">
@@ -267,11 +267,16 @@
 
 		<div class="form-group col-md-12" ng-show="input.doesWork">
 			<label class="control-label" for="fld-work-activity">Qual a atividade econômica?</label>
-			<select type="text" class="form-control" id="fld-work-activity" value="Serviço doméstico">
+			<select type="text" ng-model="listJobs" class="form-control" id="fld-work-activity" value="Serviço doméstico">
 				<option>Serviço doméstico</option>
 				<option>Negócio familiar</option>
-				<option>Se outro, especifique no campo abaixo</option>
+				<option value="other">Se outro, especifique no campo abaixo</option>
 			</select>
+		</div>
+
+		<div class="form-group col-md-12"  ng-show="listJobs=='other'">
+			<label class="control-label" for="fld-other-job">Especifique a atividade econômica no campo abaixo</label>
+			<input type="text" class="form-control" id="fld-work-hours" value="">
 		</div>
 
 		<div class="form-group col-md-12" ng-show="input.doesWork">
@@ -330,6 +335,11 @@
 			<div class="radio">
 				<label><input id="fld-who-is-responsible-other" name="who-is-responsible-other" value="other" type="radio"> Outros familiares</label>
 			</div>
+		</div>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-mother-name">Nome completo da mãe*</label>
+			<input type="text" class="form-control" id="fld-mother-name" value="Anna Smith">
 		</div>
 
 		<div class="form-group col-md-12">
@@ -413,7 +423,7 @@
 			<label class="control-label">Motivos de estar fora da escola*</label>
 			<div class="radio" ng-repeat="(i, reason) in reasons">
 				<label>
-					<input name="type_{{i}}" ng-model="input.reasons[i]" ng-true-value="1" ng-false-value="0" value="1" type="checkbox" > <strong ng-if="(i == 3)" class="label label-default">Motivo indicado no alerta</strong> {{reason}}
+					<input name="type_{{i}}" ng-model="input.reasons[i]" ng-true-value="0" ng-false-value="0" value="1" type="checkbox" > <strong ng-if="(i == 3)" class="label label-default">Motivo indicado no alerta</strong> {{reason}}
 				</label>
 			</div>
 		</div>
