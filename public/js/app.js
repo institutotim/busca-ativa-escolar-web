@@ -183,7 +183,7 @@
 		$rootScope.section = 'cases';
 
 		$scope.identity = Identity;
-		$scope.reasons = MockData.alertReasons;
+		$scope.reasons = MockData.searchReasons;
 
 		$scope.input = {
 			hasBeenAtSchool: 1,
