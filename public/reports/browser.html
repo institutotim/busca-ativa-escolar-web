@@ -135,6 +135,7 @@
 					<div class="checkbox"><label for="filter-age-15a17"><input type="checkbox" id="filter-age-15a17" name="filter-age-15a17" checked> 15 a 17</label></div>
 					<div class="checkbox"><label for="filter-age-18p"><input type="checkbox" id="filter-age-18p" name="filter-age-18p" checked> 18+</label></div>
 				</div>
+
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('gender')">
 					<label class="control-label" for="filter-gender-male">Por sexo</label>
 					<div class="form-inline row">
@@ -142,6 +143,7 @@
 						<div class="checkbox col-md-6"><label for="filter-gender-female"><input type="checkbox" id="filter-gender-female" name="filter-gender-female" checked> <i class="fa fa-venus"></i> Fem.</label></div>
 					</div>
 				</div>
+
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('region')">
 					<label class="control-label" for="filter-zone-rural">Por zona</label>
 					<div class="form-inline row">
@@ -149,6 +151,7 @@
 						<div class="checkbox col-md-6"><label for="filter-zone-urban"><input type="checkbox" id="filter-zone-urban" name="filter-zone-urban" checked> Urbana</label></div>
 					</div>
 				</div>
+
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('parent_scholarity')">
 					<label class="control-label" for="filter-parent_scholarity">Por grau de instrução</label>
 						<select id="filter-parent_scholarity" class="form-control">
@@ -163,6 +166,7 @@
 							<option>Pós graduação</option>
 						</select>
 				</div>
+
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('family_income')">
 					<label class="control-label" for="filter-family_income">Por renda familiar - salário mínimo</label>
 						<select id="filter-family_income" class="form-control">
@@ -172,6 +176,17 @@
 							<option>Mais de ½ a 1</option>
 							<option>Mais de 1 a 2</option>
 							<option>Mais de 2</option>
+						</select>
+				</div>
+
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('ethnicity')">
+					<label class="control-label" for="filter-ethnicity">Por raça/etnia</label>
+						<select id="filter-ethnicity" class="form-control">
+							<option selected>Todas as raças</option>
+							<option>Indígena</option>
+							<option>Branca</option>
+							<option>Preta(pretos e pardos)</option>
+							<option>Amarela</option>
 						</select>
 				</div>
 			</div>
