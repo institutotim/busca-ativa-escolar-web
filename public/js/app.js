@@ -939,6 +939,7 @@
 		$scope.cities = MockData.cities;
 		$scope.states = MockData.states;
 		$scope.groups = MockData.groups;
+		$scope.userTypes = MockData.userTypes;
 
 		$scope.range = function (start, end) {
 			var arr = [];
@@ -2114,6 +2115,13 @@ Highcharts.maps["countries/br/br-all"] = {
 			{id: 4, name: 'Secretaria dos Transportes'}
 		];
 
+		var userTypes = [
+			{id: 1, name: 'Agente Comunitário'},
+			{id: 2, name: 'Técnico Verificador'},
+			{id: 3, name: 'Supervisor Institucional'},
+			{id: 4, name: 'Coordenador Operacional'}
+		];
+
 		var brazilMapData = [
 			{
 				"hc-key": "br-sp",
@@ -2242,6 +2250,8 @@ Highcharts.maps["countries/br/br-all"] = {
 			states: states,
 			cities: cities,
 			groups: groups,
+			userTypes: userTypes,
+
 
 			caseTypesChart: {
 				options: {
