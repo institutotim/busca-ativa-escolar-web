@@ -8,7 +8,7 @@
 			<div class="panel-body">
 
 				<div class="form-group">
-					<label class="control-label" for="sel-report-entity">Entidade</label>
+					<label class="control-label" for="sel-report-entity">Segmento</label>
 					<select id="sel-report-entity" class="form-control"
 					        ng-model="current.entity"
 					        ng-change="onParametersUpdate()"
@@ -81,7 +81,7 @@
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('uf') || canFilterBy('city')">
-					<label class="control-label" for="filter-uf">Por localidade</label>
+					<label class="control-label" for="filter-uf">Por endereço</label>
 					<div class="row">
 						<div class="col-md-4">
 							<input type="text" class="form-control" id="filter-uf" placeholder="UF...">
@@ -93,7 +93,7 @@
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('process_status')">
-					<label class="control-label" for="filter-process_status-normal">Por status do andamento</label>
+					<label class="control-label" for="filter-process_status-normal">Por status do prazo</label>
 					<div class="checkbox"><label for="filter-process_status-normal"><input type="checkbox" id="filter-process_status-normal" name="filter-process_status-normal" checked> Normal</label></div>
 					<div class="checkbox"><label for="filter-process_status-delayed"><input type="checkbox" id="filter-process_status-delayed" name="filter-process_status-delayed" checked> Em atraso</label></div>
 				</div>

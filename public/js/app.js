@@ -612,10 +612,10 @@
 					process_status: {id: 'process_status', values: ['Em andamento', 'Em atraso']},
 					cause: {id: 'cause', values: MockData.alertReasons}
 				},
-				filters: ['age', 'gender', 'assigned_user', 'uf', 'city', 'alert_status', 'alert_causes','children_status', 'process_status'],
+				filters: ['age', 'gender', 'assigned_user', 'uf', 'city', 'alert_status', 'alert_causes', 'process_status'],
 				views: ['map', 'chart', 'timeline', 'list']
 			},
-			users: {
+			/*users: {
 				id: 'users',
 				name: 'Usuários',
 				value: 'num_assignments',
@@ -626,7 +626,7 @@
 				},
 				filters: ['children_status', 'process_status', 'case_step', 'user_group', 'user_type'],
 				views: ['chart', 'timeline', 'list']
-			}
+			}*/
 		};
 
 		$scope.views = {
