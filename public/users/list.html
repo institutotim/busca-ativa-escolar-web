@@ -43,8 +43,18 @@
 							</ui-select-choices>
 						</ui-select>
 					</div>
-
+					
 					<div class="form-group col-md-6">
+						<label><i class="fa fa-user"></i> Tipo</label>
+						<ui-select ng-model="input.userTypes">
+							<ui-select-match allow-clear="true" placeholder="Todas">{{$select.selected.name}}</ui-select-match>
+							<ui-select-choices repeat="userType in userTypes | filter: $select.search track by userType.id">
+								<div ng-bind-html="userType.name | highlight: $select.search"></div>
+							</ui-select-choices>
+						</ui-select>
+					</div>
+
+					<div class="form-group col-md-12">
 						<label><i class="fa fa-envelope"></i> E-mail</label>
 						<input type="search" ng-model="input.email" class="form-control" placeholder="Buscar por e-mail" />
 					</div>

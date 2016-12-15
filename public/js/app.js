@@ -183,7 +183,7 @@
 		$rootScope.section = 'cases';
 
 		$scope.identity = Identity;
-		$scope.reasons = MockData.alertReasons;
+		$scope.reasons = MockData.searchReasons;
 
 		$scope.input = {
 			hasBeenAtSchool: 1,
@@ -590,17 +590,17 @@
 				name: 'Casos',
 				value: 'num_cases',
 				dimensions: {
-					children_status: {id: 'children_status', values: ['Fora da escola', 'Em observação', 'Dentro da escola']},
+					children_status: {id: 'children_status', values: ['Fora da escola', 'Dentro da escola em observação', 'Dentro da escola consolidado']},
 					process_status: {id: 'process_status', values: ['Em andamento', 'Em atraso']},
 					case_step: {id: 'case_step', values: ['Alerta', 'Pesquisa', 'Análise Técnica', 'Gestão do Caso', 'Rematrícula', '1a Observação', '2a Observação', '3a Observação', '4a Observação']},
-					age: {id: 'age', values: ['0 a 3', '4 e 5', '6 a 10', '11 a 14', '15 a 17', '18+']},
+					age: {id: 'age', values: ['4 e 5', '6 a 10', '11 a 14', '15 a 17', '18+']},
 					gender: {id: 'gender', values: ['Masculino', 'Feminino']},
-					family_income: {id: 'family_income', values: ['R$ 0 a R$ 500', 'R$ 501 a R$ 1.000', 'R$ 1.001 a R$ 1.500', 'R$ 1.501 a R$ 2.500', 'R$ 2.500 a R$ 3.500', 'R$ 3.501 ou mais']},
+					family_income: {id: 'family_income', values: ['Até ¼', 'Mais de ¼ a ½', 'Mais de ½ a 1', 'Mais de 1 a 2', 'Mais de 2']},
 					region: {id: 'region', values: ['Urbana', 'Rural']},
-					economic_activity: {id: 'economic_activity', values: ['Bombeiro', 'Médico', 'Engenheiro', 'Advogado', 'Eletricista', 'Encanador', 'Contador', 'Administrador', 'Faxineiro', 'Pedreiro', 'Astronauta']},
-					cause: {id: 'cause', values: MockData.alertReasons}
+					parent_scholarity: {id: 'parent_scholarity', values: ['Nenhuma', 'Ensino fundamental completo', 'Ensino fundamental incompleto', 'Ensino médio completo', 'Ensino médio incompleto', 'Ensino superior completo', 'Ensino superior incompleto', 'Pós graduação']},
+					cause: {id: 'cause', values: MockData.searchReasons}
 				},
-				filters: ['age', 'gender', 'ethnicity', 'family_income', 'parent_scholarity', 'economic_activity', 'region', 'case_step', 'uf', 'city', 'children_status', 'process_status', 'cause'],
+				filters: ['age', 'gender', 'ethnicity', 'family_income', 'parent_scholarity','case_status', 'region', 'case_step', 'uf', 'city', 'children_status', 'process_status', 'search_causes'],
 				views: ['map', 'chart', 'timeline', 'list']
 			},
 			alerts: {
@@ -612,21 +612,21 @@
 					process_status: {id: 'process_status', values: ['Em andamento', 'Em atraso']},
 					cause: {id: 'cause', values: MockData.alertReasons}
 				},
-				filters: ['age', 'gender', 'assigned_user', 'uf', 'city', 'alert_status', 'children_status', 'process_status'],
+				filters: ['age', 'gender', 'assigned_user', 'uf', 'city', 'alert_status', 'alert_causes', 'process_status'],
 				views: ['map', 'chart', 'timeline', 'list']
 			},
-			users: {
+			/*users: {
 				id: 'users',
 				name: 'Usuários',
 				value: 'num_assignments',
 				dimensions: {
-					children_status: {id: 'children_status', values: ['Fora da escola', 'Em observação', 'Dentro da escola']},
+					children_status: {id: 'children_status', values: ['Fora da escola', 'Dentro da escola em observação', 'Dentro da escola consolidado']},
 					process_status: {id: 'process_status', values: ['Em andamento', 'Em atraso']},
 					case_step: {id: 'case_step', values: ['Alerta', 'Pesquisa', 'Análise Técnica', 'Gestão do Caso', 'Rematrícula', '1a Observação', '2a Observação', '3a Observação', '4a Observação']},
 				},
 				filters: ['children_status', 'process_status', 'case_step', 'user_group', 'user_type'],
 				views: ['chart', 'timeline', 'list']
-			}
+			}*/
 		};
 
 		$scope.views = {
@@ -939,6 +939,7 @@
 		$scope.cities = MockData.cities;
 		$scope.states = MockData.states;
 		$scope.groups = MockData.groups;
+		$scope.userTypes = MockData.userTypes;
 
 		$scope.range = function (start, end) {
 			var arr = [];
@@ -2068,6 +2069,30 @@ Highcharts.maps["countries/br/br-all"] = {
 			"Violência na escola"
 		];
 
+		var searchReasons = [
+			"Adolescente em conflito com a lei",
+			"Criança ou adolescente com deficiência física",
+			"Criança ou adolescente com deficiência intelectual",
+			"Criança ou adolescente com deficiência mental",
+			"Criança ou adolescente com deficiência sensorial",
+			"Criança ou adolescente com doenças (que impedem e/ou dificultem a frequência à escola)",
+			"Criança ou adolescente em abrigos",
+			"Criança ou adolescente em situação de rua",
+			"Criança ou adolescente que sofrem ou sofreram abuso / violência sexual",
+			"Evasão porque sente a escola desinteressante",
+			"Falta de documentação da criança ou adolescente",
+			"Falta de infraestrutura escolar (Escola)",
+			"Falta de infraestrutura escolar (Vagas)",
+			"Falta de transporte escolar",
+			"Gravidez na adolescência",
+			"Preconceito ou discriminação racial",
+			"Trabalho infantil",
+			"Violência familiar",
+			"Violência na escola (Discriminação de gênero)",
+			"Violência na escola (Discriminação racial)",
+			"Violência na escola (Discriminação religiosa)"
+		];
+
 		var states = [
 			{id: 'SP', name: 'São Paulo'},
 			{id: 'MG', name: 'Minas Gerais'},
@@ -2088,6 +2113,13 @@ Highcharts.maps["countries/br/br-all"] = {
 			{id: 2, name: 'Secretaria da Educação'},
 			{id: 3, name: 'Secretaria do Verde e Meio Ambiente'},
 			{id: 4, name: 'Secretaria dos Transportes'}
+		];
+
+		var userTypes = [
+			{id: 1, name: 'Agente Comunitário'},
+			{id: 2, name: 'Técnico Verificador'},
+			{id: 3, name: 'Supervisor Institucional'},
+			{id: 4, name: 'Coordenador Operacional'}
 		];
 
 		var brazilMapData = [
@@ -2212,11 +2244,14 @@ Highcharts.maps["countries/br/br-all"] = {
 		return {
 
 			alertReasons: alertReasons,
+			searchReasons: searchReasons,
 			caseStatuses: caseStatuses,
 
 			states: states,
 			cities: cities,
 			groups: groups,
+			userTypes: userTypes,
+
 
 			caseTypesChart: {
 				options: {

@@ -15,9 +15,12 @@
 		</div>
 		<div class="form-group col-md-4">
 			<label class="control-label" for="fld-alert-raca">Raça / Etnia</label>
-			<select id="fld-alert-raca" class="form-control">
-				<option selected>Caucasiano</option>
-			</select>
+			<select type="text" class="form-control" id="fld-alert-raca" value="Selecione">
+				<option>Indígena</option>
+				<option>Branca</option>
+				<option>Preta (pretos e pardos)</option>
+				<option>Amarela</option>
+			</select>	
 		</div>
 
 		<div class="form-group col-md-4">
@@ -185,14 +188,42 @@
 			<input type="text" class="form-control" id="fld-reason-not-enrolled" value="Lorem ipsum dolor sit amet">
 		</div>
 
-		<div class="form-group col-md-12" ng-show="input.hasBeenAtSchool">
+		<div class="form-group col-md-6" ng-show="input.hasBeenAtSchool">
 			<label class="control-label" for="fld-last-school-year">Qual o último ano que frequentou?</label>
-			<input type="text" class="form-control" id="fld-last-school-year" value="Ensino Fundamental / 4&ordm; ano">
+			<select id="fld-last-school-year" class="form-control">
+				<option>Pré-escola (4 anos)</option>
+				<option>Pré-escola (5 anos)</option>
+				<option>Ensino Fundamental - Anos iniciais (1º ano)</option>
+				<option>Ensino Fundamental - Anos iniciais (2º ano)</option>
+				<option>Ensino Fundamental - Anos iniciais (3º ano)</option>
+				<option>Ensino Fundamental - Anos iniciais (4º ano)</option>
+				<option>Ensino Fundamental - Anos iniciais (5º ano)</option>
+				<option>Ensino Fundamental - Anos finais (6º ano)</option>
+				<option>Ensino Fundamental - Anos finais (7º ano)</option>
+				<option>Ensino Fundamental - Anos finais (8º ano)</option>
+				<option>Ensino Fundamental - Anos finais (9º ano)</option>
+				<option>Ensino Médio - 1º ano</option>
+				<option>Ensino Médio - 2º ano</option>
+				<option>Ensino Médio - 3º ano</option>
+				<option>EJA (ensino fundamental anos finais)</option>
+				<option>EJA (ensino fundamental anos iniciais)</option>
+				<option>EJA (Alfabetizado)</option>
+			</select>
+		</div>
+
+		<div class="form-group col-md-6" ng-show="input.hasBeenAtSchool">
+			<label class="control-label" for="fld-year-last-enrolled">Em qual ano foi cursado o último ano escolar?</label>
+			<input type="text" class="form-control" id="fld-year-last-enrolled" value="2015">
 		</div>
 
 		<div class="form-group col-md-12" ng-show="input.hasBeenAtSchool">
-			<label class="control-label" for="fld-year-last-enrolled">Em qual ano foi cursado o último ano escolar?</label>
-			<input type="text" class="form-control" id="fld-year-last-enrolled" value="2015">
+			<label class="control-label" for="fld-last-school-year-status-completed">Qual o status do último ano escolar?</label>
+			<div class="radio">
+				<label><input id="fld-last-school-year-status-completed" name="last-school-year-status" value="completed" type="radio" checked> Completo</label>
+			</div>
+			<div class="radio">
+				<label><input id="fld-last-school-year-status-pending" name="last-school-year-status" value="pending" type="radio"> Incompleto</label>
+			</div>
 		</div>
 
 		<div class="form-group col-md-12" ng-show="input.hasBeenAtSchool">
@@ -208,16 +239,6 @@
 		<div class="form-group col-md-12" ng-show="input.hasBeenAtSchool">
 			<label class="control-label" for="fld-last-school-address">Endereço da última escola cursada</label>
 			<input type="text" class="form-control" id="fld-last-school-address" value="Rua Lorem Ipsum, 123">
-		</div>
-
-		<div class="form-group col-md-12" ng-show="input.hasBeenAtSchool">
-			<label class="control-label" for="fld-last-school-year-status-completed">Qual o status do último ano escolar?</label>
-			<div class="radio">
-				<label><input id="fld-last-school-year-status-completed" name="last-school-year-status" value="completed" type="radio" checked> Completo</label>
-			</div>
-			<div class="radio">
-				<label><input id="fld-last-school-year-status-pending" name="last-school-year-status" value="pending" type="radio"> Incompleto</label>
-			</div>
 		</div>
 
 		<div ng-show="editable">
@@ -244,9 +265,18 @@
 			</div>
 		</div>
 
-		<div class="form-group col-md-12" ng-show="!input.doesWork">
-			<label class="control-label" for="fld-work-activity">Se trabalha, qual a atividade econômica?</label>
-			<input type="text" class="form-control" id="fld-work-activity" value="Serviço doméstico">
+		<div class="form-group col-md-12" ng-show="input.doesWork">
+			<label class="control-label" for="fld-work-activity">Qual a atividade econômica?</label>
+			<select type="text" ng-model="listJobs" class="form-control" id="fld-work-activity" value="Serviço doméstico">
+				<option>Serviço doméstico</option>
+				<option>Negócio familiar</option>
+				<option value="other">Se outro, especifique no campo abaixo</option>
+			</select>
+		</div>
+
+		<div class="form-group col-md-12"  ng-show="listJobs=='other'">
+			<label class="control-label" for="fld-other-job">Especifique a atividade econômica no campo abaixo</label>
+			<input type="text" class="form-control" id="fld-work-hours" value="">
 		</div>
 
 		<div class="form-group col-md-12" ng-show="input.doesWork">
@@ -308,6 +338,11 @@
 		</div>
 
 		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-mother-name">Nome completo da mãe*</label>
+			<input type="text" class="form-control" id="fld-mother-name" value="Anna Smith">
+		</div>
+
+		<div class="form-group col-md-12">
 			<label class="control-label" for="fld-parent-name">Nome completo do responsável*</label>
 			<input type="text" class="form-control" id="fld-parent-name" value="Jane Doe">
 		</div>
@@ -334,12 +369,26 @@
 
 		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-parent-race">Raça ou etnia do responsável</label>
-			<input type="text" class="form-control" id="fld-parent-race" value="Branca">
+			<select type="text" class="form-control" id="fld-parent-race" value="Selecione">
+				<option>Indígena</option>
+				<option>Branca</option>
+				<option>Preta (pretos e pardos)</option>
+				<option>Amarela</option>
+			</select>	
 		</div>
 
 		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-parent-scholarity">Escolaridade do responsável</label>
-			<input type="text" class="form-control" id="fld-parent-scholarity" value="Ensino médio completo">
+			<select type="text" class="form-control" id="fld-parent-scholarity" value="Ensino médio completo">
+				<option>Nenhuma</option>
+				<option>Ensino fundamental completo</option>
+				<option>Ensino fundamental incompleto</option>
+				<option>Ensino médio completo</option>
+				<option>Ensino médio incompleto</option>
+				<option>Ensino superior completo</option>
+				<option>Ensino superior incompleto</option>
+				<option>Pós graduação</option>
+			</select>
 		</div>
 
 		<div class="form-group col-md-6">
@@ -349,7 +398,12 @@
 
 		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-family-income">Renda familiar per capita</label>
-			<input type="text" class="form-control" id="fld-family-income" value="Entre ½ e 1 salário mínimo">
+			<select type="text" class="form-control" id="fld-family-income" value="Selecione">
+				<option> Até ¼ </option>
+				<option> Mais de ¼ a ½ </option>
+				<option> Mais de 1 a 2 </option>
+				<option> Mais de 2 </option>
+			</select>
 		</div>
 
 		<div ng-show="editable">
@@ -369,7 +423,7 @@
 			<label class="control-label">Motivos de estar fora da escola*</label>
 			<div class="radio" ng-repeat="(i, reason) in reasons">
 				<label>
-					<input name="type_{{i}}" ng-model="input.reasons[i]" ng-true-value="1" ng-false-value="0" value="1" type="checkbox" {{(i == 3) ? 'checked' : ''}}> <strong ng-if="(i == 3)" class="label label-default">Motivo indicado no alerta</strong> {{reason}}
+					<input name="type_{{i}}" ng-model="input.reasons[i]" ng-true-value="0" ng-false-value="0" value="1" type="checkbox" > <strong ng-if="(i == 3)" class="label label-default">Motivo indicado no alerta</strong> {{reason}}
 				</label>
 			</div>
 		</div>
@@ -386,57 +440,59 @@
 
 		<div class="form-group col-md-12" ng-show="input.reasons[1]">
 			<label class="control-label" for="fld-handicapped-reason">Por qual motivo a matrícula não foi realizada?</label>
-			<input type="text" class="form-control" id="fld-handicapped-reason" value="A escola não tem acessibilidade para receber criança com deficiência ou Transtornos Globais de Desenvolvimento (TGD)">
+			<select type="text" class="form-control" id="fld-handicapped-reason" value="Selecione">
+				<option>A família não procurou uma escola</option>
+				<option>A matrícula foi negada</option>
+				<option>A escola não tem acessibilidade para receber criança com deficiência ou Transtornos Globais de Desenvolvimento (TGD)</option>
+				<option>Outros motivos</option>
+			</select>
 		</div>
-
-		<div ng-show="editable">
-			<hr />
-
-			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e iniciar Análise Técnica</a>
-		</div>
-
 	</div>
 </div>
 
-<div class="panel panel-default" ng-show="showAll || currnetStep == 'pesquisa'">
-	<div class="panel-heading" ng-click="togglePanel('location')"><i class="material-icons">map</i> Dados de localização</div>
+
+<div class="panel panel-default" ng-show="currentForm == 'pesquisa'">
+	<div class="panel-heading" ng-click="togglePanel('location')"><i class="fa fa-users"></i> Dados de localização</div>
 	<div class="panel-body" uib-collapse="!isOpen('location')">
 		<div class="form-group col-md-8">
-			<label class="control-label" for="fld-address">Endereço*</label>
-			<input type="text" class="form-control" id="fld-address" value="Alameda Barão de Piracicaba, 500">
+			<label class="control-label" for="fld-alert-address">Endereço*</label>
+			<input type="text" class="form-control" id="fld-alert-address" value="Alameda Barão de Piracicaba, 500">
 		</div>
 		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-cep">CEP</label>
-			<input type="text" class="form-control" id="fld-cep" value="01234-567">
+			<label class="control-label" for="fld-alert-cep">CEP</label>
+			<input type="text" class="form-control" id="fld-alert-cep" value="01234-567">
 		</div>
 		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-reference">Referência geográfica</label>
-			<input type="text" class="form-control" id="fld-reference" value="Esquina com a Rua ABCD, em frente a loja XYZ">
+			<label class="control-label" for="fld-alert-reference">Referência geográfica</label>
+			<input type="text" class="form-control" id="fld-alert-reference" value="Esquina com a Rua ABCD, em frente a loja XYZ">
 		</div>
 		<div class="form-group col-md-5">
-			<label class="control-label" for="fld-neighborhood">Bairro*</label>
-			<input type="text" class="form-control" id="fld-neighborhood" value="Campos Elíseos">
+			<label class="control-label" for="fld-alert-neighborhood">Bairro*</label>
+			<input type="text" class="form-control" id="fld-alert-neighborhood" value="Campos Elíseos">
 		</div>
 		<div class="form-group col-md-5">
-			<label class="control-label" for="fld-city">Município*</label>
-			<input type="text" class="form-control" id="fld-city" value="São Paulo">
+			<label class="control-label" for="fld-alert-city">Município*</label>
+			<input type="text" class="form-control" id="fld-alert-city" value="São Paulo">
 		</div>
 		<div class="form-group col-md-2">
-			<label class="control-label" for="fld-uf">UF*</label>
-			<input type="text" class="form-control" id="fld-uf" value="SP">
+			<label class="control-label" for="fld-alert-uf">UF*</label>
+			<input type="text" class="form-control" id="fld-alert-uf" value="SP">
 		</div>
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-zone">Zona</label>
-			<input type="text" class="form-control" id="fld-zone" value="Rural">
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-parent-zone">Tipo da localização</label>
+			<select type="text" class="form-control" id="fld-parent-zone" value="Ensino médio completo">
+				<option>Urbana</option>
+				<option>Rural</option>
+			</select>
 		</div>
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-phone">Telefone residencial</label>
-			<input type="text" class="form-control" id="fld-phone" value="(11) 2222-3333">
-		</div>
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-mobile">Telefone celular</label>
-			<input type="text" class="form-control" id="fld-mobile" value="(11) 98888-4444">
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-parent-quilombola">Comunidade quilombola</label>
+			<select type="text" class="form-control" id="fld-parent-quilombola" value="Ensino médio completo">
+				<option>Sim</option>
+				<option>Não</option>			
+			</select>
 		</div>
 
 		<hr />
@@ -449,9 +505,8 @@
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e iniciar Análise Técnica</a>
 		</div>
-
 	</div>
-</div>
+</div>	
 
 <div class="panel panel-default" ng-show="currentForm == 'analise_tecnica'">
 	<div class="panel-heading"><i class="fa fa-info-circle"></i> Análise técnica</div>
@@ -509,7 +564,7 @@
 </div>
 
 <div class="panel panel-default" ng-show="(showAll && isPastStep('rematricula')) || currentForm == 'rematricula'">
-	<div class="panel-heading"><i class="fa fa-building"></i> Dados da escola da (re)matrícula</div>
+	<div class="panel-heading"><i class="fa fa-building"></i> Dados da escola de (re)matrícula</div>
 	<div class="panel-body">
 
 		<div class="form-group col-md-12">
@@ -569,8 +624,25 @@
 		</div>
 		<div class="form-group col-md-12">
 			<label class="control-label" for="fld-enroll-year">Escolha abaixo em que etapa de ensino e série que a criança ou adolescente foi (re)matriculada</label>
-			<input type="email" class="form-control" id="fld-enroll-year" value="Ensino Fundamental - Anos iniciais (4º ano)
-">
+			<select id="fld-last-school-year" class="form-control">
+				<option>Pré-escola (4 anos)</option>
+				<option>Pré-escola (5 anos)</option>
+				<option>Ensino Fundamental - Anos iniciais (1º ano)</option>
+				<option>Ensino Fundamental - Anos iniciais (2º ano)</option>
+				<option>Ensino Fundamental - Anos iniciais (3º ano)</option>
+				<option>Ensino Fundamental - Anos iniciais (4º ano)</option>
+				<option>Ensino Fundamental - Anos iniciais (5º ano)</option>
+				<option>Ensino Fundamental - Anos finais (6º ano)</option>
+				<option>Ensino Fundamental - Anos finais (7º ano)</option>
+				<option>Ensino Fundamental - Anos finais (8º ano)</option>
+				<option>Ensino Fundamental - Anos finais (9º ano)</option>
+				<option>Ensino Médio - 1º ano</option>
+				<option>Ensino Médio - 2º ano</option>
+				<option>Ensino Médio - 3º ano</option>
+				<option>EJA (ensino fundamental anos finais)</option>
+				<option>EJA (ensino fundamental anos iniciais)</option>
+				<option>EJA (Alfabetizado)</option>
+			</select>
 		</div>
 
 		<div class="form-group col-md-12">
