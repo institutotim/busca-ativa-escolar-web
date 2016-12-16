@@ -516,7 +516,7 @@
 		$scope.step = 3; // Steps 1 and 2 are from sign up
 		$scope.isEditing = false;
 
-		$scope.causes = MockData.alertReasons;
+		$scope.causes = MockData.alertReasonsPriority;
 		$scope.newGroupName = "";
 		$scope.groups = [
 			{name: 'Secretaria Municipal de Educação', canChange: false},
@@ -832,7 +832,7 @@
 		$scope.step = 3;
 		$scope.isEditing = true;
 
-		$scope.causes = MockData.alertReasons;
+		$scope.causes = MockData.alertReasonsPriority;
 		$scope.newGroupName = "";
 		$scope.groups = [
 			{name: 'Secretaria Municipal de Educação', canChange: false},
@@ -2052,7 +2052,7 @@ Highcharts.maps["countries/br/br-all"] = {
 	angular.module('BuscaAtivaEscolar').factory('MockData', function () {
 
 		var alertReasons = [
-			"Adolescente em conflito com a lei",
+			"Adolescente em conflito com a lei" ,
 			"Criança ou adolescente com deficiência(s)",
 			"Criança ou adolescente com doença(s) que impeça(m) ou dificulte(m) a frequência à escola",
 			"Criança ou adolescente em abrigo",
@@ -2067,6 +2067,38 @@ Highcharts.maps["countries/br/br-all"] = {
 			"Trabalho infantil",
 			"Violência familiar",
 			"Violência na escola"
+		];
+		var alertReasonsPriority = [
+			{'name' : "Adolescente em conflito com a lei" ,
+			 'priority': 1},
+			{'name' : "Criança ou adolescente com deficiência(s)",
+			 'priority': 1},
+			{'name' : "Criança ou adolescente com doença(s) que impeça(m) ou dificulte(m) a frequência à escola",
+			 'priority': 2},
+			{'name' : "Criança ou adolescente em abrigo",
+			 'priority': 1},
+			{'name' : "Criança ou adolescente em situação de rua",
+			 'priority': 1},
+			{'name' : "Criança ou adolescente vítima de abuso / violência sexual",
+			 'priority': 1},
+			{'name' : "Evasão porque sente a escola desinteressante",
+			 'priority': 3},
+			{'name' : "Falta de documentação da criança ou adolescente",
+			 'priority': 3},
+			{'name' : "Falta de infraestrutura escolar",
+			 'priority': 2},
+			{'name' : "Falta de transporte escolar",
+			 'priority': 3},
+			{'name' : "Gravidez na adolescência",
+			 'priority': 2},
+			{'name' : "Preconceito ou discriminação racial",
+			 'priority': 1},
+			{'name' : "Trabalho infantil",
+			 'priority': 1},
+			{'name' : "Violência familiar",
+			 'priority': 1},
+			{'name' : "Violência na escola",
+			 'priority': 1},
 		];
 
 		var searchReasons = [
@@ -2246,6 +2278,7 @@ Highcharts.maps["countries/br/br-all"] = {
 			alertReasons: alertReasons,
 			searchReasons: searchReasons,
 			caseStatuses: caseStatuses,
+			alertReasonsPriority: alertReasonsPriority,
 
 			states: states,
 			cities: cities,
