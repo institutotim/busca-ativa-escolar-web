@@ -189,7 +189,6 @@
 		$scope.input = {
 			hasBeenAtSchool: 1,
 			doesWork: 1,
-			reasons: {3: 1},
 			obsStillAtSchool: 1,
 		};
 
