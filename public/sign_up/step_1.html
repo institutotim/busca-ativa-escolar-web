@@ -2,8 +2,8 @@
 	<div class="panel-heading">
 		<h3><strong>1.</strong> <i class="fa fa-building"></i> Dados do município</h3>
 	</div>
-	<div class="panel-body">
 
+	<div class="panel-body">
 		<div>
 			<p>
 				Localize e selecione o município que irá participar do Busca Ativa Escolar.
@@ -13,47 +13,83 @@
 		</div>
 
 		<div>
-			<div class="form-group col-md-3">
-				<input type="text" class="form-control" value="SP" placeholder="UF" />
+			<div class="form-group col-md-6">
+				<ui-select ng-model="input.city">
+				<ui-select-match allow-clear="true" placeholder="UF">{{$select.selected.state}}</ui-select-match>
+					<ui-select-choices repeat="city in cities | filter: $select.search track by city.id">
+						<div>{{city.state}}</div>
+					</ui-select-choices>
+				</ui-select>
 			</div>
 
-			<div class="form-group col-md-9">
-				<input type="text" class="form-control" value="São Paulo" placeholder="Município" />
-			</div>
-		</div>
-
-		<div style="margin: 10px 0;">
-			<p>Leia abaixo os termos de adesão, e indique seu aceite abaixo para prosseguir.</p>
-
-			<div class="panel panel-default" style="max-height: 300px; overflow-y: scroll">
-				<div class="panel-body">
-
-					<h4>TERMO DE ADESÃO DA PLATAFORMA BUSCA ATIVA ESCOLAR</h4>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-				</div>
+			<div class="form-group col-md-6">
+				<ui-select ng-model="input.city">
+				<ui-select-match allow-clear="true" placeholder="Município">{{$select.selected.name}}</ui-select-match>
+					<ui-select-choices repeat="city in cities | filter: $select.search track by city.id">
+						<div>{{city.name}}</div>
+					</ui-select-choices>
+				</ui-select>
 			</div>
 		</div>
+	
+		<br/>
+		<br/>
+		<br/>
 
-		<div class="row">
-			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-agree_tos-yes" style="margin-right: 10px;">Li e concordo com os termos de adesão acima:</label>
-				<div class="radio-inline">
-					<label><input id="fld-agree_tos-yes" ng-model="$parent.agreeTOS" ng-value="1" name="agree_tos" value="1" type="radio"> Sim</label>
-				</div>
-				<div class="radio-inline">
-					<label><input id="fld-agree_tos-no" ng-model="$parent.agreeTOS" ng-value="0" name="agree_tos" value="0" type="radio"> Não</label>
-				</div>
-			</div>
+		<h3><i class="fa fa-user"></i> Dados do Gestor Político</h3>
+			<p>
+				Essa etapa tem por objetivo efetuar a primeira parte da adesão de novos municípios no sistema Busca Ativa Escolar e deve ser preenchida pelo gestor político do município responsável por desempenhar as taredas abaixo:
+			</p>
+
+			<ul class="list-group">
+			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Cadastrar o coordenador operacional no sistema;</li>
+			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Acessar as estatísticas gerais da cidade </li>
+			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Acompanhar a iniciativa, estimulando as ações intersetoriais e fazendo as articulações políticas necessárias para que o coordenador operacional possa desenvolver seu trabalho; </li> 
+			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Analisar os relatórios e refletir sobre as políticas públicas para o enfrentamento da exclusão escolar de forma intersetorial.</li>
+			</ul>
+
+			<p>Informe aqui os dados do gestor operacional, responsável pela Busca Ativa Escolar no município.</p>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-co-name">Nome*</label>
+			<input type="text" class="form-control" id="fld-co-name" value="Aryel Tupinambá">
+		</div>
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
+			<input type="text" class="form-control" id="fld-co-dob" value="25/08/1991">
+		</div>
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-co-cpf">CPF*</label>
+			<input type="text" class="form-control" id="fld-co-cpf" value="123.456.789-00">
+		</div>
+
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-co-email">E-mail institucional*</label>
+			<input type="email" class="form-control" id="fld-co-email" value="aryel.tupinamba@lqdi.net">
+		</div>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-co-work-phone">Telefone fixo institucional*</label>
+			<input type="text" class="form-control" id="fld-co-work-phone" value="(11) 2222-3333">
+		</div>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-co-work-mobile">Telefone celular institucional</label>
+			<input type="text" class="form-control" id="fld-co-work-mobile" value="(11) 98888-4444">
+		</div>
+
+		<hr />
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-co-institution">Instituição*</label>
+			<input type="text" class="form-control" id="fld-co-institution" value="Secretaria de Assistência Social">
+		</div>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-co-position">Cargo*</label>
+			<input type="text" class="form-control" id="fld-co-position" value="Diretor de Operações">
 		</div>
 
 	</div>
 	<div class="panel-footer clearfix">
-		<button ng-click="nextStep()" ng-show="$parent.agreeTOS" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
+		<button ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
 	</div>
 </div>

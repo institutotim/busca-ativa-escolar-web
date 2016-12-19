@@ -1,61 +1,42 @@
 <div class="panel panel-default">
-	<div class="panel-heading">
-		<h3><strong>3.</strong> <i class="fa fa-sitemap"></i> Dados dos gestor operacional</h3>
+		<div class="panel-heading">
+		<h3><strong>1.</strong> <i class="fa fa-building"></i> Termo de Adesão</h3>
 	</div>
 	<div class="panel-body">
+		<div style="margin: 10px 0;">
+			<p>Leia abaixo os termos de adesão, e indique seu aceite abaixo para prosseguir.</p>
 
-		<p>Informe aqui os dados do gestor operacional, responsável pela Busca Ativa Escolar no município.</p>
+			<div class="panel panel-default" style="max-height: 300px; overflow-y: scroll">
+				<div class="panel-body">
 
-		<h4>Coordenador Operacional</h4>
-		<p>
-			O coordenador operacional deve ser a pessoa responsável por operacionalizar o programa no município no dia-a-dia. Ele também será responsável por realizar a primeira configuração no sistema.
-			Esse coordenador terá acesso completo à plataforma, podendo visualizar e acompanhar casos, incluir informações, determinar responsáveis, configurar parametrização, cadastrar e gerenciar usuários e extrair relatórios.
-			Esse coordenador também poderá alterar os acessos do Gestor Político e Prefeito, quando ocorrer uma troca de gestão.
-			Por isso, sugerimos que essa pessoa seja um funcionário concursado da Prefeitura, para que possa continuar a dar sequência no programa, independente da continuidade da gestão em exercício.
-		</p>
+					<h4>TERMO DE ADESÃO DA PLATAFORMA BUSCA ATIVA ESCOLAR</h4>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
-		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-co-name">Nome*</label>
-			<input type="text" class="form-control" id="fld-co-name" value="Aryel Tupinambá">
-		</div>
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
-			<input type="text" class="form-control" id="fld-co-dob" value="25/08/1991">
-		</div>
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-co-cpf">CPF*</label>
-			<input type="text" class="form-control" id="fld-co-cpf" value="123.456.789-00">
+				</div>
+			</div>
 		</div>
 
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-co-email">E-mail institucional*</label>
-			<input type="email" class="form-control" id="fld-co-email" value="aryel.tupinamba@lqdi.net">
+		<div class="row">
+			<div class="form-group col-md-12">
+				<label class="control-label" for="fld-agree_tos-yes" style="margin-right: 10px;">Li e concordo com os termos de adesão acima:</label>
+				<div class="radio-inline">
+					<label><input id="fld-agree_tos-yes" ng-model="$parent.agreeTOS" ng-value="1" name="agree_tos" value="1" type="radio"> Sim</label>
+				</div>
+				<div class="radio-inline">
+					<label><input id="fld-agree_tos-no" ng-model="$parent.agreeTOS" ng-value="0" name="agree_tos" value="0" type="radio"> Não</label>
+				</div>
+			</div>
 		</div>
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-co-work-phone">Telefone fixo institucional*</label>
-			<input type="text" class="form-control" id="fld-co-work-phone" value="(11) 2222-3333">
-		</div>
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-co-work-mobile">Telefone celular institucional</label>
-			<input type="text" class="form-control" id="fld-co-work-mobile" value="(11) 98888-4444">
-		</div>
-
-		<hr />
-
-		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-co-institution">Instituição*</label>
-			<input type="text" class="form-control" id="fld-co-institution" value="Secretaria de Assistência Social">
-		</div>
-
-		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-co-position">Cargo*</label>
-			<input type="text" class="form-control" id="fld-co-position" value="Diretor de Operações">
-		</div>
-
-	</div>
 
 	<div class="panel-footer clearfix">
 		<button ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<button ng-click="finish()" type="button" class="btn btn-success btn-raised pull-right">Salvar e enviar para aprovação <i class="fa fa-upload"></i></button>
+		<button ng-click="finish()" ng-show="$parent.agreeTOS" type="button" class="btn btn-success btn-raised pull-right">Salvar e enviar para aprovação <i class="fa fa-upload"></i></button>
+
+				
 	</div>
 </div>
