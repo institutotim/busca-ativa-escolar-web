@@ -184,6 +184,7 @@
 
 		$scope.identity = Identity;
 		$scope.reasons = MockData.searchReasons;
+		$scope.alertReasons = MockData.alertReasons;
 
 		$scope.input = {
 			hasBeenAtSchool: 1,
