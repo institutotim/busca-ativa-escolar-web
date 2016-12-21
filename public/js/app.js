@@ -2052,7 +2052,7 @@ Highcharts.maps["countries/br/br-all"] = {
 	angular.module('BuscaAtivaEscolar').factory('MockData', function () {
 
 		var alertReasons = [
-			"Adolescente em conflito com a lei" ,
+			"Adolescente em conflito com a lei",
 			"Criança ou adolescente com deficiência(s)",
 			"Criança ou adolescente com doença(s) que impeça(m) ou dificulte(m) a frequência à escola",
 			"Criança ou adolescente em abrigo",
@@ -2065,11 +2065,12 @@ Highcharts.maps["countries/br/br-all"] = {
 			"Gravidez na adolescência",
 			"Preconceito ou discriminação racial",
 			"Trabalho infantil",
+			"Uso, abuso ou dependência de substâncias psicoativas",
 			"Violência familiar",
 			"Violência na escola"
 		];
 		var alertReasonsPriority = [
-			{'name' : "Adolescente em conflito com a lei" ,
+			{'name' : "Adolescente em conflito com a lei",
 			 'priority': 1},
 			{'name' : "Criança ou adolescente com deficiência(s)",
 			 'priority': 1},
@@ -2092,6 +2093,8 @@ Highcharts.maps["countries/br/br-all"] = {
 			{'name' : "Gravidez na adolescência",
 			 'priority': 2},
 			{'name' : "Preconceito ou discriminação racial",
+			 'priority': 1},
+			{'name' : "Uso, abuso ou dependência de substâncias psicoativas",
 			 'priority': 1},
 			{'name' : "Trabalho infantil",
 			 'priority': 1},
@@ -2119,6 +2122,7 @@ Highcharts.maps["countries/br/br-all"] = {
 			"Gravidez na adolescência",
 			"Preconceito ou discriminação racial",
 			"Trabalho infantil",
+			"Uso, abuso ou dependência de substâncias psicoativas",
 			"Violência familiar",
 			"Violência na escola (Discriminação de gênero)",
 			"Violência na escola (Discriminação racial)",
