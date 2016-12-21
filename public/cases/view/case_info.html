@@ -316,16 +316,16 @@
 		<div class="form-group col-md-12">
 			<label class="control-label" for="fld-who-is-responsible-father">Quem é o responsável?</label>
 			<div class="radio">
-				<label><input id="fld-who-is-responsible-father" name="who-is-responsible-father" value="father" type="radio" checked> Pai</label>
+				<label><input id="fld-who-is-responsible-father" name="who-is-responsible" value="father" type="radio" checked> Pai</label>
 			</div>
 			<div class="radio">
-				<label><input id="fld-who-is-responsible-mother" name="who-is-responsible-mother" value="mother" type="radio"> Mãe</label>
+				<label><input id="fld-who-is-responsible-mother" name="who-is-responsible" value="mother" type="radio"> Mãe</label>
 			</div>
 			<div class="radio">
-				<label><input id="fld-who-is-responsible-siblings" name="who-is-responsible-siblings" value="siblings" type="radio"> Irmão/Irmã</label>
+				<label><input id="fld-who-is-responsible-siblings" name="who-is-responsible" value="siblings" type="radio"> Irmão/Irmã</label>
 			</div>
 			<div class="radio">
-				<label><input id="fld-who-is-responsible-other" name="who-is-responsible-other" value="other" type="radio"> Outros familiares</label>
+				<label><input id="fld-who-is-responsible-other" name="who-is-responsible" value="other" type="radio"> Outros familiares</label>
 			</div>
 		</div>
 
@@ -409,7 +409,7 @@
 </div>
 
 <div class="panel panel-default" ng-show="showAll || currentForm == 'pesquisa'">
-	<div class="panel-heading" ng-click="togglePanel('causes')"><i class="fa fa-question-circle"></i> Sobre a causa de exclusão escolar</div>
+	<div class="panel-heading" ng-click="togglePanel('causes')"><i class="fa fa-exclamation-circle"></i> Sobre a causa de exclusão escolar</div>
 	<div class="panel-body" uib-collapse="!isOpen('causes')">
 			<div class="form-group col-md-12">
 			<label class="control-label">Motivos de estar fora da escola*</label>
