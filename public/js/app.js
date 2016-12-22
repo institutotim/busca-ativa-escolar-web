@@ -117,6 +117,10 @@
 					templateUrl: 'first_time_setup/main.html?NC=' + NC,
 					controller: 'FirstTimeSetupCtrl'
 				}).
+				when('/second_time_setup', {
+					templateUrl: 'second_time_setup/main.html?NC=' + NC,
+					controller: 'SecondTimeSetupCtrl'
+				}).
 				otherwise({
 					redirectTo: '/dashboard'
 				});
@@ -184,11 +188,11 @@
 
 		$scope.identity = Identity;
 		$scope.reasons = MockData.searchReasons;
+		$scope.alertReasons = MockData.alertReasons;
 
 		$scope.input = {
 			hasBeenAtSchool: 1,
 			doesWork: 1,
-			reasons: {3: 1},
 			obsStillAtSchool: 1,
 		};
 
@@ -516,13 +520,77 @@
 		$scope.step = 3; // Steps 1 and 2 are from sign up
 		$scope.isEditing = false;
 
-		$scope.causes = MockData.alertReasons;
+
+		Identity.clearLogin();
+
+		$scope.goToStep = function (step) {
+			$scope.step = step;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.nextStep = function() {
+			$scope.step++;
+			$window.scrollTo(0, 0);
+			if($scope.step > 6) $scope.step = 6;
+		};
+
+		$scope.prevStep = function() {
+			$scope.step--;
+			$window.scrollTo(0, 0);
+			if($scope.step < 3) $scope.step = 3;
+		};
+
+		$scope.removeGroup = function(i) {
+			$scope.groups.splice(i, 1);
+		};
+
+		$scope.addGroup = function() {
+			$scope.groups.push({name: $scope.newGroupName, canChange: true});
+			$scope.newGroupName = "";
+		};
+
+		$scope.finish = function() {
+			Modals.show(Modals.Confirm(
+				'Tem certeza que deseja prosseguir com o cadastro?',
+				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
+			)).then(function(res) {
+				Identity.login();
+				location.hash = '/dashboard';
+			});
+		};
+
+	});
+
+})();
+(function() {
+angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function ($scope, $rootScope, $window, Modals, MockData, Identity) {
+
+		$rootScope.section = 'second_time_setup';
+
+		$scope.identity = Identity;
+		$scope.step = 3; // Steps 1 and 2 are from sign up
+		$scope.isEditing = false;
+
+		$scope.causes = MockData.alertReasonsPriority;
 		$scope.newGroupName = "";
 		$scope.groups = [
 			{name: 'Secretaria Municipal de Educação', canChange: false},
 			{name: 'Secretaria Municipal de Assistência Social', canChange: true},
 			{name: 'Secretaria Municipal da Saúde', canChange: true}
 		];
+
+		$rootScope.section = 'users';
+		$scope.identity = Identity;
+
+		$scope.range = function (start, end) {
+			var arr = [];
+
+			for(var i = start; i <= end; i++) {
+				arr.push(i);
+			}
+
+			return arr;
+		}
 
 		Identity.clearLogin();
 
@@ -832,7 +900,7 @@
 		$scope.step = 3;
 		$scope.isEditing = true;
 
-		$scope.causes = MockData.alertReasons;
+		$scope.causes = MockData.alertReasonsPriority;
 		$scope.newGroupName = "";
 		$scope.groups = [
 			{name: 'Secretaria Municipal de Educação', canChange: false},
@@ -879,6 +947,9 @@
 (function() {
 
 	angular.module('BuscaAtivaEscolar').controller('SignUpCtrl', function ($scope, $rootScope, $window, Modals, MockData, Identity) {
+		
+		$scope.cities = MockData.cities;
+		$scope.states = MockData.states;
 
 		$rootScope.section = 'sign_up';
 
@@ -890,14 +961,12 @@
 
 		$scope.goToStep = function (step) {
 			if(!$scope.agreeTOS) return;
-			if($scope.step >= 4) return;
 
 			$scope.step = step;
 			$window.scrollTo(0, 0);
 		};
 
 		$scope.nextStep = function() {
-			if(!$scope.agreeTOS) return;
 			if($scope.step >= 4) return;
 
 			$scope.step++;
@@ -906,7 +975,6 @@
 		};
 
 		$scope.prevStep = function() {
-			if(!$scope.agreeTOS) return;
 			if($scope.step >= 4) return;
 
 			$scope.step--;
@@ -2065,8 +2133,43 @@ Highcharts.maps["countries/br/br-all"] = {
 			"Gravidez na adolescência",
 			"Preconceito ou discriminação racial",
 			"Trabalho infantil",
+			"Uso, abuso ou dependência de substâncias psicoativas",
 			"Violência familiar",
 			"Violência na escola"
+		];
+		var alertReasonsPriority = [
+			{'name' : "Adolescente em conflito com a lei",
+			 'priority': 1},
+			{'name' : "Criança ou adolescente com deficiência(s)",
+			 'priority': 1},
+			{'name' : "Criança ou adolescente com doença(s) que impeça(m) ou dificulte(m) a frequência à escola",
+			 'priority': 2},
+			{'name' : "Criança ou adolescente em abrigo",
+			 'priority': 1},
+			{'name' : "Criança ou adolescente em situação de rua",
+			 'priority': 1},
+			{'name' : "Criança ou adolescente vítima de abuso / violência sexual",
+			 'priority': 1},
+			{'name' : "Evasão porque sente a escola desinteressante",
+			 'priority': 3},
+			{'name' : "Falta de documentação da criança ou adolescente",
+			 'priority': 3},
+			{'name' : "Falta de infraestrutura escolar",
+			 'priority': 2},
+			{'name' : "Falta de transporte escolar",
+			 'priority': 3},
+			{'name' : "Gravidez na adolescência",
+			 'priority': 2},
+			{'name' : "Preconceito ou discriminação racial",
+			 'priority': 1},
+			{'name' : "Uso, abuso ou dependência de substâncias psicoativas",
+			 'priority': 1},
+			{'name' : "Trabalho infantil",
+			 'priority': 1},
+			{'name' : "Violência familiar",
+			 'priority': 1},
+			{'name' : "Violência na escola",
+			 'priority': 1},
 		];
 
 		var searchReasons = [
@@ -2087,6 +2190,7 @@ Highcharts.maps["countries/br/br-all"] = {
 			"Gravidez na adolescência",
 			"Preconceito ou discriminação racial",
 			"Trabalho infantil",
+			"Uso, abuso ou dependência de substâncias psicoativas",
 			"Violência familiar",
 			"Violência na escola (Discriminação de gênero)",
 			"Violência na escola (Discriminação racial)",
@@ -2246,6 +2350,7 @@ Highcharts.maps["countries/br/br-all"] = {
 			alertReasons: alertReasons,
 			searchReasons: searchReasons,
 			caseStatuses: caseStatuses,
+			alertReasonsPriority: alertReasonsPriority,
 
 			states: states,
 			cities: cities,

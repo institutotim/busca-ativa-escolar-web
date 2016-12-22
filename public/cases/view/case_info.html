@@ -41,9 +41,9 @@
 		</div>
 		<div class="form-group col-md-12">
 			<label class="control-label">Por que a criança ou adolescente está fora da escola?* <br />Selecione a principal causa identificada:</label>
-			<div class="radio" ng-repeat="(i, reason) in reasons">
+			<div class="radio" ng-repeat="(i, alertReason) in alertReasons">
 				<label>
-					<input name="type" value="{{i}}" type="radio"> {{reason}}
+					<input name="type" value="{{i}}" type="radio"> {{alertReason}}
 				</label>
 			</div>
 		</div>
@@ -111,14 +111,6 @@
 		<div class="form-group col-md-2">
 			<label class="control-label" for="fld-alert-uf">UF*</label>
 			<input type="text" class="form-control" id="fld-alert-uf" value="SP">
-		</div>
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-alert-phone">Telefone residencial</label>
-			<input type="text" class="form-control" id="fld-alert-phone" value="(11) 2222-3333">
-		</div>
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-alert-mobile">Telefone celular</label>
-			<input type="text" class="form-control" id="fld-alert-mobile" value="(11) 98888-4444">
 		</div>
 	</div>
 </div>
@@ -324,16 +316,16 @@
 		<div class="form-group col-md-12">
 			<label class="control-label" for="fld-who-is-responsible-father">Quem é o responsável?</label>
 			<div class="radio">
-				<label><input id="fld-who-is-responsible-father" name="who-is-responsible-father" value="father" type="radio" checked> Pai</label>
+				<label><input id="fld-who-is-responsible-father" name="who-is-responsible" value="father" type="radio" checked> Pai</label>
 			</div>
 			<div class="radio">
-				<label><input id="fld-who-is-responsible-mother" name="who-is-responsible-mother" value="mother" type="radio"> Mãe</label>
+				<label><input id="fld-who-is-responsible-mother" name="who-is-responsible" value="mother" type="radio"> Mãe</label>
 			</div>
 			<div class="radio">
-				<label><input id="fld-who-is-responsible-siblings" name="who-is-responsible-siblings" value="siblings" type="radio"> Irmão/Irmã</label>
+				<label><input id="fld-who-is-responsible-siblings" name="who-is-responsible" value="siblings" type="radio"> Irmão/Irmã</label>
 			</div>
 			<div class="radio">
-				<label><input id="fld-who-is-responsible-other" name="who-is-responsible-other" value="other" type="radio"> Outros familiares</label>
+				<label><input id="fld-who-is-responsible-other" name="who-is-responsible" value="other" type="radio"> Outros familiares</label>
 			</div>
 		</div>
 
@@ -417,18 +409,18 @@
 </div>
 
 <div class="panel panel-default" ng-show="showAll || currentForm == 'pesquisa'">
-	<div class="panel-heading" ng-click="togglePanel('causes')"><i class="fa fa-question-circle"></i> Sobre a causa de exclusão escolar</div>
+	<div class="panel-heading" ng-click="togglePanel('causes')"><i class="fa fa-exclamation-circle"></i> Sobre a causa de exclusão escolar</div>
 	<div class="panel-body" uib-collapse="!isOpen('causes')">
-		<div class="form-group col-md-12">
+			<div class="form-group col-md-12">
 			<label class="control-label">Motivos de estar fora da escola*</label>
 			<div class="radio" ng-repeat="(i, reason) in reasons">
 				<label>
-					<input name="type_{{i}}" ng-model="input.reasons[i]" ng-true-value="0" ng-false-value="0" value="1" type="checkbox" > <strong ng-if="(i == 3)" class="label label-default">Motivo indicado no alerta</strong> {{reason}}
+					<input name="type_{{i}}" ng-model="input.reasons[i]" ng-true-value="1" ng-false-value="0" value="0" type="checkbox"> <strong ng-if="(i == 3)" class="label label-default">Motivo indicado no alerta</strong> {{reason}}
 				</label>
 			</div>
 		</div>
 
-		<div class="form-group col-md-12" ng-show="input.reasons[1]">
+		<div class="form-group col-md-12" ng-show="input.reasons[1] || input.reasons[2] || input.reasons[3] || input.reasons[4]">
 			<label class="control-label" for="fld-handicapped-at-sus-yes">A criança ou adolescente é atendida pelo SUS (Sistema Único de Saúde)?</label>
 			<div class="radio">
 				<label><input id="fld-handicapped-at-sus-yes" name="handicapped-at-sus" value="yes" type="radio" checked> Sim</label>
@@ -438,7 +430,7 @@
 			</div>
 		</div>
 
-		<div class="form-group col-md-12" ng-show="input.reasons[1]">
+		<div class="form-group col-md-12" ng-show="input.reasons[1] || input.reasons[2] || input.reasons[3] || input.reasons[4]">
 			<label class="control-label" for="fld-handicapped-reason">Por qual motivo a matrícula não foi realizada?</label>
 			<select type="text" class="form-control" id="fld-handicapped-reason" value="Selecione">
 				<option>A família não procurou uma escola</option>
@@ -446,7 +438,6 @@
 				<option>A escola não tem acessibilidade para receber criança com deficiência ou Transtornos Globais de Desenvolvimento (TGD)</option>
 				<option>Outros motivos</option>
 			</select>
-		</div>
 	</div>
 </div>
 

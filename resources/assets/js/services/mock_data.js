@@ -16,8 +16,68 @@
 			"Gravidez na adolescência",
 			"Preconceito ou discriminação racial",
 			"Trabalho infantil",
+			"Uso, abuso ou dependência de substâncias psicoativas",
 			"Violência familiar",
 			"Violência na escola"
+		];
+		var alertReasonsPriority = [
+			{'name' : "Adolescente em conflito com a lei" ,
+			 'priority': 1},
+			{'name' : "Criança ou adolescente com deficiência(s)",
+			 'priority': 1},
+			{'name' : "Criança ou adolescente com doença(s) que impeça(m) ou dificulte(m) a frequência à escola",
+			 'priority': 2},
+			{'name' : "Criança ou adolescente em abrigo",
+			 'priority': 1},
+			{'name' : "Criança ou adolescente em situação de rua",
+			 'priority': 1},
+			{'name' : "Criança ou adolescente vítima de abuso / violência sexual",
+			 'priority': 1},
+			{'name' : "Evasão porque sente a escola desinteressante",
+			 'priority': 3},
+			{'name' : "Falta de documentação da criança ou adolescente",
+			 'priority': 3},
+			{'name' : "Falta de infraestrutura escolar",
+			 'priority': 2},
+			{'name' : "Falta de transporte escolar",
+			 'priority': 3},
+			{'name' : "Gravidez na adolescência",
+			 'priority': 2},
+			{'name' : "Preconceito ou discriminação racial",
+			 'priority': 1},
+			{'name' : "Uso, abuso ou dependência de substâncias psicoativas",
+			 'priority': 1},
+			{'name' : "Trabalho infantil",
+			 'priority': 1},
+			{'name' : "Violência familiar",
+			 'priority': 1},
+			{'name' : "Violência na escola",
+			 'priority': 1},
+		];
+
+		var searchReasons = [
+			"Adolescente em conflito com a lei",
+			"Criança ou adolescente com deficiência física",
+			"Criança ou adolescente com deficiência intelectual",
+			"Criança ou adolescente com deficiência mental",
+			"Criança ou adolescente com deficiência sensorial",
+			"Criança ou adolescente com doenças (que impedem e/ou dificultem a frequência à escola)",
+			"Criança ou adolescente em abrigos",
+			"Criança ou adolescente em situação de rua",
+			"Criança ou adolescente que sofrem ou sofreram abuso / violência sexual",
+			"Evasão porque sente a escola desinteressante",
+			"Falta de documentação da criança ou adolescente",
+			"Falta de infraestrutura escolar (Escola)",
+			"Falta de infraestrutura escolar (Vagas)",
+			"Falta de transporte escolar",
+			"Gravidez na adolescência",
+			"Preconceito ou discriminação racial",
+			"Trabalho infantil",
+			"Uso, abuso ou dependência de substâncias psicoativas",
+			"Violência familiar",
+			"Violência na escola (Discriminação de gênero)",
+			"Violência na escola (Discriminação racial)",
+			"Violência na escola (Discriminação religiosa)"
 		];
 
 		var states = [
@@ -40,6 +100,13 @@
 			{id: 2, name: 'Secretaria da Educação'},
 			{id: 3, name: 'Secretaria do Verde e Meio Ambiente'},
 			{id: 4, name: 'Secretaria dos Transportes'}
+		];
+
+		var userTypes = [
+			{id: 1, name: 'Agente Comunitário'},
+			{id: 2, name: 'Técnico Verificador'},
+			{id: 3, name: 'Supervisor Institucional'},
+			{id: 4, name: 'Coordenador Operacional'}
 		];
 
 		var brazilMapData = [
@@ -164,11 +231,15 @@
 		return {
 
 			alertReasons: alertReasons,
+			searchReasons: searchReasons,
 			caseStatuses: caseStatuses,
+			alertReasonsPriority: alertReasonsPriority,
 
 			states: states,
 			cities: cities,
 			groups: groups,
+			userTypes: userTypes,
+
 
 			caseTypesChart: {
 				options: {
