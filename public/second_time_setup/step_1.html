@@ -1,20 +1,16 @@
 <div class="panel panel-default">
-		<div class="panel-heading">
-			<h3><strong ng-show="!$parent.isEditing">4.</strong> <i class="fa fa-sitemap"></i> Cadastre o coordenador operacional</h3>
-		</div>
+	<div class="panel-heading">
+		<h3><strong ng-show="!$parent.isEditing">1.</strong> <i class="fa fa-sitemap"></i> Revisão do cadastro</h3>
+	</div>
+	<div class="panel-body">
 		<div class="col-md-12">
 			<h4>Coordenador Operacional</h4>
 			<p>
-				Essa etapa deve ser preenchida pelo gestor político do município. O objetivo da etapa é indicar o Coordenador Operacional responsável por desempenhar as taredas abaixo:
+				O coordenador operacional deve ser a pessoa responsável por operacionalizar o programa no município no dia-a-dia.
+				Esse coordenador terá acesso completo à plataforma, podendo visualizar e acompanhar casos, incluir informações, determinar responsáveis, configurar parametrização, cadastrar e gerenciar usuários e extrair relatórios.
+				Esse coordenador também poderá alterar os acessos do Gestor Político e Prefeito, quando ocorrer uma troca de gestão.
+				Por isso, sugerimos que essa pessoa seja um funcionário concursado da Prefeitura, para que possa continuar a dar sequência no programa, independente da continuidade da gestão em exercício.
 			</p>
-			
-			<ul style="font-size: 10px"  class="list-group">
-			  <li class="list-group-item"><i font-site class="fa fa-circle-o"></i> Cadastrar os supervisores institucionais, os técnicos verificadores e os agentes comunitários</li>
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Estabelecer os parâmetros do sistema de acordo com a realidade do município. Inclui definir quais atores participarão, quais casos serão resolvidos por quem, os prazos para as tarefas principais etc </li>
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Acessar as estatísticas gerais da cidade </li> 
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Definir, em conjunto com o gestor político, estratégias para a implementação do projeto no âmbito do município</li>
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Coordenar as ações de formação das equipes participantes </li> 
-			</ul>
 		</div>
 
 		<div ng-show="$parent.isEditing" class="clearfix"><a href="#/users/5" class="btn btn-raised btn-primary"><i class="fa fa-user"></i> Editar usuário do Coordenador Político</a></div>
@@ -24,12 +20,10 @@
 				<label class="control-label" for="fld-co-name">Nome*</label>
 				<input type="text" class="form-control" id="fld-co-name" value="Aryel Tupinambá">
 			</div>
-
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
 				<input type="text" class="form-control" id="fld-co-dob" value="25/08/1991">
 			</div>
-
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-co-cpf">CPF*</label>
 				<input type="text" class="form-control" id="fld-co-cpf" value="123.456.789-00">
@@ -39,7 +33,6 @@
 				<label class="control-label" for="fld-co-email">E-mail institucional*</label>
 				<input type="email" class="form-control" id="fld-co-email" value="aryel.tupinamba@lqdi.net">
 			</div>
-			
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-work-phone">Telefone fixo institucional*</label>
 				<input type="text" class="form-control" id="fld-co-work-phone" value="(11) 2222-3333">
@@ -48,6 +41,7 @@
 				<label class="control-label" for="fld-co-work-mobile">Telefone celular institucional</label>
 				<input type="text" class="form-control" id="fld-co-work-mobile" value="(11) 98888-4444">
 			</div>
+
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-personal-email">E-mail pessoal</label>
@@ -100,13 +94,14 @@
 				<label class="control-label" for="fld-co-position">Cargo*</label>
 				<input type="text" class="form-control" id="fld-co-position" value="Diretor de Operações">
 			</div>
+
 		</div>
+
 	</div>
 
 	<div class="panel-footer clearfix">
 		<button ng-show="!$parent.isEditing" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<a class="btn btn-primary btn-raised pull-right" href="#/second_time_setup">Finalizar</a>
-
+		<button ng-show="!$parent.isEditing" ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
 		<button ng-show="$parent.isEditing" ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
 	</div>
 </div>

@@ -24,15 +24,9 @@
 	</tr>
 	<tr ng-repeat="(j, group) in groups track by j">
 		<td width="70%"><label for="chk-group-view-{{i}}-{{j}}" style="width: 100%; color: black;">{{group.name}}</label></td>
-		<td width="15%">
+		<td width="30%">
 			<label for="chk-group-view-{{i}}-{{j}}" style="width: 100%; text-align: center;" uib-tooltip="Visualiza">
-				<input id="chk-group-view-{{i}}-{{j}}" type="checkbox" checked />  Visualiza <i class="fa fa-eye"></i>
-			</label>
-		</td>
-
-		<td width="15%">
-			<label for="chk-group-notification-{{i}}-{{j}}" style="width: 100%; text-align: center;" uib-tooltip="Recebe notificação">
-				<input id="chk-group-notification-{{i}}-{{j}}" type="checkbox" checked />  Notificação <i class="fa fa-envelope"></i>
+				<input id="chk-group-view-{{i}}-{{j}}" type="checkbox"  />  Visualiza e notifica <i class="fa fa-eye"></i>
 			</label>
 		</td>
 	</tr>

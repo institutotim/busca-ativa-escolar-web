@@ -1,0 +1,41 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3><strong ng-show="!$parent.isEditing">3.</strong> <i class="fa fa-calendar"></i> Cadastre os usuários</h3>
+	</div>
+	<div class="panel-body">
+			<a ng-show="identity.can('users.create')"  class="btn btn-primary btn-raised pull-right"><i class="fa fa-plus"></i> Novo</a>
+
+		<table class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th>N&ordm; <i class="fa fa-arrow-down"></i></th>						
+						<th>Nome <i class="fa fa-arrow-down"></i></th>
+						<th>E-mail <i class="fa fa-arrow-down"></i></th>
+						<th>Tipo <i class="fa fa-arrow-down"></i></th>
+						<th>Grupo <i class="fa fa-arrow-down"></i></th>
+						<th ng-show="identity.can('users.edit')">Opções</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="i in range(1, 12)">
+						<td width="6%">#{{2 + i}}</td>
+						<td width="22%"><strong><i class="material-icons">person</i> Aryel Tupinambá</strong><br /></td>
+						<td width="18%">aryel.tupinamba@lqdi.net</td>
+						<td width="18%">Coordenador Operacional</td>
+						<td width="18%">Secretaria dos Transportes</td>
+						<td width="20%" ng-show="identity.can('users.edit') || identity.can('users.deactivate')">
+							<a href="#/users/5" ng-show="identity.can('users.edit')" class="btn btn-info btn-xs" style="margin: 0;"><i class="material-icons">mode_edit</i> Editar</a>
+							<a ng-show="identity.can('users.deactivate')" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-ban"></i> Desativar</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+	</div>
+
+	<div class="panel-footer clearfix">
+		<button ng-show="!$parent.isEditing" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
+		<button ng-show="!$parent.isEditing" ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
+		<button ng-show="$parent.isEditing" ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
+	</div>
+</div>
