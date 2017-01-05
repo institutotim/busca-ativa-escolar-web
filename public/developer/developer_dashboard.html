@@ -81,12 +81,22 @@
 				<div class="panel panel-primary">
 					<div class="panel-heading">Testar back-end</div>
 					<div class="panel-body">
+
+						<button type="button" ng-click="testGetTenant()" class="btn btn-raised btn-warning">Realizar request aberto</button>
+
+						<div>
+							<p>ID: {{tenant.id}}</p>
+							<p>Name: {{tenant.name}}</p>
+							<p>Tenant registered at: {{tenant.created_at}}</p>
+						</div>
+
 						<button type="button" ng-click="testGetChildren()" class="btn btn-raised btn-warning">Realizar request autenticado</button>
 
 						<div>
 							<p>ID: {{child.id}}</p>
 							<p>Name: {{child.name}}</p>
-							<p>Age: {{child.age}}</p>
+							<p>Status: {{child.status}}</p>
+							<p>Step type: {{child.current_step_type}}</p>
 							<p>Record created at: {{child.created_at}}</p>
 						</div>
 
