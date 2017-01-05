@@ -27,7 +27,7 @@
 
 		return {
 			link: init,
-			templateUrl: 'navbar.html'
+			templateUrl: '/views/navbar.html'
 		};
 	});
 

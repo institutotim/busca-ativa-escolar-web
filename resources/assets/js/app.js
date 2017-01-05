@@ -46,6 +46,10 @@
 			});
 		})
 
+		.config(function ($locationProvider) {
+			$locationProvider.html5Mode(true);
+		})
+
 		.config(function(ngToastProvider) {
 			ngToastProvider.configure({
 				verticalPosition: 'top',
@@ -69,63 +73,63 @@
 
 			$routeProvider.
 				when('/dashboard', {
-					templateUrl: 'dashboard.html?NC=' + NC,
+					templateUrl: '/views/dashboard.html?NC=' + NC,
 					controller: 'DashboardCtrl'
 				}).
 				when('/preferences', {
-					templateUrl: 'preferences/manage.html?NC=' + NC,
+					templateUrl: '/views/preferences/manage.html?NC=' + NC,
 					controller: 'PreferencesCtrl'
 				}).
 				when('/developer_mode', {
-					templateUrl: 'developer/developer_dashboard.html?NC=' + NC,
+					templateUrl: '/views/developer/developer_dashboard.html?NC=' + NC,
 					controller: 'DeveloperCtrl'
 				}).
 				when('/cases', {
-					templateUrl: 'cases/list.html?NC=' + NC,
+					templateUrl: '/views/cases/list.html?NC=' + NC,
 					controller: 'CaseSearchCtrl'
 				}).
 				when('/cases/create_alert', {
-					templateUrl: 'cases/create_alert.html?NC=' + NC,
+					templateUrl: '/views/cases/create_alert.html?NC=' + NC,
 					controller: 'CreateAlertCtrl'
 				}).
 				when('/cases/:case_id', {
-					templateUrl: 'cases/view/main.html?NC=' + NC,
+					templateUrl: '/views/cases/view/main.html?NC=' + NC,
 					controller: 'CaseViewCtrl'
 				}).
 				when('/users', {
-					templateUrl: 'users/list.html?NC=' + NC,
+					templateUrl: '/views/users/list.html?NC=' + NC,
 					controller: 'UserSearchCtrl'
 				}).
 				when('/users/:user_id', {
-					templateUrl: 'users/view.html?NC=' + NC,
+					templateUrl: '/views/users/view.html?NC=' + NC,
 					controller: 'UserViewCtrl'
 				}).
 				when('/cities', {
-					templateUrl: 'cities/list.html?NC=' + NC,
+					templateUrl: '/views/cities/list.html?NC=' + NC,
 					controller: 'CitySearchCtrl'
 				}).
 				when('/settings', {
-					templateUrl: 'settings/manage_settings.html?NC=' + NC,
+					templateUrl: '/views/settings/manage_settings.html?NC=' + NC,
 					controller: 'SettingsCtrl'
 				}).
 				when('/settings/parameterize_group/:group_id', {
-					templateUrl: 'settings/parameterize_group.html?NC=' + NC,
+					templateUrl: '/views/settings/parameterize_group.html?NC=' + NC,
 					controller: 'ParameterizeGroupCtrl'
 				}).
 				when('/reports', {
-					templateUrl: 'reports/browser.html?NC=' + NC,
+					templateUrl: '/views/reports/browser.html?NC=' + NC,
 					controller: 'ReportsCtrl'
 				}).
 				when('/credits', {
-					templateUrl: 'static/credits.html?NC=' + NC,
+					templateUrl: '/views/static/credits.html?NC=' + NC,
 					controller: 'CreditsCtrl'
 				}).
 				when('/sign_up', {
-					templateUrl: 'sign_up/main.html?NC=' + NC,
+					templateUrl: '/views/sign_up/main.html?NC=' + NC,
 					controller: 'SignUpCtrl'
 				}).
 				when('/first_time_setup', {
-					templateUrl: 'first_time_setup/main.html?NC=' + NC,
+					templateUrl: '/views/first_time_setup/main.html?NC=' + NC,
 					controller: 'FirstTimeSetupCtrl'
 				}).
 				otherwise({

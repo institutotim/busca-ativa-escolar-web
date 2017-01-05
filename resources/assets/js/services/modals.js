@@ -24,7 +24,7 @@
 
 				Alert: function(message, details) {
 					return {
-						templateUrl: '/modals/alert.html',
+						templateUrl: '/views/modals/alert.html',
 						controller: 'AlertModalCtrl',
 						size: 'sm',
 						resolve: {
@@ -36,7 +36,7 @@
 
 				Confirm: function(message, details, canDismiss) {
 					var params = {
-						templateUrl: '/modals/confirm.html',
+						templateUrl: '/views/modals/confirm.html',
 						controller: 'ConfirmModalCtrl',
 						size: 'sm',
 						resolve: {
@@ -56,7 +56,7 @@
 
 				Prompt: function(question, defaultAnswer, canDismiss) {
 					var params = {
-						templateUrl: '/modals/prompt.html',
+						templateUrl: '/views/modals/prompt.html',
 						controller: 'PromptModalCtrl',
 						size: 'md',
 						resolve: {
@@ -76,7 +76,7 @@
 
 				Login: function(reason, canDismiss) {
 					var params = {
-						templateUrl: '/modals/login.html',
+						templateUrl: '/views/modals/login.html',
 						controller: 'LoginModalCtrl',
 						size: 'md',
 						resolve: {
@@ -95,7 +95,7 @@
 
 				UserPicker: function(title, message, canDismiss) {
 					var params = {
-						templateUrl: '/modals/user_picker.html',
+						templateUrl: '/views/modals/user_picker.html',
 						controller: 'UserPickerModalCtrl',
 						size: 'md',
 						resolve: {
@@ -115,7 +115,7 @@
 
 				CaseRestart: function() {
 					var params = {
-						templateUrl: '/modals/case_restart.html',
+						templateUrl: '/views/modals/case_restart.html',
 						controller: 'CaseRestartModalCtrl',
 						size: 'md',
 						resolve: {
@@ -128,7 +128,7 @@
 
 				CaseActivityLogEntry: function() {
 					var params = {
-						templateUrl: '/modals/case_activity_log_entry.html',
+						templateUrl: '/views/modals/case_activity_log_entry.html',
 						controller: 'CaseActivityLogEntryCtrl',
 						size: 'md',
 						resolve: {
