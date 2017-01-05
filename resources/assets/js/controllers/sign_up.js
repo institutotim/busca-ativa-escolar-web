@@ -8,10 +8,10 @@
 		$scope.step = 1;
 		$scope.agreeTOS = 0;
 
-		Identity.clearLogin();
+		Identity.clearSession();
 
 		$scope.goToStep = function (step) {
-			if(!$scope.agreeTOS) return;
+			if($scope.step > 2 && !$scope.agreeTOS) return;
 			if($scope.step >= 4) return;
 
 			$scope.step = step;
@@ -19,7 +19,7 @@
 		};
 
 		$scope.nextStep = function() {
-			if(!$scope.agreeTOS) return;
+			if($scope.step > 2 && !$scope.agreeTOS) return;
 			if($scope.step >= 4) return;
 
 			$scope.step++;
@@ -28,7 +28,7 @@
 		};
 
 		$scope.prevStep = function() {
-			if(!$scope.agreeTOS) return;
+			if($scope.step > 2 && !$scope.agreeTOS) return;
 			if($scope.step >= 4) return;
 
 			$scope.step--;
@@ -37,7 +37,7 @@
 		};
 
 		$scope.finish = function() {
-			if(!$scope.agreeTOS) return;
+			if($scope.step > 2 && !$scope.agreeTOS) return;
 			if($scope.step >= 4) return;
 
 			Modals.show(Modals.Confirm(

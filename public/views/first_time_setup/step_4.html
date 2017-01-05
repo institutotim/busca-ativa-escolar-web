@@ -1,112 +1,41 @@
 <div class="panel panel-default">
-		<div class="panel-heading">
-			<h3><strong ng-show="!$parent.isEditing">4.</strong> <i class="fa fa-sitemap"></i> Cadastre o coordenador operacional</h3>
-		</div>
-		<div class="col-md-12">
-			<h4>Coordenador Operacional</h4>
-			<p>
-				Essa etapa deve ser preenchida pelo gestor político do município. O objetivo da etapa é indicar o Coordenador Operacional responsável por desempenhar as taredas abaixo:
-			</p>
-			
-			<ul style="font-size: 10px"  class="list-group">
-			  <li class="list-group-item"><i font-site class="fa fa-circle-o"></i> Cadastrar os supervisores institucionais, os técnicos verificadores e os agentes comunitários</li>
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Estabelecer os parâmetros do sistema de acordo com a realidade do município. Inclui definir quais atores participarão, quais casos serão resolvidos por quem, os prazos para as tarefas principais etc </li>
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Acessar as estatísticas gerais da cidade </li> 
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Definir, em conjunto com o gestor político, estratégias para a implementação do projeto no âmbito do município</li>
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Coordenar as ações de formação das equipes participantes </li> 
-			</ul>
-		</div>
+	<div class="panel-heading">
+		<h3><strong ng-show="!$parent.isEditing">4.</strong> <i class="fa fa-users"></i> Cadastre os grupos de trabalho</h3>
+	</div>
+	<div class="panel-body">
+		<p>
+			Os grupos de trabalho são grupos de usuários que respondem por diferentes causas de evasão escolar.
+			Os grupos que você cadastrar aqui poderão ser customizados para receber um ou mais alertas e casos, de acordo com sua causa.
+			Sugerimos que os grupos cadastrados sejam as secretarias municipais ou orgãos da administração pública que irão atuar na (re)matrícula das crianças e adolescentes.
+		</p>
 
-		<div ng-show="$parent.isEditing" class="clearfix"><a href="/users/5" class="btn btn-raised btn-primary"><i class="fa fa-user"></i> Editar usuário do Coordenador Político</a></div>
-		<div ng-show="!$parent.isEditing" class="clearfix">
+		<table class="table sign-up-groups">
+			<thead>
+				<tr>
+					<th width="90%">Nome</th>
+					<th width="10%">Opções</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="(i, group) in groups track by i">
+					<td><input type="text" ng-model="group.name" class="form-control" placeholder="Nome da secretaria..." /></td>
+					<td>
+						<a class="btn btn-raised btn-danger" ng-show="group.canChange" ng-click="removeGroup(i);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+						<span class="btn btn-raised btn-default" ng-show="!group.canChange" uib-tooltip="Esse grupo é responsável pelas atividades de (re)matrícula e observação, e não pode ser apagado ou editado.">Obrigatório</span>
+					</td>
+				</tr>
+				<tr>
+					<td><input type="text" ng-model="$parent.newGroupName" class="form-control" placeholder="Nome da secretaria..." /></td>
+					<td><a class="btn btn-raised btn-success" ng-click="addGroup()" uib-tooltip="Adicionar grupo"><i class="fa fa-plus-circle"></i></a></td>
+				</tr>
+			</tbody>
+		</table>
 
-			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-co-name">Nome*</label>
-				<input type="text" class="form-control" id="fld-co-name" value="Aryel Tupinambá">
-			</div>
-
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
-				<input type="text" class="form-control" id="fld-co-dob" value="25/08/1991">
-			</div>
-
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-co-cpf">CPF*</label>
-				<input type="text" class="form-control" id="fld-co-cpf" value="123.456.789-00">
-			</div>
-
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-email">E-mail institucional*</label>
-				<input type="email" class="form-control" id="fld-co-email" value="aryel.tupinamba@lqdi.net">
-			</div>
-			
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-work-phone">Telefone fixo institucional*</label>
-				<input type="text" class="form-control" id="fld-co-work-phone" value="(11) 2222-3333">
-			</div>
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-work-mobile">Telefone celular institucional</label>
-				<input type="text" class="form-control" id="fld-co-work-mobile" value="(11) 98888-4444">
-			</div>
-
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-personal-email">E-mail pessoal</label>
-				<input type="email" class="form-control" id="fld-co-personal-email" value="aryel@tupinamba.me">
-			</div>
-
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-personal-mobile">Telefone celular pessoal</label>
-				<input type="text" class="form-control" id="fld-co-personal-mobile" value="(11) 98888-4444">
-			</div>
-
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-skype-username">Skype</label>
-				<input type="text" class="form-control" id="fld-co-skype-username" value="aryel.tupinamba">
-			</div>
-
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-address">Endereço institucional*</label>
-				<input type="text" class="form-control" id="fld-co-address" value="Av. Dr. Chucri Zaidan, 1550, cj 1712">
-			</div>
-
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-cep">CEP institucional*</label>
-				<input type="text" class="form-control" id="fld-co-cep" value="04583-110">
-			</div>
-
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-neighborhood">Bairro*</label>
-				<input type="text" class="form-control" id="fld-co-neighborhood" value="Vila Cordeiro">
-			</div>
-
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-uf">Estado*</label>
-				<input type="text" class="form-control" id="fld-co-uf" value="SP">
-			</div>
-
-			<div class="form-group col-md-8">
-				<label class="control-label" for="fld-co-city">Município*</label>
-				<input type="text" class="form-control" id="fld-co-city" value="São Paulo/SP">
-			</div>
-
-			<hr />
-
-			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-co-institution">Instituição*</label>
-				<input type="text" class="form-control" id="fld-co-institution" value="Secretaria de Assistência Social">
-			</div>
-
-			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-co-position">Cargo*</label>
-				<input type="text" class="form-control" id="fld-co-position" value="Diretor de Operações">
-			</div>
-		</div>
 	</div>
 
 	<div class="panel-footer clearfix">
 		<button ng-show="!$parent.isEditing" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<a class="btn btn-primary btn-raised pull-right" href="/second_time_setup">Finalizar</a>
-
+		<button ng-show="!$parent.isEditing" ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
 		<button ng-show="$parent.isEditing" ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
 	</div>
 </div>

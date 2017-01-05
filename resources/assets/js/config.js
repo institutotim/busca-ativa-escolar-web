@@ -39,6 +39,7 @@
 					return;
 				}
 
+				console.info("[Core.Config] Setting API endpoint: ", endpoint);
 				config.CURRENT_ENDPOINT = endpoint;
 			};
 

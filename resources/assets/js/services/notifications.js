@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').service('Notifications', function ($rootScope, $http, ngToast) {
+	angular.module('BuscaAtivaEscolar').service('Notifications', function ($rootScope, $http, $location, ngToast) {
 
 		$rootScope.notifications = [];
 
@@ -19,7 +19,7 @@
 		}
 
 		function open($event, index) {
-			location.hash = '#/cases';
+			$location.path('/cases');
 			return false;
 		}
 

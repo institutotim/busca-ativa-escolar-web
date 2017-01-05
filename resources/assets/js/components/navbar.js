@@ -9,11 +9,6 @@
 			scope.cityUF = 'SP';
 			scope.showNotifications = true;
 
-			scope.user = {
-				name: 'Aryel Tupinambá',
-				type: 'Coordenador Operacional'
-			};
-
 			scope.toggleNotifications = function($event) {
 				scope.showNotifications = !scope.showNotifications;
 

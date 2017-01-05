@@ -100,6 +100,8 @@
 				return Identity.isLoggedIn();
 			};
 
+			$rootScope.$on('identity.disconnect', this.logout);
+
 			this.logout = function() {
 				$localStorage.session.user_id = null;
 				$localStorage.session.access_token = null;

@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('CaseViewCtrl', function ($scope, $rootScope, ngToast, Modals, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('CaseViewCtrl', function ($scope, $rootScope, $location, ngToast, Modals, MockData, Identity) {
 
 		$rootScope.section = 'cases';
 
@@ -71,7 +71,7 @@
 					content: 'Caso encerrado!'
 				});
 
-				location.hash = '/cases';
+				$location.path('/cases');
 			});
 		};
 
@@ -85,7 +85,7 @@
 					content: 'Caso finalizado!'
 				});
 
-				location.hash = '/cases';
+				$location.path('/cases');
 			});
 		};
 

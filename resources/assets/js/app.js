@@ -19,7 +19,9 @@
 			'ui.select'
 		])
 
-		.run(function($rootScope, Identity) {
+		.run(function($rootScope, $cookies, Config, Identity) {
+
+			Config.setEndpoint($cookies.get('FDENP_API_ENDPOINT') || Config.CURRENT_ENDPOINT);
 
 			$.material.init();
 
@@ -67,11 +69,15 @@
 
 		.config(function($routeProvider) {
 
-			// TODO: replace with UI-Router
+			// TODO: replace with UI-Router; massive refactor to validate existing session
 
 			var NC = (new Date()).getTime();
 
 			$routeProvider.
+				when('/login', {
+					templateUrl: '/views/login.html?NC=' + NC,
+					controller: 'LoginCtrl'
+				}).
 				when('/dashboard', {
 					templateUrl: '/views/dashboard.html?NC=' + NC,
 					controller: 'DashboardCtrl'
@@ -133,7 +139,7 @@
 					controller: 'FirstTimeSetupCtrl'
 				}).
 				otherwise({
-					redirectTo: '/dashboard'
+					redirectTo: '/login'
 				});
 		});
 })();

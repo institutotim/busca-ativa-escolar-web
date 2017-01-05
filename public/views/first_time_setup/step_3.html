@@ -1,101 +1,106 @@
 <div class="panel panel-default">
-	<div class="panel-heading">
-		<h3><strong ng-show="!$parent.isEditing">3.</strong> <i class="fa fa-sitemap"></i> Revisão do cadastro</h3>
-	</div>
-	<div class="panel-body">
-
-
+		<div class="panel-heading">
+			<h3><strong ng-show="!$parent.isEditing">3.</strong> <i class="fa fa-sitemap"></i> Cadastre o coordenador operacional</h3>
+		</div>
 		<div class="col-md-12">
-			<h4>Gestor Político</h4>
+			<h4>Coordenador Operacional</h4>
 			<p>
-				O gestor político é o representante direto do governo municipal na plataforma.
-				Através do acesso de gestor político, você poderá acompanhar métricas e relatórios de evolução do programa e gerenciar os usuários do município.
+				Essa etapa deve ser preenchida pelo gestor político do município. O objetivo da etapa é indicar o Coordenador Operacional responsável por desempenhar as taredas abaixo:
 			</p>
+			
+			<ul style="font-size: 10px"  class="list-group">
+			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Cadastrar os supervisores institucionais, os técnicos verificadores e os agentes comunitários</li>
+			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Estabelecer os parâmetros do sistema de acordo com a realidade do município. Inclui definir quais atores participarão, quais casos serão resolvidos por quem, os prazos para as tarefas principais etc </li>
+			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Acessar as estatísticas gerais da cidade </li> 
+			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Definir, em conjunto com o gestor político, estratégias para a implementação do projeto no âmbito do município</li>
+			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Coordenar as ações de formação das equipes participantes </li> 
+			</ul>
 		</div>
 
-		<div ng-show="$parent.isEditing" class="clearfix"><a href="/users/5" class="btn btn-raised btn-primary"><i class="fa fa-user"></i> Editar usuário do Gestor Político</a></div>
+		<div ng-show="$parent.isEditing" class="clearfix"><a href="/users/5" class="btn btn-raised btn-primary"><i class="fa fa-user"></i> Editar usuário do Coordenador Político</a></div>
 		<div ng-show="!$parent.isEditing" class="clearfix">
 
 			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-gp-name">Nome*</label>
-				<input type="text" class="form-control" id="fld-gp-name" value="Aryel Tupinambá">
+				<label class="control-label" for="fld-co-name">Nome*</label>
+				<input type="text" class="form-control" id="fld-co-name" value="Aryel Tupinambá">
 			</div>
+
 			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-gp-dob">Data de nascimento*</label>
-				<input type="text" class="form-control" id="fld-gp-dob" value="25/08/1991">
+				<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
+				<input type="text" class="form-control" id="fld-co-dob" value="25/08/1991">
 			</div>
+
 			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-gp-cpf">CPF*</label>
-				<input type="text" class="form-control" id="fld-gp-cpf" value="123.456.789-00">
+				<label class="control-label" for="fld-co-cpf">CPF*</label>
+				<input type="text" class="form-control" id="fld-co-cpf" value="123.456.789-00">
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-email">E-mail institucional*</label>
-				<input type="email" class="form-control" id="fld-gp-email" value="aryel.tupinamba@lqdi.net">
+				<label class="control-label" for="fld-co-email">E-mail institucional*</label>
+				<input type="email" class="form-control" id="fld-co-email" value="aryel.tupinamba@lqdi.net">
+			</div>
+			
+			<div class="form-group col-md-4">
+				<label class="control-label" for="fld-co-work-phone">Telefone fixo institucional*</label>
+				<input type="text" class="form-control" id="fld-co-work-phone" value="(11) 2222-3333">
 			</div>
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-work-phone">Telefone fixo institucional*</label>
-				<input type="text" class="form-control" id="fld-gp-work-phone" value="(11) 2222-3333">
-			</div>
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-work-mobile">Telefone celular institucional</label>
-				<input type="text" class="form-control" id="fld-gp-work-mobile" value="(11) 98888-4444">
-			</div>
-
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-personal-email">E-mail pessoal</label>
-				<input type="email" class="form-control" id="fld-gp-personal-email" value="aryel@tupinamba.me">
+				<label class="control-label" for="fld-co-work-mobile">Telefone celular institucional</label>
+				<input type="text" class="form-control" id="fld-co-work-mobile" value="(11) 98888-4444">
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-personal-mobile">Telefone celular pessoal</label>
-				<input type="text" class="form-control" id="fld-gp-personal-mobile" value="(11) 98888-4444">
+				<label class="control-label" for="fld-co-personal-email">E-mail pessoal</label>
+				<input type="email" class="form-control" id="fld-co-personal-email" value="aryel@tupinamba.me">
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-skype-username">Skype</label>
-				<input type="text" class="form-control" id="fld-gp-skype-username" value="aryel.tupinamba">
+				<label class="control-label" for="fld-co-personal-mobile">Telefone celular pessoal</label>
+				<input type="text" class="form-control" id="fld-co-personal-mobile" value="(11) 98888-4444">
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-address">Endereço institucional*</label>
-				<input type="text" class="form-control" id="fld-gp-address" value="Av. Dr. Chucri Zaidan, 1550, cj 1712">
+				<label class="control-label" for="fld-co-skype-username">Skype</label>
+				<input type="text" class="form-control" id="fld-co-skype-username" value="aryel.tupinamba">
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-cep">CEP institucional*</label>
-				<input type="text" class="form-control" id="fld-gp-cep" value="04583-110">
+				<label class="control-label" for="fld-co-address">Endereço institucional*</label>
+				<input type="text" class="form-control" id="fld-co-address" value="Av. Dr. Chucri Zaidan, 1550, cj 1712">
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-neighborhood">Bairro*</label>
-				<input type="text" class="form-control" id="fld-gp-neighborhood" value="Vila Cordeiro">
+				<label class="control-label" for="fld-co-cep">CEP institucional*</label>
+				<input type="text" class="form-control" id="fld-co-cep" value="04583-110">
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-uf">Estado*</label>
-				<input type="text" class="form-control" id="fld-gp-uf" value="SP">
+				<label class="control-label" for="fld-co-neighborhood">Bairro*</label>
+				<input type="text" class="form-control" id="fld-co-neighborhood" value="Vila Cordeiro">
+			</div>
+
+			<div class="form-group col-md-4">
+				<label class="control-label" for="fld-co-uf">Estado*</label>
+				<input type="text" class="form-control" id="fld-co-uf" value="SP">
 			</div>
 
 			<div class="form-group col-md-8">
-				<label class="control-label" for="fld-gp-city">Município*</label>
-				<input type="text" class="form-control" id="fld-gp-city" value="São Paulo/SP">
+				<label class="control-label" for="fld-co-city">Município*</label>
+				<input type="text" class="form-control" id="fld-co-city" value="São Paulo/SP">
 			</div>
 
 			<hr />
 
 			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-gp-institution">Instituição*</label>
-				<input type="text" class="form-control" id="fld-gp-institution" value="Prefeitura de São Paulo">
+				<label class="control-label" for="fld-co-institution">Instituição*</label>
+				<input type="text" class="form-control" id="fld-co-institution" value="Secretaria de Assistência Social">
 			</div>
 
 			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-gp-position">Cargo*</label>
-				<input type="text" class="form-control" id="fld-gp-position" value="Secretário de Assistência Social">
+				<label class="control-label" for="fld-co-position">Cargo*</label>
+				<input type="text" class="form-control" id="fld-co-position" value="Diretor de Operações">
 			</div>
 		</div>
-	</div>
-
 	</div>
 
 	<div class="panel-footer clearfix">

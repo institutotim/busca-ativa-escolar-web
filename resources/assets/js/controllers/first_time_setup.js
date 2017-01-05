@@ -1,14 +1,14 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('FirstTimeSetupCtrl', function ($scope, $rootScope, $window, Modals, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('FirstTimeSetupCtrl', function ($scope, $rootScope, $window, $location, Auth, Modals, MockData, Identity) {
 
 		$rootScope.section = 'first_time_setup';
 
 		$scope.identity = Identity;
-		$scope.step = 3; // Steps 1 and 2 are from sign up
+		$scope.step = 2; // Step 1 is sign-up
 		$scope.isEditing = false;
 
-		$scope.causes = MockData.alertReasons;
+		$scope.causes = MockData.alertReasonsPriority;
 		$scope.newGroupName = "";
 		$scope.groups = [
 			{name: 'Secretaria Municipal de Educação', canChange: false},
@@ -16,7 +16,17 @@
 			{name: 'Secretaria Municipal da Saúde', canChange: true}
 		];
 
-		Identity.clearLogin();
+		Identity.clearSession();
+
+		$scope.range = function (start, end) {
+			var arr = [];
+
+			for(var i = start; i <= end; i++) {
+				arr.push(i);
+			}
+
+			return arr;
+		};
 
 		$scope.goToStep = function (step) {
 			$scope.step = step;
@@ -26,13 +36,13 @@
 		$scope.nextStep = function() {
 			$scope.step++;
 			$window.scrollTo(0, 0);
-			if($scope.step > 6) $scope.step = 6;
+			if($scope.step > 7) $scope.step = 7;
 		};
 
 		$scope.prevStep = function() {
 			$scope.step--;
 			$window.scrollTo(0, 0);
-			if($scope.step < 3) $scope.step = 3;
+			if($scope.step < 2) $scope.step = 1;
 		};
 
 		$scope.removeGroup = function(i) {
@@ -49,8 +59,9 @@
 				'Tem certeza que deseja prosseguir com o cadastro?',
 				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
 			)).then(function(res) {
-				Identity.login();
-				location.hash = '/dashboard';
+				Auth.login('manager_sp@lqdi.net', 'demo').then(function() {
+					$location.path('/dashboard');
+				});
 			});
 		};
 
