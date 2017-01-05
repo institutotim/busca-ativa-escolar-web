@@ -1,11 +1,11 @@
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
-		.factory('Cities', function Cities(API, Identity, $resource) {
+		.factory('AlertCauses', function AlertCauses(API, Identity, $resource) {
 
 			let headers = {};
 
-			return $resource(API.getURI('cities/:id'), {id: '@id'}, {
+			return $resource(API.getURI('static/alert_causes/:id'), {id: '@id'}, {
 				get: {method: 'GET', headers: headers},
 				save: {method: 'POST', headers: headers},
 				query: {method: 'GET', isArray: true, headers: headers},
