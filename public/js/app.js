@@ -6,8 +6,13 @@
 			'ngToast',
 			'ngAnimate',
 			'ngCookies',
+			'ngResource',
+			'ngStorage',
 
-			'googlechart',
+
+			'BuscaAtivaEscolar.Config',
+
+			'angularMoment',
 			'highcharts-ng',
 
 			'ui.bootstrap',
@@ -41,8 +46,8 @@
 			});
 		})
 
-		.config(['ngToastProvider', function(ngToast) {
-			ngToast.configure({
+		.config(function(ngToastProvider) {
+			ngToastProvider.configure({
 				verticalPosition: 'top',
 				horizontalPosition: 'right',
 				maxNumber: 3,
@@ -50,9 +55,15 @@
 				dismissButton: true,
 				timeout: 3000
 			});
-		}])
+		})
 
-		.config(['$routeProvider', function($routeProvider) {
+		.config(function ($httpProvider) {
+			$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+		})
+
+		.config(function($routeProvider) {
+
+			// TODO: replace with UI-Router
 
 			var NC = (new Date()).getTime();
 
@@ -117,14 +128,67 @@
 					templateUrl: 'first_time_setup/main.html?NC=' + NC,
 					controller: 'FirstTimeSetupCtrl'
 				}).
-				when('/second_time_setup', {
-					templateUrl: 'second_time_setup/main.html?NC=' + NC,
-					controller: 'SecondTimeSetupCtrl'
-				}).
 				otherwise({
 					redirectTo: '/dashboard'
 				});
-		}]);
+		});
+})();
+(function() {
+	console.log("[core.load] Loaded: config.js");
+
+	angular
+		.module('BuscaAtivaEscolar.Config', [])
+		.factory('Config', function Config($rootScope) {
+
+			numeral.language('pt-br');
+			moment.locale('pt-br');
+
+			var config = {
+
+				BUILD_PREFIX: 'b010.', // Build prefix for local storage keys; one-up this whenever the local storage structure is outdated
+
+				API_ENDPOINTS: {
+					local_http: {
+						label: 'V1 Local - Homestead (Insecure)',
+						api: 'http://api.busca-ativa-escolar.local/api/v1/',
+						token: 'http://api.busca-ativa-escolar.local/api/auth/token',
+					},
+					homolog_http: {
+						label: 'V1 Homolog - web4-lqdi (Insecure)',
+						api: 'http://api.busca-ativa-escolar.dev.lqdi.net/api/v1/',
+						token: 'http://api.busca-ativa-escolar.dev.lqdi.net/api/auth/token',
+					}
+				},
+
+				TOKEN_EXPIRES_IN: 3600, // 1 hour
+				REFRESH_EXPIRES_IN: 1209600, // 2 weeks
+
+				ALLOWED_ENDPOINTS: ['local_http', 'homolog_http'],
+				CURRENT_ENDPOINT: 'local_http'
+
+			};
+
+			config.setEndpoint = function(endpoint) {
+				if(config.ALLOWED_ENDPOINTS.indexOf(endpoint) === -1) {
+					console.error("[Core.Config] Cannot set endpoint to ", endpoint,  ", not in valid endpoints list: ", config.ALLOWED_ENDPOINTS);
+					return;
+				}
+
+				config.CURRENT_ENDPOINT = endpoint;
+			};
+
+			config.getAPIEndpoint = function() {
+				return config.API_ENDPOINTS[config.CURRENT_ENDPOINT].api
+			};
+
+			config.getTokenEndpoint = function() {
+				return config.API_ENDPOINTS[config.CURRENT_ENDPOINT].token
+			};
+
+			return $rootScope.config = config;
+
+		});
+
 })();
 (function() {
 
@@ -187,12 +251,12 @@
 		$rootScope.section = 'cases';
 
 		$scope.identity = Identity;
-		$scope.reasons = MockData.searchReasons;
-		$scope.alertReasons = MockData.alertReasons;
+		$scope.reasons = MockData.alertReasons;
 
 		$scope.input = {
 			hasBeenAtSchool: 1,
 			doesWork: 1,
+			reasons: {3: 1},
 			obsStillAtSchool: 1,
 		};
 
@@ -492,7 +556,7 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('DeveloperCtrl', function ($scope, $rootScope, Notifications) {
+	angular.module('BuscaAtivaEscolar').controller('DeveloperCtrl', function ($scope, $rootScope, $localStorage, Notifications, Children, Auth) {
 
 		var messages = [
 			'asdasd asd as das das dsd fasdf as',
@@ -503,9 +567,26 @@
 			'askjdfh aiufeiuab biausf biu iubfa iub fseiuse bfsaef'
 		];
 
+		$scope.storage = $localStorage;
+
 		$scope.testNotification = function (messageClass) {
 			Notifications.push(messageClass, messages.clone().shuffle().pop())
-		}
+		};
+
+		$scope.login = function() {
+			Auth.requireLogin();
+		};
+
+		$scope.logout = function() {
+			Auth.logout();
+		};
+
+		$scope.testGetChildren = function() {
+			var child_id = 'b9d1d8a0-ce23-11e6-98e6-1dc1d3126c4e';
+			var tenant_id = 'b0838f00-cd55-11e6-b19b-757d3a457db3';
+
+			$scope.child = Children.get({id: child_id});
+		};
 
 	});
 
@@ -520,77 +601,13 @@
 		$scope.step = 3; // Steps 1 and 2 are from sign up
 		$scope.isEditing = false;
 
-
-		Identity.clearLogin();
-
-		$scope.goToStep = function (step) {
-			$scope.step = step;
-			$window.scrollTo(0, 0);
-		};
-
-		$scope.nextStep = function() {
-			$scope.step++;
-			$window.scrollTo(0, 0);
-			if($scope.step > 6) $scope.step = 6;
-		};
-
-		$scope.prevStep = function() {
-			$scope.step--;
-			$window.scrollTo(0, 0);
-			if($scope.step < 3) $scope.step = 3;
-		};
-
-		$scope.removeGroup = function(i) {
-			$scope.groups.splice(i, 1);
-		};
-
-		$scope.addGroup = function() {
-			$scope.groups.push({name: $scope.newGroupName, canChange: true});
-			$scope.newGroupName = "";
-		};
-
-		$scope.finish = function() {
-			Modals.show(Modals.Confirm(
-				'Tem certeza que deseja prosseguir com o cadastro?',
-				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
-			)).then(function(res) {
-				Identity.login();
-				location.hash = '/dashboard';
-			});
-		};
-
-	});
-
-})();
-(function() {
-angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function ($scope, $rootScope, $window, Modals, MockData, Identity) {
-
-		$rootScope.section = 'second_time_setup';
-
-		$scope.identity = Identity;
-		$scope.step = 3; // Steps 1 and 2 are from sign up
-		$scope.isEditing = false;
-
-		$scope.causes = MockData.alertReasonsPriority;
+		$scope.causes = MockData.alertReasons;
 		$scope.newGroupName = "";
 		$scope.groups = [
 			{name: 'Secretaria Municipal de Educação', canChange: false},
 			{name: 'Secretaria Municipal de Assistência Social', canChange: true},
 			{name: 'Secretaria Municipal da Saúde', canChange: true}
 		];
-
-		$rootScope.section = 'users';
-		$scope.identity = Identity;
-
-		$scope.range = function (start, end) {
-			var arr = [];
-
-			for(var i = start; i <= end; i++) {
-				arr.push(i);
-			}
-
-			return arr;
-		}
 
 		Identity.clearLogin();
 
@@ -658,17 +675,17 @@ angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function (
 				name: 'Casos',
 				value: 'num_cases',
 				dimensions: {
-					children_status: {id: 'children_status', values: ['Fora da escola', 'Dentro da escola em observação', 'Dentro da escola consolidado']},
+					children_status: {id: 'children_status', values: ['Fora da escola', 'Em observação', 'Dentro da escola']},
 					process_status: {id: 'process_status', values: ['Em andamento', 'Em atraso']},
 					case_step: {id: 'case_step', values: ['Alerta', 'Pesquisa', 'Análise Técnica', 'Gestão do Caso', 'Rematrícula', '1a Observação', '2a Observação', '3a Observação', '4a Observação']},
-					age: {id: 'age', values: ['4 e 5', '6 a 10', '11 a 14', '15 a 17', '18+']},
+					age: {id: 'age', values: ['0 a 3', '4 e 5', '6 a 10', '11 a 14', '15 a 17', '18+']},
 					gender: {id: 'gender', values: ['Masculino', 'Feminino']},
-					family_income: {id: 'family_income', values: ['Até ¼', 'Mais de ¼ a ½', 'Mais de ½ a 1', 'Mais de 1 a 2', 'Mais de 2']},
+					family_income: {id: 'family_income', values: ['R$ 0 a R$ 500', 'R$ 501 a R$ 1.000', 'R$ 1.001 a R$ 1.500', 'R$ 1.501 a R$ 2.500', 'R$ 2.500 a R$ 3.500', 'R$ 3.501 ou mais']},
 					region: {id: 'region', values: ['Urbana', 'Rural']},
-					parent_scholarity: {id: 'parent_scholarity', values: ['Nenhuma', 'Ensino fundamental completo', 'Ensino fundamental incompleto', 'Ensino médio completo', 'Ensino médio incompleto', 'Ensino superior completo', 'Ensino superior incompleto', 'Pós graduação']},
-					cause: {id: 'cause', values: MockData.searchReasons}
+					economic_activity: {id: 'economic_activity', values: ['Bombeiro', 'Médico', 'Engenheiro', 'Advogado', 'Eletricista', 'Encanador', 'Contador', 'Administrador', 'Faxineiro', 'Pedreiro', 'Astronauta']},
+					cause: {id: 'cause', values: MockData.alertReasons}
 				},
-				filters: ['age', 'gender', 'ethnicity', 'family_income', 'parent_scholarity','case_status', 'region', 'case_step', 'uf', 'city', 'children_status', 'process_status', 'search_causes'],
+				filters: ['age', 'gender', 'ethnicity', 'family_income', 'parent_scholarity', 'economic_activity', 'region', 'case_step', 'uf', 'city', 'children_status', 'process_status', 'cause'],
 				views: ['map', 'chart', 'timeline', 'list']
 			},
 			alerts: {
@@ -680,21 +697,21 @@ angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function (
 					process_status: {id: 'process_status', values: ['Em andamento', 'Em atraso']},
 					cause: {id: 'cause', values: MockData.alertReasons}
 				},
-				filters: ['age', 'gender', 'assigned_user', 'uf', 'city', 'alert_status', 'alert_causes', 'process_status'],
+				filters: ['age', 'gender', 'assigned_user', 'uf', 'city', 'alert_status', 'children_status', 'process_status'],
 				views: ['map', 'chart', 'timeline', 'list']
 			},
-			/*users: {
+			users: {
 				id: 'users',
 				name: 'Usuários',
 				value: 'num_assignments',
 				dimensions: {
-					children_status: {id: 'children_status', values: ['Fora da escola', 'Dentro da escola em observação', 'Dentro da escola consolidado']},
+					children_status: {id: 'children_status', values: ['Fora da escola', 'Em observação', 'Dentro da escola']},
 					process_status: {id: 'process_status', values: ['Em andamento', 'Em atraso']},
 					case_step: {id: 'case_step', values: ['Alerta', 'Pesquisa', 'Análise Técnica', 'Gestão do Caso', 'Rematrícula', '1a Observação', '2a Observação', '3a Observação', '4a Observação']},
 				},
 				filters: ['children_status', 'process_status', 'case_step', 'user_group', 'user_type'],
 				views: ['chart', 'timeline', 'list']
-			}*/
+			}
 		};
 
 		$scope.views = {
@@ -891,6 +908,77 @@ angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function (
 
 })();
 (function() {
+angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function ($scope, $rootScope, $window, Modals, MockData, Identity) {
+
+		$rootScope.section = 'second_time_setup';
+
+		$scope.identity = Identity;
+		$scope.step = 3; // Steps 1 and 2 are from sign up
+		$scope.isEditing = false;
+
+		$scope.causes = MockData.alertReasonsPriority;
+		$scope.newGroupName = "";
+		$scope.groups = [
+			{name: 'Secretaria Municipal de Educação', canChange: false},
+			{name: 'Secretaria Municipal de Assistência Social', canChange: true},
+			{name: 'Secretaria Municipal da Saúde', canChange: true}
+		];
+
+		$rootScope.section = 'users';
+		$scope.identity = Identity;
+
+		$scope.range = function (start, end) {
+			var arr = [];
+
+			for(var i = start; i <= end; i++) {
+				arr.push(i);
+			}
+
+			return arr;
+		}
+
+		Identity.clearLogin();
+
+		$scope.goToStep = function (step) {
+			$scope.step = step;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.nextStep = function() {
+			$scope.step++;
+			$window.scrollTo(0, 0);
+			if($scope.step > 6) $scope.step = 6;
+		};
+
+		$scope.prevStep = function() {
+			$scope.step--;
+			$window.scrollTo(0, 0);
+			if($scope.step < 3) $scope.step = 3;
+		};
+
+		$scope.removeGroup = function(i) {
+			$scope.groups.splice(i, 1);
+		};
+
+		$scope.addGroup = function() {
+			$scope.groups.push({name: $scope.newGroupName, canChange: true});
+			$scope.newGroupName = "";
+		};
+
+		$scope.finish = function() {
+			Modals.show(Modals.Confirm(
+				'Tem certeza que deseja prosseguir com o cadastro?',
+				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
+			)).then(function(res) {
+				Identity.login();
+				location.hash = '/dashboard';
+			});
+		};
+
+	});
+
+})();
+(function() {
 
 	angular.module('BuscaAtivaEscolar').controller('SettingsCtrl', function ($scope, $rootScope, $window, ngToast, MockData, Identity) {
 
@@ -900,7 +988,7 @@ angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function (
 		$scope.step = 3;
 		$scope.isEditing = true;
 
-		$scope.causes = MockData.alertReasonsPriority;
+		$scope.causes = MockData.alertReasons;
 		$scope.newGroupName = "";
 		$scope.groups = [
 			{name: 'Secretaria Municipal de Educação', canChange: false},
@@ -947,9 +1035,6 @@ angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function (
 (function() {
 
 	angular.module('BuscaAtivaEscolar').controller('SignUpCtrl', function ($scope, $rootScope, $window, Modals, MockData, Identity) {
-		
-		$scope.cities = MockData.cities;
-		$scope.states = MockData.states;
 
 		$rootScope.section = 'sign_up';
 
@@ -961,12 +1046,14 @@ angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function (
 
 		$scope.goToStep = function (step) {
 			if(!$scope.agreeTOS) return;
+			if($scope.step >= 4) return;
 
 			$scope.step = step;
 			$window.scrollTo(0, 0);
 		};
 
 		$scope.nextStep = function() {
+			if(!$scope.agreeTOS) return;
 			if($scope.step >= 4) return;
 
 			$scope.step++;
@@ -975,6 +1062,7 @@ angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function (
 		};
 
 		$scope.prevStep = function() {
+			if(!$scope.agreeTOS) return;
 			if($scope.step >= 4) return;
 
 			$scope.step--;
@@ -1007,7 +1095,6 @@ angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function (
 		$scope.cities = MockData.cities;
 		$scope.states = MockData.states;
 		$scope.groups = MockData.groups;
-		$scope.userTypes = MockData.userTypes;
 
 		$scope.range = function (start, end) {
 			var arr = [];
@@ -1881,6 +1968,39 @@ Highcharts.maps["countries/br/br-all"] = {
 	}]
 };
 (function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
+
+			this.request = function (config) {
+
+				if(config.headers['X-Require-Auth'] !== 'auth-required') return config;
+
+				if(Identity.isLoggedIn()) {
+
+					return Identity.provideToken().then(function (access_token) {
+						config.headers.Authorization = 'Bearer ' + access_token;
+						return config;
+					})
+
+				}
+
+				return config;
+			};
+
+			this.responseError = function (response) {
+
+				if (response.status === 401) {
+					$rootScope.$broadcast('unauthorized');
+				}
+
+				return response;
+			};
+
+		});
+
+})();
+(function() {
 
 	angular
 		.module('BuscaAtivaEscolar')
@@ -1962,6 +2082,39 @@ Highcharts.maps["countries/br/br-all"] = {
 
 	angular
 		.module('BuscaAtivaEscolar')
+		.controller('LoginModalCtrl', function LoginModalCtrl($scope, $uibModalInstance, Modals, Identity, Auth, reason, canDismiss) {
+
+			console.log("[modal] login", reason, canDismiss);
+
+			$scope.email = '';
+			$scope.password = '';
+
+			$scope.reason = reason;
+			$scope.canDismiss = canDismiss;
+
+			function onLoggedIn(session) {
+				$uibModalInstance.close({response: Identity.getCurrentUser()});
+			}
+
+			function onError() {
+				Modals.show(Modals.Alert('Usuário ou senha incorretos', 'Por favor, verifique os dados informados e tente novamente.'));
+			}
+
+			$scope.login = function() {
+				Auth.login($scope.email, $scope.password).then(onLoggedIn, onError);
+			};
+
+			$scope.close = function() {
+				$uibModalInstance.dismiss(false);
+			}
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
 		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, question, defaultAnswer, canDismiss) {
 
 			console.log("[modal] prompt_modal", question, canDismiss);
@@ -2004,112 +2157,296 @@ Highcharts.maps["countries/br/br-all"] = {
 
 })();
 (function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Children', function Children(API, Identity, $resource) {
 
-	angular.module('BuscaAtivaEscolar').service('Identity', function ($cookies) {
+			let headers = API.REQUIRE_AUTH;
 
-		var hasLoggedIn = true;
+			return $resource(API.getURI('children/:id'), {id: '@id'}, {
+				get: {method: 'GET', headers: headers},
+				save: {method: 'POST', headers: headers},
+				query: {method: 'GET', isArray: true, headers: headers},
+				remove: {method: 'DELETE', headers: headers},
+				delete: {method: 'DELETE', headers: headers}
+			});
 
-		var mockUsers = {
-			'agente_comunitario': {
-				name: 'Mary Smith',
-				email: 'mary.smith@saopaulo.sp.gov.br',
-				type: 'Agente Comunitário',
-				can: ['dashboard']
-			},
-			'tecnico_verificador': {
-				name: 'Paul Atree',
-				email: 'paul.atree@saopaulo.sp.gov.br',
-				type: 'Técnico Verificador',
-				can: ['preferences', 'dashboard','cases', 'preferences.notifications']
-			},
-			'supervisor_institucional': {
-				name: 'John Doe',
-				email: 'john.doe@saopaulo.sp.gov.br',
-				type: 'Supervisor Institucional',
-				can: ['preferences', 'dashboard','cases','reports', 'users', 'users.create', 'users.edit', 'preferences.notifications', 'case.close', 'case.assign']
-			},
-			'coordenador_operacional': {
-				name: 'Aryel Tupinambá',
-				email: 'atupinamba@saopaulo.sp.gov.br',
-				type: 'Coordenador Operacional',
-				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit',  'users.deactivate', 'users.create', 'settings', 'preferences.notifications', 'case.close', 'case.assign']
-			},
-			'gestor_politico': {
-				name: 'João das Neves',
-				email: 'jneves@saopaulo.sp.gov.br',
-				type: 'Gestor Político',
-				can: ['dashboard','reports', 'users', 'users.deactivate']
-			},
-			'gestor_nacional': {
-				name: 'Jane Doe',
-				email: 'fdenp@unicef.org.br',
-				type: 'Gestor Nacional',
-				can: ['dashboard', 'reports', 'cities', 'users.filter_by_city']
-			},
-			'super_administrador': {
-				name: 'Morgan Freeman',
-				email: 'dev@lqdi.net',
-				type: 'Super Administrador',
-				can: ['preferences', 'dashboard','reports','cities','cities.edit','users','users.edit', 'users.deactivate', 'users.create', 'settings', 'users.filter_by_city']
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('API', function API($q, $rootScope, Config) {
+
+			var numPendingRequests = 0;
+			var successStatuses = [200, 201, 202, 203];
+			var useableErrorStatuses = [400, 401, 403];
+
+			const REQUIRE_AUTH = {'X-Require-Auth': 'auth-required'};
+
+			function isLoading() {
+				return (numPendingRequests > 0);
 			}
-		};
 
-		var currentType = $cookies.get('FDENP_Dev_UserType') || 'coordenador_operacional';
-		var currentUser = mockUsers[currentType];
+			function getURI(path) {
+				return Config.getAPIEndpoint() + path;
+			}
+
+			function getTokenURI() {
+				return Config.getTokenEndpoint();
+			}
+
+			function pushRequest() {
+				numPendingRequests++;
+			}
+
+			function popRequest() {
+				numPendingRequests--;
+			}
+
+			function isUseableError(status_code) {
+				return useableErrorStatuses.indexOf(parseInt(status_code, 10)) !== -1;
+			}
+
+			function isSuccessStatus(status_code) {
+				return successStatuses.indexOf(parseInt(status_code, 10)) !== -1;
+			}
+
+			$rootScope.isLoading = isLoading;
+
+			this.getURI = getURI;
+			this.getTokenURI = getTokenURI;
+			this.pushRequest = pushRequest;
+			this.popRequest = popRequest;
+			this.isUseableError = isUseableError;
+			this.isSuccessStatus = isSuccessStatus;
+			this.isLoading = isLoading;
+
+			this.REQUIRE_AUTH = REQUIRE_AUTH;
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('Auth', function Auth($q, $rootScope, $localStorage, $http, $resource, Modals, API, Identity, Config) {
+
+			var self = this;
+
+			$localStorage.$default({
+				session: {
+					user_id: null,
+					access_token: null,
+					refresh_token: null,
+					token_expires_at: null,
+					refresh_expires_at: null
+				}
+			});
+
+			function requireLogin(reason) {
+				return Modals.show(Modals.Login(reason, false));
+			}
+
+			function provideToken() {
+
+				console.log("[auth::token.provide] Providing token, session=", $localStorage.session);
+
+				// Isn't even logged in
+				if(!Identity.isLoggedIn()) return requireLogin('Você precisa fazer login para realizar essa ação!');
+
+				// Has valid token
+				if(!isTokenExpired()) return $q.resolve($localStorage.session.access_token);
+
+				console.log("[auth::token.provide] Token expired! Refreshing...");
+
+				// Is logged in, but both access and refresh token are expired
+				if(isRefreshExpired()) {
+					console.log("[auth::token.provide] Refresh token also expired! Logging out...");
+					return requireLogin('Sua sessão expirou! Por favor, entre seus dados novamente para continuar.');
+				}
+
+				// Is logged in, access token expired but refresh token still valid
+				return self.refresh().then(function (session) {
+					console.log("[auth::token.provide] Refreshed, new tokens: ", session);
+					return session.access_token;
+				});
+
+			}
+
+			function isTokenExpired() {
+				var now = (new Date()).getTime();
+				return !Identity.isLoggedIn() || (now >= $localStorage.session.token_expires_at);
+			}
+
+			function isRefreshExpired() {
+				var now = (new Date()).getTime();
+				return !Identity.isLoggedIn() || (now >= $localStorage.session.refresh_expires_at);
+			}
+
+			function handleAuthResponse(response) {
+
+				API.popRequest();
+
+				if(response.status !== 200) {
+					console.log("[auth::login] Rejecting Auth response! Status= ", response.status);
+					return $q.reject(response.data);
+				}
+
+				$localStorage.session.access_token = response.data.access_token;
+				$localStorage.session.refresh_token = response.data.refresh_token;
+				$localStorage.session.token_expires_at = (new Date()).getTime() + (Config.TOKEN_EXPIRES_IN * 1000);
+				$localStorage.session.refresh_expires_at = (new Date()).getTime() + (Config.REFRESH_EXPIRES_IN * 1000);
+
+				// Auth.refresh doesn't return user_id, so we can't always set it
+				if(response.data.user_id) $localStorage.session.user_id = response.data.user.id;
+
+				Identity.setCurrentUser(response.data.user);
+
+				return $localStorage.session;
+			}
+
+			function handleAuthError(response) {
+
+				API.popRequest();
+
+				console.error("[auth::login] API error: ", response);
+
+				if(!response || !response.status || !API.isUseableError(response.status)) {
+					console.warn("[auth::login] Error code ", response.status, " not in list of useable errors: ", useableErrors);
+					$rootScope.$broadcast('auth.error', response);
+				}
+
+				throw (response.data) ? response.data : response;
+			}
+
+			this.provideToken = provideToken;
+			this.requireLogin = requireLogin;
+			this.isTokenExpired = isTokenExpired;
+			this.isRefreshExpired = isRefreshExpired;
+
+			this.isLoggedIn = function() {
+				return Identity.isLoggedIn();
+			};
+
+			this.logout = function() {
+				$localStorage.session.user_id = null;
+				$localStorage.session.access_token = null;
+				$localStorage.session.refresh_token = null;
+				$localStorage.session.token_expires_at = null;
+				$localStorage.session.refresh_expires_at = null;
+
+				Identity.clearSession();
+			};
+
+			this.login = function(email, password) {
+
+				let tokenRequest = {
+					grant_type: 'login',
+					email: email,
+					password: password
+				};
+
+				let options = {
+					accept: 'application/json',
+				};
+
+				API.pushRequest();
+
+				return $http
+					.post(API.getTokenURI(), tokenRequest, options)
+					.then(handleAuthResponse, handleAuthError);
+			};
+
+			this.refresh = function() {
+
+				let tokenRequest = {
+					grant_type: 'refresh',
+					refresh_token: $localStorage.session.refresh_token
+				};
+
+				let options = {
+					accept: 'application/json',
+				};
+
+				API.pushRequest();
+
+				return $http
+					.post(API.getTokenURI(), tokenRequest, options)
+					.then(handleAuthResponse, handleAuthError);
+			};
+
+		})
+		.run(function (Identity, Auth) {
+			Identity.setTokenProvider(Auth.provideToken);
+		})
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').service('Identity', function ($q, $rootScope, $localStorage) {
+
+		var tokenProvider = null;
+
+		$localStorage.$default({
+			identity: {
+				is_logged_in: false,
+				current_user: {},
+			}
+		});
+
+		function setTokenProvider(callback) {
+			tokenProvider = callback;
+		}
+
+		function provideToken() {
+			if(!tokenProvider) return $q.reject('no_token_provider');
+			return tokenProvider();
+		}
 
 		function getCurrentUser() {
-			return currentUser;
+			return $localStorage.identity.current_user || {};
+		}
+
+		function setCurrentUser(user) {
+			if(!user) clearSession();
+
+			$rootScope.$broadcast('identity.connected', {user: user});
+
+			$localStorage.identity.is_logged_in = true;
+			$localStorage.identity.current_user = user;
 		}
 
 		function can(operation) {
-			if(!currentUser) return false;
+			if(!isLoggedIn()) return false;
+			return true;
+
+			// TODO: back-end Fractal Transformer will populate this
 			return getCurrentUser().can.indexOf(operation) !== -1;
 		}
 
 		function getType() {
-			return currentType;
-		}
-
-		function setUserType(type) {
-			currentType = type;
-			currentUser = mockUsers[type];
-
-			$cookies.put('FDENP_Dev_UserType', type);
-
-			if(window.zE) {
-				zE.identify({
-					name: currentUser.name,
-					email: currentUser.email
-				});
-			}
+			return getCurrentUser().type;
 		}
 
 		function isLoggedIn() {
-			return !!hasLoggedIn;
+			return $localStorage.identity.is_logged_in;
 		}
 
-		function login() {
-			hasLoggedIn = true;
-		}
+		function clearSession() {
+			$rootScope.$broadcast('identity.disconnected');
 
-		function logout() {
-			clearLogin();
-			location.hash = '/sign_up';
-		}
-
-		function clearLogin() {
-			hasLoggedIn = false;
+			$localStorage.identity.is_logged_in = false;
+			$localStorage.identity.current_user = {};
 		}
 
 		return {
 			getCurrentUser: getCurrentUser,
+			setCurrentUser: setCurrentUser,
 			getType: getType,
 			can: can,
-			setUserType: setUserType,
 			isLoggedIn: isLoggedIn,
-			login: login,
-			logout: logout,
-			clearLogin: clearLogin
+			clearSession: clearSession,
+			setTokenProvider: setTokenProvider,
+			provideToken: provideToken
 		}
 
 	});
@@ -2138,7 +2475,7 @@ Highcharts.maps["countries/br/br-all"] = {
 			"Violência na escola"
 		];
 		var alertReasonsPriority = [
-			{'name' : "Adolescente em conflito com a lei",
+			{'name' : "Adolescente em conflito com a lei" ,
 			 'priority': 1},
 			{'name' : "Criança ou adolescente com deficiência(s)",
 			 'priority': 1},
@@ -2682,6 +3019,25 @@ Highcharts.maps["countries/br/br-all"] = {
 						resolve: {
 							question: function() { return question; },
 							defaultAnswer: function() { return defaultAnswer; },
+							canDismiss: function() { return canDismiss; }
+						}
+					};
+
+					if (!canDismiss) {
+						params.keyboard = false;
+						params.backdrop = 'static';
+					}
+
+					return params;
+				},
+
+				Login: function(reason, canDismiss) {
+					var params = {
+						templateUrl: '/modals/login.html',
+						controller: 'LoginModalCtrl',
+						size: 'md',
+						resolve: {
+							reason: function() { return reason; },
 							canDismiss: function() { return canDismiss; }
 						}
 					};

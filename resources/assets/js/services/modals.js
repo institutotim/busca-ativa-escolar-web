@@ -74,6 +74,25 @@
 					return params;
 				},
 
+				Login: function(reason, canDismiss) {
+					var params = {
+						templateUrl: '/modals/login.html',
+						controller: 'LoginModalCtrl',
+						size: 'md',
+						resolve: {
+							reason: function() { return reason; },
+							canDismiss: function() { return canDismiss; }
+						}
+					};
+
+					if (!canDismiss) {
+						params.keyboard = false;
+						params.backdrop = 'static';
+					}
+
+					return params;
+				},
+
 				UserPicker: function(title, message, canDismiss) {
 					var params = {
 						templateUrl: '/modals/user_picker.html',

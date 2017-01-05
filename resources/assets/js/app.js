@@ -6,8 +6,13 @@
 			'ngToast',
 			'ngAnimate',
 			'ngCookies',
+			'ngResource',
+			'ngStorage',
 
-			'googlechart',
+
+			'BuscaAtivaEscolar.Config',
+
+			'angularMoment',
 			'highcharts-ng',
 
 			'ui.bootstrap',
@@ -41,8 +46,8 @@
 			});
 		})
 
-		.config(['ngToastProvider', function(ngToast) {
-			ngToast.configure({
+		.config(function(ngToastProvider) {
+			ngToastProvider.configure({
 				verticalPosition: 'top',
 				horizontalPosition: 'right',
 				maxNumber: 3,
@@ -50,9 +55,15 @@
 				dismissButton: true,
 				timeout: 3000
 			});
-		}])
+		})
 
-		.config(['$routeProvider', function($routeProvider) {
+		.config(function ($httpProvider) {
+			$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+		})
+
+		.config(function($routeProvider) {
+
+			// TODO: replace with UI-Router
 
 			var NC = (new Date()).getTime();
 
@@ -120,5 +131,5 @@
 				otherwise({
 					redirectTo: '/dashboard'
 				});
-		}]);
+		});
 })();

@@ -53,7 +53,6 @@
     "commit": "8a1951c54a956c33964c99b338f3a4830e652689"
   },
   "_source": "https://github.com/tameraydin/ngToast.git",
-  "_target": "^2.0.0",
-  "_originalSource": "ngtoast",
-  "_direct": true
+  "_target": "~2.0.0",
+  "_originalSource": "ngtoast"
 }

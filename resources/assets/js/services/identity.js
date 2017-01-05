@@ -1,110 +1,70 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').service('Identity', function ($cookies) {
+	angular.module('BuscaAtivaEscolar').service('Identity', function ($q, $rootScope, $localStorage) {
 
-		var hasLoggedIn = true;
+		var tokenProvider = null;
 
-		var mockUsers = {
-			'agente_comunitario': {
-				name: 'Mary Smith',
-				email: 'mary.smith@saopaulo.sp.gov.br',
-				type: 'Agente Comunitário',
-				can: ['dashboard']
-			},
-			'tecnico_verificador': {
-				name: 'Paul Atree',
-				email: 'paul.atree@saopaulo.sp.gov.br',
-				type: 'Técnico Verificador',
-				can: ['preferences', 'dashboard','cases', 'preferences.notifications']
-			},
-			'supervisor_institucional': {
-				name: 'John Doe',
-				email: 'john.doe@saopaulo.sp.gov.br',
-				type: 'Supervisor Institucional',
-				can: ['preferences', 'dashboard','cases','reports', 'users', 'users.create', 'users.edit', 'preferences.notifications', 'case.close', 'case.assign']
-			},
-			'coordenador_operacional': {
-				name: 'Aryel Tupinambá',
-				email: 'atupinamba@saopaulo.sp.gov.br',
-				type: 'Coordenador Operacional',
-				can: ['preferences', 'dashboard','cases','reports','users', 'users.edit',  'users.deactivate', 'users.create', 'settings', 'preferences.notifications', 'case.close', 'case.assign']
-			},
-			'gestor_politico': {
-				name: 'João das Neves',
-				email: 'jneves@saopaulo.sp.gov.br',
-				type: 'Gestor Político',
-				can: ['dashboard','reports', 'users', 'users.deactivate']
-			},
-			'gestor_nacional': {
-				name: 'Jane Doe',
-				email: 'fdenp@unicef.org.br',
-				type: 'Gestor Nacional',
-				can: ['dashboard', 'reports', 'cities', 'users.filter_by_city']
-			},
-			'super_administrador': {
-				name: 'Morgan Freeman',
-				email: 'dev@lqdi.net',
-				type: 'Super Administrador',
-				can: ['preferences', 'dashboard','reports','cities','cities.edit','users','users.edit', 'users.deactivate', 'users.create', 'settings', 'users.filter_by_city']
+		$localStorage.$default({
+			identity: {
+				is_logged_in: false,
+				current_user: {},
 			}
-		};
+		});
 
-		var currentType = $cookies.get('FDENP_Dev_UserType') || 'coordenador_operacional';
-		var currentUser = mockUsers[currentType];
+		function setTokenProvider(callback) {
+			tokenProvider = callback;
+		}
+
+		function provideToken() {
+			if(!tokenProvider) return $q.reject('no_token_provider');
+			return tokenProvider();
+		}
 
 		function getCurrentUser() {
-			return currentUser;
+			return $localStorage.identity.current_user || {};
+		}
+
+		function setCurrentUser(user) {
+			if(!user) clearSession();
+
+			$rootScope.$broadcast('identity.connected', {user: user});
+
+			$localStorage.identity.is_logged_in = true;
+			$localStorage.identity.current_user = user;
 		}
 
 		function can(operation) {
-			if(!currentUser) return false;
+			if(!isLoggedIn()) return false;
+			return true;
+
+			// TODO: back-end Fractal Transformer will populate this
 			return getCurrentUser().can.indexOf(operation) !== -1;
 		}
 
 		function getType() {
-			return currentType;
-		}
-
-		function setUserType(type) {
-			currentType = type;
-			currentUser = mockUsers[type];
-
-			$cookies.put('FDENP_Dev_UserType', type);
-
-			if(window.zE) {
-				zE.identify({
-					name: currentUser.name,
-					email: currentUser.email
-				});
-			}
+			return getCurrentUser().type;
 		}
 
 		function isLoggedIn() {
-			return !!hasLoggedIn;
+			return $localStorage.identity.is_logged_in;
 		}
 
-		function login() {
-			hasLoggedIn = true;
-		}
+		function clearSession() {
+			$rootScope.$broadcast('identity.disconnected');
 
-		function logout() {
-			clearLogin();
-			location.hash = '/sign_up';
-		}
-
-		function clearLogin() {
-			hasLoggedIn = false;
+			$localStorage.identity.is_logged_in = false;
+			$localStorage.identity.current_user = {};
 		}
 
 		return {
 			getCurrentUser: getCurrentUser,
+			setCurrentUser: setCurrentUser,
 			getType: getType,
 			can: can,
-			setUserType: setUserType,
 			isLoggedIn: isLoggedIn,
-			login: login,
-			logout: logout,
-			clearLogin: clearLogin
+			clearSession: clearSession,
+			setTokenProvider: setTokenProvider,
+			provideToken: provideToken
 		}
 
 	});
