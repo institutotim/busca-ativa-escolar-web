@@ -10,8 +10,8 @@
 		})
 		.controller('CaseSearchCtrl', function ($scope, Children) {
 
+			$scope.Children = Children;
 			$scope.list = Children.get();
-			$scope.children = Children;
 
 		});
 

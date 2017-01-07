@@ -89,8 +89,8 @@
 		})
 		.controller('CaseSearchCtrl', function ($scope, Children) {
 
+			$scope.Children = Children;
 			$scope.list = Children.get();
-			$scope.children = Children;
 
 		});
 
@@ -130,16 +130,16 @@
 					url: '/assigned_users',
 					templateUrl: '/views/cases/view/assigned_users.html'
 				})
-		})
+		});
 
 	// TODO: reflect if it's not worth it to rename internally "cases" to "children" (since it's the correct parent entity name)
 
 	function CaseViewCtrl($scope, $state, $stateParams, Children, Cases) {
 		if($state.current.name === "case_viewer") $state.go('.consolidated');
 
+		$scope.Children = Children;
 		$scope.child_id = $stateParams.child_id;
 		$scope.child = Children.get({id: $scope.child_id});
-		$scope.children = Children;
 
 		// TODO: get consolidated info from endpoint
 
