@@ -3,9 +3,9 @@
 		<div class="panel-heading clearfix">
 			<div class="pull-left">
 				<h1>
-					<i class="material-icons" style="font-size: 36px;">folder_shared</i> Edward Doe <small>Jane Doe / John Doe</small>
+					<i class="fa fa-folder"></i> {{child.name}} <small>{{Children.decorate.parents(child)}}</small>
 				</h1>
-				<div style="margin-top: -20px; padding-left: 44px"><span class="label label-warning">Fora da escola</span></div>
+				<div style="margin-top: -20px; padding-left: 44px"><span class="label label-warning">{{child.status}}</span></div>
 			</div>
 
 			<h2 class="pull-right">n&ordm; 42</h2>
@@ -15,7 +15,7 @@
 			<div class="pull-right" style="margin: 0 10px;">
 				<label class="control-label panel-header-label" style="margin: 0;">Grau de risco</label>
 				<div class="dropdown case-step-dropdown" uib-dropdown is-open="false">
-					<a class="btn btn-warning btn-raised dropdown-toggle" uib-dropdown-toggle style="width: 100%">Alta <span ng-show="identity.can('case.change_risk_level')" class="caret"></span></a>
+					<a class="btn btn-warning btn-raised dropdown-toggle" uib-dropdown-toggle style="width: 100%">{{child.risk_level}} <span ng-show="identity.can('case.change_risk_level')" class="caret"></span></a>
 					<ul class="dropdown-menu" uib-dropdown-menu ng-show="identity.can('case.change_risk_level')">
 						<li><a>Alta</a></li>
 						<li><a>Média</a></li>
@@ -27,7 +27,7 @@
 			<div class="pull-right" style="margin: 0 10px;">
 				<label class="control-label panel-header-label" style="margin: 0;">Etapa atual</label>
 				<div>
-					<a class="btn btn-info btn-raised" ng-click="activeTab = 1; currentForm = currentStep">{{steps[currentStep].name}}</a>
+					<a class="btn btn-info btn-raised" ui-sref=".steps">{{child.current_step_type}}</a>
 				</div>
 			</div>
 

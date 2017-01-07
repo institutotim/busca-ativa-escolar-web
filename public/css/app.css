@@ -12,6 +12,9 @@
 
 /* ANIMATION */
 /* SHADOWS */
+#app-navbar {
+  z-index: 800;
+}
 #app-navbar .navbar-brand {
   padding: 0;
   background-image: url('../images/logo_bae_header.png?1476203987');
@@ -177,6 +180,28 @@ footer.app-footer a.credits-btn {
   font-weight: lighter;
   text-align: center;
   color: #0c5e8e;
+}
+
+.loading-feedback {
+  display: none;
+  position: fixed !important;
+  background: rgba(0, 0, 0, 0.4);
+  text-align: center;
+  vertical-align: middle;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.loading-feedback.feedback-visible {
+  display: block;
+  z-index: 500;
+}
+.loading-feedback .feedback-spinner {
+  position: absolute;
+  left: calc(50% - 100px);
+  top: calc(50% - 100px);
 }
 
 .form-group {

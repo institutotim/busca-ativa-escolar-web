@@ -2,7 +2,6 @@
 
 	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
 
-
 		function init(scope, element, attrs) {
 			scope.identity = Identity;
 			scope.cityName = 'São Paulo';
@@ -22,6 +21,7 @@
 
 		return {
 			link: init,
+			replace: true,
 			templateUrl: '/views/navbar.html'
 		};
 	});

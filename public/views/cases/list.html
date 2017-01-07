@@ -8,9 +8,8 @@
 			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
-						<th>N&ordm; <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
-						<th>Risco <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
 						<th>Nome <i class="fa fa-arrow-down"></i><br /><small>da criança ou adolescente</small></th>
+						<th>Risco <i class="fa-arrow-down"></i> <br />&nbsp;</th>
 						<th>Idade <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
 						<th>Responsável <i class="fa fa-arrow-down"></i><br /><small>pelo caso</small></th>
 						<th>Etapa <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
@@ -19,38 +18,33 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="i in range(1, 24)">
-						<td width="8%" style="vertical-align: middle;">
-							<div class="text-center"><i class="material-icons">assignment</i></div>
-							<div class="text-center">{{12 + i}}</div>
+					<tr ng-repeat="(i, child) in list.data">
+						<td width="34%" style="vertical-align: middle;">
+							<strong><i class="fa fa-mars"></i> {{child.name}}</strong><br />
+							<small><span uib-tooltip="Pais ou responsáveis"><i class="fa fa-users"></i> {{child.mother_name}} / {{child.father_name}}</span></small>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
-							<div class="label label-danger" uib-tooltip="Alto Risco" ng-show="(i == 7)">A</div>
-							<div class="label label-warning" uib-tooltip="Médio Risco" ng-show="(i == 8 || i == 9)">M</div>
-							<div class="label label-default" uib-tooltip="Baixo Risco" ng-show="(i < 7 || i > 9)">B</div>
-						</td>
-						<td width="26%" style="vertical-align: middle;">
-							<strong><i class="fa fa-mars"></i> Edward Doe</strong><br />
-							<small><span uib-tooltip="Pais ou responsáveis"><i class="fa fa-users"></i> Jane Doe / John Doe</span></small>
+							<div class="label label-danger" uib-tooltip="Alto Risco" ng-show="child.risk_level === 'high'">A</div>
+							<div class="label label-warning" uib-tooltip="Médio Risco" ng-show="child.risk_level === 'medium'">M</div>
+							<div class="label label-default" uib-tooltip="Baixo Risco" ng-show="child.risk_level === 'low'">B</div>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
-							12 anos
+							{{child.age}} anos
 						</td>
 						<td width="28%" style="vertical-align: middle;">
 							<i class="material-icons">person</i> Aryel Tupinambá <br />
 							<small>Coordenador Operacional</small>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
-							{{(i == 4) ? 'Análise Técnica' : 'Pesquisa'}} <br />
+							{{child.current_step_type}} <br />
 						</td>
 						<td width="8%" style="vertical-align: middle;">
-							<span class="label label-danger" ng-show="(i % 3) == 0">Em atraso!</span>
-							<span class="label label-info" ng-show="(i % 3) != 0">Em andamento</span>
+							<span class="label label-danger" ng-show="child.is_late">Em atraso!</span>
+							<span class="label label-info" ng-show="!child.is_late">Em andamento</span>
 						</td>
 						<td width="6%" class="text-center" style="vertical-align: middle;">
 							<div class="btn-group">
-								<a ng-show="(i != 4)" ui-sref="case_viewer({case_id: 52})" class="btn btn-default btn-sm btn-raised" style="padding: 8px 10px" uib-tooltip="Incluir informações"><i class="fa fa-edit"></i></a>
-								<a ng-show="(i == 4)" ui-sref="case_viewer({case_id: 52})" class="btn btn-default btn-sm btn-raised" style="padding: 8px 10px" uib-tooltip="Ver informações"><i class="fa fa-eye"></i></a>
+								<a ui-sref="case_viewer({child_id: child.id})" class="btn btn-default btn-sm btn-raised" style="padding: 8px 10px" uib-tooltip="Incluir informações"><i class="fa fa-edit"></i></a>
 							</div>
 						</td>
 					</tr>

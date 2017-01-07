@@ -21,6 +21,10 @@
 				return Config.getTokenEndpoint();
 			}
 
+			function hasOngoingRequests() {
+				return numPendingRequests > 0;
+			}
+
 			function pushRequest() {
 				numPendingRequests++;
 			}
@@ -43,6 +47,7 @@
 			this.getTokenURI = getTokenURI;
 			this.pushRequest = pushRequest;
 			this.popRequest = popRequest;
+			this.hasOngoingRequests = hasOngoingRequests;
 			this.isUseableError = isUseableError;
 			this.isSuccessStatus = isSuccessStatus;
 			this.isLoading = isLoading;

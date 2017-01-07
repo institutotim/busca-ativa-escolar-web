@@ -8,20 +8,10 @@
 				controller: 'CaseSearchCtrl'
 			})
 		})
-		.controller('CaseSearchCtrl', function ($scope, $rootScope, MockData, Identity) {
+		.controller('CaseSearchCtrl', function ($scope, Children) {
 
-			$rootScope.section = 'cases';
-			$scope.identity = Identity;
-
-			$scope.range = function (start, end) {
-				var arr = [];
-
-				for(var i = start; i <= end; i++) {
-					arr.push(i);
-				}
-
-				return arr;
-			}
+			$scope.list = Children.get();
+			$scope.children = Children;
 
 		});
 

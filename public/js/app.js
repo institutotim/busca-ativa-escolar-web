@@ -87,20 +87,10 @@
 				controller: 'CaseSearchCtrl'
 			})
 		})
-		.controller('CaseSearchCtrl', function ($scope, $rootScope, MockData, Identity) {
+		.controller('CaseSearchCtrl', function ($scope, Children) {
 
-			$rootScope.section = 'cases';
-			$scope.identity = Identity;
-
-			$scope.range = function (start, end) {
-				var arr = [];
-
-				for(var i = start; i <= end; i++) {
-					arr.push(i);
-				}
-
-				return arr;
-			}
+			$scope.list = Children.get();
+			$scope.children = Children;
 
 		});
 
@@ -108,10 +98,11 @@
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
+		.controller('CaseViewCtrl', CaseViewCtrl)
 		.config(function ($stateProvider) {
 			$stateProvider
 				.state('case_viewer', {
-					url: '/cases/view/{case_id}',
+					url: '/cases/view/{child_id}',
 					templateUrl: '/views/cases/view/main.html',
 					controller: 'CaseViewCtrl'
 				})
@@ -140,14 +131,47 @@
 					templateUrl: '/views/cases/view/assigned_users.html'
 				})
 		})
-		.controller('CaseViewCtrl', LegacyCaseViewCtrl);
 
+	// TODO: reflect if it's not worth it to rename internally "cases" to "children" (since it's the correct parent entity name)
 
 	function CaseViewCtrl($scope, $state, $stateParams, Children, Cases) {
 		if($state.current.name === "case_viewer") $state.go('.consolidated');
 
 		$scope.child_id = $stateParams.child_id;
 		$scope.child = Children.get({id: $scope.child_id});
+		$scope.children = Children;
+
+		// TODO: get consolidated info from endpoint
+
+	}
+
+	function ChildCasesCtrl($scope, $state, $stateParams, Children, Cases) {
+		// TODO: get list of cases and steps from endpoint
+		// TODO: handle step navigation (another sub-state?)
+		// TODO: handle case cancelling
+		// TODO: handle case completing
+	}
+
+	function ChildCaseStepCtrl($scope, $state, $stateParams, Children, Cases) {
+		// TODO: get actual step data from endpoint
+		// TODO: handle step data saving
+		// TODO: handle requests to save-and-proceed
+	}
+
+	function ChildCommentsCtrl() {
+		// TODO: handle comments
+	}
+
+	function ChildAttachmentsCtrl() {
+		// TODO: handle attachments
+	}
+
+	function ChildActivityLogCtrl() {
+		// TODO: handle activity log
+	}
+
+	function ChildAssignedUsersCtrl() {
+		// TODO: handle assigned users
 	}
 
 	function LegacyCaseViewCtrl($scope, $rootScope, $state, $location, ngToast, Modals, MockData, Identity) {
@@ -419,8 +443,23 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
+	angular.module('BuscaAtivaEscolar').directive('appLoadingFeedback', function (API) {
 
+		function init(scope, element, attrs) {
+			scope.isVisible = API.hasOngoingRequests;
+		}
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/loading_feedback.html'
+		};
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
 
 		function init(scope, element, attrs) {
 			scope.identity = Identity;
@@ -441,6 +480,7 @@
 
 		return {
 			link: init,
+			replace: true,
 			templateUrl: '/views/navbar.html'
 		};
 	});
@@ -478,6 +518,7 @@
 	identify('config', 'http.js');
 
 	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
+		$httpProvider.interceptors.push('TrackPendingRequests');
 		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
 	});
 
@@ -2052,6 +2093,47 @@ Highcharts.maps["countries/br/br-all"] = {
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
+		.service('TrackPendingRequests', function ($q, $rootScope, API) {
+
+			this.request = function (config) {
+
+				API.pushRequest();
+
+				return config;
+			};
+
+			this.response = function (response) {
+
+				API.popRequest();
+
+				return response;
+			};
+
+		});
+
+})();
+(function() {
+	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
+		$rootScope.$on('$stateChangeStart', handleStateChange);
+
+		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
+
+			console.log("[router] to=", toState, toParams);
+
+			if(toState.unauthenticated) return;
+			if(Identity.isLoggedIn()) return;
+
+			console.log("[router.guard] Trying to access authenticated state, but currently logged out. Redirecting...");
+
+			event.preventDefault();
+			$state.go('login');
+		}
+
+	});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
 		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
 
 			this.request = function (config) {
@@ -2081,22 +2163,6 @@ Highcharts.maps["countries/br/br-all"] = {
 
 		});
 
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
-		$rootScope.$on('$stateChangeStart', handleStateChange);
-
-		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
-			if(toState.unauthenticated) return;
-			if(Identity.isLoggedIn()) return;
-
-			console.log("[router.guard] Trying to access authenticated state, but currently logged out. Redirecting...");
-
-			event.preventDefault();
-			$state.go('login');
-		}
-
-	});
 })();
 (function() {
 
@@ -2310,15 +2376,25 @@ Highcharts.maps["countries/br/br-all"] = {
 		.module('BuscaAtivaEscolar')
 		.factory('Children', function Children(API, Identity, $resource) {
 
-			let headers = API.REQUIRE_AUTH;
+			var headers = API.REQUIRE_AUTH;
 
-			return $resource(API.getURI('children/:id'), {id: '@id'}, {
+			var repository = $resource(API.getURI('children/:id'), {id: '@id'}, {
 				get: {method: 'GET', headers: headers},
 				save: {method: 'POST', headers: headers},
 				query: {method: 'GET', isArray: true, headers: headers},
 				remove: {method: 'DELETE', headers: headers},
 				delete: {method: 'DELETE', headers: headers}
 			});
+
+			repository.decorate = {
+				parents: function(child) {
+					return (child.mother_name || '')
+						+ ((child.mother_name && child.father_name) ? ' / ' : '')
+						+ (child.father_name || '');
+				}
+			};
+
+			return repository;
 
 		});
 })();
@@ -2379,6 +2455,10 @@ Highcharts.maps["countries/br/br-all"] = {
 				return Config.getTokenEndpoint();
 			}
 
+			function hasOngoingRequests() {
+				return numPendingRequests > 0;
+			}
+
 			function pushRequest() {
 				numPendingRequests++;
 			}
@@ -2401,6 +2481,7 @@ Highcharts.maps["countries/br/br-all"] = {
 			this.getTokenURI = getTokenURI;
 			this.pushRequest = pushRequest;
 			this.popRequest = popRequest;
+			this.hasOngoingRequests = hasOngoingRequests;
 			this.isUseableError = isUseableError;
 			this.isSuccessStatus = isSuccessStatus;
 			this.isLoading = isLoading;
@@ -2419,8 +2500,7 @@ Highcharts.maps["countries/br/br-all"] = {
 			$localStorage.$default({
 				session: {
 					user_id: null,
-					access_token: null,
-					refresh_token: null,
+					token: null,
 					token_expires_at: null,
 					refresh_expires_at: null
 				}
@@ -2432,13 +2512,11 @@ Highcharts.maps["countries/br/br-all"] = {
 
 			function provideToken() {
 
-				console.log("[auth::token.provide] Providing token, session=", $localStorage.session);
-
 				// Isn't even logged in
 				if(!Identity.isLoggedIn()) return requireLogin('Você precisa fazer login para realizar essa ação!');
 
 				// Has valid token
-				if(!isTokenExpired()) return $q.resolve($localStorage.session.access_token);
+				if(!isTokenExpired()) return $q.resolve($localStorage.session.token);
 
 				console.log("[auth::token.provide] Token expired! Refreshing...");
 
@@ -2451,7 +2529,7 @@ Highcharts.maps["countries/br/br-all"] = {
 				// Is logged in, access token expired but refresh token still valid
 				return self.refresh().then(function (session) {
 					console.log("[auth::token.provide] Refreshed, new tokens: ", session);
-					return session.access_token;
+					return session.token;
 				});
 
 			}
@@ -2468,29 +2546,24 @@ Highcharts.maps["countries/br/br-all"] = {
 
 			function handleAuthResponse(response) {
 
-				API.popRequest();
-
 				if(response.status !== 200) {
 					console.log("[auth::login] Rejecting Auth response! Status= ", response.status);
 					return $q.reject(response.data);
 				}
 
-				$localStorage.session.access_token = response.data.access_token;
-				$localStorage.session.refresh_token = response.data.refresh_token;
+				$localStorage.session.token = response.data.token;
 				$localStorage.session.token_expires_at = (new Date()).getTime() + (Config.TOKEN_EXPIRES_IN * 1000);
 				$localStorage.session.refresh_expires_at = (new Date()).getTime() + (Config.REFRESH_EXPIRES_IN * 1000);
 
-				// Auth.refresh doesn't return user_id, so we can't always set it
+				// Auth.refresh doesn't return user/user_id, so we can't always set it
+				// TODO: response should let us know if refresh, so we can throw errors when expecting a user but do not receive it
 				if(response.data.user_id) $localStorage.session.user_id = response.data.user.id;
-
-				Identity.setCurrentUser(response.data.user);
+				if(response.data.user) Identity.setCurrentUser(response.data.user);
 
 				return $localStorage.session;
 			}
 
 			function handleAuthError(response) {
-
-				API.popRequest();
 
 				console.error("[auth::login] API error: ", response);
 
@@ -2515,8 +2588,7 @@ Highcharts.maps["countries/br/br-all"] = {
 
 			this.logout = function() {
 				$localStorage.session.user_id = null;
-				$localStorage.session.access_token = null;
-				$localStorage.session.refresh_token = null;
+				$localStorage.session.token = null;
 				$localStorage.session.token_expires_at = null;
 				$localStorage.session.refresh_expires_at = null;
 
@@ -2535,8 +2607,6 @@ Highcharts.maps["countries/br/br-all"] = {
 					accept: 'application/json',
 				};
 
-				API.pushRequest();
-
 				return $http
 					.post(API.getTokenURI(), tokenRequest, options)
 					.then(handleAuthResponse, handleAuthError);
@@ -2546,14 +2616,12 @@ Highcharts.maps["countries/br/br-all"] = {
 
 				let tokenRequest = {
 					grant_type: 'refresh',
-					refresh_token: $localStorage.session.refresh_token
+					token: $localStorage.session.token
 				};
 
 				let options = {
 					accept: 'application/json',
 				};
-
-				API.pushRequest();
 
 				return $http
 					.post(API.getTokenURI(), tokenRequest, options)

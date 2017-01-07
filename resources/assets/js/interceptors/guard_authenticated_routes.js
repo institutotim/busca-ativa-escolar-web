@@ -3,6 +3,9 @@
 		$rootScope.$on('$stateChangeStart', handleStateChange);
 
 		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
+
+			console.log("[router] to=", toState, toParams);
+
 			if(toState.unauthenticated) return;
 			if(Identity.isLoggedIn()) return;
 

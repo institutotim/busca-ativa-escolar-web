@@ -1,0 +1,17 @@
+.loading-feedback {
+	display: none;
+	position: fixed !important;
+	background: rgba(black, 0.40);
+
+	text-align: center;
+	vertical-align: middle;
+
+	@include scale-to-parent-edges;
+
+	&.feedback-visible { display: block; z-index: 500; }
+
+	.feedback-spinner {
+		@include place-at(calc(50% - 100px), calc(50% - 100px));
+	}
+
+}

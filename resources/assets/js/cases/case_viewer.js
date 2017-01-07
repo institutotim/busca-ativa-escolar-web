@@ -1,10 +1,11 @@
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
+		.controller('CaseViewCtrl', CaseViewCtrl)
 		.config(function ($stateProvider) {
 			$stateProvider
 				.state('case_viewer', {
-					url: '/cases/view/{case_id}',
+					url: '/cases/view/{child_id}',
 					templateUrl: '/views/cases/view/main.html',
 					controller: 'CaseViewCtrl'
 				})
@@ -33,14 +34,47 @@
 					templateUrl: '/views/cases/view/assigned_users.html'
 				})
 		})
-		.controller('CaseViewCtrl', LegacyCaseViewCtrl);
 
+	// TODO: reflect if it's not worth it to rename internally "cases" to "children" (since it's the correct parent entity name)
 
 	function CaseViewCtrl($scope, $state, $stateParams, Children, Cases) {
 		if($state.current.name === "case_viewer") $state.go('.consolidated');
 
 		$scope.child_id = $stateParams.child_id;
 		$scope.child = Children.get({id: $scope.child_id});
+		$scope.children = Children;
+
+		// TODO: get consolidated info from endpoint
+
+	}
+
+	function ChildCasesCtrl($scope, $state, $stateParams, Children, Cases) {
+		// TODO: get list of cases and steps from endpoint
+		// TODO: handle step navigation (another sub-state?)
+		// TODO: handle case cancelling
+		// TODO: handle case completing
+	}
+
+	function ChildCaseStepCtrl($scope, $state, $stateParams, Children, Cases) {
+		// TODO: get actual step data from endpoint
+		// TODO: handle step data saving
+		// TODO: handle requests to save-and-proceed
+	}
+
+	function ChildCommentsCtrl() {
+		// TODO: handle comments
+	}
+
+	function ChildAttachmentsCtrl() {
+		// TODO: handle attachments
+	}
+
+	function ChildActivityLogCtrl() {
+		// TODO: handle activity log
+	}
+
+	function ChildAssignedUsersCtrl() {
+		// TODO: handle assigned users
 	}
 
 	function LegacyCaseViewCtrl($scope, $rootScope, $state, $location, ngToast, Modals, MockData, Identity) {

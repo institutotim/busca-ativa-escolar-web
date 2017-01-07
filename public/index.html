@@ -29,9 +29,10 @@
 	</head>
 	<body>
 
-		<app-navbar ng-show="identity.isLoggedIn()"></app-navbar>
+		<app-navbar></app-navbar>
 		<toast></toast>
 
+		<app-loading-feedback></app-loading-feedback>
 		<div class="container app-container" ui-view></div>
 
 		<footer class="app-footer" ng-include="'/views/components/app_footer.html'"></footer>

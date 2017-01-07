@@ -8,8 +8,7 @@
 			$localStorage.$default({
 				session: {
 					user_id: null,
-					access_token: null,
-					refresh_token: null,
+					token: null,
 					token_expires_at: null,
 					refresh_expires_at: null
 				}
@@ -21,13 +20,11 @@
 
 			function provideToken() {
 
-				console.log("[auth::token.provide] Providing token, session=", $localStorage.session);
-
 				// Isn't even logged in
 				if(!Identity.isLoggedIn()) return requireLogin('Você precisa fazer login para realizar essa ação!');
 
 				// Has valid token
-				if(!isTokenExpired()) return $q.resolve($localStorage.session.access_token);
+				if(!isTokenExpired()) return $q.resolve($localStorage.session.token);
 
 				console.log("[auth::token.provide] Token expired! Refreshing...");
 
@@ -40,7 +37,7 @@
 				// Is logged in, access token expired but refresh token still valid
 				return self.refresh().then(function (session) {
 					console.log("[auth::token.provide] Refreshed, new tokens: ", session);
-					return session.access_token;
+					return session.token;
 				});
 
 			}
@@ -57,29 +54,24 @@
 
 			function handleAuthResponse(response) {
 
-				API.popRequest();
-
 				if(response.status !== 200) {
 					console.log("[auth::login] Rejecting Auth response! Status= ", response.status);
 					return $q.reject(response.data);
 				}
 
-				$localStorage.session.access_token = response.data.access_token;
-				$localStorage.session.refresh_token = response.data.refresh_token;
+				$localStorage.session.token = response.data.token;
 				$localStorage.session.token_expires_at = (new Date()).getTime() + (Config.TOKEN_EXPIRES_IN * 1000);
 				$localStorage.session.refresh_expires_at = (new Date()).getTime() + (Config.REFRESH_EXPIRES_IN * 1000);
 
-				// Auth.refresh doesn't return user_id, so we can't always set it
+				// Auth.refresh doesn't return user/user_id, so we can't always set it
+				// TODO: response should let us know if refresh, so we can throw errors when expecting a user but do not receive it
 				if(response.data.user_id) $localStorage.session.user_id = response.data.user.id;
-
-				Identity.setCurrentUser(response.data.user);
+				if(response.data.user) Identity.setCurrentUser(response.data.user);
 
 				return $localStorage.session;
 			}
 
 			function handleAuthError(response) {
-
-				API.popRequest();
 
 				console.error("[auth::login] API error: ", response);
 
@@ -104,8 +96,7 @@
 
 			this.logout = function() {
 				$localStorage.session.user_id = null;
-				$localStorage.session.access_token = null;
-				$localStorage.session.refresh_token = null;
+				$localStorage.session.token = null;
 				$localStorage.session.token_expires_at = null;
 				$localStorage.session.refresh_expires_at = null;
 
@@ -124,8 +115,6 @@
 					accept: 'application/json',
 				};
 
-				API.pushRequest();
-
 				return $http
 					.post(API.getTokenURI(), tokenRequest, options)
 					.then(handleAuthResponse, handleAuthError);
@@ -135,14 +124,12 @@
 
 				let tokenRequest = {
 					grant_type: 'refresh',
-					refresh_token: $localStorage.session.refresh_token
+					token: $localStorage.session.token
 				};
 
 				let options = {
 					accept: 'application/json',
 				};
-
-				API.pushRequest();
 
 				return $http
 					.post(API.getTokenURI(), tokenRequest, options)
