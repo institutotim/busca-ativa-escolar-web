@@ -1,4 +1,6 @@
 (function() {
+	identify('core', 'app.js');
+
 	angular
 		.module('BuscaAtivaEscolar', [
 			'ngToast',
@@ -16,147 +18,6 @@
 			'ui.bootstrap',
 			'ui.select'
 		])
-
-		.run(function($rootScope, $cookies, Config, Identity) {
-
-			Config.setEndpoint($cookies.get('FDENP_API_ENDPOINT') || Config.CURRENT_ENDPOINT);
-
-			$.material.init();
-
-			Highcharts.setOptions({
-				lang: {
-					months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-					shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-					weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-					loading: ['Atualizando o gráfico...'],
-					contextButtonTitle: 'Exportar gráfico',
-					decimalPoint: ',',
-					thousandsSep: '.',
-					downloadJPEG: 'Baixar imagem JPEG',
-					downloadPDF: 'Baixar arquivo PDF',
-					downloadPNG: 'Baixar imagem PNG',
-					downloadSVG: 'Baixar vetor SVG',
-					printChart: 'Imprimir gráfico',
-					rangeSelectorFrom: 'De',
-					rangeSelectorTo: 'Para',
-					rangeSelectorZoom: 'Zoom',
-					resetZoom: 'Voltar zoom',
-					resetZoomTitle: 'Voltar zoom para nível 1:1'
-				}
-			});
-		})
-
-		.config(function(ngToastProvider) {
-			ngToastProvider.configure({
-				verticalPosition: 'top',
-				horizontalPosition: 'right',
-				maxNumber: 3,
-				animation: 'slide',
-				dismissButton: true,
-				timeout: 3000
-			});
-		})
-
-		.config(function ($httpProvider) {
-			$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
-		})
-
-		.run(function ($state) {
-			console.log($state);
-		})
-
-		.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
-
-			$locationProvider.html5Mode(true);
-			$urlRouterProvider.otherwise('/dashboard');
-
-			// TODO: refactor to validate existing session
-
-			var NC = (new Date()).getTime();
-
-			//$urlRouterProvider.otherwise('login');
-			$stateProvider.
-			state('login', {
-				url: '/login',
-				templateUrl: '/views/login.html?NC=' + NC,
-				controller: 'LoginCtrl'
-			}).
-			state('dashboard', {
-				url: '/dashboard',
-				templateUrl: '/views/dashboard.html?NC=' + NC,
-				controller: 'DashboardCtrl'
-			}).
-			state('preferences', {
-				url: '/preferences',
-				templateUrl: '/views/preferences/manage.html?NC=' + NC,
-				controller: 'PreferencesCtrl'
-			}).
-			state('developer_mode', {
-				url: '/developer_mode',
-				templateUrl: '/views/developer/developer_dashboard.html?NC=' + NC,
-				controller: 'DeveloperCtrl'
-			}).
-			state('cases', {
-				url: '/cases',
-				templateUrl: '/views/cases/list.html?NC=' + NC,
-				controller: 'CaseSearchCtrl'
-			}).
-			state('cases.create_alert', {
-				url: '/create_alert',
-				templateUrl: '/views/cases/create_alert.html?NC=' + NC,
-				controller: 'CreateAlertCtrl'
-			}).
-			state('case_view', {
-				url: '/cases/view/{case_id}',
-				templateUrl: '/views/cases/view/main.html?NC=' + NC,
-				controller: 'CaseViewCtrl'
-			}).
-			state('users', {
-				url: '/users',
-				templateUrl: '/views/users/list.html?NC=' + NC,
-				controller: 'UserSearchCtrl'
-			}).
-			state('user_view', {
-				url: '/users/view/{user_id}',
-				templateUrl: '/views/users/view.html?NC=' + NC//,
-				//controller: 'UserViewCtrl'
-			}).
-			state('cities', {
-				url: '/cities',
-				templateUrl: '/views/cities/list.html?NC=' + NC,
-				controller: 'CitySearchCtrl'
-			}).
-			state('settings', {
-				url: '/settings',
-				templateUrl: '/views/settings/manage_settings.html?NC=' + NC,
-				controller: 'SettingsCtrl'
-			}).
-			state('settings.parameterize_group', {
-				url: '/parameterize_group/{group_id}',
-				templateUrl: '/views/settings/parameterize_group.html?NC=' + NC,
-				controller: 'ParameterizeGroupCtrl'
-			}).
-			state('reports', {
-				url: '/reports',
-				templateUrl: '/views/reports/browser.html?NC=' + NC,
-				controller: 'ReportsCtrl'
-			}).
-			state('credits', {
-				url: '/credits',
-				templateUrl: '/views/static/credits.html?NC=' + NC,
-				controller: 'CreditsCtrl'
-			}).
-			state('sign_up', {
-				url: '/sign_up',
-				templateUrl: '/views/sign_up/main.html?NC=' + NC,
-				controller: 'SignUpCtrl'
-			}).
-			state('first_time_setup', {
-				url: '/first_time_setup',
-				templateUrl: '/views/first_time_setup/main.html?NC=' + NC,
-				controller: 'FirstTimeSetupCtrl'
-			});
-		});
 })();
 (function() {
 	console.log("[core.load] Loaded: config.js");
@@ -218,58 +79,80 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('case_browser', {
+				url: '/cases',
+				templateUrl: '/views/cases/list.html',
+				controller: 'CaseSearchCtrl'
+			})
+		})
+		.controller('CaseSearchCtrl', function ($scope, $rootScope, MockData, Identity) {
 
+			$rootScope.section = 'cases';
+			$scope.identity = Identity;
 
-		function init(scope, element, attrs) {
-			scope.identity = Identity;
-			scope.cityName = 'São Paulo';
-			scope.cityUF = 'SP';
-			scope.showNotifications = true;
+			$scope.range = function (start, end) {
+				var arr = [];
 
-			scope.toggleNotifications = function($event) {
-				scope.showNotifications = !scope.showNotifications;
+				for(var i = start; i <= end; i++) {
+					arr.push(i);
+				}
 
-				$event.stopPropagation();
-				$event.stopImmediatePropagation();
-				$event.preventDefault();
-
-				return false;
+				return arr;
 			}
-		}
 
-		return {
-			link: init,
-			templateUrl: '/views/navbar.html'
-		};
-	});
+		});
 
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('CaseSearchCtrl', function ($scope, $rootScope, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('case_viewer', {
+					url: '/cases/view/{case_id}',
+					templateUrl: '/views/cases/view/main.html',
+					controller: 'CaseViewCtrl'
+				})
+				.state('case_viewer.consolidated', {
+					url: '/consolidated',
+					templateUrl: '/views/cases/view/consolidated.html'
+				})
+				.state('case_viewer.steps', {
+					url: '/steps',
+					templateUrl: '/views/cases/view/steps.html'
+				})
+				.state('case_viewer.activity_log', {
+					url: '/activity_log',
+					templateUrl: '/views/cases/view/activity_log.html'
+				})
+				.state('case_viewer.comments', {
+					url: '/comments',
+					templateUrl: '/views/cases/view/comments.html'
+				})
+				.state('case_viewer.attachments', {
+					url: '/attachments',
+					templateUrl: '/views/cases/view/attachments.html'
+				})
+				.state('case_viewer.assigned_users', {
+					url: '/assigned_users',
+					templateUrl: '/views/cases/view/assigned_users.html'
+				})
+		})
+		.controller('CaseViewCtrl', LegacyCaseViewCtrl);
 
-		$rootScope.section = 'cases';
-		$scope.identity = Identity;
 
-		$scope.range = function (start, end) {
-			var arr = [];
+	function CaseViewCtrl($scope, $state, $stateParams, Children, Cases) {
+		if($state.current.name === "case_viewer") $state.go('.consolidated');
 
-			for(var i = start; i <= end; i++) {
-				arr.push(i);
-			}
+		$scope.child_id = $stateParams.child_id;
+		$scope.child = Children.get({id: $scope.child_id});
+	}
 
-			return arr;
-		}
+	function LegacyCaseViewCtrl($scope, $rootScope, $state, $location, ngToast, Modals, MockData, Identity) {
 
-	});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar').controller('CaseViewCtrl', function ($scope, $rootScope, $location, ngToast, Modals, MockData, Identity) {
-
-		$rootScope.section = 'cases';
+		if($state.current.name === "case_viewer") $state.go('.consolidated');
 
 		$scope.identity = Identity;
 		$scope.reasons = MockData.alertReasons;
@@ -346,14 +229,14 @@
 			Modals.show(Modals.Confirm(
 				'Tem certeza que deseja finalizar esse caso?',
 				'Ao finalizar o caso, essa criança será registrada como "Dentro da Escola", e deixará de aparecer nas listas de pendências. Essa operação não pode ser desfeita.'))
-			.then(function() {
-				ngToast.create({
-					className: 'success',
-					content: 'Caso finalizado!'
-				});
+				.then(function() {
+					ngToast.create({
+						className: 'success',
+						content: 'Caso finalizado!'
+					});
 
-				$location.path('/cases');
-			});
+					$location.path('/cases');
+				});
 		};
 
 		$scope.assignUserToStep = function(stepName, canDismiss) {
@@ -512,6 +395,199 @@
 
 		init();
 
+	}
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('case_create_from_alert', {
+				url: '/cases/create_alert',
+				templateUrl: '/views/cases/create_alert.html',
+				controller: 'CreateAlertCtrl'
+			})
+		})
+		.controller('CreateAlertCtrl', function ($scope, $rootScope, MockData, Identity) {
+
+			$rootScope.section = 'dashboard';
+
+			$scope.identity = Identity;
+			$scope.reasons = MockData.alertReasons;
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
+
+
+		function init(scope, element, attrs) {
+			scope.identity = Identity;
+			scope.cityName = 'São Paulo';
+			scope.cityUF = 'SP';
+			scope.showNotifications = true;
+
+			scope.toggleNotifications = function($event) {
+				scope.showNotifications = !scope.showNotifications;
+
+				$event.stopPropagation();
+				$event.stopImmediatePropagation();
+				$event.preventDefault();
+
+				return false;
+			}
+		}
+
+		return {
+			link: init,
+			templateUrl: '/views/navbar.html'
+		};
+	});
+
+})();
+(function() {
+	identify('config', 'charts.js');
+
+	angular.module('BuscaAtivaEscolar').run(function (Config) {
+		Highcharts.setOptions({
+			lang: {
+				months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+				shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+				weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+				loading: ['Atualizando o gráfico...'],
+				contextButtonTitle: 'Exportar gráfico',
+				decimalPoint: ',',
+				thousandsSep: '.',
+				downloadJPEG: 'Baixar imagem JPEG',
+				downloadPDF: 'Baixar arquivo PDF',
+				downloadPNG: 'Baixar imagem PNG',
+				downloadSVG: 'Baixar vetor SVG',
+				printChart: 'Imprimir gráfico',
+				rangeSelectorFrom: 'De',
+				rangeSelectorTo: 'Para',
+				rangeSelectorZoom: 'Zoom',
+				resetZoom: 'Voltar zoom',
+				resetZoomTitle: 'Voltar zoom para nível 1:1'
+			}
+		});
+	})
+
+})();
+(function() {
+	identify('config', 'http.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
+		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+	});
+
+})();
+(function() {
+	identify('config', 'on_init.js');
+
+	angular.module('BuscaAtivaEscolar').run(function ($cookies, Config) {
+		Config.setEndpoint($cookies.get('FDENP_API_ENDPOINT') || Config.CURRENT_ENDPOINT);
+
+		$.material.init();
+	})
+
+})();
+(function() {
+	identify('config', 'states.js');
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
+
+			$locationProvider.html5Mode(true);
+			$urlRouterProvider.otherwise('/dashboard');
+
+			$stateProvider
+				.state('login', {
+					url: '/login',
+					templateUrl: '/views/login.html',
+					controller: 'LoginCtrl',
+					unauthenticated: true
+				})
+				.state('dashboard', {
+					url: '/dashboard',
+					templateUrl: '/views/dashboard.html',
+					controller: 'DashboardCtrl'
+				})
+				.state('preferences', {
+					url: '/preferences',
+					templateUrl: '/views/preferences/manage.html',
+					controller: 'PreferencesCtrl'
+				})
+				.state('developer_mode', {
+					url: '/developer_mode',
+					templateUrl: '/views/developer/developer_dashboard.html',
+					controller: 'DeveloperCtrl',
+					unauthenticated: true
+
+				})
+				.state('users', {
+					url: '/users',
+					templateUrl: '/views/users/list.html',
+					controller: 'UserSearchCtrl'
+				})
+				.state('user_view', {
+					url: '/users/view/{user_id}',
+					templateUrl: '/views/users/view.html'//,
+					//controller: 'UserViewCtrl'
+				})
+				.state('cities', {
+					url: '/cities',
+					templateUrl: '/views/cities/list.html',
+					controller: 'CitySearchCtrl'
+				})
+				.state('settings', {
+					url: '/settings',
+					templateUrl: '/views/settings/manage_settings.html',
+					controller: 'SettingsCtrl'
+				})
+				.state('settings.parameterize_group', {
+					url: '/parameterize_group/{group_id}',
+					templateUrl: '/views/settings/parameterize_group.html',
+					controller: 'ParameterizeGroupCtrl'
+				})
+				.state('reports', {
+					url: '/reports',
+					templateUrl: '/views/reports/browser.html',
+					controller: 'ReportsCtrl'
+				})
+				.state('credits', {
+					url: '/credits',
+					templateUrl: '/views/static/credits.html',
+					controller: 'CreditsCtrl',
+					unauthenticated: true
+				})
+				.state('sign_up', {
+					url: '/sign_up',
+					templateUrl: '/views/sign_up/main.html',
+					controller: 'SignUpCtrl',
+					unauthenticated: true
+				})
+				.state('first_time_setup', {
+					url: '/first_time_setup',
+					templateUrl: '/views/first_time_setup/main.html',
+					controller: 'FirstTimeSetupCtrl',
+					unauthenticated: true
+				});
+		});
+
+})();
+(function() {
+	identify('config', 'toasts.js');
+
+	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
+		ngToastProvider.configure({
+			verticalPosition: 'top',
+			horizontalPosition: 'right',
+			maxNumber: 3,
+			animation: 'slide',
+			dismissButton: true,
+			timeout: 3000
+		});
 	});
 
 })();
@@ -531,18 +607,6 @@
 
 			return arr;
 		}
-
-	});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar').controller('CreateAlertCtrl', function ($scope, $rootScope, MockData, Identity) {
-
-		$rootScope.section = 'dashboard';
-
-		$scope.identity = Identity;
-		$scope.reasons = MockData.alertReasons;
 
 	});
 
@@ -2019,6 +2083,22 @@ Highcharts.maps["countries/br/br-all"] = {
 
 })();
 (function() {
+	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
+		$rootScope.$on('$stateChangeStart', handleStateChange);
+
+		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
+			if(toState.unauthenticated) return;
+			if(Identity.isLoggedIn()) return;
+
+			console.log("[router.guard] Trying to access authenticated state, but currently logged out. Redirecting...");
+
+			event.preventDefault();
+			$state.go('login');
+		}
+
+	});
+})();
+(function() {
 
 	angular
 		.module('BuscaAtivaEscolar')
@@ -3300,4 +3380,8 @@ Highcharts.maps["countries/br/br-all"] = {
 	});
 
 })();
+
+function identify(namespace, file) {
+	console.log("[core.load] ", namespace, file);
+}
 //# sourceMappingURL=app.js.map

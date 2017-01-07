@@ -33,31 +33,16 @@
 
 		</div>
 
-		<uib-tabset active="activeTab" class="tab-content">
-			<uib-tab index="0">
-				<uib-tab-heading><i class='fa fa-info-circle'></i> Informações Consolidadas</uib-tab-heading>
-				<div class="panel-body" ng-include="'/views/cases/view/consolidated.html'"></div>
-			</uib-tab>
-			<uib-tab index="1">
-				<uib-tab-heading><i class='fa fa-tasks'></i> Evolução do Caso</uib-tab-heading>
-				<div class="panel-body" ng-include="'/views/cases/view/steps.html'"></div>
-			</uib-tab>
-			<uib-tab index="2">
-				<uib-tab-heading><i class='fa fa-history'></i> Histórico</uib-tab-heading>
-				<div class="panel-body" ng-include="'/views/cases/view/activity_log.html'"></div>
-			</uib-tab>
-			<uib-tab index="3" ng-if="!(isPastStep('analise_tecnica') && identity.getType() == 'tecnico_verificador')">
-				<uib-tab-heading><i class='fa fa-comments'></i> Anotações</uib-tab-heading>
-				<div class="panel-body" ng-include="'/views/cases/view/comments.html'"></div>
-			</uib-tab>
-			<uib-tab index="4" ng-if="!(isPastStep('analise_tecnica') && identity.getType() == 'tecnico_verificador')">
-				<uib-tab-heading><i class='fa fa-paperclip'></i> Anexos</uib-tab-heading>
-				<div class="panel-body" ng-include="'/views/cases/view/attachments.html'"></div>
-			</uib-tab>
-			<uib-tab index="5">
-				<uib-tab-heading><i class='fa fa-users'></i> Responsáveis</uib-tab-heading>
-				<div class="panel-body" ng-include="'/views/cases/view/assigned_users.html'"></div>
-			</uib-tab>
-		</uib-tabset>
+		<ul class="nav nav-tabs">
+			<li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".consolidated"><i class="fa fa-info-circle"></i> Informações consolidadas</a></li>
+			<li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".steps"><i class="fa fa-tasks"></i> Evolução do Caso</a></li>
+			<li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".activity_log"><i class="fa fa-history"></i> Histórico</a></li>
+			<li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".comments"><i class="fa fa-comments"></i> Anotações</a></li>
+			<li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".attachments"><i class="fa fa-paperclip"></i> Anexos</a></li>
+			<li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".assigned_users"><i class="fa fa-users"></i> Responsáveis</a></li>
+		</ul>
+
+		<div class="panel-body" ui-view></div>
+
 	</div>
 </div>

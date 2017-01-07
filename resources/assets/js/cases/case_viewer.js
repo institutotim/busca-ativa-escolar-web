@@ -1,8 +1,51 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('CaseViewCtrl', function ($scope, $rootScope, $location, ngToast, Modals, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('case_viewer', {
+					url: '/cases/view/{case_id}',
+					templateUrl: '/views/cases/view/main.html',
+					controller: 'CaseViewCtrl'
+				})
+				.state('case_viewer.consolidated', {
+					url: '/consolidated',
+					templateUrl: '/views/cases/view/consolidated.html'
+				})
+				.state('case_viewer.steps', {
+					url: '/steps',
+					templateUrl: '/views/cases/view/steps.html'
+				})
+				.state('case_viewer.activity_log', {
+					url: '/activity_log',
+					templateUrl: '/views/cases/view/activity_log.html'
+				})
+				.state('case_viewer.comments', {
+					url: '/comments',
+					templateUrl: '/views/cases/view/comments.html'
+				})
+				.state('case_viewer.attachments', {
+					url: '/attachments',
+					templateUrl: '/views/cases/view/attachments.html'
+				})
+				.state('case_viewer.assigned_users', {
+					url: '/assigned_users',
+					templateUrl: '/views/cases/view/assigned_users.html'
+				})
+		})
+		.controller('CaseViewCtrl', LegacyCaseViewCtrl);
 
-		$rootScope.section = 'cases';
+
+	function CaseViewCtrl($scope, $state, $stateParams, Children, Cases) {
+		if($state.current.name === "case_viewer") $state.go('.consolidated');
+
+		$scope.child_id = $stateParams.child_id;
+		$scope.child = Children.get({id: $scope.child_id});
+	}
+
+	function LegacyCaseViewCtrl($scope, $rootScope, $state, $location, ngToast, Modals, MockData, Identity) {
+
+		if($state.current.name === "case_viewer") $state.go('.consolidated');
 
 		$scope.identity = Identity;
 		$scope.reasons = MockData.alertReasons;
@@ -79,14 +122,14 @@
 			Modals.show(Modals.Confirm(
 				'Tem certeza que deseja finalizar esse caso?',
 				'Ao finalizar o caso, essa criança será registrada como "Dentro da Escola", e deixará de aparecer nas listas de pendências. Essa operação não pode ser desfeita.'))
-			.then(function() {
-				ngToast.create({
-					className: 'success',
-					content: 'Caso finalizado!'
-				});
+				.then(function() {
+					ngToast.create({
+						className: 'success',
+						content: 'Caso finalizado!'
+					});
 
-				$location.path('/cases');
-			});
+					$location.path('/cases');
+				});
 		};
 
 		$scope.assignUserToStep = function(stepName, canDismiss) {
@@ -245,6 +288,5 @@
 
 		init();
 
-	});
-
+	}
 })();
