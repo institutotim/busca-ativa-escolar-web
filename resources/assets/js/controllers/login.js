@@ -2,6 +2,8 @@
 
 	angular.module('BuscaAtivaEscolar').controller('LoginCtrl', function ($scope, $rootScope, $cookies, $location, Config, Auth) {
 
+		console.log("[core] @Login");
+
 		$rootScope.section = '';
 
 		$scope.email = 'manager_sp@lqdi.net';
