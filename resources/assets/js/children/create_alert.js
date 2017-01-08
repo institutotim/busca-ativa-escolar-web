@@ -2,9 +2,9 @@
 
 	angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
-			$stateProvider.state('case_create_from_alert', {
-				url: '/cases/create_alert',
-				templateUrl: '/views/cases/create_alert.html',
+			$stateProvider.state('child_create_from_alert', {
+				url: '/children/create_alert',
+				templateUrl: '/views/children/create_alert.html',
 				controller: 'CreateAlertCtrl'
 			})
 		})

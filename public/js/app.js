@@ -81,13 +81,13 @@
 
 	angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
-			$stateProvider.state('case_browser', {
-				url: '/cases',
-				templateUrl: '/views/cases/list.html',
-				controller: 'CaseSearchCtrl'
+			$stateProvider.state('child_browser', {
+				url: '/children',
+				templateUrl: '/views/children/list.html',
+				controller: 'ChildSearchCtrl'
 			})
 		})
-		.controller('CaseSearchCtrl', function ($scope, Children) {
+		.controller('ChildSearchCtrl', function ($scope, Children) {
 
 			$scope.Children = Children;
 			$scope.list = Children.search();
@@ -98,50 +98,44 @@
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
-		.controller('CaseViewCtrl', CaseViewCtrl)
+		.controller('ChildViewCtrl', ChildViewCtrl)
 		.controller('ChildCasesCtrl', ChildCasesCtrl)
 		.config(function ($stateProvider) {
 			$stateProvider
-				.state('case_viewer', {
-					url: '/cases/view/{child_id}',
-					templateUrl: '/views/cases/view/main.html',
-					controller: 'CaseViewCtrl'
+				.state('child_viewer', {
+					url: '/children/view/{child_id}',
+					templateUrl: '/views/children/view/main.html',
+					controller: 'ChildViewCtrl'
 				})
-				.state('case_viewer.consolidated', {
+				.state('child_viewer.consolidated', {
 					url: '/consolidated',
-					templateUrl: '/views/cases/view/consolidated.html'
+					templateUrl: '/views/children/view/consolidated.html'
 				})
-				.state('case_viewer.cases', {
-					url: '/cases/{case_id}',
-					templateUrl: '/views/cases/view/steps.html',
+				.state('child_viewer.cases', {
+					url: '/children/{child_id}',
+					templateUrl: '/views/children/view/steps.html',
 					controller: 'ChildCasesCtrl'
 				})
-				.state('case_viewer.cases.view', {
-					url: '/{case_id}',
-					templateUrl: '/views/cases/view/case_info.html'
-				})
-				.state('case_viewer.activity_log', {
+				.state('child_viewer.activity_log', {
 					url: '/activity_log',
-					templateUrl: '/views/cases/view/activity_log.html'
+					templateUrl: '/views/children/view/activity_log.html'
 				})
-				.state('case_viewer.comments', {
+				.state('child_viewer.comments', {
 					url: '/comments',
-					templateUrl: '/views/cases/view/comments.html'
+					templateUrl: '/views/children/view/comments.html'
 				})
-				.state('case_viewer.attachments', {
+				.state('child_viewer.attachments', {
 					url: '/attachments',
-					templateUrl: '/views/cases/view/attachments.html'
+					templateUrl: '/views/children/view/attachments.html'
 				})
-				.state('case_viewer.assigned_users', {
+				.state('child_viewer.assigned_users', {
 					url: '/assigned_users',
-					templateUrl: '/views/cases/view/assigned_users.html'
+					templateUrl: '/views/children/view/assigned_users.html'
 				})
 		});
 
-	// TODO: reflect if it's not worth it to rename internally "cases" to "children" (since it's the correct parent entity name)
-
-	function CaseViewCtrl($scope, $state, $stateParams, Children, Decorators) {
-		if($state.current.name === "case_viewer") $state.go('.consolidated');
+	function ChildViewCtrl($scope, $state, $stateParams, Children, Decorators) {
+		if($state.current.name === "child_viewer") $state.go('.consolidated');
 
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
@@ -149,7 +143,7 @@
 		$scope.child_id = $stateParams.child_id;
 		$scope.child = Children.find({id: $scope.child_id});
 
-		console.log("[core] @CaseViewCtrl", $scope.child);
+		console.log("[core] @ChildViewCtrl", $scope.child);
 
 		// TODO: get consolidated info from endpoint
 
@@ -174,7 +168,7 @@
 			});
 		});
 
-		console.log("[core] @CaseViewCtrl", $scope.child, $scope.openedCase, $scope.openedStep);
+		console.log("[core] @ChildCasesCtrl", $scope.child, $scope.openedCase, $scope.openedStep);
 
 		$scope.collapseCase = function (childCase) {
 			$scope.openedCase = childCase;
@@ -476,9 +470,9 @@
 
 	angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
-			$stateProvider.state('case_create_from_alert', {
-				url: '/cases/create_alert',
-				templateUrl: '/views/cases/create_alert.html',
+			$stateProvider.state('child_create_from_alert', {
+				url: '/children/create_alert',
+				templateUrl: '/views/children/create_alert.html',
 				controller: 'CreateAlertCtrl'
 			})
 		})
