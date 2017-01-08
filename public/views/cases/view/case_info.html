@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-show="currentForm == 'alerta'">
+<div class="panel panel-default" ng-show="isStepOpen('Alerta')">
 	<div class="panel-heading"><i class="material-icons">person</i> Informações da criança ou adolescente</div>
 	<div class="panel-body">
 		<div class="form-group col-md-12">
@@ -50,7 +50,7 @@
 	</div>
 </div>
 
-<div class="panel panel-default" ng-show="currentForm == 'alerta'">
+<div class="panel panel-default" ng-show="isStepOpen('Alerta')">
 	<div class="panel-heading"><i class="material-icons">person</i> Dados do responsável</div>
 	<div class="panel-body">
 		<div class="form-group col-md-6">
@@ -85,7 +85,7 @@
 	</div>
 </div>
 
-<div class="panel panel-default" ng-show="currentForm == 'alerta'">
+<div class="panel panel-default" ng-show="isStepOpen('Alerta')">
 	<div class="panel-heading"><i class="material-icons">map</i> Dados de localização</div>
 	<div class="panel-body">
 		<div class="form-group col-md-8">
@@ -115,7 +115,7 @@
 	</div>
 </div>
 
-<div class="panel panel-default" ng-show="showAll || currentForm == 'pesquisa'">
+<div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
 	<div class="panel-heading" ng-click="togglePanel('info')"><i class="material-icons">person</i> Dados da criança ou adolescente</div>
 	<div class="panel-body" uib-collapse="!isOpen('info')">
 		<div class="form-group col-md-12">
@@ -162,7 +162,7 @@
 	</div>
 </div>
 
-<div class="panel panel-default" ng-show="showAll || currentForm == 'pesquisa'">
+<div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
 	<div class="panel-heading" ng-click="togglePanel('education')"><i class="fa fa-graduation-cap"></i> Educação</div>
 	<div class="panel-body" uib-collapse="!isOpen('education')">
 		<div class="form-group col-md-12">
@@ -243,7 +243,7 @@
 	</div>
 </div>
 
-<div class="panel panel-default" ng-show="showAll || currentForm == 'pesquisa'">
+<div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
 	<div class="panel-heading" ng-click="togglePanel('work')"><i class="fa fa-briefcase"></i> Trabalho</div>
 	<div class="panel-body" uib-collapse="!isOpen('work')">
 
@@ -268,7 +268,7 @@
 
 		<div class="form-group col-md-12"  ng-show="listJobs=='other'">
 			<label class="control-label" for="fld-other-job">Especifique a atividade econômica no campo abaixo</label>
-			<input type="text" class="form-control" id="fld-work-hours" value="">
+			<input type="text" class="form-control" id="fld-other-job" value="">
 		</div>
 
 		<div class="form-group col-md-12" ng-show="input.doesWork">
@@ -296,7 +296,7 @@
 	</div>
 </div>
 
-<div class="panel panel-default" ng-show="showAll || currentForm == 'pesquisa'">
+<div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
 	<div class="panel-heading" ng-click="togglePanel('parents')"><i class="fa fa-users"></i> Sobre os pais ou responsáveis</div>
 	<div class="panel-body" uib-collapse="!isOpen('parents')">
 
@@ -408,7 +408,7 @@
 	</div>
 </div>
 
-<div class="panel panel-default" ng-show="showAll || currentForm == 'pesquisa'">
+<div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
 	<div class="panel-heading" ng-click="togglePanel('causes')"><i class="fa fa-exclamation-circle"></i> Sobre a causa de exclusão escolar</div>
 	<div class="panel-body" uib-collapse="!isOpen('causes')">
 			<div class="form-group col-md-12">
@@ -443,7 +443,7 @@
 </div>
 
 
-<div class="panel panel-default" ng-show="currentForm == 'pesquisa'">
+<div class="panel panel-default" ng-show="isStepOpen('Pesquisa')">
 	<div class="panel-heading" ng-click="togglePanel('location')"><i class="fa fa-users"></i> Dados de localização</div>
 	<div class="panel-body" uib-collapse="!isOpen('location')">
 		<div class="form-group col-md-8">
@@ -500,7 +500,7 @@
 	</div>
 </div>	
 
-<div class="panel panel-default" ng-show="currentForm == 'analise_tecnica'">
+<div class="panel panel-default" ng-show="isStepOpen('AnaliseTecnica')">
 	<div class="panel-heading"><i class="fa fa-info-circle"></i> Análise técnica</div>
 	<div class="panel-body">
 		<div class="form-group col-md-12">
@@ -535,7 +535,7 @@
 	</div>
 </div>
 
-<div class="panel panel-default" ng-show="currentForm == 'gestao_do_caso'">
+<div class="panel panel-default" ng-show="isStepOpen('GestaoDoCaso')">
 	<div class="panel-heading"><i class="fa fa-info-circle"></i> Relatório de gestão do caso</div>
 	<div class="panel-body">
 
@@ -555,7 +555,7 @@
 	</div>
 </div>
 
-<div class="panel panel-default" ng-show="(showAll && isPastStep('rematricula')) || currentForm == 'rematricula'">
+<div class="panel panel-default" ng-show="(showAll && isPastStep('Rematricula')) || isStepOpen('Rematricula')">
 	<div class="panel-heading"><i class="fa fa-building"></i> Dados da escola de (re)matrícula</div>
 	<div class="panel-body">
 
@@ -616,7 +616,7 @@
 		</div>
 		<div class="form-group col-md-12">
 			<label class="control-label" for="fld-enroll-year">Escolha abaixo em que etapa de ensino e série que a criança ou adolescente foi (re)matriculada</label>
-			<select id="fld-last-school-year" class="form-control">
+			<select id="fld-enroll-year" class="form-control">
 				<option>Pré-escola (4 anos)</option>
 				<option>Pré-escola (5 anos)</option>
 				<option>Ensino Fundamental - Anos iniciais (1º ano)</option>
@@ -654,7 +654,7 @@
 	</div>
 </div>
 
-<div class="panel panel-default" ng-show="currentForm == '1obs' || currentForm == '2obs' || currentForm == '3obs' || currentForm == '4obs'">
+<div class="panel panel-default" ng-show="isStepOpen('Observacao')">
 	<div class="panel-heading"><i class="fa fa-info-circle"></i> Relatório do período de observação</div>
 	<div class="panel-body">
 
@@ -696,7 +696,7 @@
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
-			<a class="btn btn-raised btn-success" ng-click="resolveCase()" ng-show="currentForm == '4obs'"><i class="fa fa-check"></i> Salvar e encerrar caso</a>
+			<a class="btn btn-raised btn-success" ng-click="resolveCase()" ng-show="isStepOpen('4obs') && openedStep.fields.report_index == 4"><i class="fa fa-check"></i> Salvar e encerrar caso</a>
 		</div>
 
 	</div>

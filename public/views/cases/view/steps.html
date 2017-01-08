@@ -3,37 +3,24 @@
 		<h3><i class="material-icons">assignment</i> Etapas</h3>
 		<hr />
 
-		<div class="panel panel-default">
-			<div class="panel-heading" ng-click="steps2014Collapsed = !steps2014Collapsed">#2014-01 <span class="label label-danger">Reincidiu em Ago/2015</span></div>
-			<div class="panel-body" uib-collapse="steps2014Collapsed">
+		<div ng-repeat="(i, case) in child.cases" class="panel panel-default">
+			<div class="panel-heading" ng-click="collapseCase(case)">
+				#{{case.name}}
+				<span ng-show="case.case_status === 'cancelled'" class="label label-warn">Cancelado {{case.updated_at | amTimeAgo}}</span>
+				<span ng-show="case.case_status === 'interrupted'" class="label label-danger">Reincidiu {{case.updated_at | amTimeAgo}}</span>
+				<span ng-show="case.case_status === 'completed'" class="label label-success">Concluído {{case.updated_at | amTimeAgo}}</span>
+				<span ng-show="case.case_status === 'in_progress'" class="label label-primary">Em andamento</span>
+			</div>
+			<div class="panel-body" uib-collapse="isCaseCollapsed(case)">
 				<div class="step-list" style="width: 100%">
 
-					<div class="step {{getCaseTimelineClass(step.id, lastStep2014)}}" ng-repeat="(i, step) in steps2014" ng-click="openForm(step.id)">
-						<strong>{{step.name}}</strong>
-						<span>12/Abr/2015</span>
+					<div ng-repeat="(i, step) in case.steps" class="step" ng-click="openStep(step)">
+						<strong>{{Decorators.Step.name(step)}}</strong>
+						<span>{{step.updated_at | amTimeAgo}}</span>
 					</div>
 				</div>
 			</div>
 		</div>
-
-		<div class="panel panel-default">
-			<div class="panel-heading" ng-click="steps2016Collapsed = !steps2016Collapsed">#2016-01
-				<span ng-show="!isCaseClosed" class="label label-success">Em andamento</span>
-				<span ng-show="isCaseClosed" class="label label-info">Caso encerrado</span>
-			</div>
-			<div class="panel-body" uib-collapse="steps2016Collapsed">
-				<div class="step-list" style="width: 100%">
-					<div class="step {{getCaseTimelineClass(step.id)}}" ng-repeat="(i, step) in steps" ng-click="openForm(step.id)" ng-class="{active: (currentForm == step.id)}">
-						<strong>{{step.name}}</strong>
-						<span ng-show="isPastStep(step.id, true)">25/Ago/2016</span>
-						<span class="btn btn-xs btn-info btn-raised btn-complete-step" ng-click="saveAndProceed()" ng-show="step.id == currentStep && currentStep != '4obs'">Concluir etapa</span>
-					</div>
-				</div>
-
-			</div>
-
-		</div>
-
 		<a class="btn btn-danger btn-raised" ng-show="identity.can('case.close') && !isCaseClosed" ng-click="closeCase()" style="width: 100%"><i class="fa fa-ban"></i> Cancelar caso</a>
 
 	</div>

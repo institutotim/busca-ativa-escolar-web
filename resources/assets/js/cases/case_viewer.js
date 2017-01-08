@@ -2,6 +2,7 @@
 
 	angular.module('BuscaAtivaEscolar')
 		.controller('CaseViewCtrl', CaseViewCtrl)
+		.controller('ChildCasesCtrl', ChildCasesCtrl)
 		.config(function ($stateProvider) {
 			$stateProvider
 				.state('case_viewer', {
@@ -13,9 +14,14 @@
 					url: '/consolidated',
 					templateUrl: '/views/cases/view/consolidated.html'
 				})
-				.state('case_viewer.steps', {
-					url: '/steps',
-					templateUrl: '/views/cases/view/steps.html'
+				.state('case_viewer.cases', {
+					url: '/cases/{case_id}',
+					templateUrl: '/views/cases/view/steps.html',
+					controller: 'ChildCasesCtrl'
+				})
+				.state('case_viewer.cases.view', {
+					url: '/{case_id}',
+					templateUrl: '/views/cases/view/case_info.html'
 				})
 				.state('case_viewer.activity_log', {
 					url: '/activity_log',
@@ -37,18 +43,63 @@
 
 	// TODO: reflect if it's not worth it to rename internally "cases" to "children" (since it's the correct parent entity name)
 
-	function CaseViewCtrl($scope, $state, $stateParams, Children, Cases) {
+	function CaseViewCtrl($scope, $state, $stateParams, Children, Decorators) {
 		if($state.current.name === "case_viewer") $state.go('.consolidated');
 
+		$scope.Decorators = Decorators;
 		$scope.Children = Children;
+
 		$scope.child_id = $stateParams.child_id;
-		$scope.child = Children.get({id: $scope.child_id});
+		$scope.child = Children.find({id: $scope.child_id});
+
+		console.log("[core] @CaseViewCtrl", $scope.child);
 
 		// TODO: get consolidated info from endpoint
 
 	}
 
-	function ChildCasesCtrl($scope, $state, $stateParams, Children, Cases) {
+	function ChildCasesCtrl($scope, $state, $stateParams, Children, CaseSteps, Decorators) {
+
+		$scope.Decorators = Decorators;
+		$scope.Children = Children;
+		$scope.CaseSteps = CaseSteps;
+
+		$scope.child_id = $scope.$parent.child_id;
+		$scope.child = $scope.$parent.child;
+
+		$scope.openedCase = null;
+		$scope.openedStep = null;
+
+		$scope.child.$promise.then(function (child) {
+			$scope.openedCase = child.cases.find(function(item) {
+				if($stateParams.case_id) return item.id === $stateParams.case_id;
+				return item.case_status == 'in_progress';
+			});
+		});
+
+		console.log("[core] @CaseViewCtrl", $scope.child, $scope.openedCase, $scope.openedStep);
+
+		$scope.collapseCase = function (childCase) {
+			$scope.openedCase = childCase;
+		};
+
+		$scope.isCaseCollapsed = function(childCase) {
+			if(!$scope.openedCase) return true;
+			return $scope.openedCase.id !== childCase.id;
+		};
+
+		$scope.isStepOpen = function (stepClassName) {
+			if(!$scope.openedStep) return false;
+			return $scope.openedStep.step_type === "BuscaAtivaEscolar\\CaseSteps\\" + stepClassName;
+		};
+
+		$scope.openStep = function(selectedStep) {
+			CaseSteps.find({type: selectedStep.step_type, id: selectedStep.id, with: 'fields'}, function (step) {
+				$scope.openedStep = step;
+			});
+		};
+
+
 		// TODO: get list of cases and steps from endpoint
 		// TODO: handle step navigation (another sub-state?)
 		// TODO: handle case cancelling

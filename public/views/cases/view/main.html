@@ -3,7 +3,7 @@
 		<div class="panel-heading clearfix">
 			<div class="pull-left">
 				<h1>
-					<i class="fa fa-folder"></i> {{child.name}} <small>{{Children.decorate.parents(child)}}</small>
+					<i class="fa fa-folder"></i> {{child.name}} <small>{{Decorators.Child.parents(child)}}</small>
 				</h1>
 				<div style="margin-top: -20px; padding-left: 44px"><span class="label label-warning">{{child.status}}</span></div>
 			</div>
@@ -27,7 +27,7 @@
 			<div class="pull-right" style="margin: 0 10px;">
 				<label class="control-label panel-header-label" style="margin: 0;">Etapa atual</label>
 				<div>
-					<a class="btn btn-info btn-raised" ui-sref=".steps">{{child.current_step_type}}</a>
+					<a class="btn btn-info btn-raised" ui-sref=".steps">{{child.current_step_type.split('\\').pop()}}</a>
 				</div>
 			</div>
 
@@ -35,7 +35,7 @@
 
 		<ul class="nav nav-tabs">
 			<li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".consolidated"><i class="fa fa-info-circle"></i> Informações consolidadas</a></li>
-			<li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".steps"><i class="fa fa-tasks"></i> Evolução do Caso</a></li>
+			<li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".cases"><i class="fa fa-tasks"></i> Evolução do Caso</a></li>
 			<li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".activity_log"><i class="fa fa-history"></i> Histórico</a></li>
 			<li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".comments"><i class="fa fa-comments"></i> Anotações</a></li>
 			<li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".attachments"><i class="fa fa-paperclip"></i> Anexos</a></li>

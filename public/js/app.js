@@ -90,7 +90,7 @@
 		.controller('CaseSearchCtrl', function ($scope, Children) {
 
 			$scope.Children = Children;
-			$scope.list = Children.get();
+			$scope.list = Children.search();
 
 		});
 
@@ -99,6 +99,7 @@
 
 	angular.module('BuscaAtivaEscolar')
 		.controller('CaseViewCtrl', CaseViewCtrl)
+		.controller('ChildCasesCtrl', ChildCasesCtrl)
 		.config(function ($stateProvider) {
 			$stateProvider
 				.state('case_viewer', {
@@ -110,9 +111,14 @@
 					url: '/consolidated',
 					templateUrl: '/views/cases/view/consolidated.html'
 				})
-				.state('case_viewer.steps', {
-					url: '/steps',
-					templateUrl: '/views/cases/view/steps.html'
+				.state('case_viewer.cases', {
+					url: '/cases/{case_id}',
+					templateUrl: '/views/cases/view/steps.html',
+					controller: 'ChildCasesCtrl'
+				})
+				.state('case_viewer.cases.view', {
+					url: '/{case_id}',
+					templateUrl: '/views/cases/view/case_info.html'
 				})
 				.state('case_viewer.activity_log', {
 					url: '/activity_log',
@@ -134,18 +140,63 @@
 
 	// TODO: reflect if it's not worth it to rename internally "cases" to "children" (since it's the correct parent entity name)
 
-	function CaseViewCtrl($scope, $state, $stateParams, Children, Cases) {
+	function CaseViewCtrl($scope, $state, $stateParams, Children, Decorators) {
 		if($state.current.name === "case_viewer") $state.go('.consolidated');
 
+		$scope.Decorators = Decorators;
 		$scope.Children = Children;
+
 		$scope.child_id = $stateParams.child_id;
-		$scope.child = Children.get({id: $scope.child_id});
+		$scope.child = Children.find({id: $scope.child_id});
+
+		console.log("[core] @CaseViewCtrl", $scope.child);
 
 		// TODO: get consolidated info from endpoint
 
 	}
 
-	function ChildCasesCtrl($scope, $state, $stateParams, Children, Cases) {
+	function ChildCasesCtrl($scope, $state, $stateParams, Children, CaseSteps, Decorators) {
+
+		$scope.Decorators = Decorators;
+		$scope.Children = Children;
+		$scope.CaseSteps = CaseSteps;
+
+		$scope.child_id = $scope.$parent.child_id;
+		$scope.child = $scope.$parent.child;
+
+		$scope.openedCase = null;
+		$scope.openedStep = null;
+
+		$scope.child.$promise.then(function (child) {
+			$scope.openedCase = child.cases.find(function(item) {
+				if($stateParams.case_id) return item.id === $stateParams.case_id;
+				return item.case_status == 'in_progress';
+			});
+		});
+
+		console.log("[core] @CaseViewCtrl", $scope.child, $scope.openedCase, $scope.openedStep);
+
+		$scope.collapseCase = function (childCase) {
+			$scope.openedCase = childCase;
+		};
+
+		$scope.isCaseCollapsed = function(childCase) {
+			if(!$scope.openedCase) return true;
+			return $scope.openedCase.id !== childCase.id;
+		};
+
+		$scope.isStepOpen = function (stepClassName) {
+			if(!$scope.openedStep) return false;
+			return $scope.openedStep.step_type === "BuscaAtivaEscolar\\CaseSteps\\" + stepClassName;
+		};
+
+		$scope.openStep = function(selectedStep) {
+			CaseSteps.find({type: selectedStep.step_type, id: selectedStep.id, with: 'fields'}, function (step) {
+				$scope.openedStep = step;
+			});
+		};
+
+
 		// TODO: get list of cases and steps from endpoint
 		// TODO: handle step navigation (another sub-state?)
 		// TODO: handle case cancelling
@@ -2091,6 +2142,31 @@ Highcharts.maps["countries/br/br-all"] = {
 	}]
 };
 (function() {
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' / ' : '')
+					+ (child.father_name || '');
+			}
+		};
+
+		var Step = {
+			name: function(step) {
+				// TODO: handle Observacao "report_index"
+				var name = step.step_type.split("\\").pop();
+				if(name !== 'Observacao') return name;
+				return step.report_index + 'a' + name;
+			}
+		};
+
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
+})();
+(function() {
 	angular
 		.module('BuscaAtivaEscolar')
 		.service('TrackPendingRequests', function ($q, $rootScope, API) {
@@ -2320,6 +2396,49 @@ Highcharts.maps["countries/br/br-all"] = {
 		});
 
 })();
+if (!Array.prototype.find) {
+	Object.defineProperty(Array.prototype, 'find', {
+		value: function(predicate) {
+			// 1. Let O be ? ToObject(this value).
+			if (this == null) {
+				throw new TypeError('"this" is null or not defined');
+			}
+
+			var o = Object(this);
+
+			// 2. Let len be ? ToLength(? Get(O, "length")).
+			var len = o.length >>> 0;
+
+			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
+			if (typeof predicate !== 'function') {
+				throw new TypeError('predicate must be a function');
+			}
+
+			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+			var thisArg = arguments[1];
+
+			// 5. Let k be 0.
+			var k = 0;
+
+			// 6. Repeat, while k < len
+			while (k < len) {
+				// a. Let Pk be ! ToString(k).
+				// b. Let kValue be ? Get(O, Pk).
+				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+				// d. If testResult is true, return kValue.
+				var kValue = o[k];
+				if (predicate.call(thisArg, kValue, k, o)) {
+					return kValue;
+				}
+				// e. Increase k by 1.
+				k++;
+			}
+
+			// 7. Return undefined.
+			return undefined;
+		}
+	});
+}
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
@@ -2357,16 +2476,31 @@ Highcharts.maps["countries/br/br-all"] = {
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
+		.factory('CaseSteps', function CaseSteps(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			var repository = $resource(API.getURI('steps/:type/:id'), {id: '@id', type: '@type', with: '@with'}, {
+				find: {method: 'GET', headers: headers},
+				update: {method: 'POST', headers: headers}
+			});
+
+
+
+			return repository;
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
 		.factory('Cases', function Cases(API, Identity, $resource) {
 
 			let headers = API.REQUIRE_AUTH;
 
-			return $resource(API.getURI('cases/:id'), {id: '@id'}, {
-				get: {method: 'GET', headers: headers},
-				save: {method: 'POST', headers: headers},
-				query: {method: 'GET', isArray: true, headers: headers},
-				remove: {method: 'DELETE', headers: headers},
-				delete: {method: 'DELETE', headers: headers}
+			return $resource(API.getURI('cases/:id'), {id: '@id', with: '@with'}, {
+				find: {method: 'GET', headers: headers},
+				update: {method: 'POST', headers: headers}
 			});
 
 		});
@@ -2378,24 +2512,11 @@ Highcharts.maps["countries/br/br-all"] = {
 
 			var headers = API.REQUIRE_AUTH;
 
-			var repository = $resource(API.getURI('children/:id'), {id: '@id'}, {
-				get: {method: 'GET', headers: headers},
-				save: {method: 'POST', headers: headers},
-				query: {method: 'GET', isArray: true, headers: headers},
-				remove: {method: 'DELETE', headers: headers},
-				delete: {method: 'DELETE', headers: headers}
+			return $resource(API.getURI('children/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: headers},
+				update: {method: 'POST', headers: headers},
+				search: {method: 'GET', isArray: false, headers: headers}
 			});
-
-			repository.decorate = {
-				parents: function(child) {
-					return (child.mother_name || '')
-						+ ((child.mother_name && child.father_name) ? ' / ' : '')
-						+ (child.father_name || '');
-				}
-			};
-
-			return repository;
-
 		});
 })();
 (function() {
