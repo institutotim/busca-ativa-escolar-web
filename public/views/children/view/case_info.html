@@ -116,8 +116,8 @@
 </div>
 
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
-	<div class="panel-heading" ng-click="togglePanel('info')"><i class="material-icons">person</i> Dados da criança ou adolescente</div>
-	<div class="panel-body" uib-collapse="!isOpen('info')">
+	<div class="panel-heading"><i class="material-icons">person</i> Dados da criança ou adolescente</div>
+	<div class="panel-body">
 		<div class="form-group col-md-12">
 			<label class="control-label" for="fld-name">Nome da criança ou adolescente*</label>
 			<input type="text" class="form-control" id="fld-name" value="Edward Doe">
@@ -156,15 +156,15 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e iniciar Análise Técnica</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e iniciar Análise Técnica</a>
 		</div>
 
 	</div>
 </div>
 
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
-	<div class="panel-heading" ng-click="togglePanel('education')"><i class="fa fa-graduation-cap"></i> Educação</div>
-	<div class="panel-body" uib-collapse="!isOpen('education')">
+	<div class="panel-heading"><i class="fa fa-graduation-cap"></i> Educação</div>
+	<div class="panel-body">
 		<div class="form-group col-md-12">
 			<label class="control-label" for="fld-has-been-at-school-yes">Já frequentou a escola alguma vez?</label>
 			<div class="radio">
@@ -237,15 +237,15 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e iniciar Análise Técnica</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e iniciar Análise Técnica</a>
 		</div>
 
 	</div>
 </div>
 
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
-	<div class="panel-heading" ng-click="togglePanel('work')"><i class="fa fa-briefcase"></i> Trabalho</div>
-	<div class="panel-body" uib-collapse="!isOpen('work')">
+	<div class="panel-heading"><i class="fa fa-briefcase"></i> Trabalho</div>
+	<div class="panel-body">
 
 		<div class="form-group col-md-12">
 			<label class="control-label" for="fld-does-work-yes">Esta criança ou adolescente está trabalhando?</label>
@@ -290,15 +290,15 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e iniciar Análise Técnica</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e iniciar Análise Técnica</a>
 		</div>
 
 	</div>
 </div>
 
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
-	<div class="panel-heading" ng-click="togglePanel('parents')"><i class="fa fa-users"></i> Sobre os pais ou responsáveis</div>
-	<div class="panel-body" uib-collapse="!isOpen('parents')">
+	<div class="panel-heading"><i class="fa fa-users"></i> Sobre os pais ou responsáveis</div>
+	<div class="panel-body">
 
 		<div class="form-group col-md-12">
 			<label class="control-label" for="fld-available-parents-mother">Quais são os familiares presentes?</label>
@@ -402,15 +402,15 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e iniciar Análise Técnica</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e iniciar Análise Técnica</a>
 		</div>
 
 	</div>
 </div>
 
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
-	<div class="panel-heading" ng-click="togglePanel('causes')"><i class="fa fa-exclamation-circle"></i> Sobre a causa de exclusão escolar</div>
-	<div class="panel-body" uib-collapse="!isOpen('causes')">
+	<div class="panel-heading"><i class="fa fa-exclamation-circle"></i> Sobre a causa de exclusão escolar</div>
+	<div class="panel-body">
 			<div class="form-group col-md-12">
 			<label class="control-label">Motivos de estar fora da escola*</label>
 			<div class="radio" ng-repeat="(i, reason) in reasons">
@@ -444,8 +444,8 @@
 
 
 <div class="panel panel-default" ng-show="isStepOpen('Pesquisa')">
-	<div class="panel-heading" ng-click="togglePanel('location')"><i class="fa fa-users"></i> Dados de localização</div>
-	<div class="panel-body" uib-collapse="!isOpen('location')">
+	<div class="panel-heading"><i class="fa fa-users"></i> Dados de localização</div>
+	<div class="panel-body">
 		<div class="form-group col-md-8">
 			<label class="control-label" for="fld-alert-address">Endereço*</label>
 			<input type="text" class="form-control" id="fld-alert-address" value="Alameda Barão de Piracicaba, 500">
@@ -495,7 +495,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e iniciar Análise Técnica</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e iniciar Análise Técnica</a>
 		</div>
 	</div>
 </div>	
@@ -529,7 +529,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e enviar para o supervisor institucional</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e enviar para o supervisor institucional</a>
 		</div>
 
 	</div>
@@ -549,7 +549,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e encaminhar para {{getNextStepName()}}</a>
 		</div>
 
 	</div>
@@ -648,7 +648,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e encaminhar para {{getNextStepName()}}</a>
 		</div>
 
 	</div>
@@ -695,7 +695,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e encaminhar para {{getNextStepName()}}</a>
 			<a class="btn btn-raised btn-success" ng-click="resolveCase()" ng-show="isStepOpen('4obs') && openedStep.fields.report_index == 4"><i class="fa fa-check"></i> Salvar e encerrar caso</a>
 		</div>
 

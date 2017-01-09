@@ -10,7 +10,15 @@
 				update: {method: 'POST', headers: headers}
 			});
 
+			repository.where = {
+				idEquals: function(id) {
+					return function(item) { return item.id === id; }
+				},
 
+				caseCurrentStepIdEquals: function(id) {
+					return function(item) { return item.current_step_id === id; }
+				}
+			};
 
 			return repository;
 

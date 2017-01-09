@@ -87,15 +87,35 @@
 			return $scope.openedStep.step_type === "BuscaAtivaEscolar\\CaseSteps\\" + stepClassName;
 		};
 
+		$scope.renderStepStatusClass = function(childCase, step) {
+			if(childCase.current_step_id === step.id) return 'step-current';
+			if(step.is_completed) return 'step-completed';
+			return 'step-pending';
+		};
+
+		$scope.canOpenStep = function(step) {
+			if(step.is_completed) return true;
+			if(step.id === $scope.openedCase.current_step_id) return true;
+			return false;
+		};
+
 		$scope.openStep = function(selectedStep) {
+			if(!$scope.canOpenStep(selectedStep)) return false;
+
 			CaseSteps.find({type: selectedStep.step_type, id: selectedStep.id, with: 'fields'}, function (step) {
 				$scope.openedStep = step;
 			});
 		};
 
+		$scope.canCompleteStep = function(childCase, step) {
+			return (step.id === childCase.current_step_id && step.report_index !== 4);
+		};
 
-		// TODO: get list of cases and steps from endpoint
-		// TODO: handle step navigation (another sub-state?)
+		$scope.hasNextStep = function(step) {
+			if(!step) return false;
+			if(step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && step.report_index === 4) return false;
+			return true;
+		};
 		// TODO: handle case cancelling
 		// TODO: handle case completing
 	}
