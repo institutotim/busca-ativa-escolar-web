@@ -100,6 +100,7 @@
 	angular.module('BuscaAtivaEscolar')
 		.controller('ChildViewCtrl', ChildViewCtrl)
 		.controller('ChildCasesCtrl', ChildCasesCtrl)
+		.controller('ChildCaseStepCtrl', ChildCaseStepCtrl)
 		.config(function ($stateProvider) {
 			$stateProvider
 				.state('child_viewer', {
@@ -115,6 +116,11 @@
 					url: '/children/{child_id}',
 					templateUrl: '/views/children/view/steps.html',
 					controller: 'ChildCasesCtrl'
+				})
+				.state('child_viewer.cases.view_step', {
+					url: '/{step_type}/{step_id}',
+					templateUrl: '/views/children/view/case_info.html',
+					controller: 'ChildCaseStepCtrl'
 				})
 				.state('child_viewer.activity_log', {
 					url: '/activity_log',
@@ -159,7 +165,6 @@
 		$scope.child = $scope.$parent.child;
 
 		$scope.openedCase = null;
-		$scope.openedStep = null;
 
 		$scope.child.$promise.then(function (child) {
 			$scope.openedCase = child.cases.find(function(item) {
@@ -168,7 +173,7 @@
 			});
 		});
 
-		console.log("[core] @ChildCasesCtrl", $scope.child, $scope.openedCase, $scope.openedStep);
+		console.log("[core] @ChildCasesCtrl", $scope.child, $scope.openedCase);
 
 		$scope.collapseCase = function (childCase) {
 			$scope.openedCase = childCase;
@@ -177,11 +182,6 @@
 		$scope.isCaseCollapsed = function(childCase) {
 			if(!$scope.openedCase) return true;
 			return $scope.openedCase.id !== childCase.id;
-		};
-
-		$scope.isStepOpen = function (stepClassName) {
-			if(!$scope.openedStep) return false;
-			return $scope.openedStep.step_type === "BuscaAtivaEscolar\\CaseSteps\\" + stepClassName;
 		};
 
 		$scope.renderStepStatusClass = function(childCase, step) {
@@ -199,9 +199,7 @@
 		$scope.openStep = function(selectedStep) {
 			if(!$scope.canOpenStep(selectedStep)) return false;
 
-			CaseSteps.find({type: selectedStep.step_type, id: selectedStep.id, with: 'fields'}, function (step) {
-				$scope.openedStep = step;
-			});
+			$state.go('child_viewer.cases.view_step', {step_type: selectedStep.step_type, step_id: selectedStep.id});
 		};
 
 		$scope.canCompleteStep = function(childCase, step) {
@@ -213,14 +211,42 @@
 			if(step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && step.report_index === 4) return false;
 			return true;
 		};
+
 		// TODO: handle case cancelling
 		// TODO: handle case completing
 	}
 
-	function ChildCaseStepCtrl($scope, $state, $stateParams, Children, Cases) {
+	function ChildCaseStepCtrl($scope, $state, $stateParams, Children, Decorators, CaseSteps) {
 		// TODO: get actual step data from endpoint
 		// TODO: handle step data saving
 		// TODO: handle requests to save-and-proceed
+
+		$scope.Decorators = Decorators;
+		$scope.Children = Children;
+		$scope.CaseSteps = CaseSteps;
+
+		$scope.editable = true;
+		$scope.showAll = false;
+		$scope.showTitle = true;
+
+		$scope.child_id = $scope.$parent.child_id;
+		$scope.child = $scope.$parent.child;
+		$scope.case = $scope.$parent.openedCase;
+
+		$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields'});
+
+		console.log("[core] @ChildCaseStepCtrl", $scope.step);
+
+		$scope.isStepOpen = function (stepClassName) {
+			if(!$scope.step) return false;
+			return $scope.step.step_type === "BuscaAtivaEscolar\\CaseSteps\\" + stepClassName;
+		};
+
+		$scope.hasNextStep = function() {
+			if(!$scope.step) return false;
+			if($scope.step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && $scope.step.report_index === 4) return false;
+			return true;
+		};
 	}
 
 	function ChildCommentsCtrl() {
@@ -2166,12 +2192,7 @@ Highcharts.maps["countries/br/br-all"] = {
 		};
 
 		var Step = {
-			name: function(step) {
-				// TODO: handle Observacao "report_index"
-				var name = step.step_type.split("\\").pop();
-				if(name !== 'Observacao') return name;
-				return step.report_index + 'a' + name;
-			}
+
 		};
 
 		return {

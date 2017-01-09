@@ -26,10 +26,7 @@
 
 	</div>
 
-	<div class="col-md-9" ng-show="openedStep">
-		<h3><i class="material-icons">person</i> <span>{{openedStep.name}}</span></h3>
-		<hr />
-
-		<div ng-include="'/views/children/view/case_info.html'" ng-init="step = openedStep; editable = true; showAll = false"></div>
+	<div class="col-md-9">
+		<ui-view></ui-view>
 	</div>
 </div>

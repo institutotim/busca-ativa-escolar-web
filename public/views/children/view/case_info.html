@@ -1,3 +1,8 @@
+<div ng-show="showTitle">
+	<h3><i class="fa fa-user"></i> <span>{{step.name}}</span></h3>
+	<hr />
+</div>
+
 <div class="panel panel-default" ng-show="isStepOpen('Alerta')">
 	<div class="panel-heading"><i class="material-icons">person</i> Informações da criança ou adolescente</div>
 	<div class="panel-body">
@@ -156,7 +161,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e iniciar Análise Técnica</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e iniciar Análise Técnica</a>
 		</div>
 
 	</div>
@@ -237,7 +242,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e iniciar Análise Técnica</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e iniciar Análise Técnica</a>
 		</div>
 
 	</div>
@@ -290,7 +295,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e iniciar Análise Técnica</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e iniciar Análise Técnica</a>
 		</div>
 
 	</div>
@@ -402,7 +407,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e iniciar Análise Técnica</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e iniciar Análise Técnica</a>
 		</div>
 
 	</div>
@@ -495,7 +500,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e iniciar Análise Técnica</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e iniciar Análise Técnica</a>
 		</div>
 	</div>
 </div>	
@@ -529,7 +534,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e enviar para o supervisor institucional</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e enviar para o supervisor institucional</a>
 		</div>
 
 	</div>
@@ -549,7 +554,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e encaminhar para {{getNextStepName()}}</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
 		</div>
 
 	</div>
@@ -648,7 +653,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e encaminhar para {{getNextStepName()}}</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
 		</div>
 
 	</div>
@@ -695,7 +700,7 @@
 			<hr />
 
 			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep(openedStep)">Salvar e encaminhar para {{getNextStepName()}}</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="hasNextStep()">Salvar e encaminhar para {{getNextStepName()}}</a>
 			<a class="btn btn-raised btn-success" ng-click="resolveCase()" ng-show="isStepOpen('4obs') && openedStep.fields.report_index == 4"><i class="fa fa-check"></i> Salvar e encerrar caso</a>
 		</div>
 
