@@ -16,7 +16,8 @@
 
 			'ui.router',
 			'ui.bootstrap',
-			'ui.select'
+			'ui.select',
+			'ui.utils.masks',
 		])
 })();
 (function() {
@@ -216,7 +217,7 @@
 		// TODO: handle case completing
 	}
 
-	function ChildCaseStepCtrl($scope, $state, $stateParams, Children, Decorators, CaseSteps) {
+	function ChildCaseStepCtrl($scope, $state, $stateParams, Children, Decorators, CaseSteps, StaticData) {
 		// TODO: get actual step data from endpoint
 		// TODO: handle step data saving
 		// TODO: handle requests to save-and-proceed
@@ -224,6 +225,7 @@
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 		$scope.CaseSteps = CaseSteps;
+		$scope.static = StaticData;
 
 		$scope.editable = true;
 		$scope.showAll = false;
@@ -234,6 +236,9 @@
 		$scope.case = $scope.$parent.openedCase;
 
 		$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields'});
+		$scope.step.$promise.then(function (step) {
+			$scope.fields = step.fields;
+		});
 
 		console.log("[core] @ChildCaseStepCtrl", $scope.step);
 
@@ -617,8 +622,10 @@
 (function() {
 	identify('config', 'on_init.js');
 
-	angular.module('BuscaAtivaEscolar').run(function ($cookies, Config) {
+	angular.module('BuscaAtivaEscolar').run(function ($cookies, Config, StaticData) {
 		Config.setEndpoint($cookies.get('FDENP_API_ENDPOINT') || Config.CURRENT_ENDPOINT);
+
+		StaticData.refresh();
 
 		$.material.init();
 	})
@@ -2477,40 +2484,6 @@ if (!Array.prototype.find) {
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
-		.factory('AlertCauses', function AlertCauses(API, Identity, $resource) {
-
-			let headers = {};
-
-			return $resource(API.getURI('static/alert_causes/:id'), {id: '@id'}, {
-				get: {method: 'GET', headers: headers},
-				save: {method: 'POST', headers: headers},
-				query: {method: 'GET', isArray: true, headers: headers},
-				remove: {method: 'DELETE', headers: headers},
-				delete: {method: 'DELETE', headers: headers}
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('CaseCauses', function CaseCauses(API, Identity, $resource) {
-
-			let headers = {};
-
-			return $resource(API.getURI('static/case_causes/:id'), {id: '@id'}, {
-				get: {method: 'GET', headers: headers},
-				save: {method: 'POST', headers: headers},
-				query: {method: 'GET', isArray: true, headers: headers},
-				remove: {method: 'DELETE', headers: headers},
-				delete: {method: 'DELETE', headers: headers}
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
 		.factory('CaseSteps', function CaseSteps(API, Identity, $resource) {
 
 			var headers = API.REQUIRE_AUTH;
@@ -2576,6 +2549,57 @@ if (!Array.prototype.find) {
 				remove: {method: 'DELETE', headers: headers},
 				delete: {method: 'DELETE', headers: headers}
 			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('StaticData', function StaticData(API, Identity, $rootScope, $http) {
+
+			var data = {};
+			var self = this;
+
+			// TODO: cache this?
+
+			function fetchLatestVersion() {
+				console.log("[static_data] Downloading latest static data definitions...");
+				$http.get(API.getURI('static/static_data?version=latest')).then(onFetch);
+			}
+
+			function refresh() {
+				// TODO: validate timestamp?
+				fetchLatestVersion();
+			}
+
+			function onFetch(res) {
+				console.log("[static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
+				data = res.data.data;
+			}
+
+			function getAlertCauses() { return (data.AlertCause) ? data.AlertCause : {}; }
+			function getCaseCauses() { return (data.CaseCause) ? data.CaseCause : {}; }
+			function getGenders() { return (data.Gender) ? data.Gender : {}; }
+			function getHandicappedRejectReasons() { return (data.HandicappedRejectReason) ? data.HandicappedRejectReason : {}; }
+			function getIncomeRanges() { return (data.IncomeRange) ? data.IncomeRange : {}; }
+			function getRaces() { return (data.Race) ? data.Race : {}; }
+			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : {}; }
+			function getSchoolingLevels() { return (data.SchoolingLevel) ? data.SchoolingLevel : {}; }
+			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : {}; }
+
+			return {
+				fetchLatestVersion: fetchLatestVersion,
+				refresh: refresh,
+				getAlertCauses: getAlertCauses,
+				getCaseCauses: getCaseCauses,
+				getGenders: getGenders,
+				getHandicappedRejectReasons: getHandicappedRejectReasons,
+				getIncomeRanges: getIncomeRanges,
+				getRaces: getRaces,
+				getSchoolGrades: getSchoolGrades,
+				getSchoolingLevels: getSchoolingLevels,
+				getWorkActivities: getWorkActivities,
+			};
 
 		});
 })();

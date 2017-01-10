@@ -119,7 +119,7 @@
 		// TODO: handle case completing
 	}
 
-	function ChildCaseStepCtrl($scope, $state, $stateParams, Children, Decorators, CaseSteps) {
+	function ChildCaseStepCtrl($scope, $state, $stateParams, Children, Decorators, CaseSteps, StaticData) {
 		// TODO: get actual step data from endpoint
 		// TODO: handle step data saving
 		// TODO: handle requests to save-and-proceed
@@ -127,6 +127,7 @@
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 		$scope.CaseSteps = CaseSteps;
+		$scope.static = StaticData;
 
 		$scope.editable = true;
 		$scope.showAll = false;
@@ -137,6 +138,9 @@
 		$scope.case = $scope.$parent.openedCase;
 
 		$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields'});
+		$scope.step.$promise.then(function (step) {
+			$scope.fields = step.fields;
+		});
 
 		console.log("[core] @ChildCaseStepCtrl", $scope.step);
 
