@@ -1,7 +1,7 @@
 <div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h3><i class="material-icons">add_alert</i> Novo alerta</h3>
+			<h3><i class="fa fa-bell"></i> Novo alerta</h3>
 		</div>
 		<div class="panel-body">
 
@@ -10,44 +10,38 @@
 				<div class="panel-body">
 					<div class="form-group col-md-12">
 						<label class="control-label" for="fld-name">Nome da criança ou adolescente*</label>
-						<input type="text" class="form-control" id="fld-name" value="Edward Doe">
+						<input type="text" class="form-control" id="fld-name" ng-model="alert.name">
 					</div>
 					<div class="form-grouo col-md-4">
 						<label class="control-label" for="fld-gender">Gênero</label>
-						<select id="fld-gender" class="form-control">
-							<option selected>Masculino</option>
-							<option>Feminino</option>
-							<option>Indefinido</option>
-						</select>
+						<select id="fld-gender" class="form-control" ng-model="alert.gender" ng-options="n.slug as n.label for n in static.getGenders()"></select>
 					</div>
 					<div class="form-grouo col-md-4">
 						<label class="control-label" for="fld-raca">Raça / Etnia</label>
-						<select id="fld-raca" class="form-control">
-							<option selected>Caucasiano</option>
-						</select>
+						<select id="fld-raca" class="form-control" ng-model="alert.race" ng-options="n.slug as n.label for n in static.getRaces()"></select>
 					</div>
 
 					<div class="form-group col-md-4">
 						<label class="control-label" for="fld-dob">Data de nascimento</label>
-						<input type="date" class="form-control" id="fld-dob" value="25/08/1991">
+						<input type="tel" class="form-control" id="fld-dob" ng-model="alert.dob" ui-date-mask>
 					</div>
 					<div class="form-group col-md-4">
 						<label class="control-label" for="fld-rg">RG</label>
-						<input type="text" class="form-control" id="fld-rg" value="12.345.678-X">
+						<input type="tel" class="form-control" id="fld-rg" ng-model="alert.rg" ui-br-rg-mask>
 					</div>
 					<div class="form-group col-md-4">
 						<label class="control-label" for="fld-cpf">CPF</label>
-						<input type="text" class="form-control" id="fld-cpf" value="123.456.789-00">
+						<input type="tel" class="form-control" id="fld-cpf" ng-model="alert.cpf" ui-br-cpf-mask>
 					</div>
 					<div class="form-group col-md-4">
 						<label class="control-label" for="fld-codnis">NIS (Número de Identificação Social)</label>
-						<input type="text" class="form-control" id="fld-codnis" value="12345678">
+						<input type="tel" class="form-control" id="fld-codnis" ng-model="alert.nis">
 					</div>
 					<div class="form-group col-md-12">
 						<label class="control-label">Por que a criança ou adolescente está fora da escola?* <br />Selecione a principal causa identificada:</label>
-						<div class="radio" ng-repeat="(i, reason) in reasons">
+						<div class="radio" ng-repeat="alertCause in static.getAlertCauses()">
 							<label>
-								<input name="type" value="{{i}}" type="radio"> {{reason}}
+								<input name="alert_cause_id" ng-model="alert.alert_cause_id" ng-value="alertCause.id" type="radio"> {{alertCause.label}}
 							</label>
 						</div>
 					</div>
@@ -59,32 +53,32 @@
 				<div class="panel-body">
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-mother-name">Nome da mãe ou responsável*</label>
-						<input type="text" class="form-control" id="fld-mother-name" value="Jane Doe">
+						<input type="text" class="form-control" id="fld-mother-name" ng-model="alert.mother_name">
 					</div>
 
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-father-name">Nome do pai ou responsável</label>
-						<input type="text" class="form-control" id="fld-father-name" value="John Doe">
+						<input type="text" class="form-control" id="fld-father-name" ng-model="alert.father_name">
 					</div>
 
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-mother-rg">RG da mãe ou responsável</label>
-						<input type="text" class="form-control" id="fld-mother-rg" value="12.345.678-9">
+						<input type="tel" class="form-control" id="fld-mother-rg" ng-model="alert.mother_rg" ui-br-rg-mask>
 					</div>
 
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-father-rg">RG do pai ou responsável</label>
-						<input type="text" class="form-control" id="fld-father-rg" value="23.456.789-0">
+						<input type="tel" class="form-control" id="fld-father-rg" ng-model="alert.father_rg" ui-br-rg-mask>
 					</div>
 
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-mother-phone">Telefone da mãe ou responsável</label>
-						<input type="text" class="form-control" id="fld-mother-phone" value="(11) 92283-0000">
+						<input type="tel" class="form-control" id="fld-mother-phone" ng-model="alert.mother_phone" ui-br-phone-number>
 					</div>
 
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-father-phone">Telefone do pai ou responsável</label>
-						<input type="text" class="form-control" id="fld-father-phone" value="(11) 92283-0000">
+						<input type="tel" class="form-control" id="fld-father-phone" ng-model="alert.father_phone" ui-br-phone-number>
 					</div>
 				</div>
 			</div>
@@ -94,42 +88,42 @@
 				<div class="panel-body">
 					<div class="form-group col-md-8">
 						<label class="control-label" for="fld-address">Endereço*</label>
-						<input type="text" class="form-control" id="fld-address" value="Alameda Barão de Piracicaba, 500">
+						<input type="text" class="form-control" id="fld-address" ng-model="alert.place_address">
 					</div>
 					<div class="form-group col-md-4">
 						<label class="control-label" for="fld-cep">CEP</label>
-						<input type="text" class="form-control" id="fld-cep" value="01234-567">
+						<input type="tel" class="form-control" id="fld-cep" ng-model="alert.place_cep" ui-br-cep-mask>
 					</div>
 					<div class="form-group col-md-12">
 						<label class="control-label" for="fld-reference">Referência geográfica</label>
-						<input type="text" class="form-control" id="fld-reference" value="Esquina com a Rua ABCD, em frente a loja XYZ">
+						<input type="text" class="form-control" id="fld-reference" ng-model="alert.place_referene">
 					</div>
 					<div class="form-group col-md-5">
 						<label class="control-label" for="fld-neighborhood">Bairro*</label>
-						<input type="text" class="form-control" id="fld-neighborhood" value="Campos Elíseos">
+						<input type="text" class="form-control" id="fld-neighborhood" ng-model="alert.place_neighborhood">
 					</div>
 					<div class="form-group col-md-5">
 						<label class="control-label" for="fld-city">Município*</label>
-						<input type="text" class="form-control" id="fld-city" value="São Paulo">
+						<input type="text" class="form-control" id="fld-city" ng-model="alert.place_city">
 					</div>
 					<div class="form-group col-md-2">
 						<label class="control-label" for="fld-uf">UF*</label>
-						<input type="text" class="form-control" id="fld-uf" value="SP">
+						<input type="text" class="form-control" id="fld-uf" ng-model="alert.place_uf">
 					</div>
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-phone">Telefone residencial</label>
-						<input type="text" class="form-control" id="fld-phone" value="(11) 2222-3333">
+						<input type="tel" class="form-control" id="fld-phone" ng-model="alert.place_phone" ui-br-phone-number>
 					</div>
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-mobile">Telefone celular</label>
-						<input type="text" class="form-control" id="fld-mobile" value="(11) 98888-4444">
+						<input type="tel" class="form-control" id="fld-mobile" ng-model="alert.place_mobile" ui-br-phone-number>
 					</div>
 				</div>
 			</div>
 
 			<hr />
 
-			<a class="btn btn-raised btn-info pull-right" ui-sref="dashboard">Criar alerta</a>
+			<a class="btn btn-raised btn-info pull-right" ng-click="createAlert()">Criar alerta</a>
 
 		</div>
 	</div>

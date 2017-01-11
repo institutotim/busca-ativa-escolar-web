@@ -17,19 +17,19 @@
 		<div class="collapse navbar-collapse" id="navbar-items">
 
 			<ul class="nav navbar-nav">
-				<li ng-show="identity.can('dashboard')" ui-sref-active="active"><a ui-sref="dashboard"><i class="material-icons">dashboard</i> Painel</a></li>
-				<li ng-show="identity.can('cases')"  ui-sref-active="active"><a ui-sref="child_browser"><i class="material-icons">list</i> Casos</a></li>
-				<li ng-show="identity.can('reports')"  ui-sref-active="active"><a ui-sref="reports"><i class="material-icons">show_chart</i> Relatórios</a></li>
-				<li ng-show="identity.can('users')"  ui-sref-active="active"><a ui-sref="users"><i class="material-icons">group</i> Usuários</a></li>
-				<li ng-show="identity.can('cities')"  ui-sref-active="active"><a ui-sref="cities"><i class="material-icons">account_balance</i> Municípios</a></li>
-				<li ng-show="identity.can('settings')"  ui-sref-active="active"><a ui-sref="settings"><i class="material-icons">settings</i> Configurações</a></li>
+				<li ng-show="identity.can('dashboard')" ui-sref-active="active"><a ui-sref="dashboard"><i class="fa fa-tachometer"></i> Painel</a></li>
+				<li ng-show="identity.can('cases')"  ui-sref-active="active"><a ui-sref="child_browser"><i class="fa fa-list"></i> Casos</a></li>
+				<li ng-show="identity.can('reports')"  ui-sref-active="active"><a ui-sref="reports"><i class="fa fa-line-chart"></i> Relatórios</a></li>
+				<li ng-show="identity.can('users')"  ui-sref-active="active"><a ui-sref="users"><i class="fa fa-users"></i> Usuários</a></li>
+				<li ng-show="identity.can('cities')"  ui-sref-active="active"><a ui-sref="cities"><i class="fa fa-university"></i> Municípios</a></li>
+				<li ng-show="identity.can('settings')"  ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
 			</ul>
 
 
 			<ul class="nav navbar-nav navbar-right logged-user">
 				<li class="dropdown" uib-dropdown>
 					<a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-						<i class="material-icons">account_circle</i>
+						<i class="fa fa-user-circle-o"></i>
 						<span class="user-details">
 							<strong ng-bind="identity.getCurrentUser().name"></strong>
 							<small ng-bind="identity.getCurrentUser().type"></small>
@@ -37,7 +37,7 @@
 						<span class="caret"></span>
 					</a>
 					<ul uib-dropdown-menu class="dropdown-menu" style="min-width: 270px">
-						<li><a ng-click="toggleNotifications($event)"><i class="material-icons">notifications</i> Notificações</a></li>
+						<li><a ng-click="toggleNotifications($event)"><i class="fa fa-envelope-o"></i> Notificações</a></li>
 
 						<li class="notification-center" uib-collapse="!showNotifications">
 							<span ng-show="!notifications.length">Nenhuma notificação recente.</span>
@@ -47,17 +47,17 @@
 							</div>
 						</li>
 
-						<li><a ui-sref="case_create_from_alert"><i class="material-icons">add_alert</i> Novo alerta</a></li>
+						<li><a ui-sref="child_create_from_alert"><i class="fa fa-bell"></i> Novo alerta</a></li>
 						<li><a ui-sref="developer_mode"><i class="fa fa-code"></i> Área do desenvolvedor</a></li>
 
 						<li role="separator" class="divider over-split-btn"></li>
 
 						<li class="has-split-btn" ng-if="identity.can('preferences')">
-							<a class="col-md-7 split-btn" ui-sref="preferences"><i class="material-icons">settings</i> Preferências</a>
-							<a class="col-md-5 split-btn" ng-click="identity.disconnect()"><i class="material-icons">exit_to_app</i> Sair</a>
+							<a class="col-md-7 split-btn" ui-sref="preferences"><i class="fa fa-cog"></i> Preferências</a>
+							<a class="col-md-5 split-btn" ng-click="identity.disconnect()"><i class="fa fa-sign-out"></i> Sair</a>
 						</li>
 
-						<li ng-if="!identity.can('preferences')"><a ng-click="identity.disconnect()"><i class="material-icons">exit_to_app</i> Sair</a></li>
+						<li ng-if="!identity.can('preferences')"><a ng-click="identity.disconnect()"><i class="fa fa-sign-out"></i> Sair</a></li>
 					</ul>
 				</li>
 			</ul>
