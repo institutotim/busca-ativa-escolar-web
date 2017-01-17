@@ -98,7 +98,7 @@
   height: 20px;
   line-height: 20px;
 }
-.step-list .step .btn-complete-step {
+.step-list .step .btn-under {
   margin: 5px 0;
 }
 .step-list .step.step-pending strong {
@@ -202,6 +202,10 @@ footer.app-footer a.credits-btn {
   position: absolute;
   left: calc(50% - 100px);
   top: calc(50% - 100px);
+}
+
+.ng-invalid {
+  background-color: rgba(217, 83, 79, 0.15) !important;
 }
 
 .form-group {

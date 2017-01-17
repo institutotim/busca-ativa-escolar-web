@@ -11,6 +11,8 @@
 @import 'components/app_footer';
 @import 'components/loading_feedback';
 
+.ng-invalid { background-color: rgba($brand-danger, 0.15) !important; }
+
 .form-group { margin-top: 10px; }
 .button-menu .btn { padding: 8px 0; }
 .material-icons { vertical-align: middle; }

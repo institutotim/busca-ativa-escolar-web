@@ -93,7 +93,7 @@
 					return params;
 				},
 
-				UserPicker: function(title, message, canDismiss) {
+				UserPicker: function(title, message, users, canDismiss) {
 					var params = {
 						templateUrl: '/views/modals/user_picker.html',
 						controller: 'UserPickerModalCtrl',
@@ -101,6 +101,7 @@
 						resolve: {
 							title: function() { return title; },
 							message: function() { return message; },
+							users: function() { return users; },
 							canDismiss: function() { return canDismiss; }
 						}
 					};

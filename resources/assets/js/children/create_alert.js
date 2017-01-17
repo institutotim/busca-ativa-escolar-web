@@ -14,27 +14,22 @@
 			$scope.static = StaticData;
 
 			$scope.alert = {
-				name: 'José Fulano',
-				rg: '223334445',
-				cpf: '22233344455',
-				mother_name: 'Maria Fulano',
-				father_name: 'Jose Fulano',
-				place_address: 'Rua Florida 123',
-				place_cep: '09988777',
-				place_neighborhood: 'Brooklin',
-				place_city: 'Sao Paulo',
-				place_uf: 'SP',
-				place_phone: '1122223333',
-				alert_cause_id: 10,
-				gender: 'male',
-				race: 'branca'
+
 			};
 
 			$scope.createAlert = function() {
+
+				// TODO: validate fields
+
 				Children.spawnFromAlert($scope.alert).$promise.then(function (res) {
+					if(res.fields) {
+						ngToast.danger('Por favor, preencha todos os campos corretamente!');
+						console.warn("[create_alert] Missing fields: ", res.fields);
+						return;
+					}
+
 					if(!res || !res.child_id) {
-						console.error("[child_alert] Failed to spawn child: ", res);
-						ngToast.error('Ocorreu um erro ao registrar o alerta!');
+						ngToast.danger('Ocorreu um erro ao registrar o alerta!');
 						return;
 					}
 

@@ -6,13 +6,7 @@
 		<div ng-show="message">{{message}}</div>
 		<div class="block">
 			<label class="control-label" for="fld-user">Usuário</label>
-			<select id="fld-user" class="form-control">
-				<option value="1" selected>John Doe</option>
-				<option value="2">Mary Smith</option>
-				<option value="3">Paul Atree</option>
-				<option value="4">João das Neves</option>
-				<option value="5">Jane Doe</option>
-			</select>
+			<select id="fld-user" class="form-control" ng-options="n as n.name for n in users" ng-model="selectedUser"></select>
 		</div>
 	</div>
 	<div class="modal-footer">

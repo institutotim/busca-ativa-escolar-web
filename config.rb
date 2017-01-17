@@ -1,5 +1,3 @@
-require 'susy'
-require 'breakpoint'
 require 'sass-css-importer'
 
 http_path = "/"
