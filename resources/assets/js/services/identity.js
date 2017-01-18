@@ -3,6 +3,8 @@
 	angular.module('BuscaAtivaEscolar').service('Identity', function ($q, $rootScope, $location, $localStorage) {
 
 		var tokenProvider = null;
+		var userProvider = null;
+
 		var debugCurrentType = "coordenador_operacional";
 
 		$localStorage.$default({
@@ -12,13 +14,32 @@
 			}
 		});
 
+		function setup() {
+			console.info("[core.identity] Setting up identity service...");
+			//refreshIdentity();
+		}
+
 		function setTokenProvider(callback) {
 			tokenProvider = callback;
+		}
+
+		function setUserProvider(callback) {
+			userProvider = callback;
 		}
 
 		function provideToken() {
 			if(!tokenProvider) return $q.reject('no_token_provider');
 			return tokenProvider();
+		}
+
+		function refreshIdentity() {
+			if(!isLoggedIn()) return;
+			if(!$localStorage.identity.current_user) return;
+			if(!$localStorage.identity.current_user.id) return;
+
+			console.log("[core.identity] Refreshing current identity details...");
+
+			$localStorage.identity.current_user = userProvider($localStorage.identity.current_user.id);
 		}
 
 		function getCurrentUser() {
@@ -34,6 +55,8 @@
 
 			$localStorage.identity.is_logged_in = true;
 			$localStorage.identity.current_user = user;
+
+			refreshIdentity();
 		}
 
 		function can(operation) {
@@ -79,7 +102,9 @@
 			can: can,
 			isLoggedIn: isLoggedIn,
 			clearSession: clearSession,
+			setup: setup,
 			setTokenProvider: setTokenProvider,
+			setUserProvider: setUserProvider,
 			provideToken: provideToken,
 			disconnect: disconnect,
 			debugUserType: debugUserType

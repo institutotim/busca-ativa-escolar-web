@@ -88,9 +88,11 @@
 				controller: 'ChildSearchCtrl'
 			})
 		})
-		.controller('ChildSearchCtrl', function ($scope, Children) {
+		.controller('ChildSearchCtrl', function ($scope, Children, Decorators) {
 
+			$scope.Decorators = Decorators;
 			$scope.Children = Children;
+
 			$scope.list = Children.search();
 
 		});
@@ -125,12 +127,14 @@
 
 		$scope.openedCase = {};
 
-		$scope.child.$promise.then(function (child) {
+		$scope.child.$promise.then(openCurrentCase);
+
+		function openCurrentCase(child) {
 			$scope.openedCase = child.cases.find(function(item) {
 				if($stateParams.case_id) return item.id === $stateParams.case_id;
-				return item.case_status == 'in_progress';
+				return item.case_status === 'in_progress';
 			});
-		});
+		}
 
 		console.log("[core] @ChildCasesCtrl", $scope.child, $scope.openedCase);
 
@@ -175,7 +179,7 @@
 			return true;
 		};
 
-		$scope.completeStep = function(step, callback) {
+		$scope.completeStep = function(step) {
 
 			var question = 'Tem certeza que deseja prosseguir para a próxima etapa?';
 			var explanation = 'Ao progredir de etapa, a etapa atual será marcada como concluída. Os dados preenchidos serão salvos.';
@@ -186,41 +190,33 @@
 			}
 
 			Modals.show(Modals.Confirm(question, explanation)).then(function () {
+				return CaseSteps.complete({type: step.step_type, id: step.id}).$promise;
+			}).then(function (response) {
 
-				if(callback) callback();
+				if(response.fields) {
+					ngToast.danger("É necessário preencher todos os campos obrigatórios para concluir essa etapa. Campos incorretos: " + Object.keys(response.fields).join(", "));
+					$state.go('child_viewer.cases.view_step', {step_type: step.step_type, step_id: step.id});
+					return;
+				}
 
-				// TODO: refactor to promise chaining (as "save" is prerequisite for this)
-				// TODO: place the final "case close" button on the last report
-				// TODO: test the whole flow a few times
+				if(response.status !== "ok") {
+					ngToast.danger("Ocorreu um erro ao concluir a etapa! (reason=" + response.reason + ")")
+					return;
+				}
 
-				CaseSteps.complete({type: step.step_type, id: step.id}).$promise.then(function (response) {
+				if(!response.hasNext) {
+					ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
+					$state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
+					return;
+				}
 
-					if(response.fields) {
-						ngToast.danger("É necessário preencher todos os campos obrigatórios para concluir essa etapa.");
-						$state.go('child_viewer.cases.view_step', {step_type: step.step_type, step_id: step.id});
-						return;
-					}
+				ngToast.success("Etapa concluída! A próxima etapa já está disponível para início");
+				$state.go('child_viewer.cases.view_step', {step_type: response.nextStep.step_type, step_id: response.nextStep.id}, {reload: true});
 
-					if(response.status !== "ok") {
-						ngToast.danger("Ocorreu um erro ao concluir a etapa! (reason=" + response.reason + ")")
-						return;
-					}
-
-					if(!response.hasNext) {
-						ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
-						$state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
-						return;
-					}
-
-					ngToast.success("Etapa concluída! A próxima etapa já está disponível para início");
-					$state.go('child_viewer.cases.view_step', {step_type: response.nextStep.step_type, step_id: response.nextStep.id}, {reload: true});
-
-				})
 			})
 		};
 
 		// TODO: handle case cancelling
-		// TODO: handle case completing
 	}
 
 	function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Children, Decorators, CaseSteps, StaticData) {
@@ -235,6 +231,7 @@
 
 		$scope.child_id = $scope.$parent.child_id;
 		$scope.child = $scope.$parent.child;
+		$scope.checkboxes = {};
 
 		$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields'});
 		$scope.step.$promise.then(function (step) {
@@ -244,8 +241,8 @@
 		console.log("[core] @ChildCaseStepCtrl", $scope.step);
 
 		$scope.saveAndProceed = function() {
-			$scope.$parent.completeStep($scope.step, function() {
-				$scope.save();
+			$scope.save().then(function() {
+				$scope.$parent.completeStep($scope.step);
 			});
 		};
 
@@ -260,6 +257,12 @@
 			return true;
 		};
 
+		$scope.canEditStep = function() {
+			if(!$scope.step) return false;
+			if(!$scope.$parent.openedCase) return false;
+			return (!$scope.step.is_completed);
+		};
+
 		$scope.canCompleteStep = function() {
 			if(!$scope.step) return false;
 			if(!$scope.$parent.openedCase) return false;
@@ -271,22 +274,23 @@
 			return !$scope.step.is_completed && !!$scope.step.is_pending_assignment;
 		};
 
+		$scope.fillWithCurrentDate = function (field) {
+			$scope.fields[field] = (new Date()).toISOString().substring(0, 10);
+		};
+
 		function filterOutEmptyFields(data) {
 			var filtered = {};
 
 			for(var i in data) {
 				if(!data.hasOwnProperty(i)) continue;
-				if(!data[i]) continue;
+				if(data[i] === null) continue;
+				if(data[i] === undefined) continue;
 				if(("" + data[i]).trim().length <= 0) continue;
 				filtered[i] = data[i];
 			}
 
 			return filtered;
 		}
-
-		$scope.fillWithCurrentDate = function (field) {
-			$scope.fields[field] = (new Date()).toISOString().substring(0, 10);
-		};
 
 		function prepareDateFields(data) {
 			var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
@@ -318,18 +322,29 @@
 
 		};
 
+		$scope.isCheckboxChecked = function(field, value) {
+			if(!$scope.fields[field]) $scope.fields[field] = [];
+			return $scope.fields[field].indexOf(value) !== -1;
+		};
+
+		$scope.toggleCheckbox = function (field, value) {
+			if(!$scope.fields[field]) $scope.fields[field] = []; // Ensures list exists
+			var index = $scope.fields[field].indexOf(value); // Check if in list
+			if(index === -1) return $scope.fields[field].push(value); // Add to list
+			return $scope.fields[field].splice(index, 1); // Remove from list
+		};
+
 		$scope.save = function() {
 			var data = $scope.step.fields;
 			data = filterOutEmptyFields($scope.step.fields);
 			data = prepareDateFields(data);
-
 
 			data.type = $scope.step.step_type;
 			data.id = $scope.step.id;
 
 			console.info("[child_viewer.step_editor] Saving step data: ", data);
 
-			CaseSteps.save(data).$promise.then(function (response) {
+			return CaseSteps.save(data).$promise.then(function (response) {
 				if(response.fields) {
 					ngToast.danger("Por favor, preencha os campos corretamente! Campos incorretos: " + Object.keys(response.fields));
 					return;
@@ -343,7 +358,7 @@
 				}
 
 				ngToast.success("Os campos da etapa foram salvos com sucesso!");
-			});
+			})
 		}
 	}
 })();
@@ -423,20 +438,34 @@
 				controller: 'CreateAlertCtrl'
 			})
 		})
-		.controller('CreateAlertCtrl', function ($scope, $state, ngToast, Identity, StaticData, Children) {
+		.controller('CreateAlertCtrl', function ($scope, $state, ngToast, Utils, Identity, StaticData, Children) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
 
-			$scope.alert = {
+			$scope.alert = {};
 
-			};
+			function prepareDateFields(data) {
+				var dateOnlyFields = ['dob'];
+
+				for(var i in data) {
+					if(!data.hasOwnProperty(i)) continue;
+					if(dateOnlyFields.indexOf(i) === -1) continue;
+
+					data[i] = Utils.stripTimeFromTimestamp(data[i]);
+				}
+
+				return data;
+			}
 
 			$scope.createAlert = function() {
 
 				// TODO: validate fields
 
-				Children.spawnFromAlert($scope.alert).$promise.then(function (res) {
+				var data = $scope.alert;
+				data = prepareDateFields(data);
+
+				Children.spawnFromAlert(data).$promise.then(function (res) {
 					if(res.fields) {
 						ngToast.danger('Por favor, preencha todos os campos corretamente!');
 						console.warn("[create_alert] Missing fields: ", res.fields);
@@ -480,8 +509,6 @@
 
 		function init(scope, element, attrs) {
 			scope.identity = Identity;
-			scope.cityName = 'São Paulo';
-			scope.cityUF = 'SP';
 			scope.showNotifications = true;
 
 			scope.toggleNotifications = function($event) {
@@ -2456,7 +2483,7 @@ if (!Array.prototype.find) {
 			var headers = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('children/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: headers},
+				find: {method: 'GET', headers: headers, params: {with: 'currentStep'}},
 				update: {method: 'POST', headers: headers},
 				search: {method: 'GET', isArray: false, headers: headers},
 				spawnFromAlert: {method: 'POST', headers: headers}
@@ -2544,6 +2571,20 @@ if (!Array.prototype.find) {
 				query: {method: 'GET', isArray: true, headers: headers},
 				remove: {method: 'DELETE', headers: headers},
 				delete: {method: 'DELETE', headers: headers}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Users', function Users(API, $resource) {
+
+			let headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('users/:id'), {id: '@id', with: '@with'}, {
+				find: {method: 'GET', headers: headers},
+				update: {method: 'POST', headers: headers}
 			});
 
 		});
@@ -2745,15 +2786,24 @@ if (!Array.prototype.find) {
 			};
 
 		})
-		.run(function (Identity, Auth) {
+		.run(function (Identity, Users, Auth) {
 			Identity.setTokenProvider(Auth.provideToken);
+			Identity.setUserProvider(function(user_id) {
+				if(!user_id) return;
+				return Users.find({id: user_id, with: 'tenant'});
+			});
+
+			Identity.setup();
 		})
+
 })();
 (function() {
 
 	angular.module('BuscaAtivaEscolar').service('Identity', function ($q, $rootScope, $location, $localStorage) {
 
 		var tokenProvider = null;
+		var userProvider = null;
+
 		var debugCurrentType = "coordenador_operacional";
 
 		$localStorage.$default({
@@ -2763,13 +2813,32 @@ if (!Array.prototype.find) {
 			}
 		});
 
+		function setup() {
+			console.info("[core.identity] Setting up identity service...");
+			//refreshIdentity();
+		}
+
 		function setTokenProvider(callback) {
 			tokenProvider = callback;
+		}
+
+		function setUserProvider(callback) {
+			userProvider = callback;
 		}
 
 		function provideToken() {
 			if(!tokenProvider) return $q.reject('no_token_provider');
 			return tokenProvider();
+		}
+
+		function refreshIdentity() {
+			if(!isLoggedIn()) return;
+			if(!$localStorage.identity.current_user) return;
+			if(!$localStorage.identity.current_user.id) return;
+
+			console.log("[core.identity] Refreshing current identity details...");
+
+			$localStorage.identity.current_user = userProvider($localStorage.identity.current_user.id);
 		}
 
 		function getCurrentUser() {
@@ -2785,6 +2854,8 @@ if (!Array.prototype.find) {
 
 			$localStorage.identity.is_logged_in = true;
 			$localStorage.identity.current_user = user;
+
+			refreshIdentity();
 		}
 
 		function can(operation) {
@@ -2830,12 +2901,80 @@ if (!Array.prototype.find) {
 			can: can,
 			isLoggedIn: isLoggedIn,
 			clearSession: clearSession,
+			setup: setup,
 			setTokenProvider: setTokenProvider,
+			setUserProvider: setUserProvider,
 			provideToken: provideToken,
 			disconnect: disconnect,
 			debugUserType: debugUserType
 		}
 
+	});
+
+})();
+(function() {
+
+	var app = angular.module('BuscaAtivaEscolar');
+
+	app.service('Language', function Language($http, API) {
+
+		var database = {};
+
+		function setup() {
+			console.log("[core.language] Setting up language service...");
+			loadFromAPI();
+		}
+
+		function loadFromAPI() {
+			console.log("[core.language] Loading language file...");
+			$http.get(API.getURI('language.json')).then(onDataLoaded);
+		}
+
+		function onDataLoaded(res) {
+			if(!res.data || !res.data.database) {
+				console.error("[core.language] Failed to load language file: ", res);
+				return;
+			}
+
+			database = res.data.database;
+
+			console.log("[core.language] Language file loaded! " + database.length + " strings available", database);
+		}
+
+		function translate(word, key) {
+			var stringID = key + "." + word;
+			return string(stringID);
+		}
+
+		function string(stringID) {
+			if(!database) return "DB_EMPTY:" + stringID;
+			if(!database[stringID]) return "STR_MISSING:" + stringID;
+
+			return database[stringID];
+		}
+
+		return {
+			setup: setup,
+			translate: translate,
+			string: string
+		};
+
+	});
+
+	app.run(function (Language) {
+		Language.setup();
+	});
+
+	app.filter('lang', function LanguageTranslateFilter(Language) {
+		return function(word, key) {
+			return Language.translate(word, key);
+		}
+	});
+
+	app.filter('string', function LanguageStringFilter(Language) {
+		return function(stringID) {
+			return Language.string(stringID);
+		}
 	});
 
 })();

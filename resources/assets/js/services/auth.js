@@ -137,7 +137,14 @@
 			};
 
 		})
-		.run(function (Identity, Auth) {
+		.run(function (Identity, Users, Auth) {
 			Identity.setTokenProvider(Auth.provideToken);
+			Identity.setUserProvider(function(user_id) {
+				if(!user_id) return;
+				return Users.find({id: user_id, with: 'tenant'});
+			});
+
+			Identity.setup();
 		})
+
 })();

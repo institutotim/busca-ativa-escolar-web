@@ -8,9 +8,11 @@
 				controller: 'ChildSearchCtrl'
 			})
 		})
-		.controller('ChildSearchCtrl', function ($scope, Children) {
+		.controller('ChildSearchCtrl', function ($scope, Children, Decorators) {
 
+			$scope.Decorators = Decorators;
 			$scope.Children = Children;
+
 			$scope.list = Children.search();
 
 		});

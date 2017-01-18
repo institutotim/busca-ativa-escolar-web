@@ -10,7 +10,7 @@
 			</button>
 			<a class="navbar-brand" ui-sref="dashboard">
 				<strong>Busca Ativa Escolar</strong>
-				<small ng-bind="(cityName + '/' + cityUF)"></small>
+				<small ng-bind="identity.getCurrentUser().tenant.name"></small>
 			</a>
 		</div>
 
@@ -32,7 +32,7 @@
 						<i class="fa fa-user-circle-o"></i>
 						<span class="user-details">
 							<strong ng-bind="identity.getCurrentUser().name"></strong>
-							<small ng-bind="identity.getCurrentUser().type"></small>
+							<small ng-bind="identity.getCurrentUser().type | lang:'user.type'"></small>
 						</span>
 						<span class="caret"></span>
 					</a>

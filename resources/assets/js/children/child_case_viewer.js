@@ -27,12 +27,14 @@
 
 		$scope.openedCase = {};
 
-		$scope.child.$promise.then(function (child) {
+		$scope.child.$promise.then(openCurrentCase);
+
+		function openCurrentCase(child) {
 			$scope.openedCase = child.cases.find(function(item) {
 				if($stateParams.case_id) return item.id === $stateParams.case_id;
-				return item.case_status == 'in_progress';
+				return item.case_status === 'in_progress';
 			});
-		});
+		}
 
 		console.log("[core] @ChildCasesCtrl", $scope.child, $scope.openedCase);
 
@@ -77,7 +79,7 @@
 			return true;
 		};
 
-		$scope.completeStep = function(step, callback) {
+		$scope.completeStep = function(step) {
 
 			var question = 'Tem certeza que deseja prosseguir para a próxima etapa?';
 			var explanation = 'Ao progredir de etapa, a etapa atual será marcada como concluída. Os dados preenchidos serão salvos.';
@@ -88,41 +90,33 @@
 			}
 
 			Modals.show(Modals.Confirm(question, explanation)).then(function () {
+				return CaseSteps.complete({type: step.step_type, id: step.id}).$promise;
+			}).then(function (response) {
 
-				if(callback) callback();
+				if(response.fields) {
+					ngToast.danger("É necessário preencher todos os campos obrigatórios para concluir essa etapa. Campos incorretos: " + Object.keys(response.fields).join(", "));
+					$state.go('child_viewer.cases.view_step', {step_type: step.step_type, step_id: step.id});
+					return;
+				}
 
-				// TODO: refactor to promise chaining (as "save" is prerequisite for this)
-				// TODO: place the final "case close" button on the last report
-				// TODO: test the whole flow a few times
+				if(response.status !== "ok") {
+					ngToast.danger("Ocorreu um erro ao concluir a etapa! (reason=" + response.reason + ")")
+					return;
+				}
 
-				CaseSteps.complete({type: step.step_type, id: step.id}).$promise.then(function (response) {
+				if(!response.hasNext) {
+					ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
+					$state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
+					return;
+				}
 
-					if(response.fields) {
-						ngToast.danger("É necessário preencher todos os campos obrigatórios para concluir essa etapa.");
-						$state.go('child_viewer.cases.view_step', {step_type: step.step_type, step_id: step.id});
-						return;
-					}
+				ngToast.success("Etapa concluída! A próxima etapa já está disponível para início");
+				$state.go('child_viewer.cases.view_step', {step_type: response.nextStep.step_type, step_id: response.nextStep.id}, {reload: true});
 
-					if(response.status !== "ok") {
-						ngToast.danger("Ocorreu um erro ao concluir a etapa! (reason=" + response.reason + ")")
-						return;
-					}
-
-					if(!response.hasNext) {
-						ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
-						$state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
-						return;
-					}
-
-					ngToast.success("Etapa concluída! A próxima etapa já está disponível para início");
-					$state.go('child_viewer.cases.view_step', {step_type: response.nextStep.step_type, step_id: response.nextStep.id}, {reload: true});
-
-				})
 			})
 		};
 
 		// TODO: handle case cancelling
-		// TODO: handle case completing
 	}
 
 	function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Children, Decorators, CaseSteps, StaticData) {
@@ -137,6 +131,7 @@
 
 		$scope.child_id = $scope.$parent.child_id;
 		$scope.child = $scope.$parent.child;
+		$scope.checkboxes = {};
 
 		$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields'});
 		$scope.step.$promise.then(function (step) {
@@ -146,8 +141,8 @@
 		console.log("[core] @ChildCaseStepCtrl", $scope.step);
 
 		$scope.saveAndProceed = function() {
-			$scope.$parent.completeStep($scope.step, function() {
-				$scope.save();
+			$scope.save().then(function() {
+				$scope.$parent.completeStep($scope.step);
 			});
 		};
 
@@ -162,6 +157,12 @@
 			return true;
 		};
 
+		$scope.canEditStep = function() {
+			if(!$scope.step) return false;
+			if(!$scope.$parent.openedCase) return false;
+			return (!$scope.step.is_completed);
+		};
+
 		$scope.canCompleteStep = function() {
 			if(!$scope.step) return false;
 			if(!$scope.$parent.openedCase) return false;
@@ -173,22 +174,23 @@
 			return !$scope.step.is_completed && !!$scope.step.is_pending_assignment;
 		};
 
+		$scope.fillWithCurrentDate = function (field) {
+			$scope.fields[field] = (new Date()).toISOString().substring(0, 10);
+		};
+
 		function filterOutEmptyFields(data) {
 			var filtered = {};
 
 			for(var i in data) {
 				if(!data.hasOwnProperty(i)) continue;
-				if(!data[i]) continue;
+				if(data[i] === null) continue;
+				if(data[i] === undefined) continue;
 				if(("" + data[i]).trim().length <= 0) continue;
 				filtered[i] = data[i];
 			}
 
 			return filtered;
 		}
-
-		$scope.fillWithCurrentDate = function (field) {
-			$scope.fields[field] = (new Date()).toISOString().substring(0, 10);
-		};
 
 		function prepareDateFields(data) {
 			var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
@@ -220,18 +222,29 @@
 
 		};
 
+		$scope.isCheckboxChecked = function(field, value) {
+			if(!$scope.fields[field]) $scope.fields[field] = [];
+			return $scope.fields[field].indexOf(value) !== -1;
+		};
+
+		$scope.toggleCheckbox = function (field, value) {
+			if(!$scope.fields[field]) $scope.fields[field] = []; // Ensures list exists
+			var index = $scope.fields[field].indexOf(value); // Check if in list
+			if(index === -1) return $scope.fields[field].push(value); // Add to list
+			return $scope.fields[field].splice(index, 1); // Remove from list
+		};
+
 		$scope.save = function() {
 			var data = $scope.step.fields;
 			data = filterOutEmptyFields($scope.step.fields);
 			data = prepareDateFields(data);
-
 
 			data.type = $scope.step.step_type;
 			data.id = $scope.step.id;
 
 			console.info("[child_viewer.step_editor] Saving step data: ", data);
 
-			CaseSteps.save(data).$promise.then(function (response) {
+			return CaseSteps.save(data).$promise.then(function (response) {
 				if(response.fields) {
 					ngToast.danger("Por favor, preencha os campos corretamente! Campos incorretos: " + Object.keys(response.fields));
 					return;
@@ -245,7 +258,7 @@
 				}
 
 				ngToast.success("Os campos da etapa foram salvos com sucesso!");
-			});
+			})
 		}
 	}
 })();

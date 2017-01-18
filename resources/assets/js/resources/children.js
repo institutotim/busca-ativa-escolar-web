@@ -6,7 +6,7 @@
 			var headers = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('children/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: headers},
+				find: {method: 'GET', headers: headers, params: {with: 'currentStep'}},
 				update: {method: 'POST', headers: headers},
 				search: {method: 'GET', isArray: false, headers: headers},
 				spawnFromAlert: {method: 'POST', headers: headers}

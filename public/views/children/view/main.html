@@ -5,7 +5,11 @@
 				<h1>
 					<i class="fa fa-folder"></i> {{child.name}} <small>{{Decorators.Child.parents(child)}}</small>
 				</h1>
-				<div style="margin-top: -20px; padding-left: 44px"><span class="label label-warning">{{child.status}}</span></div>
+				<div style="display: inline-block; vertical-align: middle; margin-top: -20px; padding-left: 34px">
+					<span class="label label-warning" ng-show="child.child_status === 'out_of_school'">Fora da Escola</span>
+					<span class="label label-primary" ng-show="child.child_status === 'in_observation'">Em observação</span>
+					<span class="label label-success" ng-show="child.child_status === 'in_school'">Dentro da Escola</span>
+				</div>
 			</div>
 
 			<h2 class="pull-right">n&ordm; 42</h2>
@@ -14,13 +18,8 @@
 
 			<div class="pull-right" style="margin: 0 10px;">
 				<label class="control-label panel-header-label" style="margin: 0;">Grau de risco</label>
-				<div class="dropdown case-step-dropdown" uib-dropdown is-open="false">
-					<a class="btn btn-warning btn-raised dropdown-toggle" uib-dropdown-toggle style="width: 100%">{{child.risk_level}} <span ng-show="identity.can('case.change_risk_level')" class="caret"></span></a>
-					<ul class="dropdown-menu" uib-dropdown-menu ng-show="identity.can('case.change_risk_level')">
-						<li><a>Alta</a></li>
-						<li><a>Média</a></li>
-						<li><a>Baixa</a></li>
-					</ul>
+				<div>
+					<a class="btn btn-warning btn-raised" style="width: 100%">{{child.risk_level | lang:'risk_level'}}</a>
 				</div>
 			</div>
 

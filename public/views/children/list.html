@@ -21,7 +21,7 @@
 					<tr ng-repeat="(i, child) in list.data">
 						<td width="34%" style="vertical-align: middle;">
 							<strong><i class="fa fa-mars"></i> {{child.name}}</strong><br />
-							<small><span uib-tooltip="Pais ou responsáveis"><i class="fa fa-users"></i> {{child.mother_name}} / {{child.father_name}}</span></small>
+							<small><span uib-tooltip="Pais ou responsáveis"><i class="fa fa-users"></i> {{Decorators.Child.parents(child)}}</span></small>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
 							<div class="label label-danger" uib-tooltip="Alto Risco" ng-show="child.risk_level === 'high'">A</div>
@@ -29,18 +29,21 @@
 							<div class="label label-default" uib-tooltip="Baixo Risco" ng-show="child.risk_level === 'low'">B</div>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
-							{{child.age}} anos
+							<span ng-show="child.age">{{child.age}} anos</span>
+							<span ng-show="!child.age">N/A</span>
 						</td>
 						<td width="28%" style="vertical-align: middle;">
 							<i class="material-icons">person</i> Aryel Tupinambá <br />
 							<small>Coordenador Operacional</small>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
-							{{child.current_step_type}} <br />
+							{{child.current_step_type | lang:'case_step.name'}} <br />
 						</td>
 						<td width="8%" style="vertical-align: middle;">
 							<span class="label label-danger" ng-show="child.is_late">Em atraso!</span>
-							<span class="label label-info" ng-show="!child.is_late">Em andamento</span>
+							<span class="label label-info" ng-show="!child.is_late && child.child_status === 'out_of_school'">Em andamento</span>
+							<span class="label label-info" ng-show="!child.is_late && child.child_status === 'in_observation'">Em observação</span>
+							<span class="label label-success" ng-show="!child.is_late && child.child_status === 'in_school'">Concluído</span>
 						</td>
 						<td width="6%" class="text-center" style="vertical-align: middle;">
 							<div class="btn-group">

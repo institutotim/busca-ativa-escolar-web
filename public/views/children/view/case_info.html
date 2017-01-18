@@ -138,15 +138,15 @@
 			<input type="text" class="form-control" id="fld-name" ng-model="fields.name">
 		</div>
 		<div class="form-grouo col-md-4">
-			<label class="control-label" for="fld-gender">Gênero</label>
+			<label class="control-label" for="fld-gender">Gênero*</label>
 			<select id="fld-gender" class="form-control" ng-model="fields.gender" ng-options="n.slug as n.label for n in static.getGenders()"></select>
 		</div>
 		<div class="form-grouo col-md-4">
-			<label class="control-label" for="fld-raca">Raça / Etnia</label>
+			<label class="control-label" for="fld-raca">Raça / Etnia*</label>
 			<select id="fld-raca" class="form-control" ng-model="fields.race" ng-options="n.slug as n.label for n in static.getRaces()"></select>
 		</div>
 		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-dob">Data de nascimento (aaaa-mm-dd)</label>
+			<label class="control-label" for="fld-dob">Data de nascimento (aaaa-mm-dd)*</label>
 			<input type="text" ui-date-mask class="form-control" id="fld-dob" ng-model="fields.dob">
 		</div>
 		<div class="form-group col-md-6">
@@ -161,7 +161,7 @@
 		<div ng-show="editable">
 			<hr />
 
-			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-raised btn-info" ng-show="canEditStep()" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e iniciar Análise Técnica</a>
 		</div>
 
@@ -224,7 +224,7 @@
 		<div ng-show="editable">
 			<hr />
 
-			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-raised btn-info" ng-show="canEditStep()" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e iniciar Análise Técnica</a>
 		</div>
 
@@ -273,7 +273,7 @@
 		<div ng-show="editable">
 			<hr />
 
-			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-raised btn-info" ng-show="canEditStep()" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e iniciar Análise Técnica</a>
 		</div>
 
@@ -366,7 +366,7 @@
 		<div ng-show="editable">
 			<hr />
 
-			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-raised btn-info" ng-show="canEditStep()" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e iniciar Análise Técnica</a>
 		</div>
 
@@ -380,7 +380,7 @@
 			<label class="control-label">Motivos de estar fora da escola*</label>
 			<div class="radio" ng-repeat="cause in static.getCaseCauses()">
 				<label>
-					<input name="case_cause_{{cause.id}}" ng-model="fields.case_cause_ids[cause.id]" ng-true-value="1" ng-false-value="0" type="checkbox"> <strong ng-if="case.alert_cause_id === cause.alert_cause_id" class="label label-default">Motivo indicado no alerta</strong> {{cause.label}}
+					<input name="case_cause_{{cause.id}}" ng-model="checkboxes.case_cause_checkbox[cause.id]" ng-change="toggleCheckbox('case_cause_ids', cause.id)" ng-checked="isCheckboxChecked('case_cause_ids', cause.id)" ng-true-value="1" ng-false-value="0" type="checkbox"> <strong ng-if="case.alert_cause_id === cause.alert_cause_id" class="label label-default">Motivo indicado no alerta</strong> {{cause.label}}
 				</label>
 			</div>
 		</div>
@@ -432,7 +432,7 @@
 		</div>
 
 		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-place_kind">Tipo da localização</label>
+			<label class="control-label" for="fld-place_kind">Tipo da localização*</label>
 			<select type="text" class="form-control" id="fld-place_kind" ng-model="fields.place_kind">
 				<option value="urban">Urbana</option>
 				<option value="rural">Rural</option>
@@ -440,7 +440,7 @@
 		</div>
 
 		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-place_is_quilombola">Comunidade quilombola</label>
+			<label class="control-label" for="fld-place_is_quilombola">Comunidade quilombola*</label>
 			<select type="text" class="form-control" id="fld-place_is_quilombola" ng-model="fields.place_is_quilombola">
 				<option ng-value="1">Sim</option>
 				<option ng-value="0">Não</option>
@@ -454,7 +454,7 @@
 		<div ng-show="editable">
 			<hr />
 
-			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-raised btn-info" ng-show="canEditStep()" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e iniciar Análise Técnica</a>
 		</div>
 	</div>
@@ -464,9 +464,9 @@
 	<div class="panel-heading"><i class="fa fa-info-circle"></i> Análise Técnica</div>
 	<div class="panel-body">
 		<div class="form-group col-md-12">
-			<label class="control-label">Causas identificadas*</label>
-			<div class="radio" ng-repeat="id in case.case_cause_ids">
-				<label>
+			<label class="control-label">Causas identificadas</label>
+			<div class="radio" ng-repeat="(id, toggle) in case.case_cause_ids ">
+				<label ng-if="toggle">
 					<i class="fa fa-check"></i> {{static.getCaseCauses()[id]}}
 				</label>
 			</div>
@@ -475,12 +475,12 @@
 		<div class="form-group col-md-12">
 			<label class="control-label">Grau de risco</label>
 			<p>
-				<div class="label label-danger">{{case.risk_level}}</div>
+				<div class="label label-danger">{{child.risk_level}}</div>
 			</p>
 		</div>
 
 		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-analysis_details">Detalhamento da análise</label>
+			<label class="control-label" for="fld-analysis_details">Detalhamento da análise*</label>
 			<textarea style="height: 100px" class="form-control" id="fld-analysis_details" ng-model="fields.analysis_details"></textarea>
 		</div>
 
@@ -488,7 +488,7 @@
 		<div ng-show="editable">
 			<hr />
 
-			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-raised btn-info" ng-show="canEditStep()" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e enviar para o supervisor institucional</a>
 		</div>
 
@@ -500,7 +500,7 @@
 	<div class="panel-body">
 
 		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-actions_description">Descreva as atividades realizadas</label>
+			<label class="control-label" for="fld-actions_description">Descreva as atividades realizadas*</label>
 			<textarea style="height: 200px" class="form-control" id="fld-actions_description" ng-model="fields.actions_description"></textarea>
 		</div>
 
@@ -508,7 +508,7 @@
 		<div ng-show="editable">
 			<hr />
 
-			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-raised btn-info" ng-show="canEditStep()" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e concluir etapa</a>
 		</div>
 
@@ -589,7 +589,7 @@
 		<div ng-show="editable">
 			<hr />
 
-			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-raised btn-info" ng-show="canEditStep()" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e concluir etapa</a>
 		</div>
 
@@ -608,7 +608,7 @@
 		</div>
 
 		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-obs-report_date">Data de registro do relatório (aaaa-mm-dd)</label>
+			<label class="control-label" for="fld-obs-report_date">Data de registro do relatório (aaaa-mm-dd)*</label>
 			<div class="clearfix">
 				<input type="text" ui-date-mask class="form-control" id="fld-obs-report_date" ng-model="fields.report_date" style="float: left; width: 70%;">
 				<button type="button" class="btn btn-sm btn-raised btn-default" ng-click="fillWithCurrentDate('report_date')" style="float: left; width: 25%">Hoje</button>
@@ -616,17 +616,17 @@
 		</div>
 
 		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-obs-is_child_still_in_school-yes">A criança ou adolescente continua na escola?</label>
+			<label class="control-label" for="fld-obs-is_child_still_in_school-yes">A criança ou adolescente continua na escola?*</label>
 			<div class="radio">
-				<label><input id="fld-obs-is_child_still_in_school-yes" ng-model="fields.is_child_still_in_school" ng-value="true" name="obs-is_child_still_in_school" value="yes" type="radio" checked> Sim</label>
+				<label><input id="fld-obs-is_child_still_in_school-yes" ng-model="fields.is_child_still_in_school" ng-value="1" name="obs-is_child_still_in_school" value="yes" type="radio" checked> Sim</label>
 			</div>
 			<div class="radio">
-				<label><input id="fld-obs-is_child_still_in_school-no" ng-model="fields.is_child_still_in_school" ng-value="false" name="obs-is_child_still_in_school" value="no" type="radio"> Não</label>
+				<label><input id="fld-obs-is_child_still_in_school-no" ng-model="fields.is_child_still_in_school" ng-value="0" name="obs-is_child_still_in_school" value="no" type="radio"> Não</label>
 			</div>
 		</div>
 
 		<div class="form-group col-md-12" ng-show="!fields.is_child_still_in_school">
-			<label class="control-label" for="fld-obs-evasion_reason">Descreva o motivo da nova evasão</label>
+			<label class="control-label" for="fld-obs-evasion_reason">Descreva o motivo da nova evasão*</label>
 			<textarea style="height: 100px" class="form-control" id="fld-obs-evasion_reason"></textarea>
 		</div>
 
@@ -639,7 +639,7 @@
 		<div ng-show="editable">
 			<hr />
 
-			<a class="btn btn-raised btn-info" ng-click="save()">Salvar</a>
+			<a class="btn btn-raised btn-info" ng-show="canEditStep()" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep()">Salvar e concluir etapa</a>
 		</div>
 
