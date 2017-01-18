@@ -20,7 +20,10 @@
 				<tbody>
 					<tr ng-repeat="(i, child) in list.data">
 						<td width="34%" style="vertical-align: middle;">
-							<strong><i class="fa fa-mars"></i> {{child.name}}</strong><br />
+							<strong>
+								<i class="fa {{child.gender | lang:'child.gender_icon'}}" ng-show="child.gender"></i>
+								{{child.name}}
+							</strong><br />
 							<small><span uib-tooltip="Pais ou responsáveis"><i class="fa fa-users"></i> {{Decorators.Child.parents(child)}}</span></small>
 						</td>
 						<td width="10%" style="vertical-align: middle;">

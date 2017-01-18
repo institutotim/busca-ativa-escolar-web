@@ -12,9 +12,9 @@
 				</div>
 			</div>
 
-			<h2 class="pull-right">n&ordm; 42</h2>
-
-			<div class="pull-right btn btn-raised btn-default btn-fab" style="margin: 10px 15px;" uib-tooltip="Masculino"><i class="material-icons fa fa-mars"></i></div>
+			<div class="pull-right btn btn-raised btn-default btn-fab" style="margin: 10px 15px;" ng-show="child.gender" uib-tooltip-html="child.gender | lang:'child.gender'">
+				<i class="material-icons fa {{child.gender | lang:'child.gender_icon'}}"></i>
+			</div>
 
 			<div class="pull-right" style="margin: 0 10px;">
 				<label class="control-label panel-header-label" style="margin: 0;">Grau de risco</label>
