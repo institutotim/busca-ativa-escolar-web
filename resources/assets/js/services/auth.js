@@ -20,11 +20,17 @@
 
 			function provideToken() {
 
+				// TODO: refresh with endpoint if first time on page
+
 				// Isn't even logged in
-				if(!Identity.isLoggedIn()) return requireLogin('Você precisa fazer login para realizar essa ação!');
+				if(!Identity.isLoggedIn() || !$localStorage.session.token) {
+					return requireLogin('Você precisa fazer login para realizar essa ação!');
+				}
 
 				// Has valid token
-				if(!isTokenExpired()) return $q.resolve($localStorage.session.token);
+				if(!isTokenExpired()) {
+					return $q.resolve($localStorage.session.token);
+				}
 
 				console.log("[auth::token.provide] Token expired! Refreshing...");
 
