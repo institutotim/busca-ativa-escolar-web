@@ -323,6 +323,7 @@
 		};
 
 		$scope.isCheckboxChecked = function(field, value) {
+			if(!$scope.fields) return false;
 			if(!$scope.fields[field]) $scope.fields[field] = [];
 			return $scope.fields[field].indexOf(value) !== -1;
 		};
