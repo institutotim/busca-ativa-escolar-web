@@ -18,14 +18,6 @@
 					url: '/activity_log',
 					templateUrl: '/views/children/view/activity_log.html'
 				})
-				.state('child_viewer.comments', {
-					url: '/comments',
-					templateUrl: '/views/children/view/comments.html'
-				})
-				.state('child_viewer.attachments', {
-					url: '/attachments',
-					templateUrl: '/views/children/view/attachments.html'
-				})
 				.state('child_viewer.assigned_users', {
 					url: '/assigned_users',
 					templateUrl: '/views/children/view/assigned_users.html'

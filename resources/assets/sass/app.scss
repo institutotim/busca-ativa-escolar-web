@@ -85,3 +85,17 @@ p.agent-panel{
   background-color: #eec902;
 }
 
+.btn-fab { padding: 0 !important; text-align: center; }
+	.btn-fab .fa { font-size: 18px;}
+
+.file-drop-area {
+	background: #F8F8F8;
+	border: 5px dashed #DDD;
+	width: 170px;
+	text-align: center;
+	padding: 50px 10px;
+	margin-left: 10px;
+
+	&.file-valid { border: 5px dashed $green-200; }
+	&.file-invalid { border: 5px dashed $red-200; }
+}

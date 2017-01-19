@@ -1,29 +1,30 @@
 <div>
 	<div class="col-md-12">
-		<h3><i class="material-icons">comment</i> Anotações</h3>
+		<div class="clearfix">
+			<h3 class="pull-left"><i class="material-icons">comment</i> Anotações</h3>
+			<a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i> Atualizar</a>
+		</div>
 
 		<table class="table">
 			<thead>
 			<tr>
-				<th>Cód</th>
-				<th>Data</th>
-				<th>Usuário</th>
-				<th>Anotação</th>
+				<th width="20%">Data</th>
+				<th width="20%">Usuário</th>
+				<th width="60%">Anotação</th>
 			</tr>
 			</thead>
 			<tbody>
-			<tr ng-repeat="i in [1,2,3,4]">
-				<td>#{{i * 12345}}</td>
-				<td>2016/Ago/25 15:22</td>
-				<td><i class="fa fa-user"></i> John doe</td>
-				<td>Aasdasd asdajshdg jahsdg jashd ajshdg ajshdgajshdga<br />sdfhgds jhsdfhsdf s<br />ashd jasgdjh gajsdh ajhsdgajshdg asda</td>
+			<tr ng-repeat="comment in comments.data">
+				<td><span uib-tooltip-html="comment.created_at | amTimeAgo" ng-bind="comment.created_at | amCalendar"></span></td>
+				<td><i class="fa fa-user"></i> <span uib-tooltip-html="comment.author.type | lang:'user.type'" ng-bind="comment.author.name"></span></td>
+				<td ng-bind="comment.message"></td>
 			</tr>
 			</tbody>
 		</table>
 	</div>
 </div>
 
-<div class="form-group">
+<form class="form-group" ng-submit="sendMessage()">
 	<div>
 		<div class="col-md-12">
 			<label class="control-label" for="fld-register-comment">Registrar anotação</label>
@@ -34,7 +35,7 @@
 			<input type="text" class="form-control" id="fld-register-comment" ng-model="message" placeholder="Digite sua mensagem...">
 		</div>
 		<div class="col-md-1 btn-group-sm">
-			<a class="btn btn-raised btn-success btn-fab" ng-click="sendMessage();"><i class="material-icons">send</i></a>
+			<button type="submit" class="btn btn-raised btn-success btn-fab"><i class="fa fa-paper-plane"></i></button>
 		</div>
 	</div>
-</div>
+</form>

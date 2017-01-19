@@ -32,6 +32,7 @@
 			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : {}; }
 			function getSchoolingLevels() { return (data.SchoolingLevel) ? data.SchoolingLevel : {}; }
 			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : {}; }
+			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
 
 			return {
 				fetchLatestVersion: fetchLatestVersion,
@@ -45,6 +46,7 @@
 				getSchoolGrades: getSchoolGrades,
 				getSchoolingLevels: getSchoolingLevels,
 				getWorkActivities: getWorkActivities,
+				getAllowedMimeTypes: getAllowedMimeTypes,
 			};
 
 		});

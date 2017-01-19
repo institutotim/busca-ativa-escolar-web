@@ -8,6 +8,7 @@
 			'ngCookies',
 			'ngResource',
 			'ngStorage',
+			'ngFileUpload',
 
 			'BuscaAtivaEscolar.Config',
 

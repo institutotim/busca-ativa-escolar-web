@@ -8,6 +8,7 @@
 			'ngCookies',
 			'ngResource',
 			'ngStorage',
+			'ngFileUpload',
 
 			'BuscaAtivaEscolar.Config',
 
@@ -74,6 +75,50 @@
 			};
 
 			return $rootScope.config = config;
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('child_viewer.attachments', {
+				url: '/attachments',
+				templateUrl: '/views/children/view/attachments.html',
+				controller: 'ChildAttachmentsCtrl',
+			})
+		})
+		.controller('ChildAttachmentsCtrl', function ($scope, $state, $stateParams, ngToast, Auth, API, Modals, Children) {
+
+			$scope.Children = Children;
+
+			$scope.attachments = {};
+			$scope.uploadToken = "";
+
+			$scope.refresh = function() {
+				$scope.attachments = Children.getAttachments({id: $stateParams.child_id});
+			};
+
+			$scope.uploadAttachment = function() {
+				Modals.show(Modals.Prompt('Qual a descrição do anexo que será enviado?', '', false))
+					.then(function(description) {
+						return Modals.show(Modals.FileUploader(
+							'Anexar arquivo',
+							'Selecione um arquivo para anexar ao perfil da criança',
+							API.getURI('children/' + $stateParams.child_id + '/attachments'),
+							{description: description}
+						))
+					})
+					.then(function (file) {
+						ngToast.success('Arquivo anexado!');
+						$scope.refresh();
+					})
+			};
+
+			console.log("[core] @ChildAttachmentsCtrl", $stateParams);
+
+			$scope.refresh();
 
 		});
 
@@ -366,6 +411,46 @@
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('child_viewer.comments', {
+				url: '/comments',
+				templateUrl: '/views/children/view/comments.html',
+				controller: 'ChildCommentsCtrl'
+			})
+		})
+		.controller('ChildCommentsCtrl', function ($scope, $state, $stateParams, Children) {
+
+			$scope.Children = Children;
+
+			$scope.comments = {};
+			$scope.message = "";
+
+			$scope.refresh = function() {
+				$scope.comments = Children.getComments({id: $stateParams.child_id});
+			};
+
+			$scope.sendMessage = function() {
+
+				Children.postComment({
+					id: $scope.$parent.child.id,
+					message: $scope.message
+				}, function (res) {
+					$scope.refresh();
+				});
+
+				$scope.message = "";
+			};
+
+			console.log("[core] @ChildCommentsCtrl", $stateParams);
+
+			$scope.refresh();
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
 		.controller('ChildViewCtrl', ChildViewCtrl)
 
 		.config(function ($stateProvider) {
@@ -382,14 +467,6 @@
 				.state('child_viewer.activity_log', {
 					url: '/activity_log',
 					templateUrl: '/views/children/view/activity_log.html'
-				})
-				.state('child_viewer.comments', {
-					url: '/comments',
-					templateUrl: '/views/children/view/comments.html'
-				})
-				.state('child_viewer.attachments', {
-					url: '/attachments',
-					templateUrl: '/views/children/view/attachments.html'
 				})
 				.state('child_viewer.assigned_users', {
 					url: '/assigned_users',
@@ -2321,6 +2398,60 @@ Highcharts.maps["countries/br/br-all"] = {
 
 	angular
 		.module('BuscaAtivaEscolar')
+		.controller('FileUploaderModalCtrl', function FileUploaderModalCtrl($scope, $q, $uibModalInstance, Auth, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
+
+			console.log("[modal] file_uploader", uploadUrl, uploadParameters, title, message);
+
+			$scope.title = title;
+			$scope.message = message;
+			$scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(",");
+
+			$scope.file = null;
+			$scope.progress = 0;
+			$scope.isUploading = false;
+
+
+			$scope.upload = function(file) {
+				if(!uploadParameters) uploadParameters = {};
+				uploadParameters.file = file;
+
+				$scope.isUploading = true;
+
+				Upload.upload({url: uploadUrl, data: uploadParameters, headers: API.REQUIRE_AUTH}).then(onSuccess, onError, onProgress);
+
+			};
+
+			function onSuccess(res) {
+				console.log('[modal.file_uploader] Uploaded: ', res.config.data.file.name, 'Response: ', res.data);
+				$uibModalInstance.close({response: res.data});
+				$scope.isUploading = false;
+			}
+
+			function onError(res) {
+				console.error('[modal.file_uploader] Error when uploading: ', res.status, 'Response: ', res);
+				$scope.isUploading = false;
+			}
+
+			function onProgress(ev) {
+				$scope.progress = (ev.loaded / ev.total);
+			}
+
+			$scope.calculateProgressWidth = function() {
+				return parseInt(100.0 * $scope.progress) + "%";
+			};
+
+			$scope.close = function() {
+				$scope.isUploading = false;
+				$uibModalInstance.dismiss(false);
+			}
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
 		.controller('LoginModalCtrl', function LoginModalCtrl($scope, $uibModalInstance, Modals, Identity, Auth, reason, canDismiss) {
 
 			console.log("[modal] login", reason, canDismiss);
@@ -2495,6 +2626,10 @@ if (!Array.prototype.find) {
 				find: {method: 'GET', headers: headers, params: {with: 'currentStep'}},
 				update: {method: 'POST', headers: headers},
 				search: {method: 'GET', isArray: false, headers: headers},
+				getComments: {url: API.getURI('children/:id/comments'), isArray: false, method: 'GET', headers: headers},
+				getAttachments: {url: API.getURI('children/:id/attachments'), isArray: false, method: 'GET', headers: headers},
+				getActivity: {url: API.getURI('children/:id/activity'), isArray: false, method: 'GET', headers: headers},
+				postComment: {url: API.getURI('children/:id/comments'), method: 'POST', headers: headers},
 				spawnFromAlert: {method: 'POST', headers: headers}
 			});
 		});
@@ -2550,6 +2685,7 @@ if (!Array.prototype.find) {
 			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : {}; }
 			function getSchoolingLevels() { return (data.SchoolingLevel) ? data.SchoolingLevel : {}; }
 			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : {}; }
+			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
 
 			return {
 				fetchLatestVersion: fetchLatestVersion,
@@ -2563,6 +2699,7 @@ if (!Array.prototype.find) {
 				getSchoolGrades: getSchoolGrades,
 				getSchoolingLevels: getSchoolingLevels,
 				getWorkActivities: getWorkActivities,
+				getAllowedMimeTypes: getAllowedMimeTypes,
 			};
 
 		});
@@ -3609,6 +3746,20 @@ if (!Array.prototype.find) {
 					}
 
 					return params;
+				},
+
+				FileUploader: function(title, message, uploadUrl, uploadParameters) {
+					return {
+						templateUrl: '/views/modals/file_uploader.html',
+						controller: 'FileUploaderModalCtrl',
+						size: 'md',
+						resolve: {
+							title: function() { return title; },
+							message: function() { return message; },
+							uploadUrl: function() { return uploadUrl; },
+							uploadParameters: function() { return uploadParameters; },
+						}
+					};
 				},
 
 				CaseRestart: function() {

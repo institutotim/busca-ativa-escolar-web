@@ -114,6 +114,20 @@
 					return params;
 				},
 
+				FileUploader: function(title, message, uploadUrl, uploadParameters) {
+					return {
+						templateUrl: '/views/modals/file_uploader.html',
+						controller: 'FileUploaderModalCtrl',
+						size: 'md',
+						resolve: {
+							title: function() { return title; },
+							message: function() { return message; },
+							uploadUrl: function() { return uploadUrl; },
+							uploadParameters: function() { return uploadParameters; },
+						}
+					};
+				},
+
 				CaseRestart: function() {
 					var params = {
 						templateUrl: '/views/modals/case_restart.html',
