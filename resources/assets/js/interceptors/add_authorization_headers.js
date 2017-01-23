@@ -1,18 +1,29 @@
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
-		.service('TrackPendingRequests', function ($q, $rootScope, API) {
+		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
 
 			this.request = function (config) {
 
-				API.pushRequest();
+				if(config.headers['X-Require-Auth'] !== 'auth-required') return config;
+
+				if(Identity.isLoggedIn()) {
+
+					return Identity.provideToken().then(function (access_token) {
+						config.headers.Authorization = 'Bearer ' + access_token;
+						return config;
+					})
+
+				}
 
 				return config;
 			};
 
-			this.response = function (response) {
+			this.responseError = function (response) {
 
-				API.popRequest();
+				if (response.status === 401) {
+					$rootScope.$broadcast('unauthorized');
+				}
 
 				return response;
 			};
