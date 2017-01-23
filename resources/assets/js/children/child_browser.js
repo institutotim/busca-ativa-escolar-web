@@ -4,7 +4,7 @@
 		.config(function ($stateProvider) {
 			$stateProvider.state('child_browser', {
 				url: '/children',
-				templateUrl: '/views/children/list.html',
+				templateUrl: '/views/children/browser.html',
 				controller: 'ChildSearchCtrl'
 			})
 		})

@@ -130,9 +130,9 @@
 		.config(function ($stateProvider) {
 			$stateProvider.state('child_browser', {
 				url: '/children',
-				templateUrl: '/views/children/list.html',
+				templateUrl: '/views/children/browser.html',
 				controller: 'ChildSearchCtrl'
-			})
+			})  
 		})
 		.controller('ChildSearchCtrl', function ($scope, Children, Decorators) {
 
@@ -496,7 +496,7 @@
 			$stateProvider
 				.state('child_viewer', {
 					url: '/children/view/{child_id}',
-					templateUrl: '/views/children/view/main.html',
+					templateUrl: '/views/children/view/viewer.html',
 					controller: 'ChildViewCtrl'
 				})
 				.state('child_viewer.consolidated', {
@@ -602,6 +602,49 @@
 			}
 
 		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('appLoadingFeedback', function (API) {
+
+		function init(scope, element, attrs) {
+			scope.isVisible = API.hasOngoingRequests;
+		}
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/loading_feedback.html'
+		};
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
+
+		function init(scope, element, attrs) {
+			scope.identity = Identity;
+			scope.showNotifications = true;
+
+			scope.toggleNotifications = function($event) {
+				scope.showNotifications = !scope.showNotifications;
+
+				$event.stopPropagation();
+				$event.stopImmediatePropagation();
+				$event.preventDefault();
+
+				return false;
+			}
+		}
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/navbar.html'
+		};
+	});
 
 })();
 (function() {
@@ -757,49 +800,6 @@
 			dismissButton: true,
 			timeout: 3000
 		});
-	});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar').directive('appLoadingFeedback', function (API) {
-
-		function init(scope, element, attrs) {
-			scope.isVisible = API.hasOngoingRequests;
-		}
-
-		return {
-			link: init,
-			replace: true,
-			templateUrl: '/views/components/loading_feedback.html'
-		};
-	});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
-
-		function init(scope, element, attrs) {
-			scope.identity = Identity;
-			scope.showNotifications = true;
-
-			scope.toggleNotifications = function($event) {
-				scope.showNotifications = !scope.showNotifications;
-
-				$event.stopPropagation();
-				$event.stopImmediatePropagation();
-				$event.preventDefault();
-
-				return false;
-			}
-		}
-
-		return {
-			link: init,
-			replace: true,
-			templateUrl: '/views/navbar.html'
-		};
 	});
 
 })();
@@ -2262,6 +2262,26 @@ Highcharts.maps["countries/br/br-all"] = {
 	}]
 };
 (function() {
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' / ' : '')
+					+ (child.father_name || '');
+			}
+		};
+
+		var Step = {
+
+		};
+
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
+})();
+(function() {
 	angular
 		.module('BuscaAtivaEscolar')
 		.service('TrackPendingRequests', function ($q, $rootScope, API) {
@@ -2334,26 +2354,6 @@ Highcharts.maps["countries/br/br-all"] = {
 
 		});
 
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
-		var Child = {
-			parents: function(child) {
-				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' / ' : '')
-					+ (child.father_name || '');
-			}
-		};
-
-		var Step = {
-
-		};
-
-		return {
-			Child: Child,
-			Step: Step
-		};
-	})
 })();
 (function() {
 

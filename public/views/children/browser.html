@@ -11,8 +11,8 @@
 						<th>Nome <i class="fa fa-arrow-down"></i><br /><small>da criança ou adolescente</small></th>
 						<th>Risco <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
 						<th>Idade <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
-						<th>Responsável <i class="fa fa-arrow-down"></i><br /><small>pelo caso</small></th>
 						<th>Etapa <i class="fa fa-arrow-down"></i> <br />&nbsp;</th>
+						<th>Responsável <i class="fa fa-arrow-down"></i><br /><small>pela etapa</small></th>
 						<th>Status <i class="fa fa-arrow-down"></i> <br /><small>do caso</small></th>
 						<th class="text-center"><br />&nbsp;</th>
 					</tr>
@@ -20,7 +20,7 @@
 				<tbody>
 					<tr ng-repeat="(i, child) in search.results">
 						<td width="34%" style="vertical-align: middle;">
-							<strong>
+							<strong style="font-size: 15px;">
 								<i class="fa {{child.gender | lang:'child.gender_icon'}}" ng-show="child.gender"></i>
 								{{child.name}}
 							</strong><br />
@@ -33,13 +33,14 @@
 						</td>
 						<td width="10%" style="vertical-align: middle;">
 							<span ng-show="child.age">{{child.age}} anos</span>
-							<span ng-show="!child.age">N/A</span>
-						</td>
-						<td width="28%" style="vertical-align: middle;">
-							<i class="fa fa-user"></i> {{child.assigned_user_name}} <br />
+							<span ng-show="!child.age"><span uib-tooltip="Informação não disponível" class="label label-default">n/d</span></span>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
-							{{child.current_step_type | lang:'case_step.name'}} <br />
+							<strong>{{child.current_step_type | lang:'case_step.name'}}</strong>
+						</td>
+						<td width="28%" style="vertical-align: middle;">
+							<span ng-show="child.assigned_user_name"><i class="fa fa-user"></i> {{child.assigned_user_name}} <br /></span>
+							<span ng-show="!child.assigned_user_name"><span class="label label-warning" uib-tooltip="Nenhum usuário atribuído">---</span></span>
 						</td>
 						<td width="8%" style="vertical-align: middle;">
 							<span class="label label-danger" ng-show="child.is_late">Em atraso!</span>
@@ -113,7 +114,7 @@
 					<input type="number" style="width: 40px; text-align: center" min="0" max="28" class="form-control" id="filter-age-to" ng-model="query.age.to">
 					<span> anos </span>
 				</div>
-				<div class="checkbox col-md-12"><label for="filter-age-null"><input type="checkbox" ng-model="query.age_null" name="filter-age_null" id="filter-age-null"> Incluir casos sem informação</label></div>
+				<div class="checkbox"><label for="filter-age-null"><input type="checkbox" ng-model="query.age_null" name="filter-age_null" id="filter-age-null"> Casos sem informação</label></div>
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-gender-male">Por sexo</label>

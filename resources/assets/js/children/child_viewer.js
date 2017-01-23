@@ -7,7 +7,7 @@
 			$stateProvider
 				.state('child_viewer', {
 					url: '/children/view/{child_id}',
-					templateUrl: '/views/children/view/main.html',
+					templateUrl: '/views/children/view/viewer.html',
 					controller: 'ChildViewCtrl'
 				})
 				.state('child_viewer.consolidated', {
