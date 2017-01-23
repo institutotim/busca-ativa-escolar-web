@@ -14,6 +14,7 @@
 
 			'angularMoment',
 			'highcharts-ng',
+			'checklist-model',
 
 			'ui.router',
 			'ui.bootstrap',

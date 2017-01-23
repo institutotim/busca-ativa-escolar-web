@@ -18,7 +18,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="(i, child) in list.data">
+					<tr ng-repeat="(i, child) in search.results">
 						<td width="34%" style="vertical-align: middle;">
 							<strong>
 								<i class="fa {{child.gender | lang:'child.gender_icon'}}" ng-show="child.gender"></i>
@@ -36,8 +36,7 @@
 							<span ng-show="!child.age">N/A</span>
 						</td>
 						<td width="28%" style="vertical-align: middle;">
-							<i class="material-icons">person</i> Aryel Tupinambá <br />
-							<small>Coordenador Operacional</small>
+							<i class="fa fa-user"></i> {{child.assigned_user_name}} <br />
 						</td>
 						<td width="10%" style="vertical-align: middle;">
 							{{child.current_step_type | lang:'case_step.name'}} <br />
@@ -61,77 +60,82 @@
 	</div>
 </div>
 <div class="col-md-3">
-	<div class="panel panel-info">
+	<form name="childSearch" ng-submit="refresh()" class="panel panel-info">
 		<div class="panel-heading">
 			<i class="material-icons">filter_list</i> Buscar e filtrar
 		</div>
 		<div class="panel-body">
+
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-name">Por nome</label>
-				<input type="text" class="form-control" id="filter-name" placeholder="Nome da criança...">
+				<input type="text" class="form-control" id="filter-name" ng-model="query.name" placeholder="Nome da criança...">
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-type">Por causa</label>
-				<input type="text" class="form-control" id="filter-type" placeholder="Causa do caso...">
+				<input type="text" class="form-control" id="filter-type"  ng-model="query.cause_name" placeholder="Causa do caso...">
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-stage">Por etapa</label>
-				<input type="text" class="form-control" id="filter-stage" placeholder="Etapa do caso...">
+				<input type="text" class="form-control" id="filter-stage" ng-model="query.step_name" placeholder="Etapa do caso...">
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-assigned-user">Por responsável pelo caso</label>
-				<input type="text" class="form-control" id="filter-assigned-user" placeholder="Nome do usuário...">
+				<input type="text" class="form-control" id="filter-assigned-user" ng-model="query.assigned_user_name" placeholder="Nome do usuário...">
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-full-address">Por endereço</label>
-				<input type="text" class="form-control" id="filter-full-address" placeholder="Bairro, CEP, nome da rua...">
+				<input type="text" class="form-control" id="filter-full-address" ng-model="query.location_full" placeholder="Bairro, CEP, nome da rua...">
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-status-sent">Por status do alerta</label>
-				<div class="checkbox"><label for="filter-status-sent"><input type="checkbox" id="filter-status-sent" name="filter-status-sent" checked> Enviado</label></div>
-				<div class="checkbox"><label for="filter-status-rejected"><input type="checkbox" id="filter-status-rejected" name="filter-status-rejected"> Improcedente</label></div>
+				<div class="checkbox"><label for="filter-status-sent"><input type="checkbox" id="filter-status-sent" checklist-model="query.alert_status" checklist-value="'accepted'" name="filter-alert_status_accepted"> Enviado</label></div>
+				<div class="checkbox"><label for="filter-status-rejected"><input type="checkbox" id="filter-status-rejected" checklist-model="query.alert_status" checklist-value="'rejected'" name="filter-alert_status_rejected"> Improcedente</label></div>
 			</div>
 			<div class="form-group" style="margin-top: 5px">
-				<label class="control-label" for="filter-status-progress">Por status do caso</label>
-				<div class="checkbox"><label for="filter-status-progress"><input type="checkbox" id="filter-status-progress" name="filter-status-progress" checked> Em andamento</label></div>
-				<div class="checkbox"><label for="filter-status-delayed"><input type="checkbox" id="filter-status-delayed" name="filter-status-delayed" checked> Em atraso</label></div>
-				<div class="checkbox"><label for="filter-status-completed"><input type="checkbox" id="filter-status-completed" name="filter-status-completed" checked> Dentro da Escola</label></div>
-				<div class="checkbox"><label for="filter-status-closed"><input type="checkbox" id="filter-status-closed" name="filter-status-closed"> Concluído</label></div>
+				<label class="control-label" for="filter-status-in_progress">Por status do caso</label>
+				<div class="checkbox"><label for="filter-status-in_progress"><input type="checkbox" id="filter-status-in_progress"  checklist-model="query.case_status" checklist-value="'in_progress'" name="filter-case_status_in_progress"> Em andamento</label></div>
+				<div class="checkbox"><label for="filter-status-cancelled"><input type="checkbox" id="filter-status-cancelled"  checklist-model="query.case_status" checklist-value="'cancelled'" name="filter-case_status_cancelled"> Cancelado</label></div>
+				<div class="checkbox"><label for="filter-status-completed"><input type="checkbox" id="filter-status-completed"  checklist-model="query.case_status" checklist-value="'completed'" name="filter-case_status_completed"> Dentro da Escola</label></div>
+				<div class="checkbox"><label for="filter-status-interrupted"><input type="checkbox" id="filter-status-interrupted"  checklist-model="query.case_status" checklist-value="'interrupted'" name="filter-case_status_interrupted"> Interrompido</label></div>
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-risk-level-low">Por grau de risco</label>
-				<div class="checkbox"><label for="filter-risk-level-low"><input type="checkbox" id="filter-risk-level-low" name="filter-risk-level-low" checked> Baixo</label></div>
-				<div class="checkbox"><label for="filter-risk-level-medium"><input type="checkbox" id="filter-risk-level-medium" name="filter-risk-level-medium" checked> Médio</label></div>
-				<div class="checkbox"><label for="filter-risk-level-high"><input type="checkbox" id="filter-risk-level-high" name="filter-risk-level-high" checked> Alto</label></div>
+				<div class="checkbox"><label for="filter-risk-level-low"><input type="checkbox" id="filter-risk-level-low" checklist-model="query.risk_level" checklist-value="'low'" name="filter-risk_level_low"> Baixo</label></div>
+				<div class="checkbox"><label for="filter-risk-level-medium"><input type="checkbox" id="filter-risk-level-medium" checklist-model="query.risk_level" checklist-value="'medium'" name="filter-risk_level_medium"> Médio</label></div>
+				<div class="checkbox"><label for="filter-risk-level-high"><input type="checkbox" id="filter-risk-level-high" checklist-model="query.risk_level" checklist-value="'high'" name="filter-risk_level_high"> Alto</label></div>
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-age-from">Por idade</label>
 				<div class="form-inline">
 					<span> de </span>
-					<input type="number" style="width: 40px; text-align: center" min="0" max="20" class="form-control" id="filter-age-from" placeholder="0">
+					<input type="number" style="width: 40px; text-align: center" min="0" max="28" class="form-control" id="filter-age-from" ng-model="query.age.from">
 					<span> a </span>
-					<input type="number" style="width: 40px; text-align: center" min="0" max="21" class="form-control" id="filter-age-to" placeholder="21">
+					<input type="number" style="width: 40px; text-align: center" min="0" max="28" class="form-control" id="filter-age-to" ng-model="query.age.to">
 					<span> anos </span>
 				</div>
+				<div class="checkbox col-md-12"><label for="filter-age-null"><input type="checkbox" ng-model="query.age_null" name="filter-age_null" id="filter-age-null"> Incluir casos sem informação</label></div>
 			</div>
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-gender-male">Por sexo</label>
 				<div class="form-inline row">
-					<div class="checkbox col-md-6"><label for="filter-gender-male"><input type="checkbox" id="filter-gender-male" name="filter-gender-male" checked> <i class="fa fa-mars"></i> Masc.</label></div>
-					<div class="checkbox col-md-6"><label for="filter-gender-female"><input type="checkbox" id="filter-gender-female" name="filter-gender-female" checked> <i class="fa fa-venus"></i> Fem.</label></div>
+					<div class="checkbox col-md-6"><label for="filter-gender-male"><input type="checkbox" checklist-model="query.gender" checklist-value="'male'" name="filter-gender_male" id="filter-gender-male"> <i class="fa fa-mars"></i> Masc.</label></div>
+					<div class="checkbox col-md-6"><label for="filter-gender-female"><input type="checkbox" checklist-model="query.gender" checklist-value="'female'" name="filter-gender_female" id="filter-gender-female"> <i class="fa fa-venus"></i> Fem.</label></div>
+					<div class="checkbox col-md-6"><label for="filter-gender-undefined"><input type="checkbox" checklist-model="query.gender" checklist-value="'undefined'" name="filter-gender_undefined" id="filter-gender-undefined"> <i class="fa fa-transgender"></i> Indef.</label></div>
+					<div class="checkbox col-md-6"><label for="filter-gender-null"><input type="checkbox" ng-model="query.gender_null" name="filter-gender_null" id="filter-gender-null"> <i class="fa fa-block"></i> Sem info.</label></div>
 				</div>
 			</div>
 			<div class="form-group" style="margin-top: 5px">
-				<label class="control-label" for="filter-zone-rural">Por zona</label>
+				<label class="control-label" for="filter-place_kind-rural">Por zona</label>
 				<div class="form-inline row">
-					<div class="checkbox col-md-6"><label for="filter-zone-rural"><input type="checkbox" id="filter-zone-rural" name="filter-zone-rural" checked> Rural</label></div>
-					<div class="checkbox col-md-6"><label for="filter-zone-urban"><input type="checkbox" id="filter-zone-urban" name="filter-zone-urban" checked> Urbana</label></div>
+					<div class="checkbox col-md-6"><label for="filter-place_kind-rural"><input type="checkbox" checklist-model="query.place_kind" checklist-value="'rural'" name="filter-place_kind_rural" id="filter-place_kind-rural"> Rural</label></div>
+					<div class="checkbox col-md-6"><label for="filter-place_kind-urban"><input type="checkbox" checklist-model="query.place_kind" checklist-value="'urban'" name="filter-place_kind_urban" id="filter-place_kind-urban"> Urbana</label></div>
+					<div class="checkbox col-md-12"><label for="filter-place_kind-null"><input type="checkbox" ng-model="query.place_kind_null" name="filter-place_kind_null" id="filter-place_kind-null"> Sem informação</label></div>
 				</div>
 			</div>
 		</div>
 		<div class="panel-footer">
 			<div>
-				<a class="btn btn-raised btn-info" style="width: 100%; padding: 8px 0"><i class="material-icons">search</i> Filtrar</a>
+				<button type="submit" class="btn btn-raised btn-info" style="width: 100%; padding: 8px 0"><i class="fa fa-search"></i> Filtrar</button>
 			</div>
 			<hr />
 			<div style="text-align: center">
@@ -139,5 +143,5 @@
 				<a class="btn btn-success"><i class="fa fa-file-excel-o"></i> Exportar XLS</a>
 			</div>
 		</div>
-	</div>
+	</form>
 </div>
