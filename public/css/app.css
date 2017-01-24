@@ -323,4 +323,27 @@ p.agent-panel {
   border: 5px dashed #ef9a9a;
 }
 
+.platform-updates-widget .update-item {
+  overflow: visible;
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+}
+.platform-updates-widget .update-item .update-avatar {
+  margin-right: 5px;
+}
+.platform-updates-widget .update-item .update-avatar img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+.platform-updates-widget .update-item .update-message {
+  display: inline-block;
+  max-width: calc(100% - 210px);
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: middle;
+  padding-left: 5px;
+}
+
 /*# sourceMappingURL=app.css.map */

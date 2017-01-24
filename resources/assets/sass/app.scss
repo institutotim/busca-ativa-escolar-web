@@ -103,3 +103,26 @@ p.agent-panel{
 	&.file-valid { border: 5px dashed $green-200; }
 	&.file-invalid { border: 5px dashed $red-200; }
 }
+
+.platform-updates-widget {
+	.update-item {
+
+		overflow: visible;
+		border-bottom: 1px solid #ccc;
+		padding: 10px;
+
+		.update-avatar {
+			img { width: 32px; height: 32px; border-radius: 4px; vertical-align: middle; }
+			margin-right: 5px;
+		}
+
+		.update-message {
+			display: inline-block;
+			max-width: calc(100% - 210px);
+			overflow: hidden;
+			white-space: nowrap;
+			vertical-align: middle;
+			padding-left: 5px;
+		}
+	}
+}
