@@ -8,8 +8,8 @@
 			</span>
 
 			<span class="update-repo label {{commit.repo === 'api' ? 'label-success' : 'label-primary'}}">{{commit.repo}}</span>
-			<span class="update-date label label-default" uib-tooltip-html="commit.date">{{commit.date | amTimeAgo}}</span>
 			<span class="update-message">{{commit.message}}</span>
+			<span class="update-date pull-right label label-default" uib-tooltip-html="commit.date">{{commit.date | amTimeAgo}}</span>
 
 		</div>
 	</div>
