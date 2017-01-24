@@ -31,16 +31,6 @@
 					unauthenticated: true
 
 				})
-				.state('users', {
-					url: '/users',
-					templateUrl: '/views/users/list.html',
-					controller: 'UserSearchCtrl'
-				})
-				.state('user_view', {
-					url: '/users/view/{user_id}',
-					templateUrl: '/views/users/view.html'//,
-					//controller: 'UserViewCtrl'
-				})
 				.state('cities', {
 					url: '/cities',
 					templateUrl: '/views/cities/list.html',

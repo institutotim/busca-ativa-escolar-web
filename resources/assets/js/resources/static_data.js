@@ -23,6 +23,7 @@
 				data = res.data.data;
 			}
 
+			function getUserTypes() { return (data.UserType) ? data.UserType : {}; }
 			function getAlertCauses() { return (data.AlertCause) ? data.AlertCause : {}; }
 			function getCaseCauses() { return (data.CaseCause) ? data.CaseCause : {}; }
 			function getGenders() { return (data.Gender) ? data.Gender : {}; }
@@ -37,6 +38,7 @@
 			return {
 				fetchLatestVersion: fetchLatestVersion,
 				refresh: refresh,
+				getUserTypes: getUserTypes,
 				getAlertCauses: getAlertCauses,
 				getCaseCauses: getCaseCauses,
 				getGenders: getGenders,

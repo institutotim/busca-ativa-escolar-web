@@ -1,0 +1,119 @@
+<div class="wnd-view">
+	<form name="userEdit" class="panel panel-default" ng-submit="save()">
+		<div class="panel-heading clearfix">
+			<div class="pull-left" ng-show="!isCreating">
+				<h1>
+					<i class="fa fa-user"></i> {{user.name}} <small>{{user.type | lang:'user.type'}}</small>
+				</h1>
+			</div>
+			<div class="pull-left" ng-show="isCreating">
+				<h1>
+					<i class="fa fa-user-plus"></i> Cadastrar usuário
+				</h1>
+			</div>
+
+		</div>
+		<div class="panel-body">
+
+			<div class="form-group col-md-12">
+				<label class="control-label" for="fld-name">Nome*</label>
+				<input type="text" class="form-control" id="fld-name" ng-model="user.name">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-email">E-mail institucional*</label>
+				<input type="email" class="form-control" id="fld-email" ng-model="user.email" ng-readonly="!isCreating">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-password">Senha de acesso*</label>
+				<input type="password" class="form-control" id="fld-password" ng-model="user.password">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-dob">Data de nascimento*</label>
+				<input type="tel" class="form-control" id="fld-dob" ui-date-mask ng-model="user.dob">
+			</div>
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-cpf">CPF*</label>
+				<input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-model="user.cpf">
+			</div>
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
+				<input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-model="user.work_phone">
+			</div>
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
+				<input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number ng-model="user.work_mobile">
+			</div>
+
+
+			<div class="form-group col-md-4">
+				<label class="control-label" for="fld-personal-email">E-mail pessoal</label>
+				<input type="email" class="form-control" id="fld-personal-email" ng-model="user.personal_email">
+			</div>
+
+			<div class="form-group col-md-4">
+				<label class="control-label" for="fld-personal-mobile">Telefone celular pessoal</label>
+				<input type="text" class="form-control" id="fld-personal-mobile" ui-br-phone-number ng-model="user.personal_mobile">
+			</div>
+
+			<div class="form-group col-md-4">
+				<label class="control-label" for="fld-skype-username">Skype</label>
+				<input type="text" class="form-control" id="fld-skype-username" ng-model="user.skype_username">
+			</div>
+
+			<div class="form-group col-md-4">
+				<label class="control-label" for="fld-address">Endereço institucional*</label>
+				<input type="text" class="form-control" id="fld-address" ng-model="user.work_address">
+			</div>
+
+			<div class="form-group col-md-4">
+				<label class="control-label" for="fld-cep">CEP institucional*</label>
+				<input type="text" class="form-control" id="fld-cep" ui-br-cep-mask ng-model="user.work_cep">
+			</div>
+
+			<div class="form-group col-md-4">
+				<label class="control-label" for="fld-neighborhood">Bairro*</label>
+				<input type="text" class="form-control" id="fld-neighborhood" ng-model="user.work_neighborhood">
+			</div>
+
+			<div class="form-group col-md-4">
+				<label class="control-label" for="fld-uf">Estado*</label>
+				<input type="text" class="form-control" id="fld-uf" ng-model="user.work_uf">
+			</div>
+
+			<div class="form-group col-md-8">
+				<label class="control-label" for="fld-city">Município*</label>
+				<input type="text" class="form-control" id="fld-city" ng-model="user.work_city">
+			</div>
+
+			<hr />
+
+			<div class="form-group col-md-12">
+				<label class="control-label" for="fld-type">Função ocupada no sistema*</label>
+				<select class="form-control" id="fld-type" ng-model="user.type" ng-options="n as (n | lang:'user.type') for n in static.getUserTypes()"></select>
+			</div>
+
+			<div class="form-group col-md-12">
+				<label class="control-label" for="fld-group">Grupo*</label>
+				<select class="form-control" id="fld-group" ng-model="user.group_id" ng-options="n.id as n.name for n in groups.data"></select>
+			</div>
+
+			<div class="form-group col-md-12">
+				<label class="control-label" for="fld-institution">Instituição*</label>
+				<input type="text" class="form-control" id="fld-institution" ng-model="user.institution">
+			</div>
+
+			<div class="form-group col-md-12">
+				<label class="control-label" for="fld-position">Cargo*</label>
+				<input type="text" class="form-control" id="fld-position" ng-model="user.position">
+			</div>
+
+			<hr />
+
+			<button type="submit" class="btn btn-raised btn-primary pull-right">Salvar</button>
+
+		</div>
+	</form>
+</div>

@@ -11,7 +11,7 @@
 @import 'components/app_footer';
 @import 'components/loading_feedback';
 
-.ng-invalid { background-color: rgba($brand-danger, 0.15) !important; }
+.form-control.ng-invalid { background-image: linear-gradient($brand-danger, $brand-danger), linear-gradient(#D2D2D2, #D2D2D2) !important; }
 
 .form-group { margin-top: 10px; }
 .button-menu .btn { padding: 8px 0; }
@@ -71,6 +71,10 @@
 
 p.agent-panel{
      font-size: 18px;
+}
+
+.form-control[readonly] {
+	background-image: none !important;
 }
 
 .form-control-table {

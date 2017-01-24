@@ -204,8 +204,8 @@ footer.app-footer a.credits-btn {
   top: calc(50% - 100px);
 }
 
-.ng-invalid {
-  background-color: rgba(217, 83, 79, 0.15) !important;
+.form-control.ng-invalid {
+  background-image: linear-gradient(#d9534f, #d9534f), linear-gradient(#d2d2d2, #d2d2d2) !important;
 }
 
 .form-group {
@@ -281,6 +281,10 @@ footer.app-footer a.credits-btn {
 
 p.agent-panel {
   font-size: 18px;
+}
+
+.form-control[readonly] {
+  background-image: none !important;
 }
 
 .form-control-table {

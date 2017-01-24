@@ -7,16 +7,11 @@
 
 				if(config.headers['X-Require-Auth'] !== 'auth-required') return config;
 
-				if(Identity.isLoggedIn()) {
+				return Identity.provideToken().then(function (access_token) {
+					config.headers.Authorization = 'Bearer ' + access_token;
+					return config;
+				});
 
-					return Identity.provideToken().then(function (access_token) {
-						config.headers.Authorization = 'Bearer ' + access_token;
-						return config;
-					})
-
-				}
-
-				return config;
 			};
 
 			this.responseError = function (response) {

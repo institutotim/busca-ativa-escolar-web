@@ -156,21 +156,7 @@
 				place_kind_null: true,
 			};
 
-			$scope.checkboxes = {};
 			$scope.search = {};
-
-			$scope.isCheckboxChecked = function(field, value) {
-				if(!$scope.query) return false;
-				if(!$scope.query[field]) $scope.query[field] = [];
-				return $scope.query[field].indexOf(value) !== -1;
-			};
-
-			$scope.toggleCheckbox = function (field, value) {
-				if(!$scope.query[field]) $scope.query[field] = []; // Ensures list exists
-				var index = $scope.query[field].indexOf(value); // Check if in list
-				if(index === -1) return $scope.query[field].push(value); // Add to list
-				return $scope.query[field].splice(index, 1); // Remove from list
-			};
 
 			$scope.refresh = function() {
 				$scope.search = Children.search($scope.query);
@@ -736,16 +722,6 @@
 					controller: 'DeveloperCtrl',
 					unauthenticated: true
 
-				})
-				.state('users', {
-					url: '/users',
-					templateUrl: '/views/users/list.html',
-					controller: 'UserSearchCtrl'
-				})
-				.state('user_view', {
-					url: '/users/view/{user_id}',
-					templateUrl: '/views/users/view.html'//,
-					//controller: 'UserViewCtrl'
 				})
 				.state('cities', {
 					url: '/cities',
@@ -1375,30 +1351,6 @@
 				$scope.step = 4;
 			});
 		};
-
-	});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar').controller('UserSearchCtrl', function ($scope, $rootScope, MockData, Identity) {
-
-		$rootScope.section = 'users';
-		$scope.identity = Identity;
-
-		$scope.cities = MockData.cities;
-		$scope.states = MockData.states;
-		$scope.groups = MockData.groups;
-
-		$scope.range = function (start, end) {
-			var arr = [];
-
-			for(var i = start; i <= end; i++) {
-				arr.push(i);
-			}
-
-			return arr;
-		}
 
 	});
 
@@ -2290,16 +2242,11 @@ Highcharts.maps["countries/br/br-all"] = {
 
 				if(config.headers['X-Require-Auth'] !== 'auth-required') return config;
 
-				if(Identity.isLoggedIn()) {
+				return Identity.provideToken().then(function (access_token) {
+					config.headers.Authorization = 'Bearer ' + access_token;
+					return config;
+				});
 
-					return Identity.provideToken().then(function (access_token) {
-						config.headers.Authorization = 'Bearer ' + access_token;
-						return config;
-					})
-
-				}
-
-				return config;
 			};
 
 			this.responseError = function (response) {
@@ -2676,16 +2623,27 @@ if (!Array.prototype.find) {
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
-		.factory('Tenants', function Tenants(API, Identity, $resource) {
+		.factory('Cities', function Cities(API, Identity, $resource) {
 
 			let headers = {};
 
-			return $resource(API.getURI('tenants/:id'), {id: '@id'}, {
-				get: {method: 'GET', headers: headers},
-				save: {method: 'POST', headers: headers},
-				query: {method: 'GET', isArray: true, headers: headers},
-				remove: {method: 'DELETE', headers: headers},
-				delete: {method: 'DELETE', headers: headers}
+			return $resource(API.getURI('cities/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: headers}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Groups', function Groups(API, $resource) {
+
+			let headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('groups/:id'), {id: '@id', with: '@with'}, {
+				find: {method: 'GET', headers: headers},
+				create: {method: 'POST', headers: headers},
+				update: {method: 'PUT', headers: headers},
 			});
 
 		});
@@ -2715,6 +2673,7 @@ if (!Array.prototype.find) {
 				data = res.data.data;
 			}
 
+			function getUserTypes() { return (data.UserType) ? data.UserType : {}; }
 			function getAlertCauses() { return (data.AlertCause) ? data.AlertCause : {}; }
 			function getCaseCauses() { return (data.CaseCause) ? data.CaseCause : {}; }
 			function getGenders() { return (data.Gender) ? data.Gender : {}; }
@@ -2729,6 +2688,7 @@ if (!Array.prototype.find) {
 			return {
 				fetchLatestVersion: fetchLatestVersion,
 				refresh: refresh,
+				getUserTypes: getUserTypes,
 				getAlertCauses: getAlertCauses,
 				getCaseCauses: getCaseCauses,
 				getGenders: getGenders,
@@ -2746,16 +2706,12 @@ if (!Array.prototype.find) {
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
-		.factory('Cities', function Cities(API, Identity, $resource) {
+		.factory('Tenants', function Tenants(API, Identity, $resource) {
 
 			let headers = {};
 
-			return $resource(API.getURI('cities/:id'), {id: '@id'}, {
-				get: {method: 'GET', headers: headers},
-				save: {method: 'POST', headers: headers},
-				query: {method: 'GET', isArray: true, headers: headers},
-				remove: {method: 'DELETE', headers: headers},
-				delete: {method: 'DELETE', headers: headers}
+			return $resource(API.getURI('tenants/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: headers}
 			});
 
 		});
@@ -2769,7 +2725,9 @@ if (!Array.prototype.find) {
 
 			return $resource(API.getURI('users/:id'), {id: '@id', with: '@with'}, {
 				find: {method: 'GET', headers: headers},
-				update: {method: 'POST', headers: headers}
+				create: {method: 'POST', headers: headers},
+				update: {method: 'PUT', headers: headers},
+				search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
 			});
 
 		});
@@ -3935,4 +3893,116 @@ if (!Array.prototype.find) {
 function identify(namespace, file) {
 	console.log("[core.load] ", namespace, file);
 }
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('user_browser', {
+				url: '/users',
+				templateUrl: '/views/users/browser.html',
+				controller: 'UserBrowserCtrl'
+			})
+		})
+		.controller('UserBrowserCtrl', function ($scope, $rootScope, Identity, Users, Groups, Tenants, StaticData) {
+
+		$scope.identity = Identity;
+		$scope.query = {
+			tenant_id: null,
+			group_id: null,
+			type: null,
+			email: null,
+			max: 128,
+		};
+
+		$scope.setMaxResults = function(max) {
+			$scope.query.max = max;
+			$scope.refresh();
+		};
+
+		$scope.canFilterByTenant = (Identity.getType() === 'gestor_nacional' || Identity.getType() === 'superuser');
+
+		$scope.static = StaticData;
+		$scope.tenants = Tenants.find();
+		$scope.groups = Groups.find();
+
+		$scope.checkboxes = {};
+		$scope.search = {};
+
+		$scope.refresh = function() {
+			$scope.search = Users.search($scope.query);
+		};
+
+		$scope.refresh();
+
+
+
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('user_editor', {
+				url: '/users/{user_id}',
+				templateUrl: '/views/users/editor.html',
+				controller: 'UserEditorCtrl'
+			})
+		})
+		.controller('UserEditorCtrl', function ($scope, $state, $stateParams, ngToast, Utils, Identity, Users, Groups, StaticData) {
+
+			$scope.isCreating = (!$stateParams.user_id || $stateParams.user_id === "new");
+			$scope.identity = Identity;
+			$scope.static = StaticData;
+
+			$scope.groups = Groups.find();
+			$scope.user = $scope.isCreating
+				? {}
+				: Users.find({id: $stateParams.user_id});
+
+			$scope.save = function() {
+
+				$scope.user = prepareDateFields($scope.user);
+
+				if($scope.isCreating) {
+					return Users.create($scope.user).$promise.then(onSaved)
+				}
+
+				Users.update($scope.user).$promise.then(onSaved);
+
+			};
+
+			function prepareDateFields(data) {
+				var dateOnlyFields = ['dob'];
+
+				for(var i in data) {
+					if(!data.hasOwnProperty(i)) continue;
+					if(dateOnlyFields.indexOf(i) === -1) continue;
+
+					data[i] = Utils.stripTimeFromTimestamp(data[i]);
+				}
+
+				return data;
+			}
+
+			function onSaved(res) {
+				if(res.status === "ok") {
+					ngToast.success("Dados de usuário salvos com sucesso!");
+
+					if($scope.isCreating) $state.go('user_editor', {user_id: res.id});
+
+					return;
+				}
+
+				if(res.fields) {
+					ngToast.danger("Por favor, preencha corretamente os campos: " + Object.keys(res.fields).join(", "));
+					return;
+				}
+
+				ngToast.danger("Ocorreu um erro ao salvar o usuário: ", res.status);
+			}
+
+		});
+
+})();
 //# sourceMappingURL=app.js.map
