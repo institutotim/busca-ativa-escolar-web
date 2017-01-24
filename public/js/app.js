@@ -175,7 +175,7 @@
 		.config(function ($stateProvider) {
 			$stateProvider
 				.state('child_viewer.cases', {
-					url: '/children/{child_id}',
+					url: '/cases',
 					templateUrl: '/views/children/view/steps.html',
 					controller: 'ChildCasesCtrl'
 				})
@@ -196,14 +196,28 @@
 		$scope.child = $scope.$parent.child;
 
 		$scope.openedCase = {};
+		$scope.openStepID = null;
 
 		$scope.child.$promise.then(openCurrentCase);
 
 		function openCurrentCase(child) {
+
+			console.log("[child_viewer.cases] Opening current case for child: ", child);
+
 			$scope.openedCase = child.cases.find(function(item) {
 				if($stateParams.case_id) return item.id === $stateParams.case_id;
 				return item.case_status === 'in_progress';
 			});
+
+			console.log("[child_viewer.cases] Current case: ", $scope.openedCase, "; finding current step to open");
+
+			var stepToOpen = $scope.openedCase.steps.find(function (step) {
+				return ($scope.openedCase.current_step_id === step.id);
+			});
+
+			console.log("[child_viewer.cases] Opening current step... ", stepToOpen);
+
+			$scope.openStep(stepToOpen);
 		}
 
 		console.log("[core] @ChildCasesCtrl", $scope.child, $scope.openedCase);
@@ -218,9 +232,12 @@
 		};
 
 		$scope.renderStepStatusClass = function(childCase, step) {
-			if(step.is_completed) return 'step-completed';
-			if(childCase.current_step_id === step.id) return 'step-current';
-			return 'step-pending';
+
+			var toggleClass = (step.id === $scope.openStepID) ? ' step-open' : '';
+
+			if(step.is_completed) return 'step-completed' + toggleClass;
+			if(childCase.current_step_id === step.id) return 'step-current' + toggleClass;
+			return 'step-pending' + toggleClass;
 		};
 
 		$scope.canOpenStep = function(step) {
@@ -231,6 +248,10 @@
 
 		$scope.openStep = function(selectedStep) {
 			if(!$scope.canOpenStep(selectedStep)) return false;
+
+			$scope.openStepID = selectedStep.id;
+
+			console.log("[child_viewer.cases] Opening step: ", selectedStep);
 
 			$state.go('child_viewer.cases.view_step', {step_type: selectedStep.step_type, step_id: selectedStep.id});
 		};
@@ -250,6 +271,8 @@
 		};
 
 		$scope.completeStep = function(step) {
+
+			console.log("[child_viewer.cases] Attempting to complete step: ", step);
 
 			var question = 'Tem certeza que deseja prosseguir para a próxima etapa?';
 			var explanation = 'Ao progredir de etapa, a etapa atual será marcada como concluída. Os dados preenchidos serão salvos.';
@@ -306,11 +329,15 @@
 		$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields'});
 		$scope.step.$promise.then(function (step) {
 			$scope.fields = step.fields;
+			$scope.$parent.openStepID = $scope.step.id;
 		});
+
 
 		console.log("[core] @ChildCaseStepCtrl", $scope.step);
 
 		$scope.saveAndProceed = function() {
+			console.log("[child_viewer.cases.step] Attempting to save and complete step: ", $scope.step);
+
 			$scope.save().then(function() {
 				$scope.$parent.completeStep($scope.step);
 			});
@@ -377,6 +404,8 @@
 
 		$scope.assignUser = function() {
 
+			console.log("[child_viewer.cases.step] Attempting to assign new user for step: ", $scope.step);
+
 			CaseSteps.assignableUsers({type: $scope.step.step_type, id: $scope.step.id}).$promise
 				.then(function (res) {
 					if(!res.users) return ngToast.danger("Nenhum usuário pode ser atribuído para essa etapa!");
@@ -406,6 +435,7 @@
 		};
 
 		$scope.save = function() {
+
 			var data = $scope.step.fields;
 			data = filterOutEmptyFields($scope.step.fields);
 			data = prepareDateFields(data);
@@ -485,22 +515,14 @@
 					templateUrl: '/views/children/view/viewer.html',
 					controller: 'ChildViewCtrl'
 				})
-				.state('child_viewer.consolidated', {
-					url: '/consolidated',
-					templateUrl: '/views/children/view/consolidated.html'
-				})
 				.state('child_viewer.activity_log', {
 					url: '/activity_log',
 					templateUrl: '/views/children/view/activity_log.html'
 				})
-				.state('child_viewer.assigned_users', {
-					url: '/assigned_users',
-					templateUrl: '/views/children/view/assigned_users.html'
-				})
 		});
 
 	function ChildViewCtrl($scope, $state, $stateParams, Children, Decorators) {
-		if($state.current.name === "child_viewer") $state.go('.consolidated');
+		if ($state.current.name === "child_viewer") $state.go('.cases');
 
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
@@ -510,24 +532,6 @@
 
 		console.log("[core] @ChildViewCtrl", $scope.child);
 
-		// TODO: get consolidated info from endpoint
-
-	}
-
-	function ChildCommentsCtrl() {
-		// TODO: handle comments
-	}
-
-	function ChildAttachmentsCtrl() {
-		// TODO: handle attachments
-	}
-
-	function ChildActivityLogCtrl() {
-		// TODO: handle activity log
-	}
-
-	function ChildAssignedUsersCtrl() {
-		// TODO: handle assigned users
 	}
 
 })();

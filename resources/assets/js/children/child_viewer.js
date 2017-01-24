@@ -10,22 +10,14 @@
 					templateUrl: '/views/children/view/viewer.html',
 					controller: 'ChildViewCtrl'
 				})
-				.state('child_viewer.consolidated', {
-					url: '/consolidated',
-					templateUrl: '/views/children/view/consolidated.html'
-				})
 				.state('child_viewer.activity_log', {
 					url: '/activity_log',
 					templateUrl: '/views/children/view/activity_log.html'
 				})
-				.state('child_viewer.assigned_users', {
-					url: '/assigned_users',
-					templateUrl: '/views/children/view/assigned_users.html'
-				})
 		});
 
 	function ChildViewCtrl($scope, $state, $stateParams, Children, Decorators) {
-		if($state.current.name === "child_viewer") $state.go('.consolidated');
+		if ($state.current.name === "child_viewer") $state.go('.cases');
 
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
@@ -35,24 +27,6 @@
 
 		console.log("[core] @ChildViewCtrl", $scope.child);
 
-		// TODO: get consolidated info from endpoint
-
-	}
-
-	function ChildCommentsCtrl() {
-		// TODO: handle comments
-	}
-
-	function ChildAttachmentsCtrl() {
-		// TODO: handle attachments
-	}
-
-	function ChildActivityLogCtrl() {
-		// TODO: handle activity log
-	}
-
-	function ChildAssignedUsersCtrl() {
-		// TODO: handle assigned users
 	}
 
 })();

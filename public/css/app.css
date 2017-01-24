@@ -80,6 +80,10 @@
   border-right: 0;
 }
 
+.case-container .panel-body {
+  padding: 0;
+}
+
 .step-list {
   display: block;
   position: relative;
@@ -90,7 +94,8 @@
   position: relative;
   width: 100%;
   height: 60px;
-  padding: 10px 10px 10px 40px;
+  cursor: pointer;
+  padding: 10px 10px 10px 55px;
 }
 .step-list .step strong, .step-list .step small {
   display: block;
@@ -107,7 +112,7 @@
 }
 .step-list .step::before {
   position: absolute;
-  left: 20px;
+  left: 35px;
   top: 0;
   width: 1px;
   height: 60px;
@@ -116,7 +121,7 @@
 }
 .step-list .step::after {
   position: absolute;
-  left: 10px;
+  left: 25px;
   top: 20px;
   width: 20px;
   height: 20px;
@@ -125,11 +130,14 @@
   z-index: 10;
   content: '';
 }
-.step-list .step.active strong {
-  color: dodgerblue;
+.step-list .step.step-open {
+  background-color: rgba(0, 184, 237, 0.15);
 }
-.step-list .step.active::after {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+.step-list .step.step-open strong {
+  color: #00b8ed;
+}
+.step-list .step .btn-under {
+  margin: 2px 0;
 }
 .step-list .step:first-child::before {
   top: 20px;
@@ -223,6 +231,10 @@ footer.app-footer a.credits-btn {
 .case-step-dropdown li a {
   font-size: 16px;
   padding: 13px 16px;
+}
+
+.btn-raised:focus {
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
 .list-group .list-group-item.timeline-item {

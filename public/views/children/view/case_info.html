@@ -6,7 +6,7 @@
 		<div class="col-md-6 text-right" ng-show="step.assigned_user">
 			<div style="display: inline-block; vertical-align: middle;" uib-tooltip="Usuário responsável pela etapa">
 				<strong><i class="fa fa-user"></i> {{step.assigned_user.name}}</strong><br />
-				<small>{{step.assigned_user.type}}</small><br />
+				<small>{{step.assigned_user.type | lang:'user.type'}}</small><br />
 			</div>
 			<div style="display: inline-block; vertical-align: middle; margin-left: 20px;">
 				<a class="btn btn-xs btn-info btn-raised" ng-click="assignUser()">Alterar</a>

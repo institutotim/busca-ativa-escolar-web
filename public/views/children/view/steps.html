@@ -1,9 +1,9 @@
 <div class="row">
 	<div class="col-md-3">
-		<h3><i class="material-icons">assignment</i> Etapas</h3>
+		<h3><i class="fa fa-check-square-o"></i> Etapas</h3>
 		<hr />
 
-		<div ng-repeat="(i, case) in child.cases" class="panel panel-default">
+		<div ng-repeat="(i, case) in child.cases" class="panel panel-default case-container">
 			<div class="panel-heading" ng-click="collapseCase(case)">
 				#{{case.name}}
 				<span ng-show="case.case_status === 'cancelled'" class="label label-warn">Cancelado {{case.updated_at | amTimeAgo}}</span>
