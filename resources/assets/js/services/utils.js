@@ -20,11 +20,42 @@
 
 		})
 		.factory('Utils', function() {
-			return {
-				stripTimeFromTimestamp: function (timestamp) {
-					if(timestamp instanceof Date) timestamp = timestamp.toISOString();
-					return ("" + timestamp).substring(0, 10);
+
+			function stripTimeFromTimestamp(timestamp) {
+				if(timestamp instanceof Date) timestamp = timestamp.toISOString();
+				return ("" + timestamp).substring(0, 10);
+			}
+
+			function filter(obj, predicate) {
+				if(obj.constructor === Array) return obj.filter(predicate);
+
+				var result = {}, key;
+
+				for (key in obj) {
+					if (obj.hasOwnProperty(key) && !!predicate(obj[key])) {
+						result[key] = obj[key];
+					}
 				}
+
+				return result;
+			}
+
+			function extract(field, obj, predicate) {
+				var filtered = filter(obj, predicate);
+				var result = [];
+
+				for(var i in filtered) {
+					if(!filtered.hasOwnProperty(i)) continue;
+					result.push(filtered[i][field]);
+				}
+
+				return result;
+			}
+
+			return {
+				stripTimeFromTimestamp: stripTimeFromTimestamp,
+				filter: filter,
+				extract: extract,
 			};
 		})
 		.directive('stringToNumber', function() {

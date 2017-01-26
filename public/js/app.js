@@ -364,6 +364,7 @@
 			$scope.$parent.openStepID = $scope.step.id;
 		});
 
+		var handicappedCauseIDs = [];
 
 		console.log("[core] @ChildCaseStepCtrl", $scope.step);
 
@@ -390,6 +391,26 @@
 			if(!$scope.step) return false;
 			if(!$scope.$parent.openedCase) return false;
 			return (!$scope.step.is_completed);
+		};
+
+		$scope.isHandicapped = function() {
+			if(!$scope.step || !$scope.step.fields || !$scope.step.fields.case_cause_ids) return false;
+
+			if(!handicappedCauseIDs || handicappedCauseIDs.length <= 0) {
+				handicappedCauseIDs = Utils.extract('id', StaticData.getCaseCauses(), function (item) {
+					return (item.is_handicapped === true);
+				});
+			}
+
+			var currentCauses = $scope.step.fields.case_cause_ids;
+
+			for(var i in currentCauses) {
+				if(!currentCauses.hasOwnProperty(i)) continue;
+				var cause = currentCauses[i];
+				if(handicappedCauseIDs.indexOf(cause) !== -1) return true;
+			}
+
+			return false;
 		};
 
 		$scope.canCompleteStep = function() {
@@ -464,6 +485,11 @@
 			var index = $scope.fields[field].indexOf(value); // Check if in list
 			if(index === -1) return $scope.fields[field].push(value); // Add to list
 			return $scope.fields[field].splice(index, 1); // Remove from list
+		};
+
+		$scope.getCaseCauseIDs = function() {
+			if(!$scope.$parent.openedCase) return [];
+			return $scope.$parent.openedCase.case_cause_ids;
 		};
 
 		$scope.save = function() {
@@ -1470,6 +1496,26 @@
 
 })();
 (function() {
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' / ' : '')
+					+ (child.father_name || '');
+			}
+		};
+
+		var Step = {
+
+		};
+
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
+})();
+(function() {
 
 	angular
 		.module('BuscaAtivaEscolar')
@@ -2328,26 +2374,6 @@ Highcharts.maps["countries/br/br-all"] = {
 	}]
 };
 (function() {
-	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
-		var Child = {
-			parents: function(child) {
-				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' / ' : '')
-					+ (child.father_name || '');
-			}
-		};
-
-		var Step = {
-
-		};
-
-		return {
-			Child: Child,
-			Step: Step
-		};
-	})
-})();
-(function() {
 	angular
 		.module('BuscaAtivaEscolar')
 		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
@@ -2416,49 +2442,6 @@ Highcharts.maps["countries/br/br-all"] = {
 		});
 
 })();
-if (!Array.prototype.find) {
-	Object.defineProperty(Array.prototype, 'find', {
-		value: function(predicate) {
-			// 1. Let O be ? ToObject(this value).
-			if (this == null) {
-				throw new TypeError('"this" is null or not defined');
-			}
-
-			var o = Object(this);
-
-			// 2. Let len be ? ToLength(? Get(O, "length")).
-			var len = o.length >>> 0;
-
-			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
-			if (typeof predicate !== 'function') {
-				throw new TypeError('predicate must be a function');
-			}
-
-			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-			var thisArg = arguments[1];
-
-			// 5. Let k be 0.
-			var k = 0;
-
-			// 6. Repeat, while k < len
-			while (k < len) {
-				// a. Let Pk be ! ToString(k).
-				// b. Let kValue be ? Get(O, Pk).
-				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-				// d. If testResult is true, return kValue.
-				var kValue = o[k];
-				if (predicate.call(thisArg, kValue, k, o)) {
-					return kValue;
-				}
-				// e. Increase k by 1.
-				k++;
-			}
-
-			// 7. Return undefined.
-			return undefined;
-		}
-	});
-}
 (function() {
 
 	angular
@@ -2672,6 +2655,49 @@ if (!Array.prototype.find) {
 		});
 
 })();
+if (!Array.prototype.find) {
+	Object.defineProperty(Array.prototype, 'find', {
+		value: function(predicate) {
+			// 1. Let O be ? ToObject(this value).
+			if (this == null) {
+				throw new TypeError('"this" is null or not defined');
+			}
+
+			var o = Object(this);
+
+			// 2. Let len be ? ToLength(? Get(O, "length")).
+			var len = o.length >>> 0;
+
+			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
+			if (typeof predicate !== 'function') {
+				throw new TypeError('predicate must be a function');
+			}
+
+			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+			var thisArg = arguments[1];
+
+			// 5. Let k be 0.
+			var k = 0;
+
+			// 6. Repeat, while k < len
+			while (k < len) {
+				// a. Let Pk be ! ToString(k).
+				// b. Let kValue be ? Get(O, Pk).
+				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+				// d. If testResult is true, return kValue.
+				var kValue = o[k];
+				if (predicate.call(thisArg, kValue, k, o)) {
+					return kValue;
+				}
+				// e. Increase k by 1.
+				k++;
+			}
+
+			// 7. Return undefined.
+			return undefined;
+		}
+	});
+}
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
@@ -3981,11 +4007,42 @@ if (!Array.prototype.find) {
 
 		})
 		.factory('Utils', function() {
-			return {
-				stripTimeFromTimestamp: function (timestamp) {
-					if(timestamp instanceof Date) timestamp = timestamp.toISOString();
-					return ("" + timestamp).substring(0, 10);
+
+			function stripTimeFromTimestamp(timestamp) {
+				if(timestamp instanceof Date) timestamp = timestamp.toISOString();
+				return ("" + timestamp).substring(0, 10);
+			}
+
+			function filter(obj, predicate) {
+				if(obj.constructor === Array) return obj.filter(predicate);
+
+				var result = {}, key;
+
+				for (key in obj) {
+					if (obj.hasOwnProperty(key) && !!predicate(obj[key])) {
+						result[key] = obj[key];
+					}
 				}
+
+				return result;
+			}
+
+			function extract(field, obj, predicate) {
+				var filtered = filter(obj, predicate);
+				var result = [];
+
+				for(var i in filtered) {
+					if(!filtered.hasOwnProperty(i)) continue;
+					result.push(filtered[i][field]);
+				}
+
+				return result;
+			}
+
+			return {
+				stripTimeFromTimestamp: stripTimeFromTimestamp,
+				filter: filter,
+				extract: extract,
 			};
 		})
 		.directive('stringToNumber', function() {

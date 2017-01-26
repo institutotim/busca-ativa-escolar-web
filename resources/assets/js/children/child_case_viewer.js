@@ -162,6 +162,7 @@
 			$scope.$parent.openStepID = $scope.step.id;
 		});
 
+		var handicappedCauseIDs = [];
 
 		console.log("[core] @ChildCaseStepCtrl", $scope.step);
 
@@ -188,6 +189,26 @@
 			if(!$scope.step) return false;
 			if(!$scope.$parent.openedCase) return false;
 			return (!$scope.step.is_completed);
+		};
+
+		$scope.isHandicapped = function() {
+			if(!$scope.step || !$scope.step.fields || !$scope.step.fields.case_cause_ids) return false;
+
+			if(!handicappedCauseIDs || handicappedCauseIDs.length <= 0) {
+				handicappedCauseIDs = Utils.extract('id', StaticData.getCaseCauses(), function (item) {
+					return (item.is_handicapped === true);
+				});
+			}
+
+			var currentCauses = $scope.step.fields.case_cause_ids;
+
+			for(var i in currentCauses) {
+				if(!currentCauses.hasOwnProperty(i)) continue;
+				var cause = currentCauses[i];
+				if(handicappedCauseIDs.indexOf(cause) !== -1) return true;
+			}
+
+			return false;
 		};
 
 		$scope.canCompleteStep = function() {
@@ -262,6 +283,11 @@
 			var index = $scope.fields[field].indexOf(value); // Check if in list
 			if(index === -1) return $scope.fields[field].push(value); // Add to list
 			return $scope.fields[field].splice(index, 1); // Remove from list
+		};
+
+		$scope.getCaseCauseIDs = function() {
+			if(!$scope.$parent.openedCase) return [];
+			return $scope.$parent.openedCase.case_cause_ids;
 		};
 
 		$scope.save = function() {
