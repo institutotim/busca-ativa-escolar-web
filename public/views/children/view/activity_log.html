@@ -1,46 +1,25 @@
 <div>
 	<div class="col-md-12">
-		<h3><i class="fa fa-history"></i> Histórico</h3>
+		<div class="clearfix">
+			<h3 class="pull-left"><i class="fa fa-history"></i> Histórico</h3>
+			<a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i> Atualizar</a>
+		</div>
 
 		<table class="table">
 			<thead>
-			<tr>
-				<th>Cód</th>
-				<th>Data</th>
-				<th>Usuário</th>
-				<th>Ação</th>
-				<th>Detalhes</th>
-			</tr>
+				<tr>
+					<th>Data e hora</th>
+					<th>Usuário</th>
+					<th>Atividade</th>
+				</tr>
 			</thead>
 			<tbody>
-			<tr>
-				<td>#2751</td>
-				<td>2016/Ago/25 15:22</td>
-				<td><i class="fa fa-user"></i> John Doe</td>
-				<td>Inseriu dados na etapa ANÁLISE TÉCNICA</td>
-				<td><a class="btn btn-xs btn-raised btn-default" ng-click="openActivityLogEntry()">Ver detalhes</a></td>
-			</tr>
-			<tr>
-				<td>#2622</td>
-				<td>2016/Ago/25 15:22</td>
-				<td><i class="fa fa-user"></i> John Doe</td>
-				<td>Enviou um anexo (#119)</td>
-				<td><a class="btn btn-xs btn-raised btn-default" ng-click="openActivityLogEntry()">Ver detalhes</a></td>
-			</tr>
-			<tr>
-				<td>#2699</td>
-				<td>2016/Ago/25 15:22</td>
-				<td><i class="fa fa-user"></i> John Doe</td>
-				<td>Registrou uma anotação (#23)</td>
-				<td><a class="btn btn-xs btn-raised btn-default" ng-click="openActivityLogEntry()">Ver detalhes</a></td>
-			</tr>
-			<tr>
-				<td>#2690</td>
-				<td>2016/Ago/25 15:22</td>
-				<td><i class="fa fa-user"></i> John Doe</td>
-				<td>Alterou a etapa do caso de PESQUISA para ANÁLISE TÉCNICA</td>
-				<td><a class="btn btn-xs btn-raised btn-default" ng-click="openActivityLogEntry()">Ver detalhes</a></td>
-			</tr>
+				<tr ng-repeat="(i, entry) in entries.data">
+					<td><span ng-bind="entry.created_at | amTimeAgo" uib-tooltip-html="entry.created_at | amCalendar"></span></td>
+					<td ng-show="entry.user"><span uib-tooltip-html="entry.user.type | lang:'user.type'"><i class="fa fa-user"></i> {{entry.user.name}}</span></td>
+					<td ng-show="!entry.user"><i class="fa fa-gear"></i> Sistema</td>
+					<td ng-bind="entry.message"></td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

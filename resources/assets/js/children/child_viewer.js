@@ -10,10 +10,6 @@
 					templateUrl: '/views/children/view/viewer.html',
 					controller: 'ChildViewCtrl'
 				})
-				.state('child_viewer.activity_log', {
-					url: '/activity_log',
-					templateUrl: '/views/children/view/activity_log.html'
-				})
 		});
 
 	function ChildViewCtrl($scope, $state, $stateParams, Children, Decorators) {
