@@ -16,6 +16,13 @@
 	<hr />
 </div>
 
+<script type="text/ng-template" id="city_item.html">
+	<a>
+		<span ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span>
+		<small ng-bind-html="match.model.uf | uibTypeaheadHighlight:query"></small>
+	</a>
+</script>
+
 <div ng-show="isPendingAssignment()" class="alert alert-warning">
 	<h3><i class="fa fa-user-times"></i> Essa etapa está pendente de atribuição!</h3>
 	<p>Não há nenhum usuário responsável por essa etapa!</p>
@@ -119,13 +126,35 @@
 			<label class="control-label" for="fld-alert-neighborhood">Bairro*</label>
 			<input type="text" class="form-control" id="fld-alert-neighborhood" ng-readonly="step.is_completed" ng-model="fields.place_neighborhood">
 		</div>
-		<div class="form-group col-md-5">
-			<label class="control-label" for="fld-alert-city">Município*</label>
-			<input type="text" class="form-control" id="fld-alert-city" ng-readonly="step.is_completed" ng-model="fields.place_city">
-		</div>
 		<div class="form-group col-md-2">
 			<label class="control-label" for="fld-alert-uf">UF*</label>
-			<input type="text" class="form-control" id="fld-alert-uf" ng-readonly="step.is_completed" ng-model="fields.place_uf">
+			<select class="form-control" id="fld-alert-uf" ng-disabled="step.is_completed" ng-model="fields.place_uf" ng-options="uf.code as uf.code for uf in static.getUFs()"></select>
+		</div>
+		<div class="form-group col-md-5">
+			<label class="control-label" for="fld-alert-city">Município*</label>
+			<input type="text" id="fld-alert-city"
+			       class="form-control"
+			       ng-model="fields.place_city"
+			       ng-readonly="step.is_completed"
+
+			       uib-typeahead="city for city in fetchCities($viewValue)"
+			       typeahead-editable="false"
+			       typeahead-no-results="alertaNoCitiesFound"
+			       typeahead-loading="alertaCitiesLoading"
+			       typeahead-focus-first="true"
+			       typeahead-template-url="city_item.html"
+			       typeahead-wait-ms="400"
+			       typeahead-min-length="3"
+			       typeahead-input-formatter="renderSelectedCity($model)"
+
+			>
+
+			<div ng-show="alertaCitiesLoading">
+				<i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
+			</div>
+			<div ng-show="alertaNoCitiesFound">
+				<i class="fa fa-remove"></i> Nenhuma cidade encontrada
+			</div>
 		</div>
 	</div>
 </div>
@@ -422,13 +451,34 @@
 			<label class="control-label" for="fld-place_neighborhood">Bairro*</label>
 			<input type="text" class="form-control" id="fld-place_neighborhood" ng-readonly="step.is_completed" ng-model="fields.place_neighborhood">
 		</div>
-		<div class="form-group col-md-5">
-			<label class="control-label" for="fld-place_city">Município*</label>
-			<input type="text" class="form-control" id="fld-place_city" ng-readonly="step.is_completed" ng-model="fields.place_city">
-		</div>
 		<div class="form-group col-md-2">
 			<label class="control-label" for="fld-place_uf">UF*</label>
-			<input type="text" class="form-control" id="fld-place_uf" ng-readonly="step.is_completed" ng-model="fields.place_uf">
+			<select class="form-control" id="fld-place_uf" ng-disabled="step.is_completed" ng-model="fields.place_uf" ng-options="uf.code as uf.code for uf in static.getUFs()"></select>
+		</div>
+		<div class="form-group col-md-5">
+			<label class="control-label" for="fld-city">Município*</label>
+			<input type="text" id="fld-city"
+			       class="form-control"
+			       ng-model="fields.place_city"
+
+			       uib-typeahead="city for city in fetchCities($viewValue)"
+			       typeahead-editable="false"
+			       typeahead-no-results="pesquisaNoCitiesFound"
+			       typeahead-loading="pesquisaCitiesLoading"
+			       typeahead-focus-first="true"
+			       typeahead-template-url="city_item.html"
+			       typeahead-wait-ms="400"
+			       typeahead-min-length="3"
+			       typeahead-input-formatter="renderSelectedCity($model)"
+
+			>
+
+			<div ng-show="pesquisaCitiesLoading">
+				<i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
+			</div>
+			<div ng-show="pesquisaNoCitiesFound">
+				<i class="fa fa-remove"></i> Nenhuma cidade encontrada
+			</div>
 		</div>
 
 		<div class="form-group col-md-6">
@@ -546,13 +596,34 @@
 			<label class="control-label" for="fld-enroll-school_neighborhood">Bairro*</label>
 			<input type="text" class="form-control" id="fld-enroll-school_neighborhood" ng-readonly="step.is_completed" ng-model="fields.school_neighborhood">
 		</div>
-		<div class="form-group col-md-5">
-			<label class="control-label" for="fld-enroll-school_city">Município*</label>
-			<input type="text" class="form-control" id="fld-enroll-school_city" ng-readonly="step.is_completed" ng-model="fields.school_city">
-		</div>
 		<div class="form-group col-md-2">
 			<label class="control-label" for="fld-enroll-school_uf">UF*</label>
-			<input type="text" class="form-control" id="fld-enroll-school_uf" ng-readonly="step.is_completed" ng-model="fields.school_uf">
+			<select class="form-control" id="fld-enroll-school_uf" ng-disabled="step.is_completed" ng-model="fields.school_if" ng-options="uf.code as uf.code for uf in static.getUFs()"></select>
+		</div>
+		<div class="form-group col-md-5">
+			<label class="control-label" for="fld-enroll-school_city">Município*</label>
+			<input type="text" id="fld-enroll-school_city"
+			       class="form-control"
+			       ng-model="fields.school_city"
+			       ng-readonly="step.is_completed"
+
+			       uib-typeahead="city for city in fetchCities($viewValue)"
+			       typeahead-editable="false"
+			       typeahead-no-results="schoolNoCitiesFound"
+			       typeahead-loading="schoolCitiesLoading"
+			       typeahead-focus-first="true"
+			       typeahead-template-url="city_item.html"
+			       typeahead-wait-ms="400"
+			       typeahead-min-length="3"
+			       typeahead-input-formatter="renderSelectedCity($model)"
+
+			>
+			<div ng-show="schoolCitiesLoading">
+				<i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
+			</div>
+			<div ng-show="schoolNoCitiesFound">
+				<i class="fa fa-remove"></i> Nenhuma cidade encontrada
+			</div>
 		</div>
 		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-enroll-school_contact_name">Nome do contato da gestão da escola*</label>

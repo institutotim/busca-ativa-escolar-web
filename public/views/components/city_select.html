@@ -1,0 +1,34 @@
+<div class="city-select">
+
+	<!-- TODO: fix this and replace scattered uib-typeaheads with this -->
+
+	<script type="text/ng-template" id="city_item.html">
+		<a>
+			<span ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span>
+			<small ng-bind-html="match.model.uf | uibTypeaheadHighlight:query"></small>
+		</a>
+	</script>
+
+	<input type="text" id="fld-city"
+	       class="form-control"
+	       ng-model="$attrs.model"
+
+	       uib-typeahead="city for city in fetchCities($viewValue)"
+	       typeahead-editable="false"
+	       typeahead-no-results="noCitiesFound"
+	       typeahead-loading="citiesLoading"
+	       typeahead-focus-first="true"
+	       typeahead-template-url="city_item.html"
+	       typeahead-wait-ms="400"
+	       typeahead-min-length="3"
+	       typeahead-input-formatter="renderSelectedCity($model)"
+
+	>
+
+	<div ng-show="citiesLoading">
+		<i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
+	</div>
+	<div ng-show="noCitiesFound">
+		<i class="fa fa-remove"></i> Nenhuma cidade encontrada
+	</div>
+</div>

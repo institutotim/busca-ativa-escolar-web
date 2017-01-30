@@ -344,7 +344,7 @@
 		// TODO: handle case cancelling
 	}
 
-	function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Children, Decorators, CaseSteps, StaticData) {
+	function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Cities, Children, Decorators, CaseSteps, StaticData) {
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 		$scope.CaseSteps = CaseSteps;
@@ -492,11 +492,39 @@
 			return $scope.$parent.openedCase.case_cause_ids;
 		};
 
+		$scope.fetchCities = function(query) {
+			var data = {name: query, $hide_loading_feedback: true};
+
+			if($scope.fields.place_uf) data.uf = $scope.fields.place_uf;
+			if($scope.fields.school_uf) data.uf = $scope.fields.school_uf;
+
+			console.log("[create_alert] Looking for cities: ", data);
+
+			return Cities.search(data).$promise.then(function (res) {
+				return res.results;
+			});
+		};
+
+		$scope.renderSelectedCity = function(city) {
+			if(!city) return '';
+			return city.uf + ' / ' + city.name;
+		};
+
 		$scope.save = function() {
 
 			var data = $scope.step.fields;
 			data = filterOutEmptyFields($scope.step.fields);
 			data = prepareDateFields(data);
+
+			if(data.place_city) {
+				data.place_city_id = data.place_city.id;
+				data.place_city_name = data.place_city.name;
+			}
+
+			if(data.school_city) {
+				data.school_city_id = data.school_city.id;
+				data.school_city_name = data.school_city.name;
+			}
 
 			data.type = $scope.step.step_type;
 			data.id = $scope.step.id;
@@ -599,7 +627,7 @@
 				controller: 'CreateAlertCtrl'
 			})
 		})
-		.controller('CreateAlertCtrl', function ($scope, $state, ngToast, Utils, Identity, StaticData, Children) {
+		.controller('CreateAlertCtrl', function ($scope, $state, ngToast, Utils, Identity, StaticData, Children, Cities) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -619,12 +647,29 @@
 				return data;
 			}
 
+			$scope.fetchCities = function(query) {
+				var data = {name: query, $hide_loading_feedback: true};
+				if($scope.alert.place_uf) data.uf = $scope.alert.place_uf;
+
+				console.log("[create_alert] Looking for cities: ", data);
+
+				return Cities.search(data).$promise.then(function (res) {
+					return res.results;
+				});
+			};
+
+			$scope.renderSelectedCity = function(city) {
+				return city.uf + ' / ' + city.name;
+			};
+
 			$scope.createAlert = function() {
 
 				// TODO: validate fields
 
 				var data = $scope.alert;
 				data = prepareDateFields(data);
+				data.place_city_id = data.place_city ? data.place_city.id : null;
+				data.place_city_name = data.place_city ? data.place_city.name : null;
 
 				Children.spawnFromAlert(data).$promise.then(function (res) {
 					if(res.fields) {
@@ -646,6 +691,48 @@
 			}
 
 		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('appCitySelect', function (Cities) {
+
+		var $scope;
+		var $attrs;
+
+		// TODO: fix this and replace repeated uib-typeaheads with this directive
+
+		function init(scope, element, attrs) {
+			$scope = scope;
+			$attrs = attrs;
+
+			$scope.$attrs = $attrs;
+			$scope.fetchCities = fetch;
+			$scope.renderSelectedCity = renderSelected;
+		}
+
+		function fetch(query) {
+			var data = {name: query, $hide_loading_feedback: true};
+			if($attrs.selectedUF) data.uf = $attrs.selectedUF;
+
+			console.log("[create_alert] Looking for cities: ", data);
+
+			return Cities.search(data).$promise.then(function (res) {
+				return res.results;
+			});
+		};
+
+		function renderSelected(city) {
+			if(!city) return '';
+			return city.uf + ' / ' + city.name;
+		};
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/city_select.html'
+		};
+	});
 
 })();
 (function() {
@@ -1494,26 +1581,6 @@
 
 	});
 
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
-		var Child = {
-			parents: function(child) {
-				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' / ' : '')
-					+ (child.father_name || '');
-			}
-		};
-
-		var Step = {
-
-		};
-
-		return {
-			Child: Child,
-			Step: Step
-		};
-	})
 })();
 (function() {
 
@@ -2374,6 +2441,26 @@ Highcharts.maps["countries/br/br-all"] = {
 	}]
 };
 (function() {
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' / ' : '')
+					+ (child.father_name || '');
+			}
+		};
+
+		var Step = {
+
+		};
+
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
+})();
+(function() {
 	angular
 		.module('BuscaAtivaEscolar')
 		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
@@ -2427,12 +2514,16 @@ Highcharts.maps["countries/br/br-all"] = {
 
 			this.request = function (config) {
 
+				if(config.data && config.data.$hide_loading_feedback) return config;
+
 				API.pushRequest();
 
 				return config;
 			};
 
 			this.response = function (response) {
+
+				if(response.config && response.config.data && response.config.data.$hide_loading_feedback) return response;
 
 				API.popRequest();
 
@@ -2768,7 +2859,8 @@ if (!Array.prototype.find) {
 			let headers = {};
 
 			return $resource(API.getURI('cities/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: headers}
+				find: {method: 'GET', headers: headers},
+				search: {url: API.getURI('cities/search'), method: 'POST', headers: headers},
 			});
 
 		});
@@ -2823,6 +2915,8 @@ if (!Array.prototype.find) {
 			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : {}; }
 			function getSchoolingLevels() { return (data.SchoolingLevel) ? data.SchoolingLevel : {}; }
 			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : {}; }
+			function getUFs() { return (data.UFs) ? data.UFs : {}; }
+			function getRegions() { return (data.Regions) ? data.Regions : {}; }
 			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
 
 			return {
@@ -2839,6 +2933,8 @@ if (!Array.prototype.find) {
 				getSchoolingLevels: getSchoolingLevels,
 				getWorkActivities: getWorkActivities,
 				getAllowedMimeTypes: getAllowedMimeTypes,
+				getUFs: getUFs,
+				getRegions: getRegions,
 			};
 
 		});

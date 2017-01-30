@@ -102,13 +102,44 @@
 						<label class="control-label" for="fld-neighborhood">Bairro*</label>
 						<input type="text" class="form-control" id="fld-neighborhood" ng-model="alert.place_neighborhood">
 					</div>
-					<div class="form-group col-md-5">
-						<label class="control-label" for="fld-city">Município*</label>
-						<input type="text" class="form-control" id="fld-city" ng-model="alert.place_city">
-					</div>
 					<div class="form-group col-md-2">
 						<label class="control-label" for="fld-uf">UF*</label>
-						<input type="text" class="form-control" id="fld-uf" ng-model="alert.place_uf">
+						<select class="form-control" id="fld-uf" ng-model="alert.place_uf" ng-options="uf.code as uf.code for uf in static.getUFs()">
+
+						</select>
+					</div>
+
+					<script type="text/ng-template" id="city_item.html">
+						<a>
+							<span ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span>
+							<small ng-bind-html="match.model.uf | uibTypeaheadHighlight:query"></small>
+						</a>
+					</script>
+
+					<div class="form-group col-md-5">
+						<label class="control-label" for="fld-city">Município*</label>
+						<input type="text" id="fld-city"
+						       class="form-control"
+						       ng-model="alert.place_city"
+
+						       uib-typeahead="city for city in fetchCities($viewValue)"
+						       typeahead-editable="false"
+						       typeahead-no-results="noCitiesFound"
+						       typeahead-loading="citiesLoading"
+						       typeahead-focus-first="true"
+						       typeahead-template-url="city_item.html"
+						       typeahead-wait-ms="400"
+						       typeahead-min-length="3"
+						       typeahead-input-formatter="renderSelectedCity($model)"
+
+						>
+
+						<div ng-show="citiesLoading">
+							<i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
+						</div>
+						<div ng-show="noCitiesFound">
+							<i class="fa fa-remove"></i> Nenhuma cidade encontrada
+						</div>
 					</div>
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-phone">Telefone residencial</label>
