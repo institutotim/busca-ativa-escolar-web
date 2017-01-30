@@ -23,6 +23,13 @@
 	</a>
 </script>
 
+<script type="text/ng-template" id="school_item.html">
+	<a>
+		<span ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span><br />
+		<small>{{match.model.city_name}} / {{match.model.uf}}</small>
+	</a>
+</script>
+
 <div ng-show="isPendingAssignment()" class="alert alert-warning">
 	<h3><i class="fa fa-user-times"></i> Essa etapa está pendente de atribuição!</h3>
 	<p>Não há nenhum usuário responsável por essa etapa!</p>
@@ -241,8 +248,31 @@
 		</div>
 
 		<div class="form-group col-md-12" ng-show="fields.has_been_in_school">
-			<label class="control-label" for="fld-school_last_name">Nome da última escola cursada</label>
-			<input type="text" class="form-control" id="fld-school_last_name" ng-readonly="step.is_completed" ng-model="fields.school_last_name">
+			<label class="control-label" for="fld-school_last">Nome da última escola cursada</label>
+			<!--input type="text" class="form-control" id="fld-school_last_name" ng-readonly="step.is_completed" ng-model="fields.school_last_name"-->
+
+			<input type="text" id="fld-school_last"
+			       class="form-control"
+			       ng-model="fields.school_last"
+
+			       uib-typeahead="school for school in fetchSchools($viewValue)"
+			       typeahead-editable="false"
+			       typeahead-no-results="pesquisaNoSchoolsFound"
+			       typeahead-loading="pesquisaSchoolsLoading"
+			       typeahead-focus-first="true"
+			       typeahead-template-url="school_item.html"
+			       typeahead-wait-ms="400"
+			       typeahead-min-length="3"
+			       typeahead-input-formatter="renderSelectedSchool($model)"
+			>
+
+			<div ng-show="pesquisaSchoolsLoading">
+				<i class="fa fa-refresh rotate-icon"></i> Buscando escolas...
+			</div>
+			<div ng-show="pesquisaNoSchoolsFound">
+				<i class="fa fa-remove"></i> Nenhuma escola encontrada
+			</div>
+
 		</div>
 
 		<div class="form-group col-md-12" ng-show="fields.has_been_in_school">
@@ -570,8 +600,31 @@
 	<div class="panel-body">
 
 		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-enroll-school_name">Nome da escola*</label>
-			<input type="text" class="form-control" id="fld-enroll-school_name" ng-readonly="step.is_completed" ng-model="fields.school_name">
+			<label class="control-label" for="fld-enroll-school">Nome da escola*</label>
+			<!--input type="text" class="form-control" id="fld-enroll-school_name" ng-readonly="step.is_completed" ng-model="fields.school_name"-->
+
+			<input type="text" id="fld-enroll-school"
+			       class="form-control"
+			       ng-model="fields.school"
+
+			       uib-typeahead="school for school in fetchSchools($viewValue)"
+			       typeahead-editable="false"
+			       typeahead-no-results="rematriculaNoSchoolsFound"
+			       typeahead-loading="rematriculaSchoolsLoading"
+			       typeahead-focus-first="true"
+			       typeahead-template-url="school_item.html"
+			       typeahead-wait-ms="400"
+			       typeahead-min-length="3"
+			       typeahead-input-formatter="renderSelectedSchool($model)"
+			>
+
+			<div ng-show="rematriculaSchoolsLoading">
+				<i class="fa fa-refresh rotate-icon"></i> Buscando escolas...
+			</div>
+			<div ng-show="rematriculaNoSchoolsFound">
+				<i class="fa fa-remove"></i> Nenhuma escola encontrada
+			</div>
+
 		</div>
 
 		<div class="form-group col-md-6">

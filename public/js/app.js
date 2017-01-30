@@ -344,7 +344,7 @@
 		// TODO: handle case cancelling
 	}
 
-	function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Cities, Children, Decorators, CaseSteps, StaticData) {
+	function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Schools, Cities, Children, Decorators, CaseSteps, StaticData) {
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 		$scope.CaseSteps = CaseSteps;
@@ -505,10 +505,40 @@
 			});
 		};
 
+		$scope.fetchSchools = function(query) {
+			var data = {name: query, $hide_loading_feedback: true};
+
+			if($scope.fields.place_uf) data.uf = $scope.fields.place_uf;
+			if($scope.fields.school_uf) data.uf = $scope.fields.school_uf;
+
+			if($scope.fields.place_city) data.city_id = $scope.fields.place_city.id;
+			if($scope.fields.school_city) data.city_id = $scope.fields.school_city.id;
+
+			console.log("[create_alert] Looking for schools: ", data);
+
+			return Schools.search(data).$promise.then(function (res) {
+				return res.results;
+			});
+		};
+
 		$scope.renderSelectedCity = function(city) {
 			if(!city) return '';
 			return city.uf + ' / ' + city.name;
 		};
+
+		$scope.renderSelectedSchool = function(school) {
+			if(!school) return '';
+			return school.name + ' (' + school.city_name + ' / ' + school.uf + ')';
+		};
+
+		function unpackTypeaheadField(data, name, model) {
+			if(data[name]) {
+				data[name + '_id'] = model.id;
+				data[name + '_name'] = model.name;
+			}
+
+			return data;
+		}
 
 		$scope.save = function() {
 
@@ -516,15 +546,10 @@
 			data = filterOutEmptyFields($scope.step.fields);
 			data = prepareDateFields(data);
 
-			if(data.place_city) {
-				data.place_city_id = data.place_city.id;
-				data.place_city_name = data.place_city.name;
-			}
-
-			if(data.school_city) {
-				data.school_city_id = data.school_city.id;
-				data.school_city_name = data.school_city.name;
-			}
+			data = unpackTypeaheadField(data, 'place_city', data.place_city);
+			data = unpackTypeaheadField(data, 'school_city', data.school_city);
+			data = unpackTypeaheadField(data, 'school', data.school);
+			data = unpackTypeaheadField(data, 'school_last', data.school_last);
 
 			data.type = $scope.step.step_type;
 			data.id = $scope.step.id;
@@ -2746,49 +2771,6 @@ Highcharts.maps["countries/br/br-all"] = {
 		});
 
 })();
-if (!Array.prototype.find) {
-	Object.defineProperty(Array.prototype, 'find', {
-		value: function(predicate) {
-			// 1. Let O be ? ToObject(this value).
-			if (this == null) {
-				throw new TypeError('"this" is null or not defined');
-			}
-
-			var o = Object(this);
-
-			// 2. Let len be ? ToLength(? Get(O, "length")).
-			var len = o.length >>> 0;
-
-			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
-			if (typeof predicate !== 'function') {
-				throw new TypeError('predicate must be a function');
-			}
-
-			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-			var thisArg = arguments[1];
-
-			// 5. Let k be 0.
-			var k = 0;
-
-			// 6. Repeat, while k < len
-			while (k < len) {
-				// a. Let Pk be ! ToString(k).
-				// b. Let kValue be ? Get(O, Pk).
-				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-				// d. If testResult is true, return kValue.
-				var kValue = o[k];
-				if (predicate.call(thisArg, kValue, k, o)) {
-					return kValue;
-				}
-				// e. Increase k by 1.
-				k++;
-			}
-
-			// 7. Return undefined.
-			return undefined;
-		}
-	});
-}
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
@@ -2876,6 +2858,20 @@ if (!Array.prototype.find) {
 				find: {method: 'GET', headers: headers},
 				create: {method: 'POST', headers: headers},
 				update: {method: 'PUT', headers: headers},
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Schools', function Schools(API, Identity, $resource) {
+
+			let headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('schools/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: headers},
+				search: {url: API.getURI('schools/search'), method: 'POST', headers: headers},
 			});
 
 		});
@@ -4159,6 +4155,49 @@ if (!Array.prototype.find) {
 
 function identify(namespace, file) {
 	console.log("[core.load] ", namespace, file);
+}
+if (!Array.prototype.find) {
+	Object.defineProperty(Array.prototype, 'find', {
+		value: function(predicate) {
+			// 1. Let O be ? ToObject(this value).
+			if (this == null) {
+				throw new TypeError('"this" is null or not defined');
+			}
+
+			var o = Object(this);
+
+			// 2. Let len be ? ToLength(? Get(O, "length")).
+			var len = o.length >>> 0;
+
+			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
+			if (typeof predicate !== 'function') {
+				throw new TypeError('predicate must be a function');
+			}
+
+			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+			var thisArg = arguments[1];
+
+			// 5. Let k be 0.
+			var k = 0;
+
+			// 6. Repeat, while k < len
+			while (k < len) {
+				// a. Let Pk be ! ToString(k).
+				// b. Let kValue be ? Get(O, Pk).
+				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+				// d. If testResult is true, return kValue.
+				var kValue = o[k];
+				if (predicate.call(thisArg, kValue, k, o)) {
+					return kValue;
+				}
+				// e. Increase k by 1.
+				k++;
+			}
+
+			// 7. Return undefined.
+			return undefined;
+		}
+	});
 }
 (function() {
 

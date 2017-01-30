@@ -142,7 +142,7 @@
 		// TODO: handle case cancelling
 	}
 
-	function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Cities, Children, Decorators, CaseSteps, StaticData) {
+	function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Schools, Cities, Children, Decorators, CaseSteps, StaticData) {
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 		$scope.CaseSteps = CaseSteps;
@@ -303,10 +303,40 @@
 			});
 		};
 
+		$scope.fetchSchools = function(query) {
+			var data = {name: query, $hide_loading_feedback: true};
+
+			if($scope.fields.place_uf) data.uf = $scope.fields.place_uf;
+			if($scope.fields.school_uf) data.uf = $scope.fields.school_uf;
+
+			if($scope.fields.place_city) data.city_id = $scope.fields.place_city.id;
+			if($scope.fields.school_city) data.city_id = $scope.fields.school_city.id;
+
+			console.log("[create_alert] Looking for schools: ", data);
+
+			return Schools.search(data).$promise.then(function (res) {
+				return res.results;
+			});
+		};
+
 		$scope.renderSelectedCity = function(city) {
 			if(!city) return '';
 			return city.uf + ' / ' + city.name;
 		};
+
+		$scope.renderSelectedSchool = function(school) {
+			if(!school) return '';
+			return school.name + ' (' + school.city_name + ' / ' + school.uf + ')';
+		};
+
+		function unpackTypeaheadField(data, name, model) {
+			if(data[name]) {
+				data[name + '_id'] = model.id;
+				data[name + '_name'] = model.name;
+			}
+
+			return data;
+		}
 
 		$scope.save = function() {
 
@@ -314,15 +344,10 @@
 			data = filterOutEmptyFields($scope.step.fields);
 			data = prepareDateFields(data);
 
-			if(data.place_city) {
-				data.place_city_id = data.place_city.id;
-				data.place_city_name = data.place_city.name;
-			}
-
-			if(data.school_city) {
-				data.school_city_id = data.school_city.id;
-				data.school_city_name = data.school_city.name;
-			}
+			data = unpackTypeaheadField(data, 'place_city', data.place_city);
+			data = unpackTypeaheadField(data, 'school_city', data.school_city);
+			data = unpackTypeaheadField(data, 'school', data.school);
+			data = unpackTypeaheadField(data, 'school_last', data.school_last);
 
 			data.type = $scope.step.step_type;
 			data.id = $scope.step.id;
