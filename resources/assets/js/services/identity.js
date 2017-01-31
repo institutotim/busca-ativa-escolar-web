@@ -28,7 +28,12 @@
 		}
 
 		function provideToken() {
-			if(!tokenProvider) return $q.reject('no_token_provider');
+
+			if(!tokenProvider) {
+				console.error("[core.identity] No token provider registered! Rejecting...");
+				return $q.reject('no_token_provider');
+			}
+
 			return tokenProvider();
 		}
 

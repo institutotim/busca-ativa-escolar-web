@@ -137,7 +137,7 @@
 			<label class="control-label" for="fld-alert-uf">UF*</label>
 			<select class="form-control" id="fld-alert-uf" ng-disabled="step.is_completed" ng-model="fields.place_uf" ng-options="uf.code as uf.code for uf in static.getUFs()"></select>
 		</div>
-		<div class="form-group col-md-5">
+		<div class="form-group col-md-5 clearfix">
 			<label class="control-label" for="fld-alert-city">Município*</label>
 			<input type="text" id="fld-alert-city"
 			       class="form-control"
@@ -247,15 +247,15 @@
 			<input type="number" min="0" max="18" step="1" class="form-control" id="fld-school_last_age" string-to-number ng-readonly="step.is_completed" ng-model="fields.school_last_age">
 		</div>
 
-		<div class="form-group col-md-12" ng-show="fields.has_been_in_school">
-			<label class="control-label" for="fld-school_last">Nome da última escola cursada</label>
+		<div class="form-group col-md-12 clearfix" ng-show="fields.has_been_in_school">
+			<label class="control-label" for="fld-school_last">Qual a última escola cursada?</label>
 			<!--input type="text" class="form-control" id="fld-school_last_name" ng-readonly="step.is_completed" ng-model="fields.school_last_name"-->
 
 			<input type="text" id="fld-school_last"
 			       class="form-control"
 			       ng-model="fields.school_last"
 
-			       uib-typeahead="school for school in fetchSchools($viewValue)"
+			       uib-typeahead="school for school in fetchSchools($viewValue, null, null)"
 			       typeahead-editable="false"
 			       typeahead-no-results="pesquisaNoSchoolsFound"
 			       typeahead-loading="pesquisaSchoolsLoading"
@@ -306,7 +306,7 @@
 
 		<div class="form-group col-md-12" ng-show="fields.is_working">
 			<label class="control-label" for="fld-work_activity">Qual a atividade econômica?</label>
-			<select ng-disabled="step.is_completed" ng-model="fields.work_activity" class="form-control" id="fld-work_activity" ng-options="n.slug as n.label for n in static.getWorkActivit()"></select>
+			<select ng-disabled="step.is_completed" ng-model="fields.work_activity" class="form-control" id="fld-work_activity" ng-options="n.slug as n.label for n in static.getWorkActivities()"></select>
 		</div>
 
 		<div class="form-group col-md-12"  ng-show="fields.work_activity === 'other'">
@@ -439,7 +439,19 @@
 			<label class="control-label">Motivos de estar fora da escola*</label>
 			<div class="radio" ng-repeat="cause in static.getCaseCauses()">
 				<label>
-					<input name="case_cause_{{cause.id}}" ng-disabled="step.is_completed" ng-model="checkboxes.case_cause_checkbox[cause.id]" ng-change="toggleCheckbox('case_cause_ids', cause.id)" ng-checked="isCheckboxChecked('case_cause_ids', cause.id)" ng-true-value="1" ng-false-value="0" type="checkbox"> <strong ng-if="case.alert_cause_id === cause.alert_cause_id" class="label label-default">Motivo indicado no alerta</strong> {{cause.label}}
+					<input name="case_cause_{{cause.id}}"
+					       ng-disabled="step.is_completed"
+					       ng-model="checkboxes.case_cause_checkbox[cause.id]"
+					       ng-change="toggleCheckbox('case_cause_ids', cause.id)"
+					       ng-checked="isCheckboxChecked('case_cause_ids', cause.id)"
+					       ng-true-value="1"
+					       ng-false-value="0"
+					       type="checkbox"
+					>
+
+					<strong ng-if="case.alert_cause_id == cause.alert_cause_id" class="label label-default">Motivo indicado no alerta</strong>
+					{{cause.label}}
+
 				</label>
 			</div>
 		</div>
@@ -485,7 +497,7 @@
 			<label class="control-label" for="fld-place_uf">UF*</label>
 			<select class="form-control" id="fld-place_uf" ng-disabled="step.is_completed" ng-model="fields.place_uf" ng-options="uf.code as uf.code for uf in static.getUFs()"></select>
 		</div>
-		<div class="form-group col-md-5">
+		<div class="form-group col-md-5 clearfix">
 			<label class="control-label" for="fld-city">Município*</label>
 			<input type="text" id="fld-city"
 			       class="form-control"
@@ -599,7 +611,48 @@
 	<div class="panel-heading"><i class="fa fa-building"></i> Dados da escola de (re)matrícula</div>
 	<div class="panel-body">
 
-		<div class="form-group col-md-12">
+		<div class="clearfix">
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-enroll-reinsertion_date">Data da (re)matrícula (aaaa-mm-dd)*</label>
+
+				<div class="clearfix">
+					<input type="text" ui-date-mask class="form-control" id="fld-enroll-reinsertion_date" ng-readonly="step.is_completed" ng-model="fields.reinsertion_date" style="float: left; width: 70%;">
+					<button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="step.is_completed" ng-click="fillWithCurrentDate('reinsertion_date')" style="float: left; width: 25%">Hoje</button>
+				</div>
+			</div>
+
+			<div class="form-group col-md-2">
+				<label class="control-label" for="fld-enroll-school_uf">UF*</label>
+				<select class="form-control" id="fld-enroll-school_uf" ng-disabled="step.is_completed" ng-model="fields.school_uf" ng-options="uf.code as uf.code for uf in static.getUFs()"></select>
+			</div>
+			<div class="form-group col-md-4 clearfix">
+				<label class="control-label" for="fld-enroll-school_city">Município*</label>
+				<input type="text" id="fld-enroll-school_city"
+				       class="form-control"
+				       ng-model="fields.school_city"
+				       ng-readonly="step.is_completed"
+
+				       uib-typeahead="city for city in fetchCities($viewValue)"
+				       typeahead-editable="false"
+				       typeahead-no-results="schoolNoCitiesFound"
+				       typeahead-loading="schoolCitiesLoading"
+				       typeahead-focus-first="true"
+				       typeahead-template-url="city_item.html"
+				       typeahead-wait-ms="400"
+				       typeahead-min-length="3"
+				       typeahead-input-formatter="renderSelectedCity($model)"
+
+				>
+				<div ng-show="schoolCitiesLoading">
+					<i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
+				</div>
+				<div ng-show="schoolNoCitiesFound">
+					<i class="fa fa-remove"></i> Nenhuma cidade encontrada
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group col-md-12 clearfix">
 			<label class="control-label" for="fld-enroll-school">Nome da escola*</label>
 			<!--input type="text" class="form-control" id="fld-enroll-school_name" ng-readonly="step.is_completed" ng-model="fields.school_name"-->
 
@@ -607,7 +660,7 @@
 			       class="form-control"
 			       ng-model="fields.school"
 
-			       uib-typeahead="school for school in fetchSchools($viewValue)"
+			       uib-typeahead="school for school in fetchSchools($viewValue, fields.school_uf, fields.school_city)"
 			       typeahead-editable="false"
 			       typeahead-no-results="rematriculaNoSchoolsFound"
 			       typeahead-loading="rematriculaSchoolsLoading"
@@ -628,56 +681,20 @@
 		</div>
 
 		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-enroll-reinsertion_date">Data da (re)matrícula (aaaa-mm-dd)*</label>
-			<input type="text" ui-date-mask class="form-control" id="fld-enroll-reinsertion_date" ng-readonly="step.is_completed" ng-model="fields.reinsertion_date">
-		</div>
-
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-enroll-school_censo_id">Código da escola no Censo Escolar*</label>
-			<input type="tel" class="form-control" id="fld-enroll-school_censo_id" ng-readonly="step.is_completed" ng-model="fields.school_censo_id">
-		</div>
-
-		<div class="form-group col-md-8">
 			<label class="control-label" for="fld-enroll-school_address">Endereço*</label>
 			<input type="text" class="form-control" id="fld-enroll-school_address" ng-readonly="step.is_completed" ng-model="fields.school_address">
 		</div>
-		<div class="form-group col-md-4">
+
+		<div class="form-group col-md-3">
 			<label class="control-label" for="fld-enroll-school_cep">CEP</label>
 			<input type="tel" ui-br-cep-mask class="form-control" id="fld-enroll-school_cep" ng-readonly="step.is_completed" ng-model="fields.school_cep">
 		</div>
-		<div class="form-group col-md-5">
+
+		<div class="form-group col-md-3">
 			<label class="control-label" for="fld-enroll-school_neighborhood">Bairro*</label>
 			<input type="text" class="form-control" id="fld-enroll-school_neighborhood" ng-readonly="step.is_completed" ng-model="fields.school_neighborhood">
 		</div>
-		<div class="form-group col-md-2">
-			<label class="control-label" for="fld-enroll-school_uf">UF*</label>
-			<select class="form-control" id="fld-enroll-school_uf" ng-disabled="step.is_completed" ng-model="fields.school_if" ng-options="uf.code as uf.code for uf in static.getUFs()"></select>
-		</div>
-		<div class="form-group col-md-5">
-			<label class="control-label" for="fld-enroll-school_city">Município*</label>
-			<input type="text" id="fld-enroll-school_city"
-			       class="form-control"
-			       ng-model="fields.school_city"
-			       ng-readonly="step.is_completed"
 
-			       uib-typeahead="city for city in fetchCities($viewValue)"
-			       typeahead-editable="false"
-			       typeahead-no-results="schoolNoCitiesFound"
-			       typeahead-loading="schoolCitiesLoading"
-			       typeahead-focus-first="true"
-			       typeahead-template-url="city_item.html"
-			       typeahead-wait-ms="400"
-			       typeahead-min-length="3"
-			       typeahead-input-formatter="renderSelectedCity($model)"
-
-			>
-			<div ng-show="schoolCitiesLoading">
-				<i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
-			</div>
-			<div ng-show="schoolNoCitiesFound">
-				<i class="fa fa-remove"></i> Nenhuma cidade encontrada
-			</div>
-		</div>
 		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-enroll-school_contact_name">Nome do contato da gestão da escola*</label>
 			<input type="text" class="form-control" id="fld-enroll-school_contact_name" ng-readonly="step.is_completed" ng-model="fields.school_contact_name">

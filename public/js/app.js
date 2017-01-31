@@ -241,6 +241,9 @@
 				return item.case_status === 'in_progress';
 			});
 
+			// Don't try to open a step; UI-Router will already open the one in the URL
+			if($stateParams.step_id) return;
+
 			console.log("[child_viewer.cases] Current case: ", $scope.openedCase, "; finding current step to open");
 
 			var stepToOpen = $scope.openedCase.steps.find(function (step) {
@@ -358,11 +361,18 @@
 		$scope.child = $scope.$parent.child;
 		$scope.checkboxes = {};
 
-		$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields'});
-		$scope.step.$promise.then(function (step) {
-			$scope.fields = step.fields;
-			$scope.$parent.openStepID = $scope.step.id;
-		});
+		$scope.step = {};
+
+		function fetchStepData() {
+			$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields,case'});
+			$scope.step.$promise.then(function (step) {
+				$scope.fields = step.fields;
+				$scope.case = step.case;
+				$scope.$parent.openStepID = $scope.step.id;
+			});
+		};
+
+		fetchStepData();
 
 		var handicappedCauseIDs = [];
 
@@ -469,7 +479,7 @@
 				}).
 				then(function (res) {
 					ngToast.success("Usuário atribuído!");
-					$state.go('child_viewer.cases.view_step', {step_type: $scope.step.step_type, step_id: $scope.step.id}, {reload: true});
+					fetchStepData();
 				});
 
 		};
@@ -505,14 +515,11 @@
 			});
 		};
 
-		$scope.fetchSchools = function(query) {
+		$scope.fetchSchools = function(query, filter_by_uf, filter_by_city) {
 			var data = {name: query, $hide_loading_feedback: true};
 
-			if($scope.fields.place_uf) data.uf = $scope.fields.place_uf;
-			if($scope.fields.school_uf) data.uf = $scope.fields.school_uf;
-
-			if($scope.fields.place_city) data.city_id = $scope.fields.place_city.id;
-			if($scope.fields.school_city) data.city_id = $scope.fields.school_city.id;
+			if(filter_by_uf) data.uf = filter_by_uf;
+			if(filter_by_city && filter_by_city.id) data.city_id = filter_by_city.id;
 
 			console.log("[create_alert] Looking for schools: ", data);
 
@@ -2497,6 +2504,9 @@ Highcharts.maps["countries/br/br-all"] = {
 				return Identity.provideToken().then(function (access_token) {
 					config.headers.Authorization = 'Bearer ' + access_token;
 					return config;
+				}, function (error) {
+					console.error("[auth.interceptor] Token provider returned error: ", error);
+					throw error;
 				});
 
 			};
@@ -2664,6 +2674,8 @@ Highcharts.maps["countries/br/br-all"] = {
 			};
 
 			function onSuccess(res) {
+				if(!res.data) return onError(res);
+
 				console.log('[modal.file_uploader] Uploaded: ', res.config.data.file.name, 'Response: ', res.data);
 				$uibModalInstance.close({response: res.data});
 				$scope.isUploading = false;
@@ -2771,6 +2783,49 @@ Highcharts.maps["countries/br/br-all"] = {
 		});
 
 })();
+if (!Array.prototype.find) {
+	Object.defineProperty(Array.prototype, 'find', {
+		value: function(predicate) {
+			// 1. Let O be ? ToObject(this value).
+			if (this == null) {
+				throw new TypeError('"this" is null or not defined');
+			}
+
+			var o = Object(this);
+
+			// 2. Let len be ? ToLength(? Get(O, "length")).
+			var len = o.length >>> 0;
+
+			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
+			if (typeof predicate !== 'function') {
+				throw new TypeError('predicate must be a function');
+			}
+
+			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+			var thisArg = arguments[1];
+
+			// 5. Let k be 0.
+			var k = 0;
+
+			// 6. Repeat, while k < len
+			while (k < len) {
+				// a. Let Pk be ! ToString(k).
+				// b. Let kValue be ? Get(O, Pk).
+				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+				// d. If testResult is true, return kValue.
+				var kValue = o[k];
+				if (predicate.call(thisArg, kValue, k, o)) {
+					return kValue;
+				}
+				// e. Increase k by 1.
+				k++;
+			}
+
+			// 7. Return undefined.
+			return undefined;
+		}
+	});
+}
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
@@ -3094,8 +3149,11 @@ Highcharts.maps["countries/br/br-all"] = {
 
 				// Auth.refresh doesn't return user/user_id, so we can't always set it
 				// TODO: response should let us know if refresh, so we can throw errors when expecting a user but do not receive it
-				if(response.data.user) Identity.setCurrentUser(response.data.user);
-				if(response.data.user.id) $localStorage.session.user_id = response.data.user.id;
+
+				if(response.data.user) {
+					Identity.setCurrentUser(response.data.user);
+					$localStorage.session.user_id = response.data.user.id;
+				}
 
 				return $localStorage.session;
 			}
@@ -3207,7 +3265,12 @@ Highcharts.maps["countries/br/br-all"] = {
 		}
 
 		function provideToken() {
-			if(!tokenProvider) return $q.reject('no_token_provider');
+
+			if(!tokenProvider) {
+				console.error("[core.identity] No token provider registered! Rejecting...");
+				return $q.reject('no_token_provider');
+			}
+
 			return tokenProvider();
 		}
 
@@ -4155,49 +4218,6 @@ Highcharts.maps["countries/br/br-all"] = {
 
 function identify(namespace, file) {
 	console.log("[core.load] ", namespace, file);
-}
-if (!Array.prototype.find) {
-	Object.defineProperty(Array.prototype, 'find', {
-		value: function(predicate) {
-			// 1. Let O be ? ToObject(this value).
-			if (this == null) {
-				throw new TypeError('"this" is null or not defined');
-			}
-
-			var o = Object(this);
-
-			// 2. Let len be ? ToLength(? Get(O, "length")).
-			var len = o.length >>> 0;
-
-			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
-			if (typeof predicate !== 'function') {
-				throw new TypeError('predicate must be a function');
-			}
-
-			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-			var thisArg = arguments[1];
-
-			// 5. Let k be 0.
-			var k = 0;
-
-			// 6. Repeat, while k < len
-			while (k < len) {
-				// a. Let Pk be ! ToString(k).
-				// b. Let kValue be ? Get(O, Pk).
-				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-				// d. If testResult is true, return kValue.
-				var kValue = o[k];
-				if (predicate.call(thisArg, kValue, k, o)) {
-					return kValue;
-				}
-				// e. Increase k by 1.
-				k++;
-			}
-
-			// 7. Return undefined.
-			return undefined;
-		}
-	});
 }
 (function() {
 

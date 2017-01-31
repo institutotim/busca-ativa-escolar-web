@@ -26,6 +26,8 @@
 			};
 
 			function onSuccess(res) {
+				if(!res.data) return onError(res);
+
 				console.log('[modal.file_uploader] Uploaded: ', res.config.data.file.name, 'Response: ', res.data);
 				$uibModalInstance.close({response: res.data});
 				$scope.isUploading = false;

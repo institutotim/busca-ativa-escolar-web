@@ -70,8 +70,11 @@
 
 				// Auth.refresh doesn't return user/user_id, so we can't always set it
 				// TODO: response should let us know if refresh, so we can throw errors when expecting a user but do not receive it
-				if(response.data.user) Identity.setCurrentUser(response.data.user);
-				if(response.data.user.id) $localStorage.session.user_id = response.data.user.id;
+
+				if(response.data.user) {
+					Identity.setCurrentUser(response.data.user);
+					$localStorage.session.user_id = response.data.user.id;
+				}
 
 				return $localStorage.session;
 			}

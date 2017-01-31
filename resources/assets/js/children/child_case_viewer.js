@@ -39,6 +39,9 @@
 				return item.case_status === 'in_progress';
 			});
 
+			// Don't try to open a step; UI-Router will already open the one in the URL
+			if($stateParams.step_id) return;
+
 			console.log("[child_viewer.cases] Current case: ", $scope.openedCase, "; finding current step to open");
 
 			var stepToOpen = $scope.openedCase.steps.find(function (step) {
@@ -156,11 +159,18 @@
 		$scope.child = $scope.$parent.child;
 		$scope.checkboxes = {};
 
-		$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields'});
-		$scope.step.$promise.then(function (step) {
-			$scope.fields = step.fields;
-			$scope.$parent.openStepID = $scope.step.id;
-		});
+		$scope.step = {};
+
+		function fetchStepData() {
+			$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields,case'});
+			$scope.step.$promise.then(function (step) {
+				$scope.fields = step.fields;
+				$scope.case = step.case;
+				$scope.$parent.openStepID = $scope.step.id;
+			});
+		};
+
+		fetchStepData();
 
 		var handicappedCauseIDs = [];
 
@@ -267,7 +277,7 @@
 				}).
 				then(function (res) {
 					ngToast.success("Usuário atribuído!");
-					$state.go('child_viewer.cases.view_step', {step_type: $scope.step.step_type, step_id: $scope.step.id}, {reload: true});
+					fetchStepData();
 				});
 
 		};
@@ -303,14 +313,11 @@
 			});
 		};
 
-		$scope.fetchSchools = function(query) {
+		$scope.fetchSchools = function(query, filter_by_uf, filter_by_city) {
 			var data = {name: query, $hide_loading_feedback: true};
 
-			if($scope.fields.place_uf) data.uf = $scope.fields.place_uf;
-			if($scope.fields.school_uf) data.uf = $scope.fields.school_uf;
-
-			if($scope.fields.place_city) data.city_id = $scope.fields.place_city.id;
-			if($scope.fields.school_city) data.city_id = $scope.fields.school_city.id;
+			if(filter_by_uf) data.uf = filter_by_uf;
+			if(filter_by_city && filter_by_city.id) data.city_id = filter_by_city.id;
 
 			console.log("[create_alert] Looking for schools: ", data);
 

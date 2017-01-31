@@ -10,6 +10,9 @@
 				return Identity.provideToken().then(function (access_token) {
 					config.headers.Authorization = 'Bearer ' + access_token;
 					return config;
+				}, function (error) {
+					console.error("[auth.interceptor] Token provider returned error: ", error);
+					throw error;
 				});
 
 			};
