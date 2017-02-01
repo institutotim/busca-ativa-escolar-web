@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 @import 'compass/css3';
 
 @import 'shared/util_mixins';
@@ -10,6 +12,8 @@
 @import 'components/subnav_tabs';
 @import 'components/app_footer';
 @import 'components/loading_feedback';
+
+@import '../../../public/vendor/json-formatter/dist/json-formatter';
 
 .form-control.ng-invalid { background-image: linear-gradient($brand-danger, $brand-danger), linear-gradient(#D2D2D2, #D2D2D2) !important; }
 
@@ -132,3 +136,5 @@ p.agent-panel{
 		}
 	}
 }
+
+.ace_editor { height: 200px; }

@@ -5,19 +5,38 @@
 		</div>
 		<div class="panel-body">
 
-			<div class="col-md-6">
+			<div class="col-md-12">
 				<div class="panel panel-primary">
-					<div class="panel-heading">Alterar perfil de acesso</div>
-					<div class="panel-body">
+					<div class="panel-heading">REST Client</div>
+					<div class="panel-body clearfix">
 
-						<div class="list-group">
-							<a class="list-group-item" ng-click="identity.debugUserType('agente_comunitario')"><i class="material-icons">account_box</i> Alterar perfil para: Agente Comunitário</a>
-							<a class="list-group-item" ng-click="identity.debugUserType('tecnico_verificador')"><i class="material-icons">account_box</i> Alterar perfil para: Técnico Verificador</a>
-							<a class="list-group-item" ng-click="identity.debugUserType('supervisor_institucional')"><i class="material-icons">account_box</i> Alterar perfil para: Supervisor Institucional</a>
-							<a class="list-group-item" ng-click="identity.debugUserType('coordenador_operacional')"><i class="material-icons">account_box</i> Alterar perfil para: Coordenador Operacional</a>
-							<a class="list-group-item" ng-click="identity.debugUserType('gestor_politico')"><i class="material-icons">account_box</i> Alterar perfil para: Gestor Político</a>
-							<a class="list-group-item" ng-click="identity.debugUserType('gestor_nacional')"><i class="material-icons">account_box</i> Alterar perfil para: Gestor Nacional</a>
-							<a class="list-group-item" ng-click="identity.debugUserType('superuser')"><i class="material-icons">account_box</i> Alterar perfil para: Super Administrador</a>
+						<div class="col-md-6">
+							<h3>Request</h3>
+
+							<div class="form-group clearfix">
+								<div class="form-group col-md-10">
+									<select class="form-control" ng-model="rest.endpoint" ng-options="n as n.name for n in static.getAPIEndpoints()"></select>
+								</div>
+								<div class="form-group col-md-2">
+									<label for="chk-require-auth" uib-tooltip="Authenticate as current user?">
+										<input id="chk-require-auth" ng-model="rest.requireAuth" ng-true-value="1" ng-false-value="0" type="checkbox" />
+										<i class="fa fa-key"></i>
+									</label>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="ace_editor" ng-model="rest.request" ui-ace="{mode: 'json'}"></div>
+							</div>
+
+							<div class="form-group clearfix">
+								<button class="btn btn-success pull-right" ng-click="rest.sendRequest();" type="button">Send</button>
+							</div>
+						</div>
+
+						<div class="col-md-6">
+							<h3>Response</h3>
+							<json-formatter open="1" json="rest.response"></json-formatter>
 						</div>
 
 					</div>
@@ -59,33 +78,6 @@
 							</tr>
 							</tbody>
 						</table>
-
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md-6">
-				<div class="panel panel-primary">
-					<div class="panel-heading">Testar back-end</div>
-					<div class="panel-body">
-
-						<button type="button" ng-click="testGetTenant()" class="btn btn-raised btn-warning">Realizar request aberto</button>
-
-						<div>
-							<p>ID: {{tenant.id}}</p>
-							<p>Name: {{tenant.name}}</p>
-							<p>Tenant registered at: {{tenant.created_at}}</p>
-						</div>
-
-						<button type="button" ng-click="testGetChildren()" class="btn btn-raised btn-warning">Realizar request autenticado</button>
-
-						<div>
-							<p>ID: {{child.id}}</p>
-							<p>Name: {{child.name}}</p>
-							<p>Status: {{child.status}}</p>
-							<p>Step type: {{child.current_step_type}}</p>
-							<p>Record created at: {{child.created_at}}</p>
-						</div>
 
 					</div>
 				</div>

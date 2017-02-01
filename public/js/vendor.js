@@ -86470,4 +86470,611 @@ angular.module('checklist-model', [])
   };
 }]);
 
+'use strict';
+
+/**
+ * Binds a ACE Editor widget
+ */
+angular.module('ui.ace', [])
+  .constant('uiAceConfig', {})
+  .directive('uiAce', ['uiAceConfig', function (uiAceConfig) {
+
+    if (angular.isUndefined(window.ace)) {
+      throw new Error('ui-ace need ace to work... (o rly?)');
+    }
+
+    /**
+     * Sets editor options such as the wrapping mode or the syntax checker.
+     *
+     * The supported options are:
+     *
+     *   <ul>
+     *     <li>showGutter</li>
+     *     <li>useWrapMode</li>
+     *     <li>onLoad</li>
+     *     <li>theme</li>
+     *     <li>mode</li>
+     *   </ul>
+     *
+     * @param acee
+     * @param session ACE editor session
+     * @param {object} opts Options to be set
+     */
+    var setOptions = function(acee, session, opts) {
+
+      // sets the ace worker path, if running from concatenated
+      // or minified source
+      if (angular.isDefined(opts.workerPath)) {
+        var config = window.ace.require('ace/config');
+        config.set('workerPath', opts.workerPath);
+      }
+      // ace requires loading
+      if (angular.isDefined(opts.require)) {
+        opts.require.forEach(function (n) {
+            window.ace.require(n);
+        });
+      }
+      // Boolean options
+      if (angular.isDefined(opts.showGutter)) {
+        acee.renderer.setShowGutter(opts.showGutter);
+      }
+      if (angular.isDefined(opts.useWrapMode)) {
+        session.setUseWrapMode(opts.useWrapMode);
+      }
+      if (angular.isDefined(opts.showInvisibles)) {
+        acee.renderer.setShowInvisibles(opts.showInvisibles);
+      }
+      if (angular.isDefined(opts.showIndentGuides)) {
+        acee.renderer.setDisplayIndentGuides(opts.showIndentGuides);
+      }
+      if (angular.isDefined(opts.useSoftTabs)) {
+        session.setUseSoftTabs(opts.useSoftTabs);
+      }
+      if (angular.isDefined(opts.showPrintMargin)) {
+        acee.setShowPrintMargin(opts.showPrintMargin);
+      }
+
+      // commands
+      if (angular.isDefined(opts.disableSearch) && opts.disableSearch) {
+        acee.commands.addCommands([
+          {
+            name: 'unfind',
+            bindKey: {
+              win: 'Ctrl-F',
+              mac: 'Command-F'
+            },
+            exec: function () {
+              return false;
+            },
+            readOnly: true
+          }
+        ]);
+      }
+
+      // Basic options
+      if (angular.isString(opts.theme)) {
+        acee.setTheme('ace/theme/' + opts.theme);
+      }
+      if (angular.isString(opts.mode)) {
+        session.setMode('ace/mode/' + opts.mode);
+      }
+      // Advanced options
+      if (angular.isDefined(opts.firstLineNumber)) {
+        if (angular.isNumber(opts.firstLineNumber)) {
+          session.setOption('firstLineNumber', opts.firstLineNumber);
+        } else if (angular.isFunction(opts.firstLineNumber)) {
+          session.setOption('firstLineNumber', opts.firstLineNumber());
+        }
+      }
+
+      // advanced options
+      var key, obj;
+      if (angular.isDefined(opts.advanced)) {
+          for (key in opts.advanced) {
+              // create a javascript object with the key and value
+              obj = { name: key, value: opts.advanced[key] };
+              // try to assign the option to the ace editor
+              acee.setOption(obj.name, obj.value);
+          }
+      }
+
+      // advanced options for the renderer
+      if (angular.isDefined(opts.rendererOptions)) {
+          for (key in opts.rendererOptions) {
+              // create a javascript object with the key and value
+              obj = { name: key, value: opts.rendererOptions[key] };
+              // try to assign the option to the ace editor
+              acee.renderer.setOption(obj.name, obj.value);
+          }
+      }
+
+      // onLoad callbacks
+      angular.forEach(opts.callbacks, function (cb) {
+        if (angular.isFunction(cb)) {
+          cb(acee);
+        }
+      });
+    };
+
+    return {
+      restrict: 'EA',
+      require: '?ngModel',
+      link: function (scope, elm, attrs, ngModel) {
+
+        /**
+         * Corresponds the uiAceConfig ACE configuration.
+         * @type object
+         */
+        var options = uiAceConfig.ace || {};
+
+        /**
+         * uiAceConfig merged with user options via json in attribute or data binding
+         * @type object
+         */
+        var opts = angular.extend({}, options, scope.$eval(attrs.uiAce));
+
+        /**
+         * ACE editor
+         * @type object
+         */
+        var acee = window.ace.edit(elm[0]);
+
+        /**
+         * ACE editor session.
+         * @type object
+         * @see [EditSession]{@link http://ace.c9.io/#nav=api&api=edit_session}
+         */
+        var session = acee.getSession();
+
+        /**
+         * Reference to a change listener created by the listener factory.
+         * @function
+         * @see listenerFactory.onChange
+         */
+        var onChangeListener;
+
+        /**
+         * Reference to a blur listener created by the listener factory.
+         * @function
+         * @see listenerFactory.onBlur
+         */
+        var onBlurListener;
+
+        /**
+         * Calls a callback by checking its existing. The argument list
+         * is variable and thus this function is relying on the arguments
+         * object.
+         * @throws {Error} If the callback isn't a function
+         */
+        var executeUserCallback = function () {
+
+          /**
+           * The callback function grabbed from the array-like arguments
+           * object. The first argument should always be the callback.
+           *
+           * @see [arguments]{@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/arguments}
+           * @type {*}
+           */
+          var callback = arguments[0];
+
+          /**
+           * Arguments to be passed to the callback. These are taken
+           * from the array-like arguments object. The first argument
+           * is stripped because that should be the callback function.
+           *
+           * @see [arguments]{@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope/arguments}
+           * @type {Array}
+           */
+          var args = Array.prototype.slice.call(arguments, 1);
+
+          if (angular.isDefined(callback)) {
+            scope.$evalAsync(function () {
+              if (angular.isFunction(callback)) {
+                callback(args);
+              } else {
+                throw new Error('ui-ace use a function as callback.');
+              }
+            });
+          }
+        };
+
+        /**
+         * Listener factory. Until now only change listeners can be created.
+         * @type object
+         */
+        var listenerFactory = {
+          /**
+           * Creates a change listener which propagates the change event
+           * and the editor session to the callback from the user option
+           * onChange. It might be exchanged during runtime, if this
+           * happens the old listener will be unbound.
+           *
+           * @param callback callback function defined in the user options
+           * @see onChangeListener
+           */
+          onChange: function (callback) {
+            return function (e) {
+              var newValue = session.getValue();
+
+              if (ngModel && newValue !== ngModel.$viewValue &&
+                  // HACK make sure to only trigger the apply outside of the
+                  // digest loop 'cause ACE is actually using this callback
+                  // for any text transformation !
+                  !scope.$$phase && !scope.$root.$$phase) {
+                scope.$evalAsync(function () {
+                  ngModel.$setViewValue(newValue);
+                });
+              }
+
+              executeUserCallback(callback, e, acee);
+            };
+          },
+          /**
+           * Creates a blur listener which propagates the editor session
+           * to the callback from the user option onBlur. It might be
+           * exchanged during runtime, if this happens the old listener
+           * will be unbound.
+           *
+           * @param callback callback function defined in the user options
+           * @see onBlurListener
+           */
+          onBlur: function (callback) {
+            return function () {
+              executeUserCallback(callback, acee);
+            };
+          }
+        };
+
+        attrs.$observe('readonly', function (value) {
+          acee.setReadOnly(!!value || value === '');
+        });
+
+        // Value Blind
+        if (ngModel) {
+          ngModel.$formatters.push(function (value) {
+            if (angular.isUndefined(value) || value === null) {
+              return '';
+            }
+            else if (angular.isObject(value) || angular.isArray(value)) {
+              throw new Error('ui-ace cannot use an object or an array as a model');
+            }
+            return value;
+          });
+
+          ngModel.$render = function () {
+            session.setValue(ngModel.$viewValue);
+          };
+        }
+
+        // Listen for option updates
+        var updateOptions = function (current, previous) {
+          if (current === previous) return;
+          opts = angular.extend({}, options, scope.$eval(attrs.uiAce));
+
+          opts.callbacks = [ opts.onLoad ];
+          if (opts.onLoad !== options.onLoad) {
+            // also call the global onLoad handler
+            opts.callbacks.unshift(options.onLoad);
+          }
+
+          // EVENTS
+
+          // unbind old change listener
+          session.removeListener('change', onChangeListener);
+
+          // bind new change listener
+          onChangeListener = listenerFactory.onChange(opts.onChange);
+          session.on('change', onChangeListener);
+
+          // unbind old blur listener
+          //session.removeListener('blur', onBlurListener);
+          acee.removeListener('blur', onBlurListener);
+
+          // bind new blur listener
+          onBlurListener = listenerFactory.onBlur(opts.onBlur);
+          acee.on('blur', onBlurListener);
+
+          setOptions(acee, session, opts);
+        };
+
+        scope.$watch(attrs.uiAce, updateOptions, /* deep watch */ true);
+
+        // set the options here, even if we try to watch later, if this
+        // line is missing things go wrong (and the tests will also fail)
+        updateOptions(options);
+
+        elm.on('$destroy', function () {
+          acee.session.$stopWorker();
+          acee.destroy();
+        });
+
+        scope.$watch(function() {
+          return [elm[0].offsetWidth, elm[0].offsetHeight];
+        }, function() {
+          acee.resize();
+          acee.renderer.updateFull();
+        }, true);
+
+      }
+    };
+  }]);
+
+/*!
+ * jsonformatter
+ * 
+ * Version: 0.6.0 - 2016-04-29T03:24:40.672Z
+ * License: Apache-2.0
+ */
+
+
+'use strict';
+
+angular.module('jsonFormatter', ['RecursionHelper'])
+
+.provider('JSONFormatterConfig', function JSONFormatterConfigProvider() {
+
+  // Default values for hover preview config
+  var hoverPreviewEnabled = false;
+  var hoverPreviewArrayCount = 100;
+  var hoverPreviewFieldCount = 5;
+
+  return {
+    get hoverPreviewEnabled() {
+      return hoverPreviewEnabled;
+    },
+    set hoverPreviewEnabled(value) {
+     hoverPreviewEnabled = !!value;
+    },
+
+    get hoverPreviewArrayCount() {
+      return hoverPreviewArrayCount;
+    },
+    set hoverPreviewArrayCount(value) {
+      hoverPreviewArrayCount = parseInt(value, 10);
+    },
+
+    get hoverPreviewFieldCount() {
+      return hoverPreviewFieldCount;
+    },
+    set hoverPreviewFieldCount(value) {
+      hoverPreviewFieldCount = parseInt(value, 10);
+    },
+
+    $get: function () {
+      return {
+        hoverPreviewEnabled: hoverPreviewEnabled,
+        hoverPreviewArrayCount: hoverPreviewArrayCount,
+        hoverPreviewFieldCount: hoverPreviewFieldCount
+      };
+    }
+  };
+})
+
+.directive('jsonFormatter', ['RecursionHelper', 'JSONFormatterConfig', function jsonFormatterDirective(RecursionHelper, JSONFormatterConfig) {
+  function escapeString(str) {
+    return str.replace('"', '\"');
+  }
+
+  // From http://stackoverflow.com/a/332429
+  function getObjectName(object) {
+    if (object === undefined) {
+      return '';
+    }
+    if (object === null) {
+      return 'Object';
+    }
+    if (typeof object === 'object' && !object.constructor) {
+        return 'Object';
+    }
+    var funcNameRegex = /function (.{1,})\(/;
+    var results = (funcNameRegex).exec((object).constructor.toString());
+    if (results && results.length > 1) {
+      return results[1];
+    } else {
+      return '';
+    }
+  }
+
+  function getType(object) {
+    if (object === null) { return 'null'; }
+    return typeof object;
+  }
+
+  function getValuePreview (object, value) {
+    var type = getType(object);
+
+    if (type === 'null' || type === 'undefined') { return type; }
+
+    if (type === 'string') {
+      value = '"' + escapeString(value) + '"';
+    }
+    if (type === 'function'){
+
+      // Remove content of the function
+      return object.toString()
+          .replace(/[\r\n]/g, '')
+          .replace(/\{.*\}/, '') + '{…}';
+
+    }
+    return value;
+  }
+
+  function getPreview(object) {
+    var value = '';
+    if (angular.isObject(object)) {
+      value = getObjectName(object);
+      if (angular.isArray(object))
+        value += '[' + object.length + ']';
+    } else {
+      value = getValuePreview(object, object);
+    }
+    return value;
+  }
+
+  function link(scope) {
+    scope.isArray = function () {
+      return angular.isArray(scope.json);
+    };
+
+    scope.isObject = function() {
+      return angular.isObject(scope.json);
+    };
+
+    scope.getKeys = function (){
+      if (scope.isObject()) {
+        return Object.keys(scope.json).map(function(key) {
+          if (key === '') { return '""'; }
+          return key;
+        });
+      }
+    };
+    scope.type = getType(scope.json);
+    scope.hasKey = typeof scope.key !== 'undefined';
+    scope.getConstructorName = function(){
+      return getObjectName(scope.json);
+    };
+
+    if (scope.type === 'string'){
+
+      // Add custom type for date
+      if((new Date(scope.json)).toString() !== 'Invalid Date') {
+        scope.isDate = true;
+      }
+
+      // Add custom type for URLs
+      if (scope.json.indexOf('http') === 0) {
+        scope.isUrl = true;
+      }
+    }
+
+    scope.isEmptyObject = function () {
+      return scope.getKeys() && !scope.getKeys().length &&
+        scope.isOpen && !scope.isArray();
+    };
+
+
+    // If 'open' attribute is present
+    scope.isOpen = !!scope.open;
+    scope.toggleOpen = function () {
+      scope.isOpen = !scope.isOpen;
+    };
+    scope.childrenOpen = function () {
+      if (scope.open > 1){
+        return scope.open - 1;
+      }
+      return 0;
+    };
+
+    scope.openLink = function (isUrl) {
+      if(isUrl) {
+        window.location.href = scope.json;
+      }
+    };
+
+    scope.parseValue = function (value){
+      return getValuePreview(scope.json, value);
+    };
+
+    scope.showThumbnail = function () {
+      return !!JSONFormatterConfig.hoverPreviewEnabled && scope.isObject() && !scope.isOpen;
+    };
+
+    scope.getThumbnail = function () {
+      if (scope.isArray()) {
+
+        // if array length is greater then 100 it shows "Array[101]"
+        if (scope.json.length > JSONFormatterConfig.hoverPreviewArrayCount) {
+          return 'Array[' + scope.json.length + ']';
+        } else {
+          return '[' + scope.json.map(getPreview).join(', ') + ']';
+        }
+      } else {
+
+        var keys = scope.getKeys();
+
+        // the first five keys (like Chrome Developer Tool)
+        var narrowKeys = keys.slice(0, JSONFormatterConfig.hoverPreviewFieldCount);
+
+        // json value schematic information
+        var kvs = narrowKeys
+          .map(function (key) { return key + ':' + getPreview(scope.json[key]); });
+
+        // if keys count greater then 5 then show ellipsis
+        var ellipsis = keys.length >= 5 ? '…' : '';
+
+        return '{' + kvs.join(', ') + ellipsis + '}';
+      }
+    };
+  }
+
+  return {
+    templateUrl: 'json-formatter.html',
+    restrict: 'E',
+    replace: true,
+    scope: {
+      json: '=',
+      key: '=',
+      open: '='
+    },
+    compile: function(element) {
+
+      // Use the compile function from the RecursionHelper,
+      // And return the linking function(s) which it returns
+      return RecursionHelper.compile(element, link);
+    }
+  };
+}]);
+
+// Export to CommonJS style imports. Exporting this string makes this valid:
+// angular.module('myApp', [require('jsonformatter')]);
+if (typeof module === 'object') {
+  module.exports = 'jsonFormatter';
+}
+'use strict';
+
+// from http://stackoverflow.com/a/18609594
+angular.module('RecursionHelper', []).factory('RecursionHelper', ['$compile', function($compile){
+  return {
+    /**
+     * Manually compiles the element, fixing the recursion loop.
+     * @param element
+     * @param [link] A post-link function, or an object with function(s)
+     * registered via pre and post properties.
+     * @returns An object containing the linking functions.
+     */
+    compile: function(element, link){
+      // Normalize the link parameter
+      if(angular.isFunction(link)){
+        link = { post: link };
+      }
+
+      // Break the recursion loop by removing the contents
+      var contents = element.contents().remove();
+      var compiledContents;
+      return {
+        pre: (link && link.pre) ? link.pre : null,
+        /**
+         * Compiles and re-adds the contents
+         */
+        post: function(scope, element){
+          // Compile the contents
+          if(!compiledContents){
+            compiledContents = $compile(contents);
+          }
+          // Re-add the compiled contents to the element
+          compiledContents(scope, function(clone){
+            element.append(clone);
+          });
+
+          // Call the post-linking function, if any
+          if(link && link.post){
+            link.post.apply(null, arguments);
+          }
+        }
+      };
+    }
+  };
+}]);
+
+angular.module("jsonFormatter").run(["$templateCache", function($templateCache) {$templateCache.put("json-formatter.html","<div ng-init=\"isOpen = open && open > 0\" class=\"json-formatter-row\"><a ng-click=\"toggleOpen()\"><span class=\"toggler {{isOpen ? \'open\' : \'\'}}\" ng-if=\"isObject()\"></span> <span class=\"key\" ng-if=\"hasKey\"><span class=\"key-text\">{{key}}</span><span class=\"colon\">:</span></span> <span class=\"value\"><span ng-if=\"isObject()\"><span class=\"constructor-name\">{{getConstructorName(json)}}</span> <span ng-if=\"isArray()\"><span class=\"bracket\">[</span><span class=\"number\">{{json.length}}</span><span class=\"bracket\">]</span></span></span> <span ng-if=\"!isObject()\" ng-click=\"openLink(isUrl)\" class=\"{{type}}\" ng-class=\"{date: isDate, url: isUrl}\">{{parseValue(json)}}</span></span> <span ng-if=\"showThumbnail()\" class=\"thumbnail-text\">{{getThumbnail()}}</span></a><div class=\"children\" ng-if=\"getKeys().length && isOpen\"><json-formatter ng-repeat=\"key in getKeys() track by $index\" json=\"json[key]\" key=\"key\" open=\"childrenOpen()\"></json-formatter></div><div class=\"children empty object\" ng-if=\"isEmptyObject()\"></div><div class=\"children empty array\" ng-if=\"getKeys() && !getKeys().length && isOpen && isArray()\"></div></div>");}]);
 //# sourceMappingURL=vendor.js.map

@@ -35,6 +35,7 @@
 			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : {}; }
 			function getUFs() { return (data.UFs) ? data.UFs : {}; }
 			function getRegions() { return (data.Regions) ? data.Regions : {}; }
+			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : {}; }
 			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
 
 			return {
@@ -53,6 +54,7 @@
 				getAllowedMimeTypes: getAllowedMimeTypes,
 				getUFs: getUFs,
 				getRegions: getRegions,
+				getAPIEndpoints: getAPIEndpoints,
 			};
 
 		});

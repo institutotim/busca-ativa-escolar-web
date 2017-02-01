@@ -16,9 +16,12 @@
 			'highcharts-ng',
 			'checklist-model',
 
+			'jsonFormatter',
+
 			'ui.router',
 			'ui.bootstrap',
 			'ui.select',
 			'ui.utils.masks',
+			'ui.ace',
 		])
 })();
