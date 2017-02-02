@@ -37,7 +37,8 @@
 
 			var config = {
 
-				BUILD_PREFIX: 'b036.', // Build prefix for local storage keys; one-up this whenever the local storage structure is outdated
+				BUILD_PREFIX: 'b040.', // Build prefix for local storage keys; one-up this whenever the local storage structure is outdated
+				
 
 				API_ENDPOINTS: {
 					local_http: {
