@@ -46,11 +46,6 @@
 					templateUrl: '/views/settings/parameterize_group.html',
 					controller: 'ParameterizeGroupCtrl'
 				})
-				.state('reports', {
-					url: '/reports',
-					templateUrl: '/views/reports/browser.html',
-					controller: 'ReportsCtrl'
-				})
 				.state('credits', {
 					url: '/credits',
 					templateUrl: '/views/static/credits.html',

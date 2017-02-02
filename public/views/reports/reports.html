@@ -12,7 +12,7 @@
 					<select id="sel-report-entity" class="form-control"
 					        ng-model="current.entity"
 					        ng-change="onParametersUpdate()"
-					        ng-options="entity as entity.name for entity in reports">
+					        ng-options="entity.id as entity.name for entity in entities">
 					</select>
 				</div>
 
@@ -21,22 +21,22 @@
 					<select id="sel-report-view" class="form-control"
 					        ng-model="current.view"
 					        ng-change="onParametersUpdate()"
-					        ng-options="views[view] as views[view].name for view in current.entity.views">
+					        ng-options="view as views[view].name for view in entities[current.entity].views">
 					</select>
 				</div>
 
-				<div class="form-group" ng-show="current.view.allowsDimension">
+				<div class="form-group" ng-show="views[current.view].allowsDimension">
 					<label class="control-label" for="sel-report-dimension">Dimensão</label>
 					<select id="sel-report-dimension" class="form-control"
 					        ng-model="current.dimension"
 					        ng-change="onParametersUpdate()"
-					        ng-options="dimension as fields[dimension.id] for dimension in current.entity.dimensions">
+					        ng-options="dimension as fields[dimension] for dimension in entities[current.entity].dimensions">
 					</select>
 				</div>
 
 			</div>
 		</div>
-		<div class="panel panel-info">
+		<div class="panel panel-info" ng-hide="true">
 			<div class="panel-heading">
 				<i class="material-icons">filter_list</i> Buscar e filtrar
 			</div>
@@ -56,7 +56,7 @@
 					<label class="control-label" for="filter-cause_alert">Por causa</label>
 					<select class="form-control" id="filter-cause_alert"  placeholder="Causa do caso..."
 					        ng-model="filterCause.entity"
-					        ng-options="entity as entity for entity in reports.cases.dimensions.cause.values">
+					        ng-options="entity as entity for entity in values.case_cause">
 					</select>
 				</div>
 
@@ -64,15 +64,15 @@
 					<label class="control-label" for="filter-cause_search">Por causa</label>
 					<select class="form-control" id="filter-cause_search"  placeholder="Causa do caso..."
 					        ng-model="filterCause.entity"
-					        ng-options="entity as entity for entity in reports.alerts.dimensions.cause.values">
+					        ng-options="entity as entity for entity in values.alert_cause">
 					</select>
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('case_step')">
-					<label class="control-label" for="filter-stage">Por etapa</label>
-					<select id="sel-report-entity" class="form-control" id="filter-stage" placeholder="Etapa do caso..."
+					<label class="control-label" for="filter-step">Por etapa</label>
+					<select id="filter-step" class="form-control" id="filter-step" placeholder="Etapa do caso..."
 					        ng-model="filterStep.entity"
-					        ng-options="entity as entity for entity in reports.cases.dimensions.case_step.values">
+					        ng-options="entity as entity for entity in values.case_step">
 					</select>
 				</div>
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('assigned_user')">
@@ -92,10 +92,10 @@
 					</div>
 				</div>
 
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('process_status')">
-					<label class="control-label" for="filter-process_status-normal">Por status do prazo</label>
-					<div class="checkbox"><label for="filter-process_status-normal"><input type="checkbox" id="filter-process_status-normal" name="filter-process_status-normal" checked> Normal</label></div>
-					<div class="checkbox"><label for="filter-process_status-delayed"><input type="checkbox" id="filter-process_status-delayed" name="filter-process_status-delayed" checked> Em atraso</label></div>
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('deadline_status')">
+					<label class="control-label" for="filter-deadline_status-normal">Por status do prazo</label>
+					<div class="checkbox"><label for="filter-deadline_status-normal"><input type="checkbox" id="filter-deadline_status-normal" name="filter-deadline_status-normal" checked> Normal</label></div>
+					<div class="checkbox"><label for="filter-deadline_status-delayed"><input type="checkbox" id="filter-deadline_status-delayed" name="filter-deadline_status-delayed" checked> Em atraso</label></div>
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('children_status')">
@@ -106,7 +106,7 @@
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('case_status')">
-					<label class="control-label" for="filter-case">Por status do caso</label>
+					<label class="control-label" for="filter-case_status-in_progress">Por status do caso</label>
 					<div class="checkbox"><label for="filter-case_status-in_progress"><input type="checkbox" id="filter-case_status-in_progress"" name="filter-case_status-in_progress" checked> Em andamento</label></div>
 					<div class="checkbox"><label for="filter-case_status-completed"><input type="checkbox" id="filter-case_status-completed" name="filter-case_status-completed" > Concluído</label></div>
 					<div class="checkbox"><label for="filter-case_status-interrupted"><input type="checkbox" id="filter-case_status-interrupted" name="filter-case_status-interrupted" > Interrompido</label></div>
@@ -114,11 +114,11 @@
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="input.hasBeenCanceled">
-					 	<label class="control-label" for="fld-other-job">Especifique os motivos de cancelamento</label>
-					 	<div class="checkbox"><label for="filter-case_canceled-duplicated"><input type="checkbox" id="filter-case_canceled-duplicated"" name="filter-case_canceled-duplicated" > Caso duplicado</label></div>
-						<div class="checkbox"><label for="filter-case_canceled-family-not-found"><input type="checkbox" id="filter-case_canceled-family-not-found" name="filter-case_canceled-family-not-found"> Familia não foi encontrada</label></div>
-						<div class="checkbox"><label for="filter-case_canceled-death"><input type="checkbox" id="filter-case_canceled-death" name="filter-case_canceled-death" > Óbito</label></div>
-						<div class="checkbox"><label for="filter-case_canceled-insert-by_mistake"><input type="checkbox" id="filter-case_canceled-insert-by_mistake" name="filter-case_canceled-insert-by_mistake"> Caso inserido por engano</label></div>
+					 	<label class="control-label" for="filter-case_cancelled-duplicated">Especifique os motivos de cancelamento</label>
+					 	<div class="checkbox"><label for="filter-case_cancelled-duplicated"><input type="checkbox" id="filter-case_cancelled-duplicated" name="filter-case_cancelled-duplicated" > Caso duplicado</label></div>
+						<div class="checkbox"><label for="filter-case_cancelled-family-not-found"><input type="checkbox" id="filter-case_cancelled-family-not-found" name="filter-case_cancelled-family-not-found"> Familia não foi encontrada</label></div>
+						<div class="checkbox"><label for="filter-case_cancelled-death"><input type="checkbox" id="filter-case_cancelled-death" name="filter-case_cancelled-death" > Óbito</label></div>
+						<div class="checkbox"><label for="filter-case_cancelled-insert-by_mistake"><input type="checkbox" id="filter-case_cancelled-insert-by_mistake" name="filter-case_cancelled-insert-by_mistake"> Caso inserido por engano</label></div>
 				</div>	 
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('alert_status')">
@@ -128,7 +128,7 @@
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('age')">
-					<label class="control-label" for="filter-age-0a3">Por faixa etária</label>
+					<label class="control-label" for="filter-age-4a5">Por faixa etária</label>
 					<div class="checkbox"><label for="filter-age-4a5"><input type="checkbox" id="filter-age-4a5" name="filter-age-4a5" checked> 4 a 5</label></div>
 					<div class="checkbox"><label for="filter-age-6a10"><input type="checkbox" id="filter-age-6a10" name="filter-age-6a10" checked> 6 a 10</label></div>
 					<div class="checkbox"><label for="filter-age-11a14"><input type="checkbox" id="filter-age-11a14" name="filter-age-11a14" checked> 11 a 14</label></div>
@@ -206,7 +206,18 @@
 				<h3><i class="material-icons">show_chart</i> Relatórios <small>Quantidade de casos</small></h3>
 			</div>
 
-			<highchart ng-if="current.view.id != 'list'" style="width: 800px; height: 600px" id="base-chart" config="chartConfig"></highchart>
+			<div class="row clearfix">
+				<div class="col-md-6">
+					<json-formatter json="current" open="10"></json-formatter>
+				</div>
+				<div class="col-md-6">
+					<json-formatter json="reportData.response" open="10"></json-formatter>
+				</div>
+			</div>
+
+			<highchart ng-if="reportData.$resolved === true && current.view !== 'list'" style="width: 800px; height: 600px" id="base-chart" config="chartConfig"></highchart>
+
+			<!--highchart ng-if="current.view.id != 'list'" style="width: 800px; height: 600px" id="base-chart" config="chartConfig"></highchart>
 			<table ng-if="current.view.id == 'list'" class="table">
 				<thead>
 					<tr>
@@ -222,7 +233,7 @@
 						<td>{{generateRandomNumber(1, 99)}}%</td>
 					</tr>
 				</tbody>
-			</table>
+			</table-->
 
 		</div>
 
