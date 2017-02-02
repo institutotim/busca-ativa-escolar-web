@@ -1071,18 +1071,18 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $rootScope, $location, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $rootScope, $location, Identity, StaticData, Language) {
 
 		if(!Identity.isLoggedIn()) $location.path('/login');
 
 		$rootScope.section = 'dashboard';
 		$scope.identity = Identity;
-		$scope.mockData = MockData;
+		$scope.language = Language;
+		$scope.static = StaticData;
 
-		$scope.evolutionChart = MockData.evolutionChart;
-		$scope.typesChart = MockData.typesChart;
-		$scope.caseTypesChart = MockData.caseTypesChart;
-		$scope.casesTimelineChart = MockData.generateCasesTimelineChart();
+		$scope.numLangStrings = function() {
+			return Language.getNumStrings();
+		}
 
 	});
 
@@ -3055,11 +3055,14 @@ if (!Array.prototype.find) {
 			var data = {};
 			var self = this;
 
+			var dataFile = API.getURI('static/static_data?version=latest');
+			var $promise = {};
+
 			// TODO: cache this?
 
 			function fetchLatestVersion() {
 				console.log("[static_data] Downloading latest static data definitions...");
-				$http.get(API.getURI('static/static_data?version=latest')).then(onFetch);
+				$promise = $http.get(dataFile).then(onFetch);
 			}
 
 			function refresh() {
@@ -3070,6 +3073,18 @@ if (!Array.prototype.find) {
 			function onFetch(res) {
 				console.log("[static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
 				data = res.data.data;
+			}
+
+			function getDataFile() {
+				return dataFile;
+			}
+
+			function getNumChains() {
+				return data.length ? data.length : 0;
+			}
+
+			function isReady() {
+				return getNumChains() > 0;
 			}
 
 			function getUserTypes() { return (data.UserType) ? data.UserType : {}; }
@@ -3104,6 +3119,9 @@ if (!Array.prototype.find) {
 				getUFs: getUFs,
 				getRegions: getRegions,
 				getAPIEndpoints: getAPIEndpoints,
+				isReady: isReady,
+				getNumChains: getNumChains,
+				getDataFile: getDataFile,
 			};
 
 		});
@@ -3480,6 +3498,8 @@ if (!Array.prototype.find) {
 	app.service('Language', function Language($q, $http, API) {
 
 		var database = {};
+		var langFile = API.getURI('language.json');
+		var $promise = {};
 
 		function setup() {
 			console.log("[core.language] Setting up language service...");
@@ -3488,7 +3508,7 @@ if (!Array.prototype.find) {
 
 		function loadFromAPI() {
 			console.log("[core.language] Loading language file...");
-			$http.get(API.getURI('language.json')).then(onDataLoaded);
+			$promise = $http.get(langFile).then(onDataLoaded);
 		}
 
 		function onDataLoaded(res) {
@@ -3514,10 +3534,25 @@ if (!Array.prototype.find) {
 			return database[stringID];
 		}
 
+		function getNumStrings() {
+			return database.length ? database.length : 0;
+		}
+
+		function getLangFile() {
+			return langFile;
+		}
+
+		function isReady() {
+			return getNumStrings() > 0;
+		}
+
 		return {
 			setup: setup,
 			translate: translate,
-			string: string
+			string: string,
+			getNumStrings: getNumStrings,
+			getLangFile: getLangFile,
+			isReady: isReady,
 		};
 
 	});

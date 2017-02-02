@@ -6,11 +6,14 @@
 			var data = {};
 			var self = this;
 
+			var dataFile = API.getURI('static/static_data?version=latest');
+			var $promise = {};
+
 			// TODO: cache this?
 
 			function fetchLatestVersion() {
 				console.log("[static_data] Downloading latest static data definitions...");
-				$http.get(API.getURI('static/static_data?version=latest')).then(onFetch);
+				$promise = $http.get(dataFile).then(onFetch);
 			}
 
 			function refresh() {
@@ -21,6 +24,18 @@
 			function onFetch(res) {
 				console.log("[static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
 				data = res.data.data;
+			}
+
+			function getDataFile() {
+				return dataFile;
+			}
+
+			function getNumChains() {
+				return data.length ? data.length : 0;
+			}
+
+			function isReady() {
+				return getNumChains() > 0;
 			}
 
 			function getUserTypes() { return (data.UserType) ? data.UserType : {}; }
@@ -55,6 +70,9 @@
 				getUFs: getUFs,
 				getRegions: getRegions,
 				getAPIEndpoints: getAPIEndpoints,
+				isReady: isReady,
+				getNumChains: getNumChains,
+				getDataFile: getDataFile,
 			};
 
 		});

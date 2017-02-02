@@ -5,6 +5,8 @@
 	app.service('Language', function Language($q, $http, API) {
 
 		var database = {};
+		var langFile = API.getURI('language.json');
+		var $promise = {};
 
 		function setup() {
 			console.log("[core.language] Setting up language service...");
@@ -13,7 +15,7 @@
 
 		function loadFromAPI() {
 			console.log("[core.language] Loading language file...");
-			$http.get(API.getURI('language.json')).then(onDataLoaded);
+			$promise = $http.get(langFile).then(onDataLoaded);
 		}
 
 		function onDataLoaded(res) {
@@ -39,10 +41,25 @@
 			return database[stringID];
 		}
 
+		function getNumStrings() {
+			return database.length ? database.length : 0;
+		}
+
+		function getLangFile() {
+			return langFile;
+		}
+
+		function isReady() {
+			return getNumStrings() > 0;
+		}
+
 		return {
 			setup: setup,
 			translate: translate,
-			string: string
+			string: string,
+			getNumStrings: getNumStrings,
+			getLangFile: getLangFile,
+			isReady: isReady,
 		};
 
 	});
