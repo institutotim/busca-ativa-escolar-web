@@ -2,7 +2,7 @@
 
 	var app = angular.module('BuscaAtivaEscolar');
 
-	app.service('Language', function Language($http, API) {
+	app.service('Language', function Language($q, $http, API) {
 
 		var database = {};
 
@@ -52,15 +52,23 @@
 	});
 
 	app.filter('lang', function LanguageTranslateFilter(Language) {
-		return function(word, key) {
+		var $fn = function(word, key) {
 			return Language.translate(word, key);
-		}
+		};
+
+		$fn.$stateful = true; // TODO: optimize so this is not needed
+
+		return $fn;
 	});
 
 	app.filter('string', function LanguageStringFilter(Language) {
-		return function(stringID) {
+		var $fn =  function(stringID) {
 			return Language.string(stringID);
-		}
+		};
+
+		$fn.$stateful = true; // TODO: optimize so this is not needed
+
+		return $fn;
 	});
 
 })();
