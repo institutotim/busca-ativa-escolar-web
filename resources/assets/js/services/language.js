@@ -2,7 +2,7 @@
 
 	var app = angular.module('BuscaAtivaEscolar');
 
-	app.service('Language', function Language($q, $http, API) {
+	app.service('Language', function Language($q, $http, $rootScope, API) {
 
 		var database = {};
 		var langFile = API.getURI('language.json');
@@ -27,6 +27,8 @@
 			database = res.data.database;
 
 			console.log("[core.language] Language file loaded! " + database.length + " strings available", database);
+
+			$rootScope.$broadcast('Language.ready');
 		}
 
 		function translate(word, key) {

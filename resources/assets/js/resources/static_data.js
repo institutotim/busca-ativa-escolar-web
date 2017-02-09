@@ -24,6 +24,8 @@
 			function onFetch(res) {
 				console.log("[static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
 				data = res.data.data;
+
+				$rootScope.$broadcast('StaticData.ready');
 			}
 
 			function getDataFile() {

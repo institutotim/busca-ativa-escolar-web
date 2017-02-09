@@ -52,10 +52,33 @@
 				return result;
 			}
 
+			function pluck(collection, value_column, key_column) {
+				var hasKeyColumn = !!key_column;
+				var plucked = (hasKeyColumn) ? {} : [];
+
+				for(var i in collection) {
+					if(!collection.hasOwnProperty(i)) continue;
+
+					var value = collection[i][value_column] ? collection[i][value_column] : null;
+
+					if(!hasKeyColumn) {
+						plucked.push(value);
+						continue;
+					}
+
+					var key = collection[i][key_column] ? collection[i][key_column] : i;
+					plucked[key] = value;
+
+				}
+
+				return plucked;
+			}
+
 			return {
 				stripTimeFromTimestamp: stripTimeFromTimestamp,
 				filter: filter,
 				extract: extract,
+				pluck: pluck,
 			};
 		})
 		.directive('stringToNumber', function() {
