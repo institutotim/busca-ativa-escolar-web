@@ -2633,6 +2633,7 @@ if (!Array.prototype.find) {
 
 			$scope.ready = false;
 
+			$scope.filters = {};
 			$scope.values = {};
 			$scope.labels = {};
 			$scope.entities = {};
@@ -2653,7 +2654,22 @@ if (!Array.prototype.find) {
 			function onInit() {
 				$scope.ready = true;
 
-				$scope.values = {
+				$scope.filters = {
+					//deadline_status: ['normal', 'delayed'],
+					//case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
+					//alert_status: ['confirmed', 'rejected'],
+					child_status: ['in_school', 'in_observation', 'out_of_school'],
+					age: {from: 0, to: 28},
+					age_null: true,
+					gender: Utils.pluck(StaticData.getGenders(), 'slug'), //['male', 'female', 'undefined'],
+					gender_null: true,
+					//race: Utils.pluck(StaticData.getRaces(), 'slug'), //['male', 'female', 'undefined'],
+					//race_null: true,
+					place_kind: ['rural', 'urban'],
+					place_kind_null: true
+				};
+
+				$scope.values = { // TODO: reevaluate if this is necessary
 					child_status: ['out_of_school', 'in_observation', 'in_school'],
 					deadline_status: ['normal', 'delayed'],
 					step_slug: [
@@ -2672,8 +2688,8 @@ if (!Array.prototype.find) {
 					alert_cause_id: Object.keys(StaticData.getAlertCauses()),
 				};
 
-				$scope.labels = {
-					child_status: {out_of_school: 'Fora da Escola' , in_observation: 'Em observacao', in_school: 'Dentro da Escola'},
+				$scope.labels = { // TODO: these should come from the backend, as some fields (school, city, etc) need to be fetched
+					child_status: {out_of_school: 'Fora da escola' , in_observation: 'Em observação', in_school: 'Dentro da escola'},
 					deadline_status: {normal: 'Normal', delayed: 'Em atraso'},
 					step_slug: {
 						'alerta': 'Alerta',
@@ -2698,9 +2714,25 @@ if (!Array.prototype.find) {
 						name: 'Crianças e adolescentes',
 						value: 'num_children',
 						entity: 'children',
-						//dimensions: ['child_status', 'deadline_status', 'case_step', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids'],
 						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'place_uf', 'school_last_id'],
-						filters: ['age', 'gender', 'ethnicity', 'parents_income', 'parent_scholarity', 'work_activity', 'place_kind', 'case_step', 'uf', 'city', 'child_status', 'deadline_status', 'cause'],
+						filters: [
+							//'case_status', // TODO: implement in backend/searchdoc
+							'child_status',
+							//'alert_status', // TODO: implement in backend/searchdoc
+							//'deadline_status', // TODO: implement in backend/searchdoc
+							'age',
+							'gender',
+							//'race',
+							//'parents_income',
+							//'guardian_schooling',
+							//'work_activity',
+							'place_kind',
+							'step_slug',
+							//'uf',
+							//'city',
+							//'deadline_status',
+							'case_cause_ids'
+						],
 						views: ['chart', 'list']//['map', 'chart', 'timeline', 'list']
 					}/*,
 					 alerts: {
@@ -2757,10 +2789,10 @@ if (!Array.prototype.find) {
 
 				$scope.chartConfig = getChartConfig();
 
-				$scope.onParametersUpdate();
+				$scope.refresh();
 			}
 
-			$scope.onParametersUpdate = function() {
+			$scope.refresh = function() {
 
 				// Check if selected view is available in entity
 				if($scope.entities[$scope.current.entity].views.indexOf($scope.current.view) === -1) {
@@ -2787,6 +2819,7 @@ if (!Array.prototype.find) {
 
 				var params = Object.assign({}, $scope.current);
 				params.view = $scope.views[$scope.current.view].viewMode;
+				params.filters = $scope.filters;
 
 				$scope.reportData = Reports.query(params);
 
@@ -2799,6 +2832,11 @@ if (!Array.prototype.find) {
 
 			$scope.canFilterBy = function(filter_id) {
 				if(!$scope.ready) return false;
+
+				if(filter_id === 'period') {
+					return $scope.current.view === 'timeline';
+				}
+
 				return $scope.entities[$scope.current.entity].filters.indexOf(filter_id) !== -1;
 			};
 

@@ -1,6 +1,6 @@
 <div>
 
-	<div class="col-md-3">
+	<form ng-submit="refresh()" class="col-md-3">
 		<div class="panel panel-info">
 			<div class="panel-heading">
 				<i class="fa fa-search"></i> Tipos de relatórios
@@ -11,7 +11,7 @@
 					<label class="control-label" for="sel-report-entity">Segmento</label>
 					<select id="sel-report-entity" class="form-control"
 					        ng-model="current.entity"
-					        ng-change="onParametersUpdate()"
+					        ng-change="refresh()"
 					        ng-options="entity.id as entity.name for entity in entities">
 					</select>
 				</div>
@@ -20,7 +20,7 @@
 					<label class="control-label" for="sel-report-view">Recorte</label>
 					<select id="sel-report-view" class="form-control"
 					        ng-model="current.view"
-					        ng-change="onParametersUpdate()"
+					        ng-change="refresh()"
 					        ng-options="view as views[view].name for view in entities[current.entity].views">
 					</select>
 				</div>
@@ -29,20 +29,20 @@
 					<label class="control-label" for="sel-report-dimension">Dimensão</label>
 					<select id="sel-report-dimension" class="form-control"
 					        ng-model="current.dimension"
-					        ng-change="onParametersUpdate()"
+					        ng-change="refresh()"
 					        ng-options="dimension as fields[dimension] for dimension in entities[current.entity].dimensions">
 					</select>
 				</div>
 
 			</div>
 		</div>
-		<div class="panel panel-info" ng-hide="true">
+		<div class="panel panel-info">
 			<div class="panel-heading">
 				<i class="material-icons">filter_list</i> Buscar e filtrar
 			</div>
 
 			<div class="panel-body">
-				<div class="form-group" style="margin-top: 5px">
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('period')">
 					<label class="control-label" for="filter-date-start">Por período</label>
 					<div class="form-inline">
 						<span style="width: 25px; text-align: center; display: inline-block;"> de </span>
@@ -52,152 +52,131 @@
 					</div>
 				</div>
 
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('search_causes')">
-					<label class="control-label" for="filter-cause_alert">Por causa</label>
-					<select class="form-control" id="filter-cause_alert"  placeholder="Causa do caso..."
-					        ng-model="filterCause.entity"
-					        ng-options="entity as entity for entity in values.case_cause">
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('case_cause_ids')">
+					<label class="control-label" for="filter-case_cause_ids">Por causa do caso</label>
+					<select class="form-control" id="filter-case_cause_ids"  placeholder="Causa do caso..."
+					        ng-model="filters.case_cause_ids"
+					        ng-options="n.id as n.label for n in static.getCaseCauses()">
+						<option value="">Todas</option>
 					</select>
 				</div>
 
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('alert_causes')">
-					<label class="control-label" for="filter-cause_search">Por causa</label>
-					<select class="form-control" id="filter-cause_search"  placeholder="Causa do caso..."
-					        ng-model="filterCause.entity"
-					        ng-options="entity as entity for entity in values.alert_cause">
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('alert_cause_id')">
+					<label class="control-label" for="filter-alert_cause_id">Por causa do alerta</label>
+					<select class="form-control" id="filter-alert_cause_id"  placeholder="Causa do alerta..."
+					        ng-model="filters.alert_cause_id"
+					        ng-options="n.id as n.label for n in static.getAlertCauses()">
+						<option value="">Todas</option>
 					</select>
 				</div>
 
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('case_step')">
-					<label class="control-label" for="filter-step">Por etapa</label>
-					<select id="filter-step" class="form-control" id="filter-step" placeholder="Etapa do caso..."
-					        ng-model="filterStep.entity"
-					        ng-options="entity as entity for entity in values.case_step">
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('step_slug')">
+					<label class="control-label" for="filter-step_slug">Por etapa</label>
+					<select id="filter-step_slug" class="form-control" id="filter-step_slug" placeholder="Etapa do caso..."
+					        ng-model="filters.step_slug"
+					        ng-options="val as labels.step_slug[val] for val in values.step_slug">
+						<option value="">Todas</option>
 					</select>
 				</div>
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('assigned_user')">
-					<label class="control-label" for="filter-assigned_user">Por usuário responsável</label>
-					<input type="text" class="form-control" id="filter-assigned_user" placeholder="Nome de usuário...">
-				</div>
-
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('uf') || canFilterBy('city')">
-					<label class="control-label" for="filter-uf">Por endereço</label>
-					<div class="row">
-						<div class="col-md-4">
-							<input type="text" class="form-control" id="filter-uf" placeholder="UF...">
-						</div>
-						<div class="col-md-8">
-							<input type="text" class="form-control" id="filter-city" placeholder="Município...">
-						</div>
-					</div>
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('assigned_user_name')">
+					<label class="control-label" for="filter-assigned_user_name">Por usuário responsável</label>
+					<!-- TODO: autocomplete users -->
+					<input type="text" class="form-control" id="filter-assigned_user_name" placeholder="Nome de usuário...">
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('deadline_status')">
 					<label class="control-label" for="filter-deadline_status-normal">Por status do prazo</label>
-					<div class="checkbox"><label for="filter-deadline_status-normal"><input type="checkbox" id="filter-deadline_status-normal" name="filter-deadline_status-normal" checked> Normal</label></div>
-					<div class="checkbox"><label for="filter-deadline_status-delayed"><input type="checkbox" id="filter-deadline_status-delayed" name="filter-deadline_status-delayed" checked> Em atraso</label></div>
+					<div class="checkbox"><label for="filter-deadline_status-normal"><input type="checkbox" id="filter-deadline_status-normal" checklist-model="filters.deadline_status" checklist-value="'normal'" name="filter-deadline_status-normal" checked> Normal</label></div>
+					<div class="checkbox"><label for="filter-deadline_status-delayed"><input type="checkbox" id="filter-deadline_status-delayed" checklist-model="filters.deadline_status" checklist-value="'delayed'" name="filter-deadline_status-delayed" checked> Em atraso</label></div>
 				</div>
 
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('children_status')">
-					<label class="control-label" for="filter-children_status-evaded">Por status da criança</label>
-					<div class="checkbox"><label for="filter-children_status-evaded"><input type="checkbox" id="filter-children_status-evaded" name="filter-children_status-evaded" checked> Fora da escola</label></div>
-					<div class="checkbox"><label for="filter-children_status-in_observation"><input type="checkbox" id="filter-children_status-in_observation" name="filter-children_status-in_observation" checked> Dentro da escola em observação</label></div>
-					<div class="checkbox"><label for="filter-children_status-reinserted"><input type="checkbox" id="filter-children_status-reinserted" name="filter-children_status-reinserted" checked> Dentro da escola consolidado</label></div>
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('child_status')">
+					<label class="control-label" for="filter-children_status-out_of_school">Por status da criança</label>
+					<div class="checkbox"><label for="filter-children_status-out_of_school"><input type="checkbox" id="filter-children_status-out_of_school"  checklist-model="filters.child_status" checklist-value="'out_of_school'" name="filter-child_status-out_of_school"> Fora da escola</label></div>
+					<div class="checkbox"><label for="filter-children_status-in_observation"><input type="checkbox" id="filter-children_status-in_observation"  checklist-model="filters.child_status" checklist-value="'in_observation'" name="filter-child_status-in_observation"> Dentro da escola em observação</label></div>
+					<div class="checkbox"><label for="filter-children_status-in_school"><input type="checkbox" id="filter-children_status-in_school"  checklist-model="filters.child_status" checklist-value="'in_school'" name="filter-child_status-in_school"> Dentro da escola consolidado</label></div>
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('case_status')">
-					<label class="control-label" for="filter-case_status-in_progress">Por status do caso</label>
-					<div class="checkbox"><label for="filter-case_status-in_progress"><input type="checkbox" id="filter-case_status-in_progress"" name="filter-case_status-in_progress" checked> Em andamento</label></div>
-					<div class="checkbox"><label for="filter-case_status-completed"><input type="checkbox" id="filter-case_status-completed" name="filter-case_status-completed" > Concluído</label></div>
-					<div class="checkbox"><label for="filter-case_status-interrupted"><input type="checkbox" id="filter-case_status-interrupted" name="filter-case_status-interrupted" > Interrompido</label></div>
-					<div class="checkbox"><label for="filter-case_status-canceled"><input  ng-model="input.hasBeenCanceled" ng-value="1" type="checkbox" id="filter-case_status-canceled" name="filter-case_status-canceled" > Cancelado</label></div>
+					<label class="control-label" for="filter-status-in_progress">Por status do caso</label>
+					<div class="checkbox"><label for="filter-status-in_progress"><input type="checkbox" id="filter-status-in_progress"  checklist-model="filters.case_status" checklist-value="'in_progress'" name="filter-case_status_in_progress"> Em andamento</label></div>
+					<div class="checkbox"><label for="filter-status-cancelled"><input type="checkbox" id="filter-status-cancelled"  checklist-model="filters.case_status" checklist-value="'cancelled'" name="filter-case_status_cancelled"> Cancelado</label></div>
+					<div class="checkbox"><label for="filter-status-completed"><input type="checkbox" id="filter-status-completed"  checklist-model="filters.case_status" checklist-value="'completed'" name="filter-case_status_completed"> Dentro da Escola</label></div>
+					<div class="checkbox"><label for="filter-status-interrupted"><input type="checkbox" id="filter-status-interrupted"  checklist-model="filters.case_status" checklist-value="'interrupted'" name="filter-case_status_interrupted"> Interrompido</label></div>
 				</div>
-
-				<div class="form-group" style="margin-top: 5px" ng-show="input.hasBeenCanceled">
-					 	<label class="control-label" for="filter-case_cancelled-duplicated">Especifique os motivos de cancelamento</label>
-					 	<div class="checkbox"><label for="filter-case_cancelled-duplicated"><input type="checkbox" id="filter-case_cancelled-duplicated" name="filter-case_cancelled-duplicated" > Caso duplicado</label></div>
-						<div class="checkbox"><label for="filter-case_cancelled-family-not-found"><input type="checkbox" id="filter-case_cancelled-family-not-found" name="filter-case_cancelled-family-not-found"> Familia não foi encontrada</label></div>
-						<div class="checkbox"><label for="filter-case_cancelled-death"><input type="checkbox" id="filter-case_cancelled-death" name="filter-case_cancelled-death" > Óbito</label></div>
-						<div class="checkbox"><label for="filter-case_cancelled-insert-by_mistake"><input type="checkbox" id="filter-case_cancelled-insert-by_mistake" name="filter-case_cancelled-insert-by_mistake"> Caso inserido por engano</label></div>
-				</div>	 
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('alert_status')">
 					<label class="control-label" for="filter-alert_status-confirmed">Por status do alerta</label>
-					<div class="checkbox"><label for="filter-alert_status-confirmed"><input type="checkbox" id="filter-alert_status-confirmed" name="filter-alert_status-confirmed" checked> Procedente</label></div>
-					<div class="checkbox"><label for="filter-alert_status-rejected"><input type="checkbox" id="filter-alert_status-rejected" name="filter-alert_status-rejected"> Improcedente</label></div>
+					<div class="checkbox"><label for="filter-alert_status-confirmed"><input type="checkbox" id="filter-alert_status-confirmed"  checklist-model="filters.alert_status" checklist-value="'confirmed'" name="filter-alert_status_confirmed"> Procedente</label></div>
+					<div class="checkbox"><label for="filter-alert_status-rejected"><input type="checkbox" id="filter-alert_status-rejected"  checklist-model="filters.alert_status" checklist-value="'rejected'" name="filter-alert_status_rejected"> Improcedente</label></div>
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('age')">
-					<label class="control-label" for="filter-age-4a5">Por faixa etária</label>
-					<div class="checkbox"><label for="filter-age-4a5"><input type="checkbox" id="filter-age-4a5" name="filter-age-4a5" checked> 4 a 5</label></div>
-					<div class="checkbox"><label for="filter-age-6a10"><input type="checkbox" id="filter-age-6a10" name="filter-age-6a10" checked> 6 a 10</label></div>
-					<div class="checkbox"><label for="filter-age-11a14"><input type="checkbox" id="filter-age-11a14" name="filter-age-11a14" checked> 11 a 14</label></div>
-					<div class="checkbox"><label for="filter-age-15a17"><input type="checkbox" id="filter-age-15a17" name="filter-age-15a17" checked> 15 a 17</label></div>
-					<div class="checkbox"><label for="filter-age-18p"><input type="checkbox" id="filter-age-18p" name="filter-age-18p" checked> 18+</label></div>
+					<label class="control-label" for="filter-age-from">Por faixa etária</label>
+					<div class="form-inline">
+						<span> de </span>
+						<input type="number" style="width: 40px; text-align: center" min="0" max="28" class="form-control" id="filter-age-from" ng-model="filters.age.from">
+						<span> a </span>
+						<input type="number" style="width: 40px; text-align: center" min="0" max="28" class="form-control" id="filter-age-to" ng-model="filters.age.to">
+						<span> anos </span>
+					</div>
+					<div class="checkbox"><label for="filter-age-null"><input type="checkbox" ng-model="filters.age_null" name="filter-age_null" id="filter-age-null"> Casos sem informação</label></div>
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('gender')">
 					<label class="control-label" for="filter-gender-male">Por sexo</label>
 					<div class="form-inline row">
-						<div class="checkbox col-md-6"><label for="filter-gender-male"><input type="checkbox" id="filter-gender-male" name="filter-gender-male" checked> <i class="fa fa-mars"></i> Masc.</label></div>
-						<div class="checkbox col-md-6"><label for="filter-gender-female"><input type="checkbox" id="filter-gender-female" name="filter-gender-female" checked> <i class="fa fa-venus"></i> Fem.</label></div>
+						<div class="checkbox col-md-6"><label for="filter-gender-male"><input type="checkbox" checklist-model="filters.gender" checklist-value="'male'" name="filter-gender_male" id="filter-gender-male"> <i class="fa fa-mars"></i> Masc.</label></div>
+						<div class="checkbox col-md-6"><label for="filter-gender-female"><input type="checkbox" checklist-model="filters.gender" checklist-value="'female'" name="filter-gender_female" id="filter-gender-female"> <i class="fa fa-venus"></i> Fem.</label></div>
+						<div class="checkbox col-md-6"><label for="filter-gender-undefined"><input type="checkbox" checklist-model="filters.gender" checklist-value="'undefined'" name="filter-gender_undefined" id="filter-gender-undefined"> <i class="fa fa-transgender"></i> Indef.</label></div>
+						<div class="checkbox col-md-6"><label for="filter-gender-null"><input type="checkbox" ng-model="filters.gender_null" name="filter-gender_null" id="filter-gender-null"> <i class="fa fa-block"></i> Sem info.</label></div>
 					</div>
 				</div>
 
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('region')">
-					<label class="control-label" for="filter-zone-rural">Por zona</label>
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('place_kind')">
+					<label class="control-label" for="filter-place_kind-rural">Por zona</label>
 					<div class="form-inline row">
-						<div class="checkbox col-md-6"><label for="filter-zone-rural"><input type="checkbox" id="filter-zone-rural" name="filter-zone-rural" checked> Rural</label></div>
-						<div class="checkbox col-md-6"><label for="filter-zone-urban"><input type="checkbox" id="filter-zone-urban" name="filter-zone-urban" checked> Urbana</label></div>
+						<div class="checkbox col-md-6"><label for="filter-place_kind-rural"><input type="checkbox" checklist-model="filters.place_kind" checklist-value="'rural'" name="filter-place_kind_rural" id="filter-place_kind-rural"> Rural</label></div>
+						<div class="checkbox col-md-6"><label for="filter-place_kind-urban"><input type="checkbox" checklist-model="filters.place_kind" checklist-value="'urban'" name="filter-place_kind_urban" id="filter-place_kind-urban"> Urbana</label></div>
+						<div class="checkbox col-md-12"><label for="filter-place_kind-null"><input type="checkbox" ng-model="filters.place_kind_null" name="filter-place_kind_null" id="filter-place_kind-null"> Sem informação</label></div>
 					</div>
 				</div>
 
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('parent_scholarity')">
-					<label class="control-label" for="filter-parent_scholarity">Por grau de instrução</label>
-						<select id="filter-parent_scholarity" class="form-control">
-							<option selected>Qualquer grau de instrução</option>
-							<option>Nenhuma</option>
-							<option>Ensino fundamental completo</option>
-							<option>Ensino fundamental incompleto</option>
-							<option>Ensino médio completo</option>
-							<option>Ensino médio incompleto</option>
-							<option>Ensino superior completo</option>
-							<option>Ensino superior incompleto</option>
-							<option>Pós graduação</option>
-						</select>
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('guardian_schooling')">
+					<label class="control-label" for="filter-guardian_schooling">Por grau de instrução</label>
+					<select id="filter-guardian_schooling" class="form-control"
+					        ng-model="filters.guardian_schooling"
+					        ng-options="n.slug as n.label for n in static.getSchoolingLevels()">
+						<option value="">Todos</option>
+					</select>
 				</div>
 
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('family_income')">
-					<label class="control-label" for="filter-family_income">Por renda familiar - salário mínimo</label>
-						<select id="filter-family_income" class="form-control">
-							<option selected>Todas as faixas</option>
-							<option>Até ¼</option>
-							<option>Mais de ¼ a ½</option>
-							<option>Mais de ½ a 1</option>
-							<option>Mais de 1 a 2</option>
-							<option>Mais de 2</option>
-						</select>
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('parents_income')">
+					<label class="control-label" for="filter-parents_income">Por renda familiar - salário mínimo</label>
+					<select id="filter-parents_income" class="form-control"
+							ng-model="filters.parents_income"
+							ng-options="n.slug as n.label for n in static.getIncomeRanges()">
+						<option value="">Todas</option>
+					</select>
 				</div>
 
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('ethnicity')">
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('race')">
 					<label class="control-label" for="filter-ethnicity">Por raça/etnia</label>
-						<select id="filter-ethnicity" class="form-control">
-							<option selected>Todas as raças</option>
-							<option>Indígena</option>
-							<option>Branca</option>
-							<option>Preta(pretos e pardos)</option>
-							<option>Amarela</option>
+						<select id="filter-ethnicity" class="form-control"
+						        ng-model="filters.race"
+						        ng-options="n.slug as n.label for n in static.getRaces()">
+							<option value="">Todas</option>
 						</select>
 				</div>
 			</div>
 
 			<div class="panel-footer">
 				<div>
-					<a class="btn btn-raised btn-info" style="width: 100%; padding: 8px 0"><i class="material-icons">search</i> Filtrar</a>
+					<button type="submit" class="btn btn-raised btn-info" style="width: 100%; padding: 8px 0"><i class="material-icons">search</i> Filtrar</button>
 				</div>
 			</div>
 		</div>
-	</div>
+	</form>
 
 	<div class="col-md-9">
 
@@ -209,8 +188,10 @@
 			<div class="row clearfix">
 				<div class="col-md-6">
 					<json-formatter json="current" open="10"></json-formatter>
+					<json-formatter json="filters" open="10"></json-formatter>
 				</div>
 				<div class="col-md-6">
+					<json-formatter json="reportData.query" open="0"></json-formatter>
 					<json-formatter json="reportData.response" open="10"></json-formatter>
 				</div>
 			</div>
