@@ -39,7 +39,7 @@
 				$scope.filters = {
 					//deadline_status: ['normal', 'delayed'],
 					//case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
-					//alert_status: ['confirmed', 'rejected'],
+					alert_status: ['accepted'],
 					child_status: ['in_school', 'in_observation', 'out_of_school'],
 					age: {from: 0, to: 28},
 					age_null: true,
@@ -100,7 +100,7 @@
 						filters: [
 							//'case_status', // TODO: implement in backend/searchdoc
 							'child_status',
-							//'alert_status', // TODO: implement in backend/searchdoc
+							'alert_status',
 							//'deadline_status', // TODO: implement in backend/searchdoc
 							'age',
 							'gender',

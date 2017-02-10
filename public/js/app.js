@@ -16,6 +16,7 @@
 			'highcharts-ng',
 			'checklist-model',
 
+			'idf.br-filters',
 			'jsonFormatter',
 
 			'ui.router',
@@ -725,6 +726,64 @@
 					$state.go('child_viewer', {child_id: res.child_id});
 				});
 			}
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('pending_alerts', {
+				url: '/pending_alerts',
+				templateUrl: '/views/children/pending_alerts.html',
+				controller: 'PendingAlertsCtrlCtrl'
+			})
+		})
+		.controller('PendingAlertsCtrlCtrl', function ($scope, $rootScope, Identity, Alerts, StaticData) {
+
+			$scope.identity = Identity;
+
+			$scope.children = {};
+			$scope.child = {};
+			$scope.causes = {};
+
+			$scope.$on('StaticData.ready', function() {
+				$scope.causes = StaticData.getAlertCauses()
+			});
+
+			$scope.getAlertCauseName = function() {
+				if(!$scope.child.alert) return;
+				if(!$scope.child.alert.alert_cause_id) return;
+				if(!$scope.causes[$scope.child.alert.alert_cause_id]) return;
+				return $scope.causes[$scope.child.alert.alert_cause_id].label;
+			};
+
+			$scope.static = StaticData;
+
+			$scope.refresh = function() {
+				$scope.children = Alerts.getPending();
+			};
+
+			$scope.preview = function(child) {
+				$scope.child = child;
+			};
+
+			$scope.accept = function(child) {
+				Alerts.accept({id: child.id}, function() {
+					$scope.refresh();
+					$scope. child = {};
+				});
+			};
+
+			$scope.reject = function(child) {
+				Alerts.reject({id: child.id}, function() {
+					$scope.refresh();
+					$scope.child = {};
+				});
+			};
+
+			$scope.refresh();
 
 		});
 
@@ -2657,7 +2716,7 @@ if (!Array.prototype.find) {
 				$scope.filters = {
 					//deadline_status: ['normal', 'delayed'],
 					//case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
-					//alert_status: ['confirmed', 'rejected'],
+					alert_status: ['accepted'],
 					child_status: ['in_school', 'in_observation', 'out_of_school'],
 					age: {from: 0, to: 28},
 					age_null: true,
@@ -2718,7 +2777,7 @@ if (!Array.prototype.find) {
 						filters: [
 							//'case_status', // TODO: implement in backend/searchdoc
 							'child_status',
-							//'alert_status', // TODO: implement in backend/searchdoc
+							'alert_status',
 							//'deadline_status', // TODO: implement in backend/searchdoc
 							'age',
 							'gender',
@@ -2988,6 +3047,21 @@ if (!Array.prototype.find) {
 
 		});
 
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Alerts', function Alerts(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('alerts/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: headers},
+				getPending: {url: API.getURI('alerts/pending'), isArray: false, method: 'GET', headers: headers},
+				accept: {url: API.getURI('alerts/:id/accept'), method: 'POST', headers: headers},
+				reject: {url: API.getURI('alerts/:id/reject'), method: 'POST', headers: headers},
+			});
+		});
 })();
 (function() {
 	angular

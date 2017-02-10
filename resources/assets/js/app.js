@@ -16,6 +16,7 @@
 			'highcharts-ng',
 			'checklist-model',
 
+			'idf.br-filters',
 			'jsonFormatter',
 
 			'ui.router',
