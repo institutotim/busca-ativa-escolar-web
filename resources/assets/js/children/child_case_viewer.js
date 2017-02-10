@@ -16,7 +16,7 @@
 				})
 		});
 
-	function ChildCasesCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Children, CaseSteps, Decorators) {
+	function ChildCasesCtrl($scope, $state, $stateParams, ngToast, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
 
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
@@ -90,6 +90,7 @@
 		};
 
 		$scope.canCompleteStep = function(childCase, step) {
+			if(step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Alerta') return false;
 			return (step.id === childCase.current_step_id && !step.is_completed && !step.is_pending_assignment);
 		};
 
@@ -145,7 +146,7 @@
 		// TODO: handle case cancelling
 	}
 
-	function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Schools, Cities, Children, Decorators, CaseSteps, StaticData) {
+	function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData) {
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 		$scope.CaseSteps = CaseSteps;
@@ -199,6 +200,18 @@
 			if(!$scope.step) return false;
 			if(!$scope.$parent.openedCase) return false;
 			return (!$scope.step.is_completed);
+		};
+
+		$scope.acceptAlert = function(childID) {
+			Alerts.accept({id: childID}, function() {
+				$state.reload();
+			})
+		};
+
+		$scope.rejectAlert = function(childID) {
+			Alerts.reject({id: childID}, function() {
+				$state.reload();
+			})
 		};
 
 		$scope.isHandicapped = function() {

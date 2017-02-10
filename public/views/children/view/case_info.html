@@ -166,6 +166,16 @@
 	</div>
 </div>
 
+<div class="panel panel-default" ng-show="isStepOpen('Alerta')">
+	<div class="panel-body">
+		<div class="alert alert-primary">Alerta enviado <strong uib-tooltip-html="child.created_at" ng-bind="child.created_at | amTimeAgo"></strong> <span ng-show="child.submitter">por <strong uib-tooltip-html="child.submitter.type | lang:'user.type'" ng-bind="child.submitter.name"></strong></span></div>
+	</div>
+	<div class="panel-footer" ng-show="child.alert_status === 'pending' && identity.can('pending_alerts')">
+		<a class="btn btn-raised btn-success" ng-click="acceptAlert(child.id)"><i class="fa fa-check"></i> Aceitar</a>
+		<a class="btn btn-raised btn-danger" ng-click="rejectAlert(child.id)"><i class="fa fa-ban"></i> Rejeitar</a>
+	</div>
+</div>
+
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
 	<div class="panel-heading"><i class="material-icons">person</i> Dados da criança ou adolescente</div>
 	<div class="panel-body">
