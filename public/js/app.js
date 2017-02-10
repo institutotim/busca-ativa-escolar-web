@@ -87,6 +87,314 @@
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar').directive('appCitySelect', function (Cities) {
+
+		var $scope;
+		var $attrs;
+
+		// TODO: fix this and replace repeated uib-typeaheads with this directive
+
+		function init(scope, element, attrs) {
+			$scope = scope;
+			$attrs = attrs;
+
+			$scope.$attrs = $attrs;
+			$scope.fetchCities = fetch;
+			$scope.renderSelectedCity = renderSelected;
+		}
+
+		function fetch(query) {
+			var data = {name: query, $hide_loading_feedback: true};
+			if($attrs.selectedUF) data.uf = $attrs.selectedUF;
+
+			console.log("[create_alert] Looking for cities: ", data);
+
+			return Cities.search(data).$promise.then(function (res) {
+				return res.results;
+			});
+		};
+
+		function renderSelected(city) {
+			if(!city) return '';
+			return city.uf + ' / ' + city.name;
+		};
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/city_select.html'
+		};
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('appLoadingFeedback', function (API) {
+
+		function init(scope, element, attrs) {
+			scope.isVisible = API.hasOngoingRequests;
+		}
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/loading_feedback.html'
+		};
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
+
+		function init(scope, element, attrs) {
+			scope.identity = Identity;
+			scope.showNotifications = true;
+
+			scope.toggleNotifications = function($event) {
+				scope.showNotifications = !scope.showNotifications;
+
+				$event.stopPropagation();
+				$event.stopImmediatePropagation();
+				$event.preventDefault();
+
+				return false;
+			}
+		}
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/navbar.html'
+		};
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('widgetPlatformUpdates', function ($q, $http) {
+
+		var repositories = [
+			{label: 'api', name: 'lqdi/busca-ativa-escolar-api'},
+			{label: 'panel', name: 'lqdi/busca-ativa-escolar-web'},
+		];
+		var baseURL = "https://api.github.com/repos/";
+
+		var repositoryData = {};
+		var commits = [];
+
+		function init(scope, element, attrs) {
+			scope.commits = commits;
+			refresh();
+		}
+
+		function refresh() {
+			var queries = [];
+			for(var i in repositories) {
+				if(!repositories.hasOwnProperty(i)) continue;
+				queries.push( fetchRepository(repositories[i]) );
+			}
+
+			$q.all(queries).then(parseRepositoryData)
+		}
+
+		function getCommitsURI(repo) {
+			return baseURL + repo.name + '/commits';
+		}
+
+		function fetchRepository(repo) {
+			console.log("[widget.platform_updates] Getting latest commits for repository: ", repo);
+			return $http.get(getCommitsURI(repo)).then(function (res) {
+				if(!res.data) {
+					console.error("[widget.platform_updates] Failed! ", res, repo);
+					return;
+				}
+
+				console.info("[widget.platform_updates] Done! ", repo);
+				repositoryData[repo.label] = res.data;
+				return res.data;
+			});
+		}
+
+		function parseRepositoryData() {
+			console.log("[widget.platform_updates] Parsing repository data...");
+
+			for(var rl in repositoryData) {
+				if(!repositoryData.hasOwnProperty(rl)) continue;
+
+				for(var i in repositoryData[rl]) {
+					if(!repositoryData[rl].hasOwnProperty(i)) continue;
+
+					var c = repositoryData[rl][i];
+
+					commits.push({
+						id: c.sha,
+						repo: rl,
+						author: {
+							name: c.commit.author.name,
+							email: c.commit.author.email,
+							username: c.author.login,
+							avatar_url: c.author.avatar_url
+						},
+						date: c.commit.author.date,
+						message: c.commit.message,
+						url: c.html_url
+					})
+				}
+			}
+		}
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/platform_updates.html'
+		};
+	});
+
+})();
+(function() {
+	identify('config', 'charts.js');
+
+	angular.module('BuscaAtivaEscolar').run(function (Config) {
+		Highcharts.setOptions({
+			lang: {
+				months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+				shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+				weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+				loading: ['Atualizando o gráfico...'],
+				contextButtonTitle: 'Exportar gráfico',
+				decimalPoint: ',',
+				thousandsSep: '.',
+				downloadJPEG: 'Baixar imagem JPEG',
+				downloadPDF: 'Baixar arquivo PDF',
+				downloadPNG: 'Baixar imagem PNG',
+				downloadSVG: 'Baixar vetor SVG',
+				printChart: 'Imprimir gráfico',
+				rangeSelectorFrom: 'De',
+				rangeSelectorTo: 'Para',
+				rangeSelectorZoom: 'Zoom',
+				resetZoom: 'Voltar zoom',
+				resetZoomTitle: 'Voltar zoom para nível 1:1'
+			}
+		});
+	})
+
+})();
+(function() {
+	identify('config', 'http.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
+		$httpProvider.interceptors.push('TrackPendingRequests');
+		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+	});
+
+})();
+(function() {
+	identify('config', 'local_storage.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
+		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v030.');
+	});
+
+})();
+(function() {
+	identify('config', 'on_init.js');
+
+	angular.module('BuscaAtivaEscolar').run(function ($cookies, Config, StaticData) {
+		Config.setEndpoint($cookies.get('FDENP_API_ENDPOINT') || Config.CURRENT_ENDPOINT);
+
+		StaticData.refresh();
+
+		$.material.init();
+	})
+
+})();
+(function() {
+	identify('config', 'states.js');
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
+
+			$locationProvider.html5Mode(true);
+			$urlRouterProvider.otherwise('/dashboard');
+
+			$stateProvider
+				.state('login', {
+					url: '/login',
+					templateUrl: '/views/login.html',
+					controller: 'LoginCtrl',
+					unauthenticated: true
+				})
+				.state('dashboard', {
+					url: '/dashboard',
+					templateUrl: '/views/dashboard.html',
+					controller: 'DashboardCtrl'
+				})
+				.state('preferences', {
+					url: '/preferences',
+					templateUrl: '/views/preferences/manage.html',
+					controller: 'PreferencesCtrl'
+				})
+				.state('developer_mode', {
+					url: '/developer_mode',
+					templateUrl: '/views/developer/developer_dashboard.html',
+					controller: 'DeveloperCtrl',
+					unauthenticated: true
+
+				})
+				.state('cities', {
+					url: '/cities',
+					templateUrl: '/views/cities/list.html',
+					controller: 'CitySearchCtrl'
+				})
+				.state('settings', {
+					url: '/settings',
+					templateUrl: '/views/settings/manage_settings.html',
+					controller: 'SettingsCtrl'
+				})
+				.state('settings.parameterize_group', {
+					url: '/parameterize_group/{group_id}',
+					templateUrl: '/views/settings/parameterize_group.html',
+					controller: 'ParameterizeGroupCtrl'
+				})
+				.state('credits', {
+					url: '/credits',
+					templateUrl: '/views/static/credits.html',
+					controller: 'CreditsCtrl',
+					unauthenticated: true
+				})
+				.state('sign_up', {
+					url: '/sign_up',
+					templateUrl: '/views/sign_up/main.html',
+					controller: 'SignUpCtrl',
+					unauthenticated: true
+				})
+				.state('first_time_setup', {
+					url: '/first_time_setup',
+					templateUrl: '/views/first_time_setup/main.html',
+					controller: 'FirstTimeSetupCtrl',
+					unauthenticated: true
+				});
+		});
+
+})();
+(function() {
+	identify('config', 'toasts.js');
+
+	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
+		ngToastProvider.configure({
+			verticalPosition: 'top',
+			horizontalPosition: 'right',
+			maxNumber: 3,
+			animation: 'slide',
+			dismissButton: true,
+			timeout: 3000
+		});
+	});
+
+})();
+(function() {
+
 	angular.module('BuscaAtivaEscolar')
 		.controller('ChildActivityLogCtrl', ChildActivityLogCtrl)
 
@@ -799,314 +1107,6 @@
 			$scope.refresh();
 
 		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar').directive('appCitySelect', function (Cities) {
-
-		var $scope;
-		var $attrs;
-
-		// TODO: fix this and replace repeated uib-typeaheads with this directive
-
-		function init(scope, element, attrs) {
-			$scope = scope;
-			$attrs = attrs;
-
-			$scope.$attrs = $attrs;
-			$scope.fetchCities = fetch;
-			$scope.renderSelectedCity = renderSelected;
-		}
-
-		function fetch(query) {
-			var data = {name: query, $hide_loading_feedback: true};
-			if($attrs.selectedUF) data.uf = $attrs.selectedUF;
-
-			console.log("[create_alert] Looking for cities: ", data);
-
-			return Cities.search(data).$promise.then(function (res) {
-				return res.results;
-			});
-		};
-
-		function renderSelected(city) {
-			if(!city) return '';
-			return city.uf + ' / ' + city.name;
-		};
-
-		return {
-			link: init,
-			replace: true,
-			templateUrl: '/views/components/city_select.html'
-		};
-	});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar').directive('appLoadingFeedback', function (API) {
-
-		function init(scope, element, attrs) {
-			scope.isVisible = API.hasOngoingRequests;
-		}
-
-		return {
-			link: init,
-			replace: true,
-			templateUrl: '/views/components/loading_feedback.html'
-		};
-	});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
-
-		function init(scope, element, attrs) {
-			scope.identity = Identity;
-			scope.showNotifications = true;
-
-			scope.toggleNotifications = function($event) {
-				scope.showNotifications = !scope.showNotifications;
-
-				$event.stopPropagation();
-				$event.stopImmediatePropagation();
-				$event.preventDefault();
-
-				return false;
-			}
-		}
-
-		return {
-			link: init,
-			replace: true,
-			templateUrl: '/views/navbar.html'
-		};
-	});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar').directive('widgetPlatformUpdates', function ($q, $http) {
-
-		var repositories = [
-			{label: 'api', name: 'lqdi/busca-ativa-escolar-api'},
-			{label: 'panel', name: 'lqdi/busca-ativa-escolar-web'},
-		];
-		var baseURL = "https://api.github.com/repos/";
-
-		var repositoryData = {};
-		var commits = [];
-
-		function init(scope, element, attrs) {
-			scope.commits = commits;
-			refresh();
-		}
-
-		function refresh() {
-			var queries = [];
-			for(var i in repositories) {
-				if(!repositories.hasOwnProperty(i)) continue;
-				queries.push( fetchRepository(repositories[i]) );
-			}
-
-			$q.all(queries).then(parseRepositoryData)
-		}
-
-		function getCommitsURI(repo) {
-			return baseURL + repo.name + '/commits';
-		}
-
-		function fetchRepository(repo) {
-			console.log("[widget.platform_updates] Getting latest commits for repository: ", repo);
-			return $http.get(getCommitsURI(repo)).then(function (res) {
-				if(!res.data) {
-					console.error("[widget.platform_updates] Failed! ", res, repo);
-					return;
-				}
-
-				console.info("[widget.platform_updates] Done! ", repo);
-				repositoryData[repo.label] = res.data;
-				return res.data;
-			});
-		}
-
-		function parseRepositoryData() {
-			console.log("[widget.platform_updates] Parsing repository data...");
-
-			for(var rl in repositoryData) {
-				if(!repositoryData.hasOwnProperty(rl)) continue;
-
-				for(var i in repositoryData[rl]) {
-					if(!repositoryData[rl].hasOwnProperty(i)) continue;
-
-					var c = repositoryData[rl][i];
-
-					commits.push({
-						id: c.sha,
-						repo: rl,
-						author: {
-							name: c.commit.author.name,
-							email: c.commit.author.email,
-							username: c.author.login,
-							avatar_url: c.author.avatar_url
-						},
-						date: c.commit.author.date,
-						message: c.commit.message,
-						url: c.html_url
-					})
-				}
-			}
-		}
-
-		return {
-			link: init,
-			replace: true,
-			templateUrl: '/views/components/platform_updates.html'
-		};
-	});
-
-})();
-(function() {
-	identify('config', 'charts.js');
-
-	angular.module('BuscaAtivaEscolar').run(function (Config) {
-		Highcharts.setOptions({
-			lang: {
-				months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-				shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-				weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-				loading: ['Atualizando o gráfico...'],
-				contextButtonTitle: 'Exportar gráfico',
-				decimalPoint: ',',
-				thousandsSep: '.',
-				downloadJPEG: 'Baixar imagem JPEG',
-				downloadPDF: 'Baixar arquivo PDF',
-				downloadPNG: 'Baixar imagem PNG',
-				downloadSVG: 'Baixar vetor SVG',
-				printChart: 'Imprimir gráfico',
-				rangeSelectorFrom: 'De',
-				rangeSelectorTo: 'Para',
-				rangeSelectorZoom: 'Zoom',
-				resetZoom: 'Voltar zoom',
-				resetZoomTitle: 'Voltar zoom para nível 1:1'
-			}
-		});
-	})
-
-})();
-(function() {
-	identify('config', 'http.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
-		$httpProvider.interceptors.push('TrackPendingRequests');
-		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
-	});
-
-})();
-(function() {
-	identify('config', 'local_storage.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
-		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v030.');
-	});
-
-})();
-(function() {
-	identify('config', 'on_init.js');
-
-	angular.module('BuscaAtivaEscolar').run(function ($cookies, Config, StaticData) {
-		Config.setEndpoint($cookies.get('FDENP_API_ENDPOINT') || Config.CURRENT_ENDPOINT);
-
-		StaticData.refresh();
-
-		$.material.init();
-	})
-
-})();
-(function() {
-	identify('config', 'states.js');
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
-
-			$locationProvider.html5Mode(true);
-			$urlRouterProvider.otherwise('/dashboard');
-
-			$stateProvider
-				.state('login', {
-					url: '/login',
-					templateUrl: '/views/login.html',
-					controller: 'LoginCtrl',
-					unauthenticated: true
-				})
-				.state('dashboard', {
-					url: '/dashboard',
-					templateUrl: '/views/dashboard.html',
-					controller: 'DashboardCtrl'
-				})
-				.state('preferences', {
-					url: '/preferences',
-					templateUrl: '/views/preferences/manage.html',
-					controller: 'PreferencesCtrl'
-				})
-				.state('developer_mode', {
-					url: '/developer_mode',
-					templateUrl: '/views/developer/developer_dashboard.html',
-					controller: 'DeveloperCtrl',
-					unauthenticated: true
-
-				})
-				.state('cities', {
-					url: '/cities',
-					templateUrl: '/views/cities/list.html',
-					controller: 'CitySearchCtrl'
-				})
-				.state('settings', {
-					url: '/settings',
-					templateUrl: '/views/settings/manage_settings.html',
-					controller: 'SettingsCtrl'
-				})
-				.state('settings.parameterize_group', {
-					url: '/parameterize_group/{group_id}',
-					templateUrl: '/views/settings/parameterize_group.html',
-					controller: 'ParameterizeGroupCtrl'
-				})
-				.state('credits', {
-					url: '/credits',
-					templateUrl: '/views/static/credits.html',
-					controller: 'CreditsCtrl',
-					unauthenticated: true
-				})
-				.state('sign_up', {
-					url: '/sign_up',
-					templateUrl: '/views/sign_up/main.html',
-					controller: 'SignUpCtrl',
-					unauthenticated: true
-				})
-				.state('first_time_setup', {
-					url: '/first_time_setup',
-					templateUrl: '/views/first_time_setup/main.html',
-					controller: 'FirstTimeSetupCtrl',
-					unauthenticated: true
-				});
-		});
-
-})();
-(function() {
-	identify('config', 'toasts.js');
-
-	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
-		ngToastProvider.configure({
-			verticalPosition: 'top',
-			horizontalPosition: 'right',
-			maxNumber: 3,
-			animation: 'slide',
-			dismissButton: true,
-			timeout: 3000
-		});
-	});
 
 })();
 (function() {
@@ -2432,6 +2432,357 @@ Highcharts.maps["countries/br/br-all"] = {
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar')
+		.config(function($stateProvider) {
+			$stateProvider.state('reports', {
+				url: '/reports',
+				templateUrl: '/views/reports/reports.html',
+				controller: 'ReportViewerCtrl'
+			})
+		})
+		.controller('ReportViewerCtrl', function ($scope, $rootScope, Platform, Utils, Cities, StaticData, Reports, Identity) {
+
+			$scope.identity = Identity;
+			$scope.static = StaticData;
+
+			$scope.ready = false;
+
+			$scope.filters = {};
+			$scope.entities = {};
+			$scope.views = {};
+			$scope.totals = {};
+			$scope.fields = {};
+
+			$scope.reportData = {};
+
+			$scope.current = {
+				entity: 'children',
+				dimension: 'cause',
+				view: 'chart'
+			};
+
+			function onInit() {
+				$scope.ready = true;
+
+				$scope.filters = {
+					//deadline_status: ['normal', 'delayed'],
+					case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
+					alert_status: ['accepted'],
+					child_status: ['in_school', 'in_observation', 'out_of_school'],
+					age: {from: 0, to: 28},
+					age_null: true,
+					gender: Utils.pluck(StaticData.getGenders(), 'slug'), //['male', 'female', 'undefined'],
+					gender_null: true,
+					race: Utils.pluck(StaticData.getRaces(), 'slug'), //['male', 'female', 'undefined'],
+					race_null: true,
+					place_kind: ['rural', 'urban'],
+					place_kind_null: true
+				};
+
+				$scope.entities = {
+					children: {
+						id: 'children',
+						name: 'Crianças e adolescentes',
+						value: 'num_children',
+						entity: 'children',
+						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'place_uf', 'place_city_id', 'school_last_id'],
+						filters: [
+							'case_status',
+							'child_status',
+							'alert_status',
+							//'deadline_status', // TODO: implement in backend/searchdoc
+							'age',
+							'gender',
+							//'race',
+							//'parents_income',
+							//'guardian_schooling',
+							//'work_activity',
+							'place_kind',
+							'step_slug',
+							//'uf',
+							//'city',
+							//'deadline_status',
+							'case_cause_ids'
+						],
+						views: ['chart', 'list']//['map', 'chart', 'timeline', 'list']
+					}/*,
+					 alerts: {
+					 id: 'alerts',
+					 name: 'Alertas',
+					 value: 'num_alerts',
+					 dimensions: ['alert_status', 'deadline_status', 'alert_cause_id'],
+					 filters: ['age', 'gender', 'assigned_user', 'uf', 'city', 'alert_status', 'child_status', 'deadline_status'],
+					 views: ['map', 'chart', 'timeline', 'list']
+					 },
+					 users: {
+					 id: 'users',
+					 name: 'Usuários',
+					 value: 'num_assignments',
+					 dimensions: ['child_status', 'deadline_status', 'case_step'],
+					 filters: ['child_status', 'deadline_status', 'case_step', 'user_group', 'user_type'],
+					 views: ['chart', 'timeline', 'list']
+					 }*/
+				};
+
+				$scope.views = {
+					map: {id: 'map', name: 'Mapa', allowsDimension: false, viewMode: 'linear'},
+					chart: {id: 'chart', name: 'Gráfico', allowsDimension: true, viewMode: 'linear'},
+					timeline: {id: 'timeline', name: 'Linha do tempo', allowsDimension: true, viewMode: 'time_series'},
+					list: {id: 'list', name: 'Lista', allowsDimension: true, viewMode: 'linear'}
+				};
+
+				$scope.totals = {
+					num_children: 'Número de crianças e adolescentes',
+					num_alerts: 'Número de alertas',
+					num_assignments: 'Número de casos sob sua responsabilidade'
+				};
+
+				$scope.fields = {
+					child_status: 'Status da criança',
+					deadline_status: 'Status do andamento',
+					alert_status: 'Status do alerta',
+					step_slug: 'Etapa do caso',
+					age: 'Faixa etária',
+					gender: 'Sexo',
+					parents_income: 'Faixa de renda familiar',
+					place_kind: 'Região',
+					work_activity: 'Atividade econômica',
+					case_cause_ids: 'Causa do Caso',
+					alert_cause_id: 'Causa do Alerta',
+					user_group: 'Grupo do usuário',
+					user_type: 'Tipo do usuário',
+					assigned_user: 'Usuário responsável',
+					parent_scholarity: 'Escolaridade do responsável',
+					place_uf: 'UF',
+					place_city_id: 'Município',
+					school_last_id: 'Última escola que frequentou',
+					city: 'Município',
+				};
+
+				$scope.chartConfig = getChartConfig();
+
+				$scope.refresh();
+			};
+
+			$scope.refresh = function() {
+
+				// Check if selected view is available in entity
+				if($scope.entities[$scope.current.entity].views.indexOf($scope.current.view) === -1) {
+					$scope.current.view = $scope.current.entity.views[0];
+				}
+
+				// Check if selected dimension is available in entity
+				var availableDimensions = $scope.entities[$scope.current.entity].dimensions;
+				if(availableDimensions.indexOf($scope.current.dimension) === -1) {
+					$scope.current.dimension = availableDimensions[0];
+				}
+
+				fetchReportData().then(function (res) {
+
+					if($scope.current.view !== "list") {
+						$scope.chartConfig = getChartConfig();
+					}
+
+				});
+
+			};
+
+			function fetchReportData() {
+
+				var params = Object.assign({}, $scope.current);
+				params.view = $scope.views[$scope.current.view].viewMode;
+				params.filters = $scope.filters;
+
+				params.filters.place_city_id = (params.filters.place_city) ? params.filters.place_city.id : null;
+
+				$scope.reportData = Reports.query(params);
+
+				return $scope.reportData.$promise;
+			}
+
+			$scope.generateRandomNumber = function(min, max) {
+				return min + Math.floor( Math.random() * (max - min));
+			};
+
+			$scope.canFilterBy = function(filter_id) {
+				if(!$scope.ready) return false;
+
+				if(filter_id === 'period') {
+					return $scope.current.view === 'timeline';
+				}
+
+				return $scope.entities[$scope.current.entity].filters.indexOf(filter_id) !== -1;
+			};
+
+			$scope.fetchCities = function(query) {
+				var data = {name: query, $hide_loading_feedback: true};
+				if($scope.filters.place_uf) data.uf = $scope.filters.place_uf;
+
+				console.log("[create_alert] Looking for cities: ", data);
+
+				return Cities.search(data).$promise.then(function (res) {
+					return res.results;
+				});
+			};
+
+			$scope.renderSelectedCity = function(city) {
+				return city.uf + ' / ' + city.name;
+			};
+
+			function getChartConfig() {
+				if($scope.current.view === "chart") return generateDimensionChart($scope.current.entity, $scope.current.dimension);
+				if($scope.current.view === "timeline") return generateTimelineChart($scope.current.entity, $scope.current.dimension);
+				//if($scope.current.view.id == "map") return MockData.brazilMapSettings;
+				return {};
+			}
+
+			function generateDimensionChart(entity, dimension) {
+
+				if(!$scope.ready) return false;
+
+				console.log("[report.charts] Generating dimension chart: ", entity, dimension, $scope.reportData);
+
+				if(!$scope.reportData) return;
+				if(!$scope.reportData.$resolved) return;
+				if(!$scope.reportData.response) return;
+				if(!$scope.reportData.response.report) return;
+
+				var report = $scope.reportData.response.report;
+				var seriesName = $scope.totals[$scope.entities[entity].value];
+				var labels = $scope.reportData.labels ? $scope.reportData.labels : {};
+
+				var data = [];
+				var categories = [];
+
+				for(var i in report) {
+					if(!report.hasOwnProperty(i)) continue;
+
+					var category = (labels[i]) ? labels[i] : i;
+
+					data.push( report[i] );
+					categories.push( category );
+
+				}
+
+				return {
+					options: {
+						chart: {
+							type: 'bar'
+						},
+						title: {
+							text: ''
+						},
+						subtitle: {
+							text: ''
+						}
+					},
+					xAxis: {
+						categories: categories,
+						title: {
+							text: null
+						}
+					},
+					yAxis: {
+						min: 0,
+						title: {
+							text: 'Quantidade',
+							align: 'high'
+						},
+						labels: {
+							overflow: 'justify'
+						}
+					},
+					tooltip: {
+						valueSuffix: ' casos'
+					},
+					plotOptions: {
+						bar: {
+							dataLabels: {
+								enabled: true
+							}
+						}
+					},
+					legend: {
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'top',
+						x: -40,
+						y: 80,
+						floating: true,
+						borderWidth: 1,
+						backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+						shadow: true
+					},
+					credits: {
+						enabled: false
+					},
+					series: [
+						{
+							name: seriesName,
+							data: data
+						}
+					]
+				};
+			}
+
+			function generateTimelineChart(entity, dimension, numDays) {
+
+				return;
+
+				if(!numDays) numDays = 30;
+				var series = [];
+
+				for(var d in dimension.values) {
+					if(!dimension.values.hasOwnProperty(d)) continue;
+
+					series.push({
+						name: dimension.values[d],
+						data: []
+					});
+				}
+
+				var settings = {
+					options: {
+						chart: {
+							type: 'line'
+						},
+
+						xAxis: {
+							currentMin: 1,
+							currentMax: 30,
+							title: {text: 'Últimos ' + numDays + ' dias'},
+							allowDecimals: false
+						},
+
+						yAxis: {
+							title: {text: $scope.values[entity.value]}
+						}
+					},
+					series: series,
+					title: {
+						text: ''
+					},
+
+					loading: false
+				};
+
+				for(var i = 0; i < numDays; i++) {
+					for(var j in series) {
+						if(!series.hasOwnProperty(j)) continue;
+						settings.series[j].data.push(Math.floor(100 + (j * 15) + (Math.random() * (numDays / 2))));
+					}
+				}
+
+				return settings;
+			}
+
+			Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top
+
+		});
+
+})();
+(function() {
+
 	angular
 		.module('BuscaAtivaEscolar')
 		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
@@ -2688,379 +3039,6 @@ if (!Array.prototype.find) {
 		}
 	});
 }
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function($stateProvider) {
-			$stateProvider.state('reports', {
-				url: '/reports',
-				templateUrl: '/views/reports/reports.html',
-				controller: 'ReportViewerCtrl'
-			})
-		})
-		.controller('ReportViewerCtrl', function ($scope, $rootScope, Platform, Utils, StaticData, Reports, Identity) {
-
-			$scope.identity = Identity;
-			$scope.static = StaticData;
-
-			$scope.ready = false;
-
-			$scope.filters = {};
-			$scope.values = {};
-			$scope.labels = {};
-			$scope.entities = {};
-			$scope.views = {};
-			$scope.totals = {};
-			$scope.fields = {};
-
-			$scope.reportData = {};
-
-			$scope.current = {
-				entity: 'children',
-				dimension: 'cause',
-				view: 'chart'
-			};
-
-			function onInit() {
-				$scope.ready = true;
-
-				$scope.filters = {
-					//deadline_status: ['normal', 'delayed'],
-					case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
-					alert_status: ['accepted'],
-					child_status: ['in_school', 'in_observation', 'out_of_school'],
-					age: {from: 0, to: 28},
-					age_null: true,
-					gender: Utils.pluck(StaticData.getGenders(), 'slug'), //['male', 'female', 'undefined'],
-					gender_null: true,
-					//race: Utils.pluck(StaticData.getRaces(), 'slug'), //['male', 'female', 'undefined'],
-					//race_null: true,
-					place_kind: ['rural', 'urban'],
-					place_kind_null: true
-				};
-
-				$scope.values = { // TODO: reevaluate if this is necessary
-					child_status: ['out_of_school', 'in_observation', 'in_school'],
-					deadline_status: ['normal', 'delayed'],
-					step_slug: [
-						'alerta',
-						'pesquisa',
-						'analise_tecnica',
-						'gestao_do_caso',
-						'rematricula',
-						'1a_observacao',
-						'2a_observacao',
-						'3a_observacao',
-						'4a_observacao',
-					],
-					work_activity: Object.keys(StaticData.getWorkActivities()),
-					case_cause_ids: Object.keys(StaticData.getCaseCauses()),
-					alert_cause_id: Object.keys(StaticData.getAlertCauses()),
-				};
-
-				$scope.labels = { // TODO: these should come from the backend, as some fields (school, city, etc) need to be fetched
-					child_status: {out_of_school: 'Fora da escola' , in_observation: 'Em observação', in_school: 'Dentro da escola'},
-					deadline_status: {normal: 'Normal', delayed: 'Em atraso'},
-					step_slug: {
-						'alerta': 'Alerta',
-						'pesquisa': 'Pesquisa',
-						'analise_tecnica': 'Analise Técnica',
-						'gestao_do_caso': 'Gestão do caso',
-						'rematricula': '(Re)matrícula',
-						'1a_observacao': '1ª Observação',
-						'2a_observacao': '2ª Observação',
-						'3a_observacao': '3ª Observação',
-						'4a_observacao': '4ª Observação',
-					},
-					work_activity: Utils.pluck(StaticData.getWorkActivities(), 'label', 'id'),
-					case_cause_ids: Utils.pluck(StaticData.getCaseCauses(), 'label', 'id'),
-					alert_cause_id: Utils.pluck(StaticData.getAlertCauses(), 'label', 'id'),
-					gender: Utils.pluck(StaticData.getGenders(), 'label', 'id'),
-				};
-
-				$scope.entities = {
-					children: {
-						id: 'children',
-						name: 'Crianças e adolescentes',
-						value: 'num_children',
-						entity: 'children',
-						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'place_uf', 'school_last_id'],
-						filters: [
-							'case_status',
-							'child_status',
-							'alert_status',
-							//'deadline_status', // TODO: implement in backend/searchdoc
-							'age',
-							'gender',
-							//'race',
-							//'parents_income',
-							//'guardian_schooling',
-							//'work_activity',
-							'place_kind',
-							'step_slug',
-							//'uf',
-							//'city',
-							//'deadline_status',
-							'case_cause_ids'
-						],
-						views: ['chart', 'list']//['map', 'chart', 'timeline', 'list']
-					}/*,
-					 alerts: {
-					 id: 'alerts',
-					 name: 'Alertas',
-					 value: 'num_alerts',
-					 dimensions: ['alert_status', 'deadline_status', 'alert_cause_id'],
-					 filters: ['age', 'gender', 'assigned_user', 'uf', 'city', 'alert_status', 'child_status', 'deadline_status'],
-					 views: ['map', 'chart', 'timeline', 'list']
-					 },
-					 users: {
-					 id: 'users',
-					 name: 'Usuários',
-					 value: 'num_assignments',
-					 dimensions: ['child_status', 'deadline_status', 'case_step'],
-					 filters: ['child_status', 'deadline_status', 'case_step', 'user_group', 'user_type'],
-					 views: ['chart', 'timeline', 'list']
-					 }*/
-				};
-
-				$scope.views = {
-					map: {id: 'map', name: 'Mapa', allowsDimension: false, viewMode: 'linear'},
-					chart: {id: 'chart', name: 'Gráfico', allowsDimension: true, viewMode: 'linear'},
-					timeline: {id: 'timeline', name: 'Linha do tempo', allowsDimension: true, viewMode: 'time_series'},
-					list: {id: 'list', name: 'Lista', allowsDimension: true, viewMode: 'linear'}
-				};
-
-				$scope.totals = {
-					num_children: 'Número de crianças e adolescentes',
-					num_alerts: 'Número de alertas',
-					num_assignments: 'Número de casos sob sua responsabilidade'
-				};
-
-				$scope.fields = {
-					child_status: 'Status da criança',
-					deadline_status: 'Status do andamento',
-					alert_status: 'Status do alerta',
-					step_slug: 'Etapa do caso',
-					age: 'Faixa etária',
-					gender: 'Sexo',
-					parents_income: 'Faixa de renda familiar',
-					place_kind: 'Região',
-					work_activity: 'Atividade econômica',
-					case_cause_ids: 'Causa do Caso',
-					alert_cause_id: 'Causa do Alerta',
-					user_group: 'Grupo do usuário',
-					user_type: 'Tipo do usuário',
-					assigned_user: 'Usuário responsável',
-					parent_scholarity: 'Escolaridade do responsável',
-					place_uf: 'Estado',
-					school_last_id: 'Última escola que frequentou',
-					city: 'Município',
-				};
-
-				$scope.chartConfig = getChartConfig();
-
-				$scope.refresh();
-			};
-
-			$scope.refresh = function() {
-
-				// Check if selected view is available in entity
-				if($scope.entities[$scope.current.entity].views.indexOf($scope.current.view) === -1) {
-					$scope.current.view = $scope.current.entity.views[0];
-				}
-
-				// Check if selected dimension is available in entity
-				var availableDimensions = $scope.entities[$scope.current.entity].dimensions;
-				if(availableDimensions.indexOf($scope.current.dimension) === -1) {
-					$scope.current.dimension = availableDimensions[0];
-				}
-
-				fetchReportData().then(function (res) {
-
-					if($scope.current.view !== "list") {
-						$scope.chartConfig = getChartConfig();
-					}
-
-				});
-
-			};
-
-			function fetchReportData() {
-
-				var params = Object.assign({}, $scope.current);
-				params.view = $scope.views[$scope.current.view].viewMode;
-				params.filters = $scope.filters;
-
-				$scope.reportData = Reports.query(params);
-
-				return $scope.reportData.$promise;
-			}
-
-			$scope.generateRandomNumber = function(min, max) {
-				return min + Math.floor( Math.random() * (max - min));
-			};
-
-			$scope.canFilterBy = function(filter_id) {
-				if(!$scope.ready) return false;
-
-				if(filter_id === 'period') {
-					return $scope.current.view === 'timeline';
-				}
-
-				return $scope.entities[$scope.current.entity].filters.indexOf(filter_id) !== -1;
-			};
-
-			function getChartConfig() {
-				if($scope.current.view === "chart") return generateDimensionChart($scope.current.entity, $scope.current.dimension);
-				if($scope.current.view === "timeline") return generateTimelineChart($scope.current.entity, $scope.current.dimension);
-				//if($scope.current.view.id == "map") return MockData.brazilMapSettings;
-				return {};
-			}
-
-			function generateDimensionChart(entity, dimension) {
-
-				if(!$scope.ready) return false;
-
-				console.log("[report.charts] Generating dimension chart: ", entity, dimension, $scope.reportData);
-
-				if(!$scope.reportData) return;
-				if(!$scope.reportData.$resolved) return;
-				if(!$scope.reportData.response) return;
-				if(!$scope.reportData.response.report) return;
-
-				var report = $scope.reportData.response.report;
-				var seriesName = $scope.totals[$scope.entities[entity].value];
-
-				var data = [];
-				var categories = [];
-
-				for(var i in report) {
-					if(!report.hasOwnProperty(i)) continue;
-
-					var category = ($scope.labels[dimension] && $scope.labels[dimension]["" + i]) ? $scope.labels[dimension]["" + i] : "" + i;
-
-					data.push( report[i] );
-					categories.push( category );
-
-				}
-
-				return {
-					options: {
-						chart: {
-							type: 'bar'
-						},
-						title: {
-							text: ''
-						},
-						subtitle: {
-							text: ''
-						}
-					},
-					xAxis: {
-						categories: categories,
-						title: {
-							text: null
-						}
-					},
-					yAxis: {
-						min: 0,
-						title: {
-							text: 'Quantidade',
-							align: 'high'
-						},
-						labels: {
-							overflow: 'justify'
-						}
-					},
-					tooltip: {
-						valueSuffix: ' casos'
-					},
-					plotOptions: {
-						bar: {
-							dataLabels: {
-								enabled: true
-							}
-						}
-					},
-					legend: {
-						layout: 'vertical',
-						align: 'right',
-						verticalAlign: 'top',
-						x: -40,
-						y: 80,
-						floating: true,
-						borderWidth: 1,
-						backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-						shadow: true
-					},
-					credits: {
-						enabled: false
-					},
-					series: [
-						{
-							name: seriesName,
-							data: data
-						}
-					]
-				};
-			}
-
-			function generateTimelineChart(entity, dimension, numDays) {
-
-				return;
-
-				if(!numDays) numDays = 30;
-				var series = [];
-
-				for(var d in dimension.values) {
-					if(!dimension.values.hasOwnProperty(d)) continue;
-
-					series.push({
-						name: dimension.values[d],
-						data: []
-					});
-				}
-
-				var settings = {
-					options: {
-						chart: {
-							type: 'line'
-						},
-
-						xAxis: {
-							currentMin: 1,
-							currentMax: 30,
-							title: {text: 'Últimos ' + numDays + ' dias'},
-							allowDecimals: false
-						},
-
-						yAxis: {
-							title: {text: $scope.values[entity.value]}
-						}
-					},
-					series: series,
-					title: {
-						text: ''
-					},
-
-					loading: false
-				};
-
-				for(var i = 0; i < numDays; i++) {
-					for(var j in series) {
-						if(!series.hasOwnProperty(j)) continue;
-						settings.series[j].data.push(Math.floor(100 + (j * 15) + (Math.random() * (numDays / 2))));
-					}
-				}
-
-				return settings;
-			}
-
-			Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top
-
-		});
-
-})();
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')

@@ -8,7 +8,7 @@
 				controller: 'ReportViewerCtrl'
 			})
 		})
-		.controller('ReportViewerCtrl', function ($scope, $rootScope, Platform, Utils, StaticData, Reports, Identity) {
+		.controller('ReportViewerCtrl', function ($scope, $rootScope, Platform, Utils, Cities, StaticData, Reports, Identity) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -16,8 +16,6 @@
 			$scope.ready = false;
 
 			$scope.filters = {};
-			$scope.values = {};
-			$scope.labels = {};
 			$scope.entities = {};
 			$scope.views = {};
 			$scope.totals = {};
@@ -43,49 +41,10 @@
 					age_null: true,
 					gender: Utils.pluck(StaticData.getGenders(), 'slug'), //['male', 'female', 'undefined'],
 					gender_null: true,
-					//race: Utils.pluck(StaticData.getRaces(), 'slug'), //['male', 'female', 'undefined'],
-					//race_null: true,
+					race: Utils.pluck(StaticData.getRaces(), 'slug'), //['male', 'female', 'undefined'],
+					race_null: true,
 					place_kind: ['rural', 'urban'],
 					place_kind_null: true
-				};
-
-				$scope.values = { // TODO: reevaluate if this is necessary
-					child_status: ['out_of_school', 'in_observation', 'in_school'],
-					deadline_status: ['normal', 'delayed'],
-					step_slug: [
-						'alerta',
-						'pesquisa',
-						'analise_tecnica',
-						'gestao_do_caso',
-						'rematricula',
-						'1a_observacao',
-						'2a_observacao',
-						'3a_observacao',
-						'4a_observacao',
-					],
-					work_activity: Object.keys(StaticData.getWorkActivities()),
-					case_cause_ids: Object.keys(StaticData.getCaseCauses()),
-					alert_cause_id: Object.keys(StaticData.getAlertCauses()),
-				};
-
-				$scope.labels = { // TODO: these should come from the backend, as some fields (school, city, etc) need to be fetched
-					child_status: {out_of_school: 'Fora da escola' , in_observation: 'Em observação', in_school: 'Dentro da escola'},
-					deadline_status: {normal: 'Normal', delayed: 'Em atraso'},
-					step_slug: {
-						'alerta': 'Alerta',
-						'pesquisa': 'Pesquisa',
-						'analise_tecnica': 'Analise Técnica',
-						'gestao_do_caso': 'Gestão do caso',
-						'rematricula': '(Re)matrícula',
-						'1a_observacao': '1ª Observação',
-						'2a_observacao': '2ª Observação',
-						'3a_observacao': '3ª Observação',
-						'4a_observacao': '4ª Observação',
-					},
-					work_activity: Utils.pluck(StaticData.getWorkActivities(), 'label', 'id'),
-					case_cause_ids: Utils.pluck(StaticData.getCaseCauses(), 'label', 'id'),
-					alert_cause_id: Utils.pluck(StaticData.getAlertCauses(), 'label', 'id'),
-					gender: Utils.pluck(StaticData.getGenders(), 'label', 'id'),
 				};
 
 				$scope.entities = {
@@ -94,7 +53,7 @@
 						name: 'Crianças e adolescentes',
 						value: 'num_children',
 						entity: 'children',
-						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'place_uf', 'school_last_id'],
+						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'place_uf', 'place_city_id', 'school_last_id'],
 						filters: [
 							'case_status',
 							'child_status',
@@ -162,7 +121,8 @@
 					user_type: 'Tipo do usuário',
 					assigned_user: 'Usuário responsável',
 					parent_scholarity: 'Escolaridade do responsável',
-					place_uf: 'Estado',
+					place_uf: 'UF',
+					place_city_id: 'Município',
 					school_last_id: 'Última escola que frequentou',
 					city: 'Município',
 				};
@@ -201,6 +161,8 @@
 				params.view = $scope.views[$scope.current.view].viewMode;
 				params.filters = $scope.filters;
 
+				params.filters.place_city_id = (params.filters.place_city) ? params.filters.place_city.id : null;
+
 				$scope.reportData = Reports.query(params);
 
 				return $scope.reportData.$promise;
@@ -218,6 +180,21 @@
 				}
 
 				return $scope.entities[$scope.current.entity].filters.indexOf(filter_id) !== -1;
+			};
+
+			$scope.fetchCities = function(query) {
+				var data = {name: query, $hide_loading_feedback: true};
+				if($scope.filters.place_uf) data.uf = $scope.filters.place_uf;
+
+				console.log("[create_alert] Looking for cities: ", data);
+
+				return Cities.search(data).$promise.then(function (res) {
+					return res.results;
+				});
+			};
+
+			$scope.renderSelectedCity = function(city) {
+				return city.uf + ' / ' + city.name;
 			};
 
 			function getChartConfig() {
@@ -240,6 +217,7 @@
 
 				var report = $scope.reportData.response.report;
 				var seriesName = $scope.totals[$scope.entities[entity].value];
+				var labels = $scope.reportData.labels ? $scope.reportData.labels : {};
 
 				var data = [];
 				var categories = [];
@@ -247,7 +225,7 @@
 				for(var i in report) {
 					if(!report.hasOwnProperty(i)) continue;
 
-					var category = ($scope.labels[dimension] && $scope.labels[dimension]["" + i]) ? $scope.labels[dimension]["" + i] : "" + i;
+					var category = (labels[i]) ? labels[i] : i;
 
 					data.push( report[i] );
 					categories.push( category );
