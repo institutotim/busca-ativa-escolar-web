@@ -8,7 +8,7 @@
 				controller: 'ReportViewerCtrl'
 			})
 		})
-		.controller('ReportViewerCtrl', function ($scope, $rootScope, Utils, StaticData, Reports, Identity) {
+		.controller('ReportViewerCtrl', function ($scope, $rootScope, Platform, Utils, StaticData, Reports, Identity) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -31,14 +31,12 @@
 				view: 'chart'
 			};
 
-			$scope.$on('StaticData.ready', onInit);
-
 			function onInit() {
 				$scope.ready = true;
 
 				$scope.filters = {
 					//deadline_status: ['normal', 'delayed'],
-					//case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
+					case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
 					alert_status: ['accepted'],
 					child_status: ['in_school', 'in_observation', 'out_of_school'],
 					age: {from: 0, to: 28},
@@ -98,7 +96,7 @@
 						entity: 'children',
 						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'place_uf', 'school_last_id'],
 						filters: [
-							//'case_status', // TODO: implement in backend/searchdoc
+							'case_status',
 							'child_status',
 							'alert_status',
 							//'deadline_status', // TODO: implement in backend/searchdoc
@@ -172,7 +170,7 @@
 				$scope.chartConfig = getChartConfig();
 
 				$scope.refresh();
-			}
+			};
 
 			$scope.refresh = function() {
 
@@ -367,6 +365,8 @@
 
 				return settings;
 			}
+
+			Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top
 
 		});
 

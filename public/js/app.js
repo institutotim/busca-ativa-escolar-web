@@ -2698,7 +2698,7 @@ if (!Array.prototype.find) {
 				controller: 'ReportViewerCtrl'
 			})
 		})
-		.controller('ReportViewerCtrl', function ($scope, $rootScope, Utils, StaticData, Reports, Identity) {
+		.controller('ReportViewerCtrl', function ($scope, $rootScope, Platform, Utils, StaticData, Reports, Identity) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -2721,14 +2721,12 @@ if (!Array.prototype.find) {
 				view: 'chart'
 			};
 
-			$scope.$on('StaticData.ready', onInit);
-
 			function onInit() {
 				$scope.ready = true;
 
 				$scope.filters = {
 					//deadline_status: ['normal', 'delayed'],
-					//case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
+					case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
 					alert_status: ['accepted'],
 					child_status: ['in_school', 'in_observation', 'out_of_school'],
 					age: {from: 0, to: 28},
@@ -2788,7 +2786,7 @@ if (!Array.prototype.find) {
 						entity: 'children',
 						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'place_uf', 'school_last_id'],
 						filters: [
-							//'case_status', // TODO: implement in backend/searchdoc
+							'case_status',
 							'child_status',
 							'alert_status',
 							//'deadline_status', // TODO: implement in backend/searchdoc
@@ -2862,7 +2860,7 @@ if (!Array.prototype.find) {
 				$scope.chartConfig = getChartConfig();
 
 				$scope.refresh();
-			}
+			};
 
 			$scope.refresh = function() {
 
@@ -3057,6 +3055,8 @@ if (!Array.prototype.find) {
 
 				return settings;
 			}
+
+			Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top
 
 		});
 
@@ -4451,6 +4451,96 @@ if (!Array.prototype.find) {
 		}
 
 	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.run(function (Platform) {
+			Platform.setup();
+		})
+		.service('Platform', function Platform($q, $state, $rootScope, StaticData, Language) {
+
+			var servicesRequired = [
+				'StaticData',
+				'Language'
+			];
+
+			var servicesReady = [];
+			var allReady = false;
+
+			var whenReadyCallbacks = [];
+
+			function setup() {
+
+				console.log('[platform.service_registry] Setting up service registry...');
+
+				for(var i in servicesRequired) {
+					if(!servicesRequired.hasOwnProperty(i)) continue;
+
+					console.log("\tAwait for service: ", servicesRequired[i]);
+
+					$rootScope.$on(servicesRequired[i] + '.ready', function(event) {
+						onServiceReady(event.name.split('.').shift());
+					})
+				}
+
+				$rootScope.$on('$stateChangeStart', clearRegisteredCallbacks);
+				$rootScope.$on('$stateChangeSuccess', checkIfAllServicesReady);
+				$rootScope.$on('Platform.ready', fireRegisteredCallbacks);
+			}
+
+			function onServiceReady(service) {
+				console.log('[platform.service_registry] Service is ready: ' + service);
+
+				if(servicesReady.indexOf(service) === -1) {
+					servicesReady.push(service);
+				}
+
+				checkIfAllServicesReady();
+			}
+
+			function clearRegisteredCallbacks() {
+				console.log('[platform.service_registry] Cleared callbacks');
+				whenReadyCallbacks = [];
+			}
+
+			function checkIfAllServicesReady() {
+				if(servicesReady.length < servicesRequired.length) return;
+				allReady = true;
+
+				console.log("[platform.service_registry] All services ready!");
+
+				$rootScope.$broadcast('Platform.ready');
+			}
+
+			function fireRegisteredCallbacks() {
+				console.log('[platform.service_registry] Firing registered callbacks: ', whenReadyCallbacks);
+				for(var i in whenReadyCallbacks) {
+					if(!whenReadyCallbacks.hasOwnProperty(i)) continue;
+					whenReadyCallbacks[i]();
+				}
+			}
+
+			function isReady() {
+				return allReady;
+			}
+
+			function whenReady(callback) {
+				console.log('[platform.service_registry] Registered callback: ', callback);
+
+				if(isReady()) return callback(); // Callback being registered post-ready, so we can already ping it
+
+				whenReadyCallbacks.push(callback);
+			}
+
+			return {
+				setup: setup,
+				isReady: isReady,
+				whenReady: whenReady,
+			}
+
+		});
 
 })();
 (function() {
