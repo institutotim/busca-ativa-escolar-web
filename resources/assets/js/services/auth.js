@@ -64,19 +64,29 @@
 					return $q.reject(response.data);
 				}
 
+				if(!response.data || !response.data.token) {
+					throw new Error("invalid_token_response");
+				}
+
 				$localStorage.session.token = response.data.token;
 				$localStorage.session.token_expires_at = (new Date()).getTime() + (Config.TOKEN_EXPIRES_IN * 1000);
 				$localStorage.session.refresh_expires_at = (new Date()).getTime() + (Config.REFRESH_EXPIRES_IN * 1000);
 
 				// Auth.refresh doesn't return user/user_id, so we can't always set it
-				// TODO: response should let us know if refresh, so we can throw errors when expecting a user but do not receive it
-
 				if(response.data.user) {
 					Identity.setCurrentUser(response.data.user);
 					$localStorage.session.user_id = response.data.user.id;
 				}
 
+				validateSessionIntegrity();
+
 				return $localStorage.session;
+			}
+
+			function validateSessionIntegrity() {
+				if(!$localStorage.session || !$localStorage.session.user_id || !$localStorage.session.token) {
+					throw new Error("invalid_session_integrity");
+				}
 			}
 
 			function handleAuthError(response) {
@@ -147,9 +157,13 @@
 		})
 		.run(function (Identity, Users, Auth) {
 			Identity.setTokenProvider(Auth.provideToken);
-			Identity.setUserProvider(function(user_id) {
+			Identity.setUserProvider(function(user_id, callback) {
 				if(!user_id) return;
-				return Users.find({id: user_id, with: 'tenant'});
+
+				var user = Users.find({id: user_id, with: 'tenant'});
+				user.$promise.then(callback);
+
+				return user;
 			});
 
 			Identity.setup();

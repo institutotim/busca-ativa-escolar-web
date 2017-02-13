@@ -38,7 +38,7 @@
 
 			var config = {
 
-				BUILD_PREFIX: 'b040.', // Build prefix for local storage keys; one-up this whenever the local storage structure is outdated
+				BUILD_PREFIX: 'b060.', // Build prefix for local storage keys; one-up this whenever the local storage structure is outdated
 
 
 				API_ENDPOINTS: {
@@ -1058,11 +1058,6 @@
 					unauthenticated: true
 
 				})
-				.state('cities', {
-					url: '/cities',
-					templateUrl: '/views/cities/list.html',
-					controller: 'CitySearchCtrl'
-				})
 				.state('settings', {
 					url: '/settings',
 					templateUrl: '/views/settings/manage_settings.html',
@@ -1106,26 +1101,6 @@
 			dismissButton: true,
 			timeout: 3000
 		});
-	});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar').controller('CitySearchCtrl', function ($scope, $rootScope, MockData, Identity) {
-
-		$rootScope.section = 'cities';
-		$scope.identity = Identity;
-
-		$scope.range = function (start, end) {
-			var arr = [];
-
-			for(var i = start; i <= end; i++) {
-				arr.push(i);
-			}
-
-			return arr;
-		}
-
 	});
 
 })();
@@ -3261,19 +3236,19 @@ if (!Array.prototype.find) {
 				return getNumChains() > 0;
 			}
 
-			function getUserTypes() { return (data.UserType) ? data.UserType : {}; }
-			function getAlertCauses() { return (data.AlertCause) ? data.AlertCause : {}; }
-			function getCaseCauses() { return (data.CaseCause) ? data.CaseCause : {}; }
-			function getGenders() { return (data.Gender) ? data.Gender : {}; }
-			function getHandicappedRejectReasons() { return (data.HandicappedRejectReason) ? data.HandicappedRejectReason : {}; }
-			function getIncomeRanges() { return (data.IncomeRange) ? data.IncomeRange : {}; }
-			function getRaces() { return (data.Race) ? data.Race : {}; }
-			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : {}; }
-			function getSchoolingLevels() { return (data.SchoolingLevel) ? data.SchoolingLevel : {}; }
-			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : {}; }
-			function getUFs() { return (data.UFs) ? data.UFs : {}; }
-			function getRegions() { return (data.Regions) ? data.Regions : {}; }
-			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : {}; }
+			function getUserTypes() { return (data.UserType) ? data.UserType : []; }
+			function getAlertCauses() { return (data.AlertCause) ? data.AlertCause : []; }
+			function getCaseCauses() { return (data.CaseCause) ? data.CaseCause : []; }
+			function getGenders() { return (data.Gender) ? data.Gender : []; }
+			function getHandicappedRejectReasons() { return (data.HandicappedRejectReason) ? data.HandicappedRejectReason : []; }
+			function getIncomeRanges() { return (data.IncomeRange) ? data.IncomeRange : []; }
+			function getRaces() { return (data.Race) ? data.Race : []; }
+			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : []; }
+			function getSchoolingLevels() { return (data.SchoolingLevel) ? data.SchoolingLevel : []; }
+			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : []; }
+			function getUFs() { return (data.UFs) ? data.UFs : []; }
+			function getRegions() { return (data.Regions) ? data.Regions : []; }
+			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
 			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
 
 			return {
@@ -3305,9 +3280,11 @@ if (!Array.prototype.find) {
 		.module('BuscaAtivaEscolar')
 		.factory('Tenants', function Tenants(API, Identity, $resource) {
 
+			let authHeaders = API.REQUIRE_AUTH;
 			let headers = {};
 
 			return $resource(API.getURI('tenants/:id'), {id: '@id'}, {
+				all: {url: API.getURI('tenants/all'), method: 'GET', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin'}},
 				find: {method: 'GET', headers: headers}
 			});
 
@@ -3453,19 +3430,29 @@ if (!Array.prototype.find) {
 					return $q.reject(response.data);
 				}
 
+				if(!response.data || !response.data.token) {
+					throw new Error("invalid_token_response");
+				}
+
 				$localStorage.session.token = response.data.token;
 				$localStorage.session.token_expires_at = (new Date()).getTime() + (Config.TOKEN_EXPIRES_IN * 1000);
 				$localStorage.session.refresh_expires_at = (new Date()).getTime() + (Config.REFRESH_EXPIRES_IN * 1000);
 
 				// Auth.refresh doesn't return user/user_id, so we can't always set it
-				// TODO: response should let us know if refresh, so we can throw errors when expecting a user but do not receive it
-
 				if(response.data.user) {
 					Identity.setCurrentUser(response.data.user);
 					$localStorage.session.user_id = response.data.user.id;
 				}
 
+				validateSessionIntegrity();
+
 				return $localStorage.session;
+			}
+
+			function validateSessionIntegrity() {
+				if(!$localStorage.session || !$localStorage.session.user_id || !$localStorage.session.token) {
+					throw new Error("invalid_session_integrity");
+				}
 			}
 
 			function handleAuthError(response) {
@@ -3536,9 +3523,13 @@ if (!Array.prototype.find) {
 		})
 		.run(function (Identity, Users, Auth) {
 			Identity.setTokenProvider(Auth.provideToken);
-			Identity.setUserProvider(function(user_id) {
+			Identity.setUserProvider(function(user_id, callback) {
 				if(!user_id) return;
-				return Users.find({id: user_id, with: 'tenant'});
+
+				var user = Users.find({id: user_id, with: 'tenant'});
+				user.$promise.then(callback);
+
+				return user;
 			});
 
 			Identity.setup();
@@ -3563,7 +3554,7 @@ if (!Array.prototype.find) {
 
 		function setup() {
 			console.info("[core.identity] Setting up identity service...");
-			//refreshIdentity();
+			refreshIdentity();
 		}
 
 		function setTokenProvider(callback) {
@@ -3585,17 +3576,24 @@ if (!Array.prototype.find) {
 		}
 
 		function refreshIdentity() {
-			if(!isLoggedIn()) return;
-			if(!$localStorage.identity.current_user) return;
-			if(!$localStorage.identity.current_user.id) return;
+			if(!isLoggedIn() || !$localStorage.session.user_id) {
+				console.log("[core.identity] No identity found in session, user is logged out");
+				$rootScope.$broadcast('Identity.ready');
+				return;
+			}
 
 			console.log("[core.identity] Refreshing current identity details...");
 
-			$localStorage.identity.current_user = userProvider($localStorage.identity.current_user.id);
+			$localStorage.identity.current_user = userProvider($localStorage.session.user_id, function(details) {
+				console.log("[core.identity] Identity details ready: ", details);
+				$rootScope.$broadcast('Identity.ready');
+			})
 		}
 
 		function getCurrentUser() {
-			return $localStorage.identity.current_user || {};
+			return ($localStorage.identity.current_user && $localStorage.identity.current_user.id)
+				? $localStorage.identity.current_user
+				: {};
 		}
 
 		function setCurrentUser(user) {
@@ -4487,7 +4485,8 @@ if (!Array.prototype.find) {
 
 			var servicesRequired = [
 				'StaticData',
-				'Language'
+				'Language',
+				'Identity'
 			];
 
 			var servicesReady = [];
@@ -4551,8 +4550,6 @@ if (!Array.prototype.find) {
 			}
 
 			function whenReady(callback) {
-				console.log('[platform.service_registry] Registered callback: ', callback);
-
 				if(isReady()) return callback(); // Callback being registered post-ready, so we can already ping it
 
 				whenReadyCallbacks.push(callback);
@@ -4672,6 +4669,24 @@ function identify(namespace, file) {
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
+		.config(function($stateProvider) {
+			$stateProvider.state('tenant_browser', {
+				url: '/tenants',
+				templateUrl: '/views/tenants/list.html',
+				controller: 'TenantBrowserCtrl'
+			})
+		})
+		.controller('TenantBrowserCtrl', function ($scope, $rootScope, Tenants, Identity) {
+
+			$scope.identity = Identity;
+			$scope.tenants = Tenants.all();
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
 			$stateProvider.state('user_browser', {
 				url: '/users',
@@ -4679,7 +4694,7 @@ function identify(namespace, file) {
 				controller: 'UserBrowserCtrl'
 			})
 		})
-		.controller('UserBrowserCtrl', function ($scope, $rootScope, Identity, Users, Groups, Tenants, StaticData) {
+		.controller('UserBrowserCtrl', function ($scope, $rootScope, Platform, Identity, Users, Groups, Tenants, StaticData) {
 
 		$scope.identity = Identity;
 		$scope.query = {
@@ -4688,6 +4703,7 @@ function identify(namespace, file) {
 			type: null,
 			email: null,
 			max: 128,
+			with: 'tenant'
 		};
 
 		$scope.setMaxResults = function(max) {
@@ -4695,20 +4711,34 @@ function identify(namespace, file) {
 			$scope.refresh();
 		};
 
-		$scope.canFilterByTenant = (Identity.getType() === 'gestor_nacional' || Identity.getType() === 'superuser');
-
 		$scope.static = StaticData;
 		$scope.tenants = Tenants.find();
 		$scope.groups = Groups.find();
+		$scope.canFilterByTenant = false;
 
 		$scope.checkboxes = {};
 		$scope.search = {};
+
+		$scope.getGroups = function() {
+			if(!$scope.groups || !$scope.groups.data) return [];
+			return $scope.groups.data;
+		};
+
+		$scope.getTenants = function() {
+			if(!$scope.tenants || !$scope.tenants.data) return [];
+			return $scope.tenants.data;
+		};
 
 		$scope.refresh = function() {
 			$scope.search = Users.search($scope.query);
 		};
 
 		$scope.refresh();
+
+		Platform.whenReady(function() {
+			$scope.canFilterByTenant = (Identity.getType() === 'gestor_nacional' || Identity.getType() === 'superuser');
+			console.log("[user_browser] Can filter by tenant? ", Identity.getType(), $scope.canFilterByTenant);
+		})
 
 
 
@@ -4725,13 +4755,22 @@ function identify(namespace, file) {
 				controller: 'UserEditorCtrl'
 			})
 		})
-		.controller('UserEditorCtrl', function ($scope, $state, $stateParams, ngToast, Utils, Identity, Users, Groups, StaticData) {
+		.controller('UserEditorCtrl', function ($scope, $state, $stateParams, ngToast, Platform, Utils, Tenants, Identity, Users, Groups, StaticData) {
 
 			$scope.isCreating = (!$stateParams.user_id || $stateParams.user_id === "new");
 			$scope.identity = Identity;
 			$scope.static = StaticData;
 
 			$scope.groups = Groups.find();
+			$scope.tenants = Tenants.find();
+			$scope.canDefineUserTenant = function() {
+				if(Identity.getType() !== 'superuser' && Identity.getType() !== 'gestor_nacional') {
+					return false;
+				}
+
+				return ($scope.user.type !== 'superuser' && $scope.user.type !== 'gestor_nacional');
+			};
+
 			$scope.user = $scope.isCreating
 				? {}
 				: Users.find({id: $stateParams.user_id});

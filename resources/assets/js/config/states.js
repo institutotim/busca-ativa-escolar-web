@@ -31,11 +31,6 @@
 					unauthenticated: true
 
 				})
-				.state('cities', {
-					url: '/cities',
-					templateUrl: '/views/cities/list.html',
-					controller: 'CitySearchCtrl'
-				})
 				.state('settings', {
 					url: '/settings',
 					templateUrl: '/views/settings/manage_settings.html',

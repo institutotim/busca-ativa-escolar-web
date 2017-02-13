@@ -8,27 +8,28 @@
 
 			<form ng-submit="refresh()" name="searchUsers" class="clearfix">
 				<div class="row">
-					<div class="form-group col-md-4" ng-show="canFilterByTenant">
+					<div class="form-group col-md-6" ng-if="canFilterByTenant">
 						<label><i class="fa fa-university"></i> Município</label>
 						<ui-select ng-model="query.tenant_id" on-select="refresh()">
 							<ui-select-match allow-clear="true" placeholder="Todas">{{$select.selected.name}}</ui-select-match>
-							<ui-select-choices repeat="tenant.id as tenant in tenants.data | filter: $select.search track by tenant.id">
-								<div ng-bind="tenant.name"></div>
+							<ui-select-choices repeat="tenant.id as tenant in getTenants() | filter: $select.search track by tenant.id">
+								<div ng-bind="tenant.name | highlight: $select.search"></div>
 							</ui-select-choices>
 						</ui-select>
 					</div>
 
-					<div class="form-group {{canFilterByTenant ? 'col-md-4' : 'col-md-6'}}">
+					<div class="form-group col-md-6" ng-if="!canFilterByTenant">
 						<label><i class="fa fa-users"></i> Grupo</label>
 						<ui-select ng-model="query.group_id" on-select="refresh()">
 							<ui-select-match allow-clear="true" placeholder="Todas">{{$select.selected.name}}</ui-select-match>
-							<ui-select-choices repeat="group.id as group in groups.data | filter: $select.search track by group.id">
+							<ui-select-choices repeat="group.id as group in getGroups()
+							 | filter: $select.search track by group.id">
 								<div ng-bind-html="group.name | highlight: $select.search"></div>
 							</ui-select-choices>
 						</ui-select>
 					</div>
 
-					<div class="form-group {{canFilterByTenant ? 'col-md-4' : 'col-md-6'}}">
+					<div class="form-group col-md-6">
 						<label><i class="fa fa-user"></i> Tipo</label>
 						<ui-select ng-model="query.type" on-select="refresh()">
 							<ui-select-match allow-clear="true" placeholder="Todas">{{$select.selected | lang:'user.type'}}</ui-select-match>
@@ -41,14 +42,14 @@
 				</div>
 
 				<div class="row">
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-6">
 						<label><i class="fa fa-envelope"></i> E-mail</label>
 						<div class="clearfix">
 							<input type="search" ng-model="query.email" class="form-control" placeholder="Buscar por e-mail" style="width: calc(100% - 60px); float: left;" />
 							<button type="submit" class="btn btn-sm btn-raised" style="margin-left: 8px; padding: 8px 16px;"><i class="fa fa-search"></i></button>
 						</div>
 					</div>
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-6">
 						<label><i class="fa fa-list-ol"></i> Limite de exibição</label>
 						<div class="clearfix" style="margin-top: 10px;">
 							<ul class="nav nav-pills adm-max-results-filter">
@@ -60,29 +61,24 @@
 						</div>
 						<p ng-show="users.length > 0">Total de registros: {{total}}</p>
 					</div>
-
-					<div class="form-group col-md-4">
-						<label><i class="fa fa-list-ol"></i> Opções</label><br />
-						<div class="btn-group">
-							<a class="btn btn-default btn-raised" ng-click="exportXLS()"><i class="fa fa-file-excel-o"></i> Exportar XLS  <span ng-hide="users.length > 0">(todos os registros)</span><span ng-show="users.length > 0">({{ total }} registros)</span></a>
-						</div>
-					</div>
 				</div>
 			</form>
 
 			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
-						<th>Nome <i class="fa fa-arrow-down"></i></th>
-						<th>E-mail <i class="fa fa-arrow-down"></i></th>
-						<th>Tipo <i class="fa fa-arrow-down"></i></th>
-						<th>Grupo <i class="fa fa-arrow-down"></i></th>
+						<th>Nome</th>
+						<th>Município</th>
+						<th>E-mail</th>
+						<th>Tipo</th>
+						<th>Grupo</th>
 						<th ng-show="identity.can('users.edit')">Opções</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="(i, user) in search.data">
 						<td width="25%"><strong><i class="fa fa-user"></i> {{user.name}}</strong><br /></td>
+						<td width="18%"><span ng-show="user.tenant">{{user.tenant.name}}</span></td>
 						<td width="18%">{{user.email}}</td>
 						<td width="18%">{{user.type | lang:'user.type'}}</td>
 						<td width="21%">{{user.group.name}}</td>

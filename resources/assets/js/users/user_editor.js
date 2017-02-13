@@ -8,13 +8,22 @@
 				controller: 'UserEditorCtrl'
 			})
 		})
-		.controller('UserEditorCtrl', function ($scope, $state, $stateParams, ngToast, Utils, Identity, Users, Groups, StaticData) {
+		.controller('UserEditorCtrl', function ($scope, $state, $stateParams, ngToast, Platform, Utils, Tenants, Identity, Users, Groups, StaticData) {
 
 			$scope.isCreating = (!$stateParams.user_id || $stateParams.user_id === "new");
 			$scope.identity = Identity;
 			$scope.static = StaticData;
 
 			$scope.groups = Groups.find();
+			$scope.tenants = Tenants.find();
+			$scope.canDefineUserTenant = function() {
+				if(Identity.getType() !== 'superuser' && Identity.getType() !== 'gestor_nacional') {
+					return false;
+				}
+
+				return ($scope.user.type !== 'superuser' && $scope.user.type !== 'gestor_nacional');
+			};
+
 			$scope.user = $scope.isCreating
 				? {}
 				: Users.find({id: $stateParams.user_id});

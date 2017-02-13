@@ -8,7 +8,8 @@
 
 			var servicesRequired = [
 				'StaticData',
-				'Language'
+				'Language',
+				'Identity'
 			];
 
 			var servicesReady = [];
@@ -72,8 +73,6 @@
 			}
 
 			function whenReady(callback) {
-				console.log('[platform.service_registry] Registered callback: ', callback);
-
 				if(isReady()) return callback(); // Callback being registered post-ready, so we can already ping it
 
 				whenReadyCallbacks.push(callback);

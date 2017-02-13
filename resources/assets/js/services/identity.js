@@ -16,7 +16,7 @@
 
 		function setup() {
 			console.info("[core.identity] Setting up identity service...");
-			//refreshIdentity();
+			refreshIdentity();
 		}
 
 		function setTokenProvider(callback) {
@@ -38,17 +38,24 @@
 		}
 
 		function refreshIdentity() {
-			if(!isLoggedIn()) return;
-			if(!$localStorage.identity.current_user) return;
-			if(!$localStorage.identity.current_user.id) return;
+			if(!isLoggedIn() || !$localStorage.session.user_id) {
+				console.log("[core.identity] No identity found in session, user is logged out");
+				$rootScope.$broadcast('Identity.ready');
+				return;
+			}
 
 			console.log("[core.identity] Refreshing current identity details...");
 
-			$localStorage.identity.current_user = userProvider($localStorage.identity.current_user.id);
+			$localStorage.identity.current_user = userProvider($localStorage.session.user_id, function(details) {
+				console.log("[core.identity] Identity details ready: ", details);
+				$rootScope.$broadcast('Identity.ready');
+			})
 		}
 
 		function getCurrentUser() {
-			return $localStorage.identity.current_user || {};
+			return ($localStorage.identity.current_user && $localStorage.identity.current_user.id)
+				? $localStorage.identity.current_user
+				: {};
 		}
 
 		function setCurrentUser(user) {
