@@ -8,7 +8,7 @@
 				controller: 'ReportViewerCtrl'
 			})
 		})
-		.controller('ReportViewerCtrl', function ($scope, $rootScope, Platform, Utils, Cities, StaticData, Reports, Identity) {
+		.controller('ReportViewerCtrl', function ($scope, $rootScope, moment, Platform, Utils, Cities, StaticData, Reports, Identity) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -32,8 +32,12 @@
 			function onInit() {
 				$scope.ready = true;
 
+				var lastWeek = moment().subtract(7, 'days').toDate();
+				var today = moment().toDate();
+
 				$scope.filters = {
 					//deadline_status: ['normal', 'delayed'],
+					period: {from: lastWeek, to: today},
 					case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
 					alert_status: ['accepted'],
 					child_status: ['in_school', 'in_observation', 'out_of_school'],
@@ -55,6 +59,7 @@
 						entity: 'children',
 						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'place_uf', 'place_city_id', 'school_last_id'],
 						filters: [
+							'date',
 							'case_status',
 							'child_status',
 							'alert_status',
@@ -67,12 +72,11 @@
 							//'work_activity',
 							'place_kind',
 							'step_slug',
-							//'uf',
-							//'city',
-							//'deadline_status',
+							'uf',
+							'city',
 							'case_cause_ids'
 						],
-						views: ['chart', 'list']//['map', 'chart', 'timeline', 'list']
+						views: ['chart', 'timeline', 'list'] //['map', 'chart', 'timeline', 'list']
 					}/*,
 					 alerts: {
 					 id: 'alerts',
@@ -106,6 +110,7 @@
 				};
 
 				$scope.fields = {
+					period: 'Período',
 					child_status: 'Status da criança',
 					deadline_status: 'Status do andamento',
 					alert_status: 'Status do alerta',
@@ -163,6 +168,13 @@
 
 				params.filters.place_city_id = (params.filters.place_city) ? params.filters.place_city.id : null;
 
+				if(params.filters.period.from || params.filters.period.to) {
+					params.filters.date = {
+						from: (params.filters.period.from) ? moment(params.filters.period.from).format('YYYY-MM-DD') : null,
+						to: (params.filters.period.to) ? moment(params.filters.period.to).format('YYYY-MM-DD') : null,
+					};
+				}
+
 				$scope.reportData = Reports.query(params);
 
 				return $scope.reportData.$promise;
@@ -175,7 +187,7 @@
 			$scope.canFilterBy = function(filter_id) {
 				if(!$scope.ready) return false;
 
-				if(filter_id === 'period') {
+				if(filter_id === 'date') {
 					return $scope.current.view === 'timeline';
 				}
 
@@ -194,6 +206,7 @@
 			};
 
 			$scope.renderSelectedCity = function(city) {
+				if(!city) return '';
 				return city.uf + ' / ' + city.name;
 			};
 
@@ -293,21 +306,60 @@
 				};
 			}
 
-			function generateTimelineChart(entity, dimension, numDays) {
+			function generateTimelineChart(entity, dimension) {
 
-				return;
+				if(!$scope.ready) return false;
 
-				if(!numDays) numDays = 30;
+				console.log("[report.charts] Generating timeline chart: ", entity, dimension, $scope.reportData);
+
+				if(!$scope.reportData) return;
+				if(!$scope.reportData.$resolved) return;
+				if(!$scope.reportData.response) return;
+				if(!$scope.reportData.response.report) return;
+
+				var report = $scope.reportData.response.report;
+				var chartName = $scope.totals[$scope.entities[entity].value];
+				var labels = $scope.reportData.labels ? $scope.reportData.labels : {};
+
 				var series = [];
+				var categories = [];
+				var data = {};
+				var dates = Object.keys(report);
 
-				for(var d in dimension.values) {
-					if(!dimension.values.hasOwnProperty(d)) continue;
+				// Translates ￿date -> metric to metric -> date; prepares list of categories
+				for(var date in report) {
+					if(!report.hasOwnProperty(date)) continue;
+
+					for(var metric in report[date]) {
+						if(!report[date].hasOwnProperty(metric)) continue;
+
+						if(!data[metric]) data[metric] = {};
+						data[metric][date] = report[date][metric];
+
+						if(categories.indexOf(date) === -1) {
+							categories.push(date);
+						}
+					}
+				}
+
+				// Builds series array
+				for(var m in data) {
+					if(!data.hasOwnProperty(m)) continue;
+
+					var metricData = [];
+
+					// Ensure even metrics with incomplete data (missing dates) show up accurately
+					for(var i in dates) {
+						if(!dates.hasOwnProperty(i)) continue;
+						metricData.push( (data[m][dates[i]]) ? data[m][dates[i]] : null );
+					}
 
 					series.push({
-						name: dimension.values[d],
-						data: []
+						name: labels[m] ? labels[m] : m,
+						data: metricData
 					});
 				}
+
 
 				var settings = {
 					options: {
@@ -316,14 +368,15 @@
 						},
 
 						xAxis: {
-							currentMin: 1,
-							currentMax: 30,
-							title: {text: 'Últimos ' + numDays + ' dias'},
+							//currentMin: 1,
+							//currentMax: 30,
+							//title: {text: 'Últimos ' + numDays + ' dias'},
+							categories: categories,
 							allowDecimals: false
 						},
 
 						yAxis: {
-							title: {text: $scope.values[entity.value]}
+							title: {text: chartName}
 						}
 					},
 					series: series,
@@ -333,13 +386,6 @@
 
 					loading: false
 				};
-
-				for(var i = 0; i < numDays; i++) {
-					for(var j in series) {
-						if(!series.hasOwnProperty(j)) continue;
-						settings.series[j].data.push(Math.floor(100 + (j * 15) + (Math.random() * (numDays / 2))));
-					}
-				}
 
 				return settings;
 			}

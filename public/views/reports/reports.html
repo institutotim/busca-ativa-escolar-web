@@ -42,13 +42,13 @@
 			</div>
 
 			<div class="panel-body">
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('period')">
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('date')">
 					<label class="control-label" for="filter-date-start">Por período</label>
 					<div class="form-inline">
 						<span style="width: 25px; text-align: center; display: inline-block;"> de </span>
-						<input type="date" style="width: 145px; text-align: center" class="form-control" id="filter-date-start"> <br />
+						<input type="date" style="width: 145px; text-align: center" ng-model="filters.period.from" class="form-control" id="filter-date-start"> <br />
 						<span style="width: 25px; text-align: center; display: inline-block;"> a </span>
-						<input type="date" style="width: 145px; text-align: center" class="form-control" id="filter-date-end">
+						<input type="date" style="width: 145px; text-align: center" ng-model="filters.period.to" class="form-control" id="filter-date-end">
 					</div>
 				</div>
 
@@ -133,7 +133,7 @@
 					</div>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group" ng-show="canFilterBy('uf')">
 					<label class="control-label" for="fld-uf">UF*</label>
 					<select class="form-control" id="fld-uf" ng-model="filters.place_uf" ng-options="uf.code as uf.code for uf in static.getUFs()">
 						<option value="">Todos</option>
@@ -147,7 +147,7 @@
 					</a>
 				</script>
 
-				<div class="form-group">
+				<div class="form-group" ng-show="canFilterBy('city')">
 					<label class="control-label" for="fld-city">Município*</label>
 					<input type="text" id="fld-city"
 					       class="form-control"
@@ -225,7 +225,7 @@
 				<h3><i class="material-icons">show_chart</i> Relatórios <small>Quantidade de casos</small></h3>
 			</div>
 
-			<div class="row clearfix">
+			<!--div class="row clearfix">
 				<div class="col-md-6">
 					<json-formatter json="current" open="10"></json-formatter>
 					<json-formatter json="filters" open="10"></json-formatter>
@@ -234,27 +234,31 @@
 					<json-formatter json="reportData.query" open="0"></json-formatter>
 					<json-formatter json="reportData.response" open="10"></json-formatter>
 				</div>
-			</div>
+			</div-->
 
 			<highchart ng-if="reportData.$resolved === true && current.view !== 'list'" style="width: 800px; height: 600px" id="base-chart" config="chartConfig"></highchart>
 
-			<!--highchart ng-if="current.view.id != 'list'" style="width: 800px; height: 600px" id="base-chart" config="chartConfig"></highchart>
-			<table ng-if="current.view.id == 'list'" class="table">
+			<table ng-if="current.view === 'list'" class="table">
 				<thead>
 					<tr>
-						<th>{{fields[current.dimension.id]}} <i class="fa fa-arrows-v"></i></th>
-						<th>Qtd. de {{current.entity.name}} <i class="fa fa-arrows-v"></i></th>
-						<th>% de {{current.entity.name}} <i class="fa fa-arrows-v"></i></th>
+						<th>{{totals[entities[current.entity].value]}}</th>
+						<th>Qtd.</th>
+						<th>%</th>
+					</tr>
+					<tr>
+						<td><strong>Total</strong></td>
+						<td>{{reportData.response.records_total}}</td>
+						<td>100%</td>
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="(i, value) in current.dimension.values">
+					<tr ng-repeat="(metric, value) in reportData.response.report">
+						<td>{{reportData.labels[metric] ? reportData.labels[metric] : metric }}</td>
 						<td>{{value}}</td>
-						<td>{{generateRandomNumber(1, 850)}}</td>
-						<td>{{generateRandomNumber(1, 99)}}%</td>
+						<td>{{(value / reportData.response.records_total) | percentage}}</td>
 					</tr>
 				</tbody>
-			</table-->
+			</table>
 
 		</div>
 
