@@ -2,7 +2,7 @@
 	identify('config', 'local_storage.js');
 
 	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
-		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v030.');
+		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v060.');
 	});
 
 })();

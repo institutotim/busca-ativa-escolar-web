@@ -38,8 +38,7 @@
 
 			var config = {
 
-				BUILD_PREFIX: 'b060.', // Build prefix for local storage keys; one-up this whenever the local storage structure is outdated
-
+				BUILD_PREFIX: 'b060.', // @DEPRECATED: see config/local_storage.js instead!
 
 				API_ENDPOINTS: {
 					local_http: {
@@ -1009,7 +1008,7 @@
 	identify('config', 'local_storage.js');
 
 	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
-		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v030.');
+		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v060.');
 	});
 
 })();
