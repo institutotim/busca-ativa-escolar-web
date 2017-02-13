@@ -138,3 +138,8 @@ p.agent-panel{
 }
 
 .ace_editor { height: 200px; }
+
+.text-will-remove {
+	color: $brand-danger !important;
+	text-decoration: line-through !important;
+}

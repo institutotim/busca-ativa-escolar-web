@@ -17,7 +17,7 @@
 
 
 			<div class="steps">
-				<div ng-show="step == 4" ng-include="'/views/first_time_setup/step_4.html'"></div>
+				<div ng-show="step == 4" ng-controller="ManageGroupsCtrl" ng-include="'/views/settings/partials/groups.html'"></div>
 				<div ng-show="step == 6" ng-include="'/views/first_time_setup/step_6.html'"></div>
 				<div ng-show="step == 7" ng-include="'/views/first_time_setup/step_7.html'"></div>
 			</div>

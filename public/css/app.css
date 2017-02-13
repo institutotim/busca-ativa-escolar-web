@@ -619,4 +619,9 @@ p.agent-panel {
   height: 200px;
 }
 
+.text-will-remove {
+  color: #d9534f !important;
+  text-decoration: line-through !important;
+}
+
 /*# sourceMappingURL=app.css.map */
