@@ -28,9 +28,11 @@
 
 				$q.all(promises).then(
 					function (res) {
+						ngToast.success('Configurações salvas com sucesso!');
 						console.log('[manage_case_workflow.save] Saved! ', res);
 						$scope.refresh();
 					}, function (err) {
+						ngToast.danger('Ocorreu um erro ao salvar as configurações!');
 						console.error('[manage_case_workflow.save] Error: ', err);
 					}
 				);

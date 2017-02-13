@@ -3247,6 +3247,7 @@ if (!Array.prototype.find) {
 			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : []; }
 			function getSchoolingLevels() { return (data.SchoolingLevel) ? data.SchoolingLevel : []; }
 			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : []; }
+			function getCaseStepSlugs() { return (data.CaseStepSlugs) ? data.CaseStepSlugs : []; }
 			function getUFs() { return (data.UFs) ? data.UFs : []; }
 			function getRegions() { return (data.Regions) ? data.Regions : []; }
 			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
@@ -3265,6 +3266,7 @@ if (!Array.prototype.find) {
 				getSchoolGrades: getSchoolGrades,
 				getSchoolingLevels: getSchoolingLevels,
 				getWorkActivities: getWorkActivities,
+				getCaseStepSlugs: getCaseStepSlugs,
 				getAllowedMimeTypes: getAllowedMimeTypes,
 				getUFs: getUFs,
 				getRegions: getRegions,
@@ -4699,9 +4701,11 @@ function identify(namespace, file) {
 
 				$q.all(promises).then(
 					function (res) {
+						ngToast.success('Configurações salvas com sucesso!');
 						console.log('[manage_case_workflow.save] Saved! ', res);
 						$scope.refresh();
 					}, function (err) {
+						ngToast.danger('Ocorreu um erro ao salvar as configurações!');
 						console.error('[manage_case_workflow.save] Error: ', err);
 					}
 				);
@@ -4715,6 +4719,44 @@ function identify(namespace, file) {
 
 				Tenants.getSettings(function (res) {
 					$scope.tenantSettings = res.settings;
+				});
+			};
+
+			Platform.whenReady(function() {
+				$scope.refresh();
+			})
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.controller('ManageDeadlinesCtrl', function ($scope, $rootScope, $q, ngToast, Platform, Identity, Tenants, Groups, StaticData) {
+
+			$scope.static = StaticData;
+			$scope.tenantSettings = {};
+
+			$scope.save = function() {
+
+				Tenants.updateSettings($scope.tenantSettings).$promise.then(
+					function (res) {
+						console.log('[manage_deadlines.save] Saved! ', res);
+						ngToast.success('Configurações salvas com sucesso!');
+						$scope.refresh();
+					},
+					function (err) {
+						console.error('[manage_deadlines.save] Error: ', err);
+						ngToast.danger('Ocorreu um erro ao atualizar as configurações');
+					}
+				);
+
+			};
+
+			$scope.refresh = function() {
+				Tenants.getSettings(function (res) {
+					console.log('[manage_deadlines] Current settings: ', res);
+					$scope.tenantSettings = res;
 				});
 			};
 

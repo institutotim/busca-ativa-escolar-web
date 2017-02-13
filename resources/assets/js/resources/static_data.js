@@ -50,6 +50,7 @@
 			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : []; }
 			function getSchoolingLevels() { return (data.SchoolingLevel) ? data.SchoolingLevel : []; }
 			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : []; }
+			function getCaseStepSlugs() { return (data.CaseStepSlugs) ? data.CaseStepSlugs : []; }
 			function getUFs() { return (data.UFs) ? data.UFs : []; }
 			function getRegions() { return (data.Regions) ? data.Regions : []; }
 			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
@@ -68,6 +69,7 @@
 				getSchoolGrades: getSchoolGrades,
 				getSchoolingLevels: getSchoolingLevels,
 				getWorkActivities: getWorkActivities,
+				getCaseStepSlugs: getCaseStepSlugs,
 				getAllowedMimeTypes: getAllowedMimeTypes,
 				getUFs: getUFs,
 				getRegions: getRegions,

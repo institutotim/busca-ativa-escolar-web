@@ -1,0 +1,33 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3><strong ng-show="!$parent.isEditing">7.</strong> <i class="fa fa-calendar"></i> Prazos</h3>
+	</div>
+	<div class="panel-body">
+
+		<p>
+			Aqui você poderá customizar quais os prazos para cada etapa. Quando um caso permanece em uma etapa após seu prazo, o caso é considerado "em atraso" e aparece de forma destacada para o usuário responsável pela etapa.
+		</p>
+
+		<table class="table">
+			<thead>
+			<tr>
+				<th>Etapa do caso</th>
+				<th>Prazo</th>
+			</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="(i, step) in static.getCaseStepSlugs()">
+					<td><span ng-bind="step | lang:'case_step.name_by_slug'"></span></td>
+					<td><span ng-show="tenantSettings.blockedStepDeadlines.indexOf(step) === -1"><input class="deadline-input" type="number" ng-model="tenantSettings.stepDeadlines[step]" min="1" max="365" step="1" placeholder="15" /> dias</span></td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+	<div class="panel-footer clearfix">
+		<button ng-show="!$parent.isEditing" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
+		<button ng-show="!$parent.isEditing" ng-click="finish()" type="button" class="btn btn-success btn-raised pull-right">Salvar e concluir <i class="fa fa-save"></i></button>
+		<button ng-show="$parent.isEditing" ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
+	</div>
+</div>

@@ -19,7 +19,7 @@
 			<div class="steps">
 				<div ng-if="step == 4" ng-controller="ManageGroupsCtrl" ng-include="'/views/settings/partials/groups.html'"></div>
 				<div ng-if="step == 6" ng-controller="ManageCaseWorkflowCtrl" ng-include="'/views/settings/partials/case_workflow.html'"></div>
-				<div ng-if="step == 7" ng-include="'/views/first_time_setup/step_7.html'"></div>
+				<div ng-if="step == 7" ng-controller="ManageDeadlinesCtrl" ng-include="'/views/settings/partials/deadlines.html'"></div>
 			</div>
 
 		</div>
