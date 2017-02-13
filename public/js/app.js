@@ -3161,6 +3161,7 @@ if (!Array.prototype.find) {
 
 			return $resource(API.getURI('groups/:id'), {id: '@id', with: '@with'}, {
 				find: {method: 'GET', headers: headers},
+				updateSettings: {method: 'PUT', url: API.getURI('groups/:id/settings'), headers: headers},
 				create: {method: 'POST', headers: headers},
 				delete: {method: 'DELETE', headers: headers},
 				update: {method: 'PUT', headers: headers},
@@ -3285,6 +3286,8 @@ if (!Array.prototype.find) {
 
 			return $resource(API.getURI('tenants/:id'), {id: '@id'}, {
 				all: {url: API.getURI('tenants/all'), method: 'GET', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin'}},
+				getSettings: {url: API.getURI('settings/tenant'), method: 'GET', headers: authHeaders},
+				updateSettings: {url: API.getURI('settings/tenant'), method: 'PUT', headers: authHeaders},
 				find: {method: 'GET', headers: headers}
 			});
 
@@ -4666,6 +4669,62 @@ if (!Array.prototype.find) {
 function identify(namespace, file) {
 	console.log("[core.load] ", namespace, file);
 }
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.controller('ManageCaseWorkflowCtrl', function ($scope, $rootScope, $q, ngToast, Platform, Identity, Tenants, Groups, StaticData) {
+
+			$scope.static = StaticData;
+
+			$scope.groups = [];
+			$scope.tenantSettings = {};
+
+			$scope.getGroups = function() {
+				if(!$scope.groups) return [];
+				return $scope.groups;
+			};
+
+			$scope.save = function() {
+
+				var promises = [];
+
+				for(var i in $scope.groups) {
+					if(!$scope.groups.hasOwnProperty(i)) continue;
+					console.log('\t[manage_case_workflow.save] Update group: ', $scope.groups[i]);
+					promises.push( Groups.updateSettings($scope.groups[i]).$promise );
+				}
+
+				console.log('\t[manage_case_workflow.save] Update tenant: ', $scope.tenantSettings);
+				promises.push( Tenants.updateSettings($scope.tenantSettings).$promise );
+
+				$q.all(promises).then(
+					function (res) {
+						console.log('[manage_case_workflow.save] Saved! ', res);
+						$scope.refresh();
+					}, function (err) {
+						console.error('[manage_case_workflow.save] Error: ', err);
+					}
+				);
+
+			};
+
+			$scope.refresh = function() {
+				Groups.find({with: 'settings'}, function(res) {
+					$scope.groups = res.data;
+				});
+
+				Tenants.getSettings(function (res) {
+					$scope.tenantSettings = res.settings;
+				});
+			};
+
+			Platform.whenReady(function() {
+				$scope.refresh();
+			})
+
+		});
+
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
