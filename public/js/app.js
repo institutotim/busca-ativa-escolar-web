@@ -31,7 +31,7 @@
 
 	angular
 		.module('BuscaAtivaEscolar.Config', [])
-		.factory('Config', function Config($rootScope) {
+		.factory('Config', function Config($rootScope, $cookies) {
 
 			numeral.language('pt-br');
 			moment.locale('pt-br');
@@ -61,22 +61,36 @@
 
 			};
 
+			var hasCheckedCookie = false;
+
 			config.setEndpoint = function(endpoint) {
 				if(config.ALLOWED_ENDPOINTS.indexOf(endpoint) === -1) {
-					console.error("[Core.Config] Cannot set endpoint to ", endpoint,  ", not in valid endpoints list: ", config.ALLOWED_ENDPOINTS);
+					console.error("[core.config] Cannot set endpoint to ", endpoint,  ", not in valid endpoints list: ", config.ALLOWED_ENDPOINTS);
 					return;
 				}
 
-				console.info("[Core.Config] Setting API endpoint: ", endpoint);
+				console.info("[core.config] Setting API endpoint: ", endpoint);
 				config.CURRENT_ENDPOINT = endpoint;
 			};
 
+			config.getCurrentEndpoint = function() {
+				if(hasCheckedCookie) return config.CURRENT_ENDPOINT;
+				hasCheckedCookie = true;
+
+				var cookie = $cookies.get('FDENP_API_ENDPOINT');
+				if(cookie) config.setEndpoint($cookies.get('FDENP_API_ENDPOINT'));
+
+				console.info("[core.config] Resolved current API endpoint: ", config.CURRENT_ENDPOINT, "cookie=", cookie);
+
+				return config.CURRENT_ENDPOINT;
+			};
+
 			config.getAPIEndpoint = function() {
-				return config.API_ENDPOINTS[config.CURRENT_ENDPOINT].api
+				return config.API_ENDPOINTS[config.getCurrentEndpoint()].api
 			};
 
 			config.getTokenEndpoint = function() {
-				return config.API_ENDPOINTS[config.CURRENT_ENDPOINT].token
+				return config.API_ENDPOINTS[config.getCurrentEndpoint()].token
 			};
 
 			return $rootScope.config = config;
@@ -1029,9 +1043,13 @@
 	identify('config', 'on_init.js');
 
 	angular.module('BuscaAtivaEscolar').run(function ($cookies, Config, StaticData) {
-		Config.setEndpoint($cookies.get('FDENP_API_ENDPOINT') || Config.CURRENT_ENDPOINT);
-
-		StaticData.refresh();
+		console.info("------------------------------");
+		console.info(" BUSCA ATIVA ESCOLAR");
+		console.info(" Copyright (c) LQDI Digital");
+		console.info("------------------------------");
+		console.info(" WS ENDPOINT: ", Config.getAPIEndpoint());
+		console.info(" STORAGE BUILD PREFIX: ", Config.BUILD_PREFIX);
+		console.info("------------------------------");
 
 		$.material.init();
 	})
@@ -3223,7 +3241,7 @@ if (!Array.prototype.find) {
 			// TODO: cache this?
 
 			function fetchLatestVersion() {
-				console.log("[static_data] Downloading latest static data definitions...");
+				console.log("[platform.static_data] Downloading latest static data definitions...");
 				$promise = $http.get(dataFile).then(onFetch);
 			}
 
@@ -3233,7 +3251,7 @@ if (!Array.prototype.find) {
 			}
 
 			function onFetch(res) {
-				console.log("[static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
+				console.log("[platform.static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
 				data = res.data.data;
 
 				$rootScope.$broadcast('StaticData.ready');
@@ -3290,6 +3308,9 @@ if (!Array.prototype.find) {
 				getDataFile: getDataFile,
 			};
 
+		})
+		.run(function (StaticData) {
+			StaticData.refresh();
 		});
 })();
 (function() {
@@ -3695,24 +3716,24 @@ if (!Array.prototype.find) {
 		var $promise = {};
 
 		function setup() {
-			console.log("[core.language] Setting up language service...");
+			console.log("[platform.language] Setting up language service...");
 			loadFromAPI();
 		}
 
 		function loadFromAPI() {
-			console.log("[core.language] Loading language file...");
+			console.log("[platform.language] Loading language file...");
 			$promise = $http.get(langFile).then(onDataLoaded);
 		}
 
 		function onDataLoaded(res) {
 			if(!res.data || !res.data.database) {
-				console.error("[core.language] Failed to load language file: ", res);
+				console.error("[platform.language] Failed to load language file: ", res);
 				return;
 			}
 
 			database = res.data.database;
 
-			console.log("[core.language] Language file loaded! " + database.length + " strings available", database);
+			console.log("[platform.language] Language file loaded! ", Object.keys(database).length, " strings available: ", database);
 
 			$rootScope.$broadcast('Language.ready');
 		}

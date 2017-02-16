@@ -9,24 +9,24 @@
 		var $promise = {};
 
 		function setup() {
-			console.log("[core.language] Setting up language service...");
+			console.log("[platform.language] Setting up language service...");
 			loadFromAPI();
 		}
 
 		function loadFromAPI() {
-			console.log("[core.language] Loading language file...");
+			console.log("[platform.language] Loading language file...");
 			$promise = $http.get(langFile).then(onDataLoaded);
 		}
 
 		function onDataLoaded(res) {
 			if(!res.data || !res.data.database) {
-				console.error("[core.language] Failed to load language file: ", res);
+				console.error("[platform.language] Failed to load language file: ", res);
 				return;
 			}
 
 			database = res.data.database;
 
-			console.log("[core.language] Language file loaded! " + database.length + " strings available", database);
+			console.log("[platform.language] Language file loaded! ", Object.keys(database).length, " strings available: ", database);
 
 			$rootScope.$broadcast('Language.ready');
 		}

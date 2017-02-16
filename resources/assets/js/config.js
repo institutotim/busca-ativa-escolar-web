@@ -3,7 +3,7 @@
 
 	angular
 		.module('BuscaAtivaEscolar.Config', [])
-		.factory('Config', function Config($rootScope) {
+		.factory('Config', function Config($rootScope, $cookies) {
 
 			numeral.language('pt-br');
 			moment.locale('pt-br');
@@ -33,22 +33,36 @@
 
 			};
 
+			var hasCheckedCookie = false;
+
 			config.setEndpoint = function(endpoint) {
 				if(config.ALLOWED_ENDPOINTS.indexOf(endpoint) === -1) {
-					console.error("[Core.Config] Cannot set endpoint to ", endpoint,  ", not in valid endpoints list: ", config.ALLOWED_ENDPOINTS);
+					console.error("[core.config] Cannot set endpoint to ", endpoint,  ", not in valid endpoints list: ", config.ALLOWED_ENDPOINTS);
 					return;
 				}
 
-				console.info("[Core.Config] Setting API endpoint: ", endpoint);
+				console.info("[core.config] Setting API endpoint: ", endpoint);
 				config.CURRENT_ENDPOINT = endpoint;
 			};
 
+			config.getCurrentEndpoint = function() {
+				if(hasCheckedCookie) return config.CURRENT_ENDPOINT;
+				hasCheckedCookie = true;
+
+				var cookie = $cookies.get('FDENP_API_ENDPOINT');
+				if(cookie) config.setEndpoint($cookies.get('FDENP_API_ENDPOINT'));
+
+				console.info("[core.config] Resolved current API endpoint: ", config.CURRENT_ENDPOINT, "cookie=", cookie);
+
+				return config.CURRENT_ENDPOINT;
+			};
+
 			config.getAPIEndpoint = function() {
-				return config.API_ENDPOINTS[config.CURRENT_ENDPOINT].api
+				return config.API_ENDPOINTS[config.getCurrentEndpoint()].api
 			};
 
 			config.getTokenEndpoint = function() {
-				return config.API_ENDPOINTS[config.CURRENT_ENDPOINT].token
+				return config.API_ENDPOINTS[config.getCurrentEndpoint()].token
 			};
 
 			return $rootScope.config = config;
