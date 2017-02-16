@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('LoginCtrl', function ($scope, $rootScope, $cookies, $location, Config, Auth) {
+	angular.module('BuscaAtivaEscolar').controller('LoginCtrl', function ($scope, $rootScope, $cookies, $location, Modals, Config, Auth) {
 
 		console.log("[core] @Login");
 
@@ -21,7 +21,8 @@
 			$scope.isLoading = false;
 		}
 
-		function onError() {
+		function onError(err) {
+			console.error('[login_ctrl] Login failed: ', err);
 			Modals.show(Modals.Alert('Usuário ou senha incorretos', 'Por favor, verifique os dados informados e tente novamente.'));
 			$scope.isLoading = false;
 		}

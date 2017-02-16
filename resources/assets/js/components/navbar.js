@@ -1,9 +1,11 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity, Auth) {
 
 		function init(scope, element, attrs) {
 			scope.identity = Identity;
+			scope.auth = Auth;
+
 			scope.showNotifications = true;
 
 			scope.toggleNotifications = function($event) {

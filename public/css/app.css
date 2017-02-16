@@ -195,6 +195,17 @@
 .step-list .step.step-pending::after {
   background: #ddd;
 }
+.step-list .step .not-allowed-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background-image: url('../images/ico_forbidden.png?1487265342');
+  background-size: auto;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
 
 .has-subnav-tabs .nav-tabs {
   background: #00b8ed;

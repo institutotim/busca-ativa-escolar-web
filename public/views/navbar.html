@@ -17,14 +17,14 @@
 		<div class="collapse navbar-collapse" id="navbar-items">
 
 			<ul class="nav navbar-nav">
-				<li ng-show="identity.can('dashboard')" ui-sref-active="active"><a ui-sref="dashboard"><i class="fa fa-tachometer"></i> Painel</a></li>
-				<li ng-show="identity.can('pending_alerts')"  ui-sref-active="active"><a ui-sref="pending_alerts"><i class="fa fa-bell"></i> Alertas</a></li>
-				<li ng-show="identity.can('cases')"  ui-sref-active="active"><a ui-sref="child_browser"><i class="fa fa-list"></i> Casos</a></li>
-				<li ng-show="identity.can('reports')"  ui-sref-active="active"><a ui-sref="reports"><i class="fa fa-line-chart"></i> Relatórios</a></li>
-				<li ng-show="identity.can('users')"  ui-sref-active="active"><a ui-sref="user_browser"><i class="fa fa-users"></i> Usuários</a></li>
-				<li ng-show="identity.can('tenants')"  ui-sref-active="active"><a ui-sref="tenant_browser
+				<li ui-sref-active="active"><a ui-sref="dashboard"><i class="fa fa-tachometer"></i> Painel</a></li>
+				<li ng-show="identity.can('alerts.pending')"  ui-sref-active="active"><a ui-sref="pending_alerts"><i class="fa fa-bell"></i> Alertas</a></li>
+				<li ng-show="identity.can('cases.view')"  ui-sref-active="active"><a ui-sref="child_browser"><i class="fa fa-list"></i> Casos</a></li>
+				<li ng-show="identity.can('reports.view')"  ui-sref-active="active"><a ui-sref="reports"><i class="fa fa-line-chart"></i> Relatórios</a></li>
+				<li ng-show="identity.can('users.view')"  ui-sref-active="active"><a ui-sref="user_browser"><i class="fa fa-users"></i> Usuários</a></li>
+				<li ng-show="identity.can('tenants.manage')"  ui-sref-active="active"><a ui-sref="tenant_browser
 "><i class="fa fa-university"></i> Municípios</a></li>
-				<li ng-show="identity.can('settings')"  ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
+				<li ng-show="identity.can('settings.manage')"  ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
 			</ul>
 
 
@@ -56,10 +56,10 @@
 
 						<li class="has-split-btn" ng-if="identity.can('preferences')">
 							<a class="col-md-7 split-btn" ui-sref="preferences"><i class="fa fa-cog"></i> Preferências</a>
-							<a class="col-md-5 split-btn" ng-click="identity.disconnect()"><i class="fa fa-sign-out"></i> Sair</a>
+							<a class="col-md-5 split-btn" ng-click="auth.logout()"><i class="fa fa-sign-out"></i> Sair</a>
 						</li>
 
-						<li ng-if="!identity.can('preferences')"><a ng-click="identity.disconnect()"><i class="fa fa-sign-out"></i> Sair</a></li>
+						<li ng-if="!identity.can('preferences')"><a ng-click="auth.logout()"><i class="fa fa-sign-out"></i> Sair</a></li>
 					</ul>
 				</li>
 			</ul>

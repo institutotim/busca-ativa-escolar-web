@@ -68,5 +68,18 @@
 		&.step-completed::after { background: greenyellow; }
 		&.step-pending::after { background: #ddd; }
 
+		.not-allowed-icon {
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 60px;
+			height: 60px;
+
+			background-image: image_url('ico_forbidden.png');
+			background-size: auto;
+			background-position: center center;
+			background-repeat: no-repeat;
+		}
+
 	}
 }

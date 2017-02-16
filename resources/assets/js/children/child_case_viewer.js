@@ -16,11 +16,13 @@
 				})
 		});
 
-	function ChildCasesCtrl($scope, $state, $stateParams, ngToast, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
+	function ChildCasesCtrl($scope, $state, $stateParams, ngToast, Identity, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
 
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 		$scope.CaseSteps = CaseSteps;
+
+		$scope.identity = Identity;
 
 		$scope.child_id = $scope.$parent.child_id;
 		$scope.child = $scope.$parent.child;
@@ -74,8 +76,9 @@
 		};
 
 		$scope.canOpenStep = function(step) {
-			if(step.is_completed) return true;
-			if(step.id === $scope.openedCase.current_step_id) return true;
+			if(step.is_completed || step.id === $scope.openedCase.current_step_id) {
+				return Identity.can('cases.step.' + step.slug)
+			}
 			return false;
 		};
 
@@ -91,6 +94,7 @@
 
 		$scope.canCompleteStep = function(childCase, step) {
 			if(step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Alerta') return false;
+			if(!Identity.can('cases.step.' + step.slug)) return false;
 			return (step.id === childCase.current_step_id && !step.is_completed && !step.is_pending_assignment);
 		};
 

@@ -14,16 +14,18 @@
 			<div class="panel-body" uib-collapse="isCaseCollapsed(case)">
 				<div class="step-list" style="width: 100%">
 
-					<div ng-repeat="(i, step) in case.steps" class="step {{renderStepStatusClass(case, step)}}" ng-click="openStep(step)">
+					<div ng-repeat="(i, step) in case.steps" class="step {{renderStepStatusClass(case, step)}}" uib-tooltip-html="!identity.can('cases.step.' + step.slug) ? 'Você não tem permissão para acessar essa etapa' : null" ng-click="openStep(step)">
 						<strong>{{step.name}}</strong>
 						<span ng-show="step.is_completed">{{step.updated_at | amTimeAgo}}</span>
-						<span ng-show="canCompleteStep(case, step)" class="btn btn-xs btn-info btn-raised btn-under btn-complete-step" ng-click="completeStep(step)">Concluir etapa</span>
-						<span ng-show="isPendingAssignment(step)" class="btn btn-xs btn-success btn-raised btn-under btn-assign-step" ng-click="assignStep(step)">Atribuir usuário</span>
+						<span ng-show="canCompleteStep(case, step) && identity.can('cases.step.' + step.slug)" class="btn btn-xs btn-info btn-raised btn-under btn-complete-step" ng-click="completeStep(step)">Concluir etapa</span>
+						<span ng-show="isPendingAssignment(step) && identity.can('cases.assign')" class="btn btn-xs btn-success btn-raised btn-under btn-assign-step" ng-click="assignStep(step)">Atribuir usuário</span>
+
+						<span class="not-allowed-icon" ng-hide="identity.can('cases.step.' + step.slug)"></span>
 					</div>
 				</div>
 			</div>
 		</div>
-		<a class="btn btn-danger btn-raised" ng-show="identity.can('case.close') && !isCaseClosed" ng-click="closeCase()" style="width: 100%"><i class="fa fa-ban"></i> Cancelar caso</a>
+		<a class="btn btn-danger btn-raised" ng-show="identity.can('cases.cancel') && !isCaseClosed" ng-click="closeCase()" style="width: 100%"><i class="fa fa-ban"></i> Cancelar caso</a>
 
 	</div>
 

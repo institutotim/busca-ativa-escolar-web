@@ -5,14 +5,16 @@
 
 			var self = this;
 
-			$localStorage.$default({
+			const DEFAULT_STORAGE = {
 				session: {
 					user_id: null,
 					token: null,
 					token_expires_at: null,
 					refresh_expires_at: null
 				}
-			});
+			};
+
+			$localStorage.$default(DEFAULT_STORAGE);
 
 			function requireLogin(reason) {
 				return Modals.show(Modals.Login(reason, false));
@@ -113,12 +115,9 @@
 			$rootScope.$on('identity.disconnect', this.logout);
 
 			this.logout = function() {
-				$localStorage.session.user_id = null;
-				$localStorage.session.token = null;
-				$localStorage.session.token_expires_at = null;
-				$localStorage.session.refresh_expires_at = null;
+				Object.assign($localStorage, DEFAULT_STORAGE);
 
-				Identity.clearSession();
+				Identity.disconnect();
 			};
 
 			this.login = function(email, password) {

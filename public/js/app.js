@@ -222,11 +222,13 @@
 				})
 		});
 
-	function ChildCasesCtrl($scope, $state, $stateParams, ngToast, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
+	function ChildCasesCtrl($scope, $state, $stateParams, ngToast, Identity, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
 
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 		$scope.CaseSteps = CaseSteps;
+
+		$scope.identity = Identity;
 
 		$scope.child_id = $scope.$parent.child_id;
 		$scope.child = $scope.$parent.child;
@@ -280,8 +282,9 @@
 		};
 
 		$scope.canOpenStep = function(step) {
-			if(step.is_completed) return true;
-			if(step.id === $scope.openedCase.current_step_id) return true;
+			if(step.is_completed || step.id === $scope.openedCase.current_step_id) {
+				return Identity.can('cases.step.' + step.slug)
+			}
 			return false;
 		};
 
@@ -297,6 +300,7 @@
 
 		$scope.canCompleteStep = function(childCase, step) {
 			if(step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Alerta') return false;
+			if(!Identity.can('cases.step.' + step.slug)) return false;
 			return (step.id === childCase.current_step_id && !step.is_completed && !step.is_pending_assignment);
 		};
 
@@ -860,10 +864,12 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity) {
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity, Auth) {
 
 		function init(scope, element, attrs) {
 			scope.identity = Identity;
+			scope.auth = Auth;
+
 			scope.showNotifications = true;
 
 			scope.toggleNotifications = function($event) {
@@ -1008,7 +1014,7 @@
 	identify('config', 'local_storage.js');
 
 	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
-		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v060.');
+		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
 	});
 
 })();
@@ -1282,7 +1288,7 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('LoginCtrl', function ($scope, $rootScope, $cookies, $location, Config, Auth) {
+	angular.module('BuscaAtivaEscolar').controller('LoginCtrl', function ($scope, $rootScope, $cookies, $location, Modals, Config, Auth) {
 
 		console.log("[core] @Login");
 
@@ -1303,7 +1309,8 @@
 			$scope.isLoading = false;
 		}
 
-		function onError() {
+		function onError(err) {
+			console.error('[login_ctrl] Login failed: ', err);
 			Modals.show(Modals.Alert('Usuário ou senha incorretos', 'Por favor, verifique os dados informados e tente novamente.'));
 			$scope.isLoading = false;
 		}
@@ -3376,14 +3383,16 @@ if (!Array.prototype.find) {
 
 			var self = this;
 
-			$localStorage.$default({
+			const DEFAULT_STORAGE = {
 				session: {
 					user_id: null,
 					token: null,
 					token_expires_at: null,
 					refresh_expires_at: null
 				}
-			});
+			};
+
+			$localStorage.$default(DEFAULT_STORAGE);
 
 			function requireLogin(reason) {
 				return Modals.show(Modals.Login(reason, false));
@@ -3484,12 +3493,9 @@ if (!Array.prototype.find) {
 			$rootScope.$on('identity.disconnect', this.logout);
 
 			this.logout = function() {
-				$localStorage.session.user_id = null;
-				$localStorage.session.token = null;
-				$localStorage.session.token_expires_at = null;
-				$localStorage.session.refresh_expires_at = null;
+				Object.assign($localStorage, DEFAULT_STORAGE);
 
-				Identity.clearSession();
+				Identity.disconnect();
 			};
 
 			this.login = function(email, password) {
@@ -3548,14 +3554,14 @@ if (!Array.prototype.find) {
 		var tokenProvider = null;
 		var userProvider = null;
 
-		var debugCurrentType = "coordenador_operacional";
-
-		$localStorage.$default({
+		const DEFAULT_STORAGE = {
 			identity: {
 				is_logged_in: false,
 				current_user: {},
 			}
-		});
+		};
+
+		$localStorage.$default(DEFAULT_STORAGE);
 
 		function setup() {
 			console.info("[core.identity] Setting up identity service...");
@@ -3615,26 +3621,22 @@ if (!Array.prototype.find) {
 		}
 
 		function can(operation) {
-			if(!isLoggedIn()) return false;
-			return true;
+			var user = getCurrentUser();
 
-			// TODO: back-end Fractal Transformer will populate this
-			return getCurrentUser().can.indexOf(operation) !== -1;
+			if(!isLoggedIn()) return false;
+			if(!user) return false;
+			if(!user.permissions) return false;
+
+			return user.permissions.indexOf(operation) !== -1;
 		}
 
 		function getType() {
 			if(isLoggedIn()) return getCurrentUser().type;
-			return debugCurrentType;
-		}
-
-		function debugUserType(type) {
-			console.log("[identity::debug] Faking user type: ", type);
-			debugCurrentType = type;
-			$localStorage.identity.current_user.type = type;
+			return 'guest';
 		}
 
 		function isLoggedIn() {
-			return $localStorage.identity.is_logged_in;
+			return ($localStorage.identity) ? !!$localStorage.identity.is_logged_in : false;
 		}
 
 		function disconnect() {
@@ -3646,8 +3648,7 @@ if (!Array.prototype.find) {
 		function clearSession() {
 			console.log("[identity] Clearing current session");
 
-			$localStorage.identity.is_logged_in = false;
-			$localStorage.identity.current_user = {};
+			Object.assign($localStorage, DEFAULT_STORAGE);
 		}
 
 		return {
@@ -3661,8 +3662,7 @@ if (!Array.prototype.find) {
 			setTokenProvider: setTokenProvider,
 			setUserProvider: setUserProvider,
 			provideToken: provideToken,
-			disconnect: disconnect,
-			debugUserType: debugUserType
+			disconnect: disconnect
 		}
 
 	});

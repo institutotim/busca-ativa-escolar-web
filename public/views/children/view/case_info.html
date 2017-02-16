@@ -9,7 +9,7 @@
 				<small>{{step.assigned_user.type | lang:'user.type'}}</small><br />
 			</div>
 			<div style="display: inline-block; vertical-align: middle; margin-left: 20px;">
-				<a class="btn btn-xs btn-info btn-raised" ng-click="assignUser()">Alterar</a>
+				<a ng-show="identity.can('cases.assign')" class="btn btn-xs btn-info btn-raised" ng-click="assignUser()">Alterar</a>
 			</div>
 		</div>
 	</div>
@@ -33,7 +33,7 @@
 <div ng-show="isPendingAssignment()" class="alert alert-warning">
 	<h3><i class="fa fa-user-times"></i> Essa etapa está pendente de atribuição!</h3>
 	<p>Não há nenhum usuário responsável por essa etapa!</p>
-	<a class="btn btn-raised btn-default" ng-click="assignUser()"><i class="fa fa-user-plus"></i> Atribuir responsável</a>
+	<a ng-show="identity.can('cases.assign')" class="btn btn-raised btn-default" ng-click="assignUser()"><i class="fa fa-user-plus"></i> Atribuir responsável</a>
 </div>
 
 <div class="panel panel-default" ng-show="isStepOpen('Alerta')">
@@ -170,7 +170,7 @@
 	<div class="panel-body">
 		<div class="alert alert-primary">Alerta enviado <strong uib-tooltip-html="child.created_at" ng-bind="child.created_at | amTimeAgo"></strong> <span ng-show="child.submitter">por <strong uib-tooltip-html="child.submitter.type | lang:'user.type'" ng-bind="child.submitter.name"></strong></span></div>
 	</div>
-	<div class="panel-footer" ng-show="child.alert_status === 'pending' && identity.can('pending_alerts')">
+	<div class="panel-footer" ng-show="child.alert_status === 'pending' && identity.can('alerts.pending')">
 		<a class="btn btn-raised btn-success" ng-click="acceptAlert(child.id)"><i class="fa fa-check"></i> Aceitar</a>
 		<a class="btn btn-raised btn-danger" ng-click="rejectAlert(child.id)"><i class="fa fa-ban"></i> Rejeitar</a>
 	</div>

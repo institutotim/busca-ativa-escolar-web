@@ -5,14 +5,14 @@
 		var tokenProvider = null;
 		var userProvider = null;
 
-		var debugCurrentType = "coordenador_operacional";
-
-		$localStorage.$default({
+		const DEFAULT_STORAGE = {
 			identity: {
 				is_logged_in: false,
 				current_user: {},
 			}
-		});
+		};
+
+		$localStorage.$default(DEFAULT_STORAGE);
 
 		function setup() {
 			console.info("[core.identity] Setting up identity service...");
@@ -72,26 +72,22 @@
 		}
 
 		function can(operation) {
-			if(!isLoggedIn()) return false;
-			return true;
+			var user = getCurrentUser();
 
-			// TODO: back-end Fractal Transformer will populate this
-			return getCurrentUser().can.indexOf(operation) !== -1;
+			if(!isLoggedIn()) return false;
+			if(!user) return false;
+			if(!user.permissions) return false;
+
+			return user.permissions.indexOf(operation) !== -1;
 		}
 
 		function getType() {
 			if(isLoggedIn()) return getCurrentUser().type;
-			return debugCurrentType;
-		}
-
-		function debugUserType(type) {
-			console.log("[identity::debug] Faking user type: ", type);
-			debugCurrentType = type;
-			$localStorage.identity.current_user.type = type;
+			return 'guest';
 		}
 
 		function isLoggedIn() {
-			return $localStorage.identity.is_logged_in;
+			return ($localStorage.identity) ? !!$localStorage.identity.is_logged_in : false;
 		}
 
 		function disconnect() {
@@ -103,8 +99,7 @@
 		function clearSession() {
 			console.log("[identity] Clearing current session");
 
-			$localStorage.identity.is_logged_in = false;
-			$localStorage.identity.current_user = {};
+			Object.assign($localStorage, DEFAULT_STORAGE);
 		}
 
 		return {
@@ -118,8 +113,7 @@
 			setTokenProvider: setTokenProvider,
 			setUserProvider: setUserProvider,
 			provideToken: provideToken,
-			disconnect: disconnect,
-			debugUserType: debugUserType
+			disconnect: disconnect
 		}
 
 	});
