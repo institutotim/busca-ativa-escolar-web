@@ -288,6 +288,10 @@
 			return false;
 		};
 
+		$scope.canEditStep = function(step) {
+			return !step.is_completed;
+		};
+
 		$scope.openStep = function(selectedStep) {
 			if(!$scope.canOpenStep(selectedStep)) return false;
 
