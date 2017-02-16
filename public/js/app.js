@@ -909,6 +909,9 @@
 		var commits = [];
 
 		function init(scope, element, attrs) {
+			repositoryData = {};
+			commits = [];
+
 			scope.commits = commits;
 			refresh();
 		}
@@ -3318,6 +3321,8 @@ if (!Array.prototype.find) {
 				create: {method: 'POST', headers: headers},
 				update: {method: 'PUT', headers: headers},
 				search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
+				suspend: {method: 'DELETE', headers: headers},
+				restore: {url: API.getURI('users/:id/restore'), method: 'POST', headers: headers},
 			});
 
 		});
@@ -3611,6 +3616,12 @@ if (!Array.prototype.find) {
 				: {};
 		}
 
+		function getCurrentUserID() {
+			return ($localStorage.identity.current_user && $localStorage.identity.current_user.id)
+				? $localStorage.identity.current_user.id
+				: null;
+		};
+
 		function setCurrentUser(user) {
 			if(!user) clearSession();
 
@@ -3657,6 +3668,7 @@ if (!Array.prototype.find) {
 
 		return {
 			getCurrentUser: getCurrentUser,
+			getCurrentUserID: getCurrentUserID,
 			setCurrentUser: setCurrentUser,
 			getType: getType,
 			can: can,
@@ -4899,7 +4911,7 @@ function identify(namespace, file) {
 				controller: 'UserBrowserCtrl'
 			})
 		})
-		.controller('UserBrowserCtrl', function ($scope, $rootScope, Platform, Identity, Users, Groups, Tenants, StaticData) {
+		.controller('UserBrowserCtrl', function ($scope, $rootScope, ngToast, Platform, Identity, Users, Groups, Tenants, StaticData) {
 
 		$scope.identity = Identity;
 		$scope.query = {
@@ -4908,7 +4920,8 @@ function identify(namespace, file) {
 			type: null,
 			email: null,
 			max: 128,
-			with: 'tenant'
+			with: 'tenant',
+			show_suspended: true
 		};
 
 		$scope.setMaxResults = function(max) {
@@ -4936,6 +4949,20 @@ function identify(namespace, file) {
 
 		$scope.refresh = function() {
 			$scope.search = Users.search($scope.query);
+		};
+
+		$scope.suspendUser = function(user) {
+			Users.suspend({id: user.id}, function (res) {
+				ngToast.success('Usuário desativado!');
+				$scope.refresh();
+			});
+		};
+
+		$scope.restoreUser = function(user) {
+			Users.restore({id: user.id}, function (res) {
+				ngToast.success('Usuário reativado!');
+				$scope.refresh();
+			});
 		};
 
 		$scope.refresh();

@@ -8,7 +8,7 @@
 				controller: 'UserBrowserCtrl'
 			})
 		})
-		.controller('UserBrowserCtrl', function ($scope, $rootScope, Platform, Identity, Users, Groups, Tenants, StaticData) {
+		.controller('UserBrowserCtrl', function ($scope, $rootScope, ngToast, Platform, Identity, Users, Groups, Tenants, StaticData) {
 
 		$scope.identity = Identity;
 		$scope.query = {
@@ -17,7 +17,8 @@
 			type: null,
 			email: null,
 			max: 128,
-			with: 'tenant'
+			with: 'tenant',
+			show_suspended: true
 		};
 
 		$scope.setMaxResults = function(max) {
@@ -45,6 +46,20 @@
 
 		$scope.refresh = function() {
 			$scope.search = Users.search($scope.query);
+		};
+
+		$scope.suspendUser = function(user) {
+			Users.suspend({id: user.id}, function (res) {
+				ngToast.success('Usuário desativado!');
+				$scope.refresh();
+			});
+		};
+
+		$scope.restoreUser = function(user) {
+			Users.restore({id: user.id}, function (res) {
+				ngToast.success('Usuário reativado!');
+				$scope.refresh();
+			});
 		};
 
 		$scope.refresh();

@@ -12,6 +12,9 @@
 		var commits = [];
 
 		function init(scope, element, attrs) {
+			repositoryData = {};
+			commits = [];
+
 			scope.commits = commits;
 			refresh();
 		}

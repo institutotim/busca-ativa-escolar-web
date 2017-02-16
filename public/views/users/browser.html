@@ -76,15 +76,20 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="(i, user) in search.data">
-						<td width="25%"><strong><i class="fa fa-user"></i> {{user.name}}</strong><br /></td>
+					<tr ng-repeat="(i, user) in search.data" class="{{!!user.deleted_at ? 'is-suspended' : ''}}">
+						<td width="25%">
+							<strong><i class="fa fa-user"></i> {{user.name}}</strong><br />
+							<span ng-show="!user.deleted_at" class="label label-success">Ativo</span>
+							<span ng-show="!!user.deleted_at" class="label label-warning">Desativado</span>
+						</td>
 						<td width="18%"><span ng-show="user.tenant">{{user.tenant.name}}</span></td>
 						<td width="18%">{{user.email}}</td>
 						<td width="18%">{{user.type | lang:'user.type'}}</td>
 						<td width="21%">{{user.group.name}}</td>
 						<td width="20%" ng-show="identity.can('users.manage')">
 							<a ui-sref="user_editor({user_id: user.id})" ng-show="identity.can('users.manage')" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-pencil-square-o"></i> Editar</a>
-							<a ng-show="identity.can('users.manage')" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-ban"></i> Desativar</a>
+							<a ng-click="suspendUser(user)" ng-show="!user.deleted_at && identity.can('users.manage') && identity.getCurrentUserID() != user.id" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-ban"></i> Desativar</a>
+							<a ng-click="restoreUser(user)" ng-show="user.deleted_at && identity.can('users.manage') && identity.getCurrentUserID() != user.id" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-check"></i> Ativar</a>
 						</td>
 					</tr>
 				</tbody>

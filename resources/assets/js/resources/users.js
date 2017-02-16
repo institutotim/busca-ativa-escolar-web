@@ -10,6 +10,8 @@
 				create: {method: 'POST', headers: headers},
 				update: {method: 'PUT', headers: headers},
 				search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
+				suspend: {method: 'DELETE', headers: headers},
+				restore: {url: API.getURI('users/:id/restore'), method: 'POST', headers: headers},
 			});
 
 		});

@@ -58,6 +58,12 @@
 				: {};
 		}
 
+		function getCurrentUserID() {
+			return ($localStorage.identity.current_user && $localStorage.identity.current_user.id)
+				? $localStorage.identity.current_user.id
+				: null;
+		};
+
 		function setCurrentUser(user) {
 			if(!user) clearSession();
 
@@ -104,6 +110,7 @@
 
 		return {
 			getCurrentUser: getCurrentUser,
+			getCurrentUserID: getCurrentUserID,
 			setCurrentUser: setCurrentUser,
 			getType: getType,
 			can: can,

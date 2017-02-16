@@ -635,4 +635,8 @@ p.agent-panel {
   text-decoration: line-through !important;
 }
 
+.is-suspended {
+  color: #d9534f !important;
+}
+
 /*# sourceMappingURL=app.css.map */
