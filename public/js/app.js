@@ -705,19 +705,6 @@
 
 			$scope.alert = {};
 
-			function prepareDateFields(data) {
-				var dateOnlyFields = ['dob'];
-
-				for(var i in data) {
-					if(!data.hasOwnProperty(i)) continue;
-					if(dateOnlyFields.indexOf(i) === -1) continue;
-
-					data[i] = Utils.stripTimeFromTimestamp(data[i]);
-				}
-
-				return data;
-			}
-
 			$scope.fetchCities = function(query) {
 				var data = {name: query, $hide_loading_feedback: true};
 				if($scope.alert.place_uf) data.uf = $scope.alert.place_uf;
@@ -730,6 +717,7 @@
 			};
 
 			$scope.renderSelectedCity = function(city) {
+				if(!city) return '';
 				return city.uf + ' / ' + city.name;
 			};
 
@@ -738,7 +726,7 @@
 				// TODO: validate fields
 
 				var data = $scope.alert;
-				data = prepareDateFields(data);
+				data = Utils.prepareDateFields(data, ['dob']);
 				data.place_city_id = data.place_city ? data.place_city.id : null;
 				data.place_city_name = data.place_city ? data.place_city.name : null;
 
@@ -1423,59 +1411,6 @@
 			ngToast.create({
 				className: 'success',
 				content: 'Configurações salvas!'
-			});
-		};
-
-	});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar').controller('SignUpCtrl', function ($scope, $rootScope, $window, Modals, MockData, Identity) {
-
-		$rootScope.section = 'sign_up';
-
-		$scope.identity = Identity;
-		$scope.step = 1;
-		$scope.agreeTOS = 0;
-
-		Identity.clearSession();
-
-		$scope.goToStep = function (step) {
-			if($scope.step > 2 && !$scope.agreeTOS) return;
-			if($scope.step >= 4) return;
-
-			$scope.step = step;
-			$window.scrollTo(0, 0);
-		};
-
-		$scope.nextStep = function() {
-			if($scope.step > 2 && !$scope.agreeTOS) return;
-			if($scope.step >= 4) return;
-
-			$scope.step++;
-			$window.scrollTo(0, 0);
-			if($scope.step > 3) $scope.step = 3;
-		};
-
-		$scope.prevStep = function() {
-			if($scope.step > 2 && !$scope.agreeTOS) return;
-			if($scope.step >= 4) return;
-
-			$scope.step--;
-			$window.scrollTo(0, 0);
-			if($scope.step < 1) $scope.step = 1;
-		};
-
-		$scope.finish = function() {
-			if($scope.step > 2 && !$scope.agreeTOS) return;
-			if($scope.step >= 4) return;
-
-			Modals.show(Modals.Confirm(
-				'Tem certeza que deseja prosseguir com o cadastro?',
-				'Os dados informados serão enviados para validação e aprovação de nossa equipe. Caso aprovado, você receberá uma mensagem em seu e-mail institucional com os dados para acesso à plataforma, e instruções de como configurá-la.'
-			)).then(function(res) {
-				$scope.step = 4;
 			});
 		};
 
@@ -3180,6 +3115,7 @@ if (!Array.prototype.find) {
 			return $resource(API.getURI('cities/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: headers},
 				search: {url: API.getURI('cities/search'), method: 'POST', headers: headers},
+				checkIfAvailable: {url: API.getURI('cities/check_availability'), method: 'POST', headers: headers},
 			});
 
 		});
@@ -3223,6 +3159,27 @@ if (!Array.prototype.find) {
 			return $resource(API.getURI('schools/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: headers},
 				search: {url: API.getURI('schools/search'), method: 'POST', headers: headers},
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('SignUps', function SignUps(API, Identity, $resource) {
+
+			let authHeaders = API.REQUIRE_AUTH;
+			let headers = {};
+
+			return $resource(API.getURI('signups/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: authHeaders},
+
+				getPending: {url: API.getURI('signups/pending'), method: 'GET', headers: authHeaders},
+				approve: {url: API.getURI('signups/:id/approve'), method: 'POST', headers: authHeaders},
+				reject: {url: API.getURI('signups/:id/reject'), method: 'POST', headers: authHeaders},
+
+				register: {url: API.getURI('signups/register'), method: 'POST', headers: headers},
+				getViaToken: {url: API.getURI('signups/via_token/:id'), method: 'GET', headers: headers},
 			});
 
 		});
@@ -4629,6 +4586,17 @@ if (!Array.prototype.find) {
 		})
 		.factory('Utils', function() {
 
+			function prepareDateFields(data, dateOnlyFields) {
+				for(var i in data) {
+					if(!data.hasOwnProperty(i)) continue;
+					if(dateOnlyFields.indexOf(i) === -1) continue;
+
+					data[i] = stripTimeFromTimestamp(data[i]);
+				}
+
+				return data;
+			}
+
 			function stripTimeFromTimestamp(timestamp) {
 				if(timestamp instanceof Date) timestamp = timestamp.toISOString();
 				return ("" + timestamp).substring(0, 10);
@@ -4684,6 +4652,7 @@ if (!Array.prototype.find) {
 
 			return {
 				stripTimeFromTimestamp: stripTimeFromTimestamp,
+				prepareDateFields: prepareDateFields,
 				filter: filter,
 				extract: extract,
 				pluck: pluck,
@@ -4902,6 +4871,105 @@ function identify(namespace, file) {
 			})
 
 		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').controller('SignUpCtrl', function ($scope, $rootScope, $window, ngToast, Utils, SignUps, Cities, Modals, StaticData) {
+
+		$scope.static = StaticData;
+
+		$scope.step = 1;
+		$scope.numSteps = 5;
+		$scope.isCityAvailable = false;
+
+		$scope.form = {
+			uf: null,
+			city: null,
+			admin: {},
+			mayor: {}
+		};
+		$scope.agreeTOS = 0;
+
+		$scope.fetchCities = function(query) {
+			var data = {name: query, $hide_loading_feedback: true};
+			if($scope.form.uf) data.uf = $scope.form.uf;
+
+			return Cities.search(data).$promise.then(function (res) {
+				return res.results;
+			});
+		};
+
+		$scope.renderSelectedCity = function(city) {
+			if(!city) return '';
+			return city.uf + ' / ' + city.name;
+		};
+
+		$scope.goToStep = function (step) {
+			if($scope.step < 1) return;
+			if($scope.step > $scope.numSteps) return;
+
+			$scope.step = step;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.nextStep = function() {
+			if($scope.step >= $scope.numSteps) return;
+
+			$scope.step++;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.prevStep = function() {
+			if($scope.step <= 1) return;
+
+			$scope.step--;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.checkCityAvailability = function(city) {
+
+			if(!$scope.form.uf) $scope.form.uf = city.uf;
+
+			$scope.hasCheckedAvailability = false;
+
+			Cities.checkIfAvailable({id: city.id}, function (res) {
+				$scope.hasCheckedAvailability = true;
+				$scope.isCityAvailable = !!res.is_available;
+			});
+		};
+
+		$scope.finish = function() {
+			if(!$scope.agreeTOS) return;
+
+			Modals.show(Modals.Confirm(
+				'Tem certeza que deseja prosseguir com o cadastro?',
+				'Os dados informados serão enviados para validação e aprovação de nossa equipe. Caso aprovado, você receberá uma mensagem em seu e-mail institucional com os dados para acesso à plataforma, e instruções de como configurá-la.'
+			)).then(function(res) {
+				var data = {};
+				data.admin = Object.assign({}, $scope.form.admin);
+				data.mayor = Object.assign({}, $scope.form.mayor);
+				data.city = Object.assign({}, $scope.form.city);
+
+				data.city_id = (data.city) ? data.city.id : null;
+				data.admin = Utils.prepareDateFields(data.admin, ['dob']);
+				data.mayor = Utils.prepareDateFields(data.mayor, ['dob']);
+
+				SignUps.register(data, function (res) {
+					if(res.status === 'ok') {
+						ngToast.success('Solicitação de adesão registrada!');
+						$scope.step = 5;
+						return;
+					}
+
+					ngToast.danger("Ocorreu um erro ao registrar a adesão: " + res.reason);
+
+				});
+
+			});
+		};
+
+	});
 
 })();
 (function() {

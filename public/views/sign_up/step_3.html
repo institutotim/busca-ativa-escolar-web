@@ -1,42 +1,44 @@
-<div class="panel panel-default">
-		<div class="panel-heading">
-		<h3><strong>1.</strong> <i class="fa fa-building"></i> Termo de Adesão</h3>
+<form class="panel panel-default" ng-submit="nextStep()">
+	<div class="panel-heading">
+		<h3><strong>{{step}}.</strong> <i class="fa fa-user"></i> Cadastre o prefeito</h3>
 	</div>
 	<div class="panel-body">
-		<div style="margin: 10px 0;">
-			<p>Leia abaixo os termos de adesão, e indique seu aceite abaixo para prosseguir.</p>
 
-			<div class="panel panel-default" style="max-height: 300px; overflow-y: scroll">
-				<div class="panel-body">
+		<p>Informe aqui os dados do Prefeito em exercício, responsável legal pelo município. Os dados devem ser preenchidos corretamente.</p>
 
-					<h4>TERMO DE ADESÃO DA PLATAFORMA BUSCA ATIVA ESCOLAR</h4>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-				</div>
-			</div>
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-name">Nome*</label>
+			<input type="text" class="form-control" id="fld-name" required ng-model="$parent.form.mayor.name">
 		</div>
 
-		<div class="row">
-			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-agree_tos-yes" style="margin-right: 10px;">Li e concordo com os termos de adesão acima:</label>
-				<div class="radio-inline">
-					<label><input id="fld-agree_tos-yes" ng-model="$parent.agreeTOS" ng-value="1" name="agree_tos" value="1" type="radio"> Sim</label>
-				</div>
-				<div class="radio-inline">
-					<label><input id="fld-agree_tos-no" ng-model="$parent.agreeTOS" ng-value="0" name="agree_tos" value="0" type="radio"> Não</label>
-				</div>
-			</div>
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-dob">Data de nascimento*</label>
+			<input type="date" class="form-control" id="fld-dob" required ng-model="$parent.form.mayor.dob">
 		</div>
 
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-cpf">CPF*</label>
+			<input type="tel" ui-br-cpf-mask class="form-control" required id="fld-cpf" ng-model="$parent.form.mayor.cpf">
+		</div>
+
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-email">E-mail institucional*</label>
+			<input type="email" class="form-control" id="fld-email" required ng-model="$parent.form.mayor.email">
+		</div>
+
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
+			<input type="tel" ui-br-phone-number class="form-control" required id="fld-work-phone" ng-model="$parent.form.mayor.phone">
+		</div>
+
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
+			<input type="tel" ui-br-phone-number class="form-control" id="fld-work-mobile" ng-model="$parent.form.mayor.mobile">
+		</div>
+
+	</div>
 	<div class="panel-footer clearfix">
 		<button ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<button ng-click="finish()" ng-show="$parent.agreeTOS" type="button" class="btn btn-success btn-raised pull-right">Salvar e enviar para aprovação <i class="fa fa-upload"></i></button>
-
-				
+		<button type="submit" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
 	</div>
-</div>
+</form>

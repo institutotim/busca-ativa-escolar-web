@@ -1,44 +1,63 @@
-<div class="panel panel-default">
+<form class="panel panel-default" ng-submit="nextStep()">
 	<div class="panel-heading">
-		<h3><strong>2.</strong> <i class="fa fa-user"></i> Cadastre o prefeito</h3>
+		<h3><strong>{{step}}.</strong> <i class="fa fa-user"></i> Dados do Gestor Político</h3>
 	</div>
-	<div class="panel-body">
 
-		<p>Informe aqui os dados do Prefeito em exercício, responsável legal pelo município. Os dados devem ser preenchidos corretamente.</p>
+	<div class="panel-body">
+		<p>
+			Essa etapa tem por objetivo efetuar a primeira parte da adesão de novos municípios no sistema Busca Ativa Escolar e deve ser preenchida pelo gestor político do município responsável por desempenhar as taredas abaixo:
+		</p>
+
+		<ul class="list-group">
+		  <li class="list-group-item"><i style="font-size: 10px" class="fa fa-circle-o"></i> Cadastrar o coordenador operacional no sistema</li>
+		  <li class="list-group-item"><i style="font-size: 10px" class="fa fa-circle-o"></i> Acessar as estatísticas gerais da cidade </li>
+		  <li class="list-group-item"><i style="font-size: 10px" class="fa fa-circle-o"></i> Acompanhar a iniciativa, estimulando as ações intersetoriais e fazendo as articulações políticas necessárias para que o coordenador operacional possa desenvolver seu trabalho; </li>
+		  <li class="list-group-item"><i style="font-size: 10px" class="fa fa-circle-o"></i> Analisar os relatórios e refletir sobre as políticas públicas para o enfrentamento da exclusão escolar de forma intersetorial.</li>
+		</ul>
+
+		<p>Informe aqui os dados do gestor político, responsável pela Busca Ativa Escolar no município.</p>
 
 		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-name">Nome*</label>
-			<input type="text" class="form-control" id="fld-name" value="Aryel Tupinambá">
+			<label class="control-label" for="fld-co-name">Nome*</label>
+			<input type="text" class="form-control" required id="fld-co-name" ng-model="$parent.form.admin.name">
 		</div>
-
 		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-dob">Data de nascimento*</label>
-			<input type="text" class="form-control" id="fld-dob" value="25/08/1991">
+			<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
+			<input type="date" class="form-control" required id="fld-co-dob" ng-model="$parent.form.admin.dob">
 		</div>
-
 		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-cpf">CPF*</label>
-			<input type="text" class="form-control" id="fld-cpf" value="123.456.789-00">
+			<label class="control-label" for="fld-co-cpf">CPF*</label>
+			<input type="tel" ui-br-cpf-mask class="form-control"  required id="fld-co-cpf" ng-model="$parent.form.admin.cpf">
 		</div>
 
 		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-email">E-mail institucional*</label>
-			<input type="email" class="form-control" id="fld-email" value="aryel.tupinamba@lqdi.net">
+			<label class="control-label" for="fld-co-email">E-mail institucional*</label>
+			<input type="email" class="form-control" required id="fld-co-email" ng-model="$parent.form.admin.email">
+		</div>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-co-work-phone">Telefone fixo institucional*</label>
+			<input type="tel" ui-br-phone-number class="form-control" required id="fld-co-work-phone" ng-model="$parent.form.admin.phone">
+		</div>
+		<div class="form-group col-md-4">
+			<label class="control-label" for="fld-co-work-mobile">Telefone celular institucional</label>
+			<input type="tel" ui-br-phone-number class="form-control" id="fld-co-work-mobile" ng-model="$parent.form.admin.mobile">
 		</div>
 
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
-			<input type="text" class="form-control" id="fld-work-phone" value="(11) 2222-3333">
+		<hr />
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-co-institution">Instituição*</label>
+			<input type="text" class="form-control" id="fld-co-institution" required ng-model="$parent.form.admin.institution">
 		</div>
 
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
-			<input type="text" class="form-control" id="fld-work-mobile" value="(11) 98888-4444">
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-co-position">Cargo*</label>
+			<input type="text" class="form-control" id="fld-co-position" required ng-model="$parent.form.admin.position">
 		</div>
 
 	</div>
 	<div class="panel-footer clearfix">
 		<button ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<button ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
+		<button type="submit" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
 	</div>
-</div>
+</form>

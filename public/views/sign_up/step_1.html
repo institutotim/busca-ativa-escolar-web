@@ -1,6 +1,6 @@
-<div class="panel panel-default">
+<form class="panel panel-default" ng-submit="$parent.hasCheckedAvailability && $parent.isCityAvailable ? nextStep() : null">
 	<div class="panel-heading">
-		<h3><strong>1.</strong> <i class="fa fa-building"></i> Revisão do cadastro</h3>
+		<h3><strong>{{step}}.</strong> <i class="fa fa-building"></i> Escolha o Município</h3>
 	</div>
 
 	<div class="panel-body">
@@ -12,84 +12,53 @@
 			</p>
 		</div>
 
-		<div>
-			<div class="form-group col-md-6">
-				<ui-select ng-model="input.city">
-				<ui-select-match allow-clear="true" placeholder="UF">{{$select.selected.state}}</ui-select-match>
-					<ui-select-choices repeat="city in cities | filter: $select.search track by city.id">
-						<div>{{city.state}}</div>
-					</ui-select-choices>
-				</ui-select>
+		<div class="clearfix">
+			<script type="text/ng-template" id="city_item.html">
+				<a>
+					<span ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span>
+					<small ng-bind-html="match.model.uf | uibTypeaheadHighlight:query"></small>
+				</a>
+			</script>
+			<div class="form-group col-md-3">
+				<label class="control-label" for="fld-place_uf">UF*</label>
+				<select class="form-control" id="fld-place_uf" ng-model="$parent.form.uf" ng-options="uf.code as uf.code for uf in $parent.static.getUFs()"></select>
 			</div>
+			<div class="form-group col-md-9 clearfix">
+				<label class="control-label" for="fld-city">Município*</label>
+				<input type="text" id="fld-city"
+				       class="form-control"
+				       ng-model="$parent.form.city"
 
-			<div class="form-group col-md-6">
-				<ui-select ng-model="input.city">
-				<ui-select-match allow-clear="true" placeholder="Município">{{$select.selected.name}}</ui-select-match>
-					<ui-select-choices repeat="city in cities | filter: $select.search track by city.id">
-						<div>{{city.name}}</div>
-					</ui-select-choices>
-				</ui-select>
+				       uib-typeahead="city for city in fetchCities($viewValue)"
+				       typeahead-editable="false"
+				       typeahead-no-results="noCitiesFound"
+				       typeahead-loading="citiesLoading"
+				       typeahead-focus-first="true"
+				       typeahead-template-url="city_item.html"
+				       typeahead-wait-ms="400"
+				       typeahead-min-length="3"
+				       typeahead-input-formatter="renderSelectedCity($model)"
+				       typeahead-on-select="checkCityAvailability($model)"
+
+				>
+
+				<div ng-show="citiesLoading">
+					<i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
+				</div>
+				<div ng-show="noCitiesFound">
+					<i class="fa fa-remove"></i> Nenhuma cidade encontrada
+				</div>
 			</div>
 		</div>
-	
-		<br/>
-		<br/>
-		<br/>
 
-		<h3><i class="fa fa-user"></i> Dados do Gestor Político</h3>
-			<p>
-				Essa etapa tem por objetivo efetuar a primeira parte da adesão de novos municípios no sistema Busca Ativa Escolar e deve ser preenchida pelo gestor político do município responsável por desempenhar as taredas abaixo:
-			</p>
-
-			<ul class="list-group">
-			  <li class="list-group-item"><i style="font-size: 10px" class="fa fa-circle-o"></i> Cadastrar o coordenador operacional no sistema</li>
-			  <li class="list-group-item"><i style="font-size: 10px" class="fa fa-circle-o"></i> Acessar as estatísticas gerais da cidade </li>
-			  <li class="list-group-item"><i style="font-size: 10px" class="fa fa-circle-o"></i> Acompanhar a iniciativa, estimulando as ações intersetoriais e fazendo as articulações políticas necessárias para que o coordenador operacional possa desenvolver seu trabalho; </li> 
-			  <li class="list-group-item"><i style="font-size: 10px" class="fa fa-circle-o"></i> Analisar os relatórios e refletir sobre as políticas públicas para o enfrentamento da exclusão escolar de forma intersetorial.</li>
-			</ul>
-
-			<p>Informe aqui os dados do gestor operacional, responsável pela Busca Ativa Escolar no município.</p>
-
-		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-co-name">Nome*</label>
-			<input type="text" class="form-control" id="fld-co-name" value="Aryel Tupinambá">
-		</div>
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
-			<input type="text" class="form-control" id="fld-co-dob" value="25/08/1991">
-		</div>
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-co-cpf">CPF*</label>
-			<input type="text" class="form-control" id="fld-co-cpf" value="123.456.789-00">
-		</div>
-
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-co-email">E-mail institucional*</label>
-			<input type="email" class="form-control" id="fld-co-email" value="aryel.tupinamba@lqdi.net">
-		</div>
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-co-work-phone">Telefone fixo institucional*</label>
-			<input type="text" class="form-control" id="fld-co-work-phone" value="(11) 2222-3333">
-		</div>
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-co-work-mobile">Telefone celular institucional</label>
-			<input type="text" class="form-control" id="fld-co-work-mobile" value="(11) 98888-4444">
-		</div>
-
-		<hr />
-
-		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-co-institution">Instituição*</label>
-			<input type="text" class="form-control" id="fld-co-institution" value="Secretaria de Assistência Social">
-		</div>
-
-		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-co-position">Cargo*</label>
-			<input type="text" class="form-control" id="fld-co-position" value="Diretor de Operações">
+		<div ng-show="$parent.hasCheckedAvailability && !$parent.isCityAvailable">
+			<div class="alert alert-warning">
+				<strong>Município indisponível!</strong> O município indicado já é participante do programa Busca Ativa Escolar, ou já possui um processo de adesão em andamento.
+			</div>
 		</div>
 
 	</div>
 	<div class="panel-footer clearfix">
-		<button ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
+		<button ng-show="$parent.hasCheckedAvailability && $parent.isCityAvailable" type="submit" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
 	</div>
-</div>
+</form>

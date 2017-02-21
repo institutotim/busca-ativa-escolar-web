@@ -1,6 +1,6 @@
 <div class="panel panel-default">
 		<div class="panel-heading">
-			<h3><strong ng-show="!$parent.isEditing">3.</strong> <i class="fa fa-sitemap"></i> Cadastre o coordenador operacional</h3>
+			<h3><strong ng-show="!$parent.isEditing">4.</strong> <i class="fa fa-sitemap"></i> Cadastre o coordenador operacional</h3>
 		</div>
 		<div class="col-md-12">
 			<h4>Coordenador Operacional</h4>
@@ -9,7 +9,7 @@
 			</p>
 			
 			<ul style="font-size: 10px"  class="list-group">
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Cadastrar os supervisores institucionais, os técnicos verificadores e os agentes comunitários</li>
+			  <li class="list-group-item"><i font-site class="fa fa-circle-o"></i> Cadastrar os supervisores institucionais, os técnicos verificadores e os agentes comunitários</li>
 			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Estabelecer os parâmetros do sistema de acordo com a realidade do município. Inclui definir quais atores participarão, quais casos serão resolvidos por quem, os prazos para as tarefas principais etc </li>
 			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Acessar as estatísticas gerais da cidade </li> 
 			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Definir, em conjunto com o gestor político, estratégias para a implementação do projeto no âmbito do município</li>
@@ -17,7 +17,7 @@
 			</ul>
 		</div>
 
-		<div ng-show="$parent.isEditing" class="clearfix"><a href="/users/5" class="btn btn-raised btn-primary"><i class="fa fa-user"></i> Editar usuário do Coordenador Político</a></div>
+		<div ng-show="$parent.isEditing" class="clearfix"><a href="#/users/5" class="btn btn-raised btn-primary"><i class="fa fa-user"></i> Editar usuário do Coordenador Político</a></div>
 		<div ng-show="!$parent.isEditing" class="clearfix">
 
 			<div class="form-group col-md-12">
@@ -105,7 +105,8 @@
 
 	<div class="panel-footer clearfix">
 		<button ng-show="!$parent.isEditing" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<button ng-show="!$parent.isEditing" ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
+		<a class="btn btn-primary btn-raised pull-right" href="#/second_time_setup">Finalizar</a>
+
 		<button ng-show="$parent.isEditing" ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
 	</div>
 </div>

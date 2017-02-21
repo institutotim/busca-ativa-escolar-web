@@ -21,6 +21,17 @@
 		})
 		.factory('Utils', function() {
 
+			function prepareDateFields(data, dateOnlyFields) {
+				for(var i in data) {
+					if(!data.hasOwnProperty(i)) continue;
+					if(dateOnlyFields.indexOf(i) === -1) continue;
+
+					data[i] = stripTimeFromTimestamp(data[i]);
+				}
+
+				return data;
+			}
+
 			function stripTimeFromTimestamp(timestamp) {
 				if(timestamp instanceof Date) timestamp = timestamp.toISOString();
 				return ("" + timestamp).substring(0, 10);
@@ -76,6 +87,7 @@
 
 			return {
 				stripTimeFromTimestamp: stripTimeFromTimestamp,
+				prepareDateFields: prepareDateFields,
 				filter: filter,
 				extract: extract,
 				pluck: pluck,

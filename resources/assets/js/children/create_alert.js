@@ -15,19 +15,6 @@
 
 			$scope.alert = {};
 
-			function prepareDateFields(data) {
-				var dateOnlyFields = ['dob'];
-
-				for(var i in data) {
-					if(!data.hasOwnProperty(i)) continue;
-					if(dateOnlyFields.indexOf(i) === -1) continue;
-
-					data[i] = Utils.stripTimeFromTimestamp(data[i]);
-				}
-
-				return data;
-			}
-
 			$scope.fetchCities = function(query) {
 				var data = {name: query, $hide_loading_feedback: true};
 				if($scope.alert.place_uf) data.uf = $scope.alert.place_uf;
@@ -40,6 +27,7 @@
 			};
 
 			$scope.renderSelectedCity = function(city) {
+				if(!city) return '';
 				return city.uf + ' / ' + city.name;
 			};
 
@@ -48,7 +36,7 @@
 				// TODO: validate fields
 
 				var data = $scope.alert;
-				data = prepareDateFields(data);
+				data = Utils.prepareDateFields(data, ['dob']);
 				data.place_city_id = data.place_city ? data.place_city.id : null;
 				data.place_city_name = data.place_city ? data.place_city.name : null;
 
