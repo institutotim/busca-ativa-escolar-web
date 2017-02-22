@@ -1,0 +1,135 @@
+<div>
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading clearfix">
+				<h3 class="pull-left"><i class="fa fa-university"></i> Adesões pendentes</h3>
+				<a style="margin-top: 22px;" class="btn btn-sm btn-raised btn-default pull-right" ng-click="refresh()"><i class="fa fa-refresh"></i> Atualizar</a>
+			</div>
+			<div class="panel-body">
+				<div class="alert alert-success" ng-hide="signups.data && signups.data.length > 0">Nenhuma adesão pendente de aprovação!</div>
+				<table class="table" ng-show="signups.data && signups.data.length > 0">
+					<thead>
+					<tr>
+						<th>Município</th>
+						<th>Data</th>
+						<th>Status</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="(i, signup) in signups.data" ng-click="preview(signup)" style="cursor: pointer;">
+						<td><span ng-bind="signup.city.name"></span>/<span ng-bind="signup.city.uf"></span></td>
+						<td><span ng-bind="signup.created_at | amTimeAgo" uib-tooltip-html="signup.created_at | amCalendar"></span></td>
+						<td>
+							<span ng-show="signup.is_approved" class="label label-success">Aguardando Configuração</span>
+							<span ng-show="!signup.is_approved" class="label label-warning">Pendente</span>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="panel panel-default" ng-show="signup && signup.id">
+			<div class="panel-heading">
+				<h3><i class="fa fa-signup"></i> {{signup.city.name}} / {{signup.city.uf}}</h3>
+			</div>
+			<div class="panel-body">
+
+				<div class="alert alert-primary">Adesão registrada <strong uib-tooltip-html="signup.created_at" ng-bind="signup.created_at | amTimeAgo"></strong> <span ng-show="signup.data.admin.name">por <strong ng-bind="signup.data.admin.name"></strong></span></div>
+
+				<div class="panel panel-default">
+					<div class="panel-heading"><i class="material-icons">person</i> Gestor Político</div>
+					<div class="panel-body">
+
+						<div class="form-group col-md-12">
+							<label class="control-label" for="fld-co-name">Nome*</label>
+							<input type="text" class="form-control" required id="fld-co-name" ng-model="signup.data.admin.name">
+						</div>
+						<div class="form-group col-md-6">
+							<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
+							<input type="date" class="form-control" required id="fld-co-dob" ng-model="signup.data.admin.dob">
+						</div>
+						<div class="form-group col-md-6">
+							<label class="control-label" for="fld-co-cpf">CPF*</label>
+							<input type="tel" ui-br-cpf-mask class="form-control"  required id="fld-co-cpf" ng-model="signup.data.admin.cpf">
+						</div>
+
+						<div class="form-group col-md-4">
+							<label class="control-label" for="fld-co-email">E-mail institucional*</label>
+							<input type="email" class="form-control" required id="fld-co-email" ng-model="signup.data.admin.email">
+						</div>
+						<div class="form-group col-md-4">
+							<label class="control-label" for="fld-co-work-phone">Telefone fixo institucional*</label>
+							<input type="tel" ui-br-phone-number class="form-control" required id="fld-co-work-phone" ng-model="signup.data.admin.phone">
+						</div>
+						<div class="form-group col-md-4">
+							<label class="control-label" for="fld-co-work-mobile">Telefone celular institucional</label>
+							<input type="tel" ui-br-phone-number class="form-control" id="fld-co-work-mobile" ng-model="signup.data.admin.mobile">
+						</div>
+
+						<hr />
+
+						<div class="form-group col-md-12">
+							<label class="control-label" for="fld-co-institution">Instituição*</label>
+							<input type="text" class="form-control" id="fld-co-institution" required ng-model="signup.data.admin.institution">
+						</div>
+
+						<div class="form-group col-md-12">
+							<label class="control-label" for="fld-co-position">Cargo*</label>
+							<input type="text" class="form-control" id="fld-co-position" required ng-model="signup.data.admin.position">
+						</div>
+
+					</div>
+				</div>
+
+				<div class="panel panel-default">
+					<div class="panel-heading"><i class="material-icons">person</i> Dados do prefeito</div>
+					<div class="panel-body">
+
+						<div class="form-group col-md-12">
+							<label class="control-label" for="fld-name">Nome*</label>
+							<input type="text" class="form-control" id="fld-name" required ng-model="signup.data.mayor.name">
+						</div>
+
+						<div class="form-group col-md-6">
+							<label class="control-label" for="fld-dob">Data de nascimento*</label>
+							<input type="date" class="form-control" id="fld-dob" required ng-model="signup.data.mayor.dob">
+						</div>
+
+						<div class="form-group col-md-6">
+							<label class="control-label" for="fld-cpf">CPF*</label>
+							<input type="tel" ui-br-cpf-mask class="form-control" required id="fld-cpf" ng-model="signup.data.mayor.cpf">
+						</div>
+
+						<div class="form-group col-md-4">
+							<label class="control-label" for="fld-email">E-mail institucional*</label>
+							<input type="email" class="form-control" id="fld-email" required ng-model="signup.data.mayor.email">
+						</div>
+
+						<div class="form-group col-md-4">
+							<label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
+							<input type="tel" ui-br-phone-number class="form-control" required id="fld-work-phone" ng-model="signup.data.mayor.phone">
+						</div>
+
+						<div class="form-group col-md-4">
+							<label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
+							<input type="tel" ui-br-phone-number class="form-control" id="fld-work-mobile" ng-model="signup.data.mayor.mobile">
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-footer clearfix">
+				<a ng-show="!signup.is_approved" class="btn btn-raised btn-success" ng-click="approve(signup)"><i class="fa fa-check"></i> Aprovar</a>
+				<a ng-show="!signup.is_approved" class="btn btn-raised btn-danger" ng-click="reject(signup)"><i class="fa fa-ban"></i> Rejeitar</a>
+				<div ng-show="signup.is_approved">
+					<div class="alert alert-success"><strong>Adesão aprovada!</strong> Aguardando a configuração inicial pelo Gestor Político do município.</div>
+					<div><a class="btn btn-raised btn-primary" ng-click="resendNotification(signup)"><i class="fa fa-envelope"></i> Reenviar e-mail de notificação</a></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

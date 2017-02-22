@@ -3174,9 +3174,11 @@ if (!Array.prototype.find) {
 			return $resource(API.getURI('signups/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: authHeaders},
 
-				getPending: {url: API.getURI('signups/pending'), method: 'GET', headers: authHeaders},
+				getPending: {url: API.getURI('signups/pending'), method: 'GET', isArray: false, headers: authHeaders},
 				approve: {url: API.getURI('signups/:id/approve'), method: 'POST', headers: authHeaders},
 				reject: {url: API.getURI('signups/:id/reject'), method: 'POST', headers: authHeaders},
+
+				resendNotification: {url: API.getURI('signups/:id/resend_notification'), method: 'POST', headers: authHeaders},
 
 				register: {url: API.getURI('signups/register'), method: 'POST', headers: headers},
 				getViaToken: {url: API.getURI('signups/via_token/:id'), method: 'GET', headers: headers},
@@ -4970,6 +4972,57 @@ function identify(namespace, file) {
 		};
 
 	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('pending_signups', {
+				url: '/pending_signups',
+				templateUrl: '/views/tenants/pending_signups.html',
+				controller: 'PendingSignupsCtrl'
+			})
+		})
+		.controller('PendingSignupsCtrl', function ($scope, $rootScope, ngToast, Identity, SignUps, StaticData) {
+
+			$scope.identity = Identity;
+			$scope.static = StaticData;
+
+			$scope.signups = {};
+			$scope.signup = {};
+
+			$scope.refresh = function() {
+				$scope.signups = SignUps.getPending();
+			};
+
+			$scope.preview = function(signup) {
+				$scope.signup = signup;
+			};
+
+			$scope.approve = function(signup) {
+				SignUps.approve({id: signup.id}, function() {
+					$scope.refresh();
+					$scope.signup = {};
+				});
+			};
+
+			$scope.reject = function(signup) {
+				SignUps.reject({id: signup.id}, function() {
+					$scope.refresh();
+					$scope.signup = {};
+				});
+			};
+
+			$scope.resendNotification = function(signup) {
+				SignUps.resendNotification({id: signup.id}, function() {
+					ngToast.success('Notificação reenviada!');
+				});
+			};
+
+			$scope.refresh();
+
+		});
 
 })();
 (function() {
