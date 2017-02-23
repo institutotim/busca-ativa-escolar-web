@@ -8,7 +8,7 @@
 				controller: 'ReportViewerCtrl'
 			})
 		})
-		.controller('ReportViewerCtrl', function ($scope, $rootScope, moment, Platform, Utils, Cities, StaticData, Reports, Identity) {
+		.controller('ReportViewerCtrl', function ($scope, $rootScope, moment, Platform, Utils, Cities, StaticData, Reports, Identity, Charts) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -221,8 +221,6 @@
 
 				if(!$scope.ready) return false;
 
-				console.log("[report.charts] Generating dimension chart: ", entity, dimension, $scope.reportData);
-
 				if(!$scope.reportData) return;
 				if(!$scope.reportData.$resolved) return;
 				if(!$scope.reportData.response) return;
@@ -232,85 +230,12 @@
 				var seriesName = $scope.totals[$scope.entities[entity].value];
 				var labels = $scope.reportData.labels ? $scope.reportData.labels : {};
 
-				var data = [];
-				var categories = [];
-
-				for(var i in report) {
-					if(!report.hasOwnProperty(i)) continue;
-
-					var category = (labels[i]) ? labels[i] : i;
-
-					data.push( report[i] );
-					categories.push( category );
-
-				}
-
-				return {
-					options: {
-						chart: {
-							type: 'bar'
-						},
-						title: {
-							text: ''
-						},
-						subtitle: {
-							text: ''
-						}
-					},
-					xAxis: {
-						categories: categories,
-						title: {
-							text: null
-						}
-					},
-					yAxis: {
-						min: 0,
-						title: {
-							text: 'Quantidade',
-							align: 'high'
-						},
-						labels: {
-							overflow: 'justify'
-						}
-					},
-					tooltip: {
-						valueSuffix: ' casos'
-					},
-					plotOptions: {
-						bar: {
-							dataLabels: {
-								enabled: true
-							}
-						}
-					},
-					legend: {
-						layout: 'vertical',
-						align: 'right',
-						verticalAlign: 'top',
-						x: -40,
-						y: 80,
-						floating: true,
-						borderWidth: 1,
-						backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-						shadow: true
-					},
-					credits: {
-						enabled: false
-					},
-					series: [
-						{
-							name: seriesName,
-							data: data
-						}
-					]
-				};
+				return Charts.generateDimensionChart(report, seriesName, labels);
 			}
 
 			function generateTimelineChart(entity, dimension) {
 
 				if(!$scope.ready) return false;
-
-				console.log("[report.charts] Generating timeline chart: ", entity, dimension, $scope.reportData);
 
 				if(!$scope.reportData) return;
 				if(!$scope.reportData.$resolved) return;
@@ -321,73 +246,8 @@
 				var chartName = $scope.totals[$scope.entities[entity].value];
 				var labels = $scope.reportData.labels ? $scope.reportData.labels : {};
 
-				var series = [];
-				var categories = [];
-				var data = {};
-				var dates = Object.keys(report);
+				return Charts.generateTimelineChart(report, chartName, labels);
 
-				// Translates ￿date -> metric to metric -> date; prepares list of categories
-				for(var date in report) {
-					if(!report.hasOwnProperty(date)) continue;
-
-					for(var metric in report[date]) {
-						if(!report[date].hasOwnProperty(metric)) continue;
-
-						if(!data[metric]) data[metric] = {};
-						data[metric][date] = report[date][metric];
-
-						if(categories.indexOf(date) === -1) {
-							categories.push(date);
-						}
-					}
-				}
-
-				// Builds series array
-				for(var m in data) {
-					if(!data.hasOwnProperty(m)) continue;
-
-					var metricData = [];
-
-					// Ensure even metrics with incomplete data (missing dates) show up accurately
-					for(var i in dates) {
-						if(!dates.hasOwnProperty(i)) continue;
-						metricData.push( (data[m][dates[i]]) ? data[m][dates[i]] : null );
-					}
-
-					series.push({
-						name: labels[m] ? labels[m] : m,
-						data: metricData
-					});
-				}
-
-
-				var settings = {
-					options: {
-						chart: {
-							type: 'line'
-						},
-
-						xAxis: {
-							//currentMin: 1,
-							//currentMax: 30,
-							//title: {text: 'Últimos ' + numDays + ' dias'},
-							categories: categories,
-							allowDecimals: false
-						},
-
-						yAxis: {
-							title: {text: chartName}
-						}
-					},
-					series: series,
-					title: {
-						text: ''
-					},
-
-					loading: false
-				};
-
-				return settings;
 			}
 
 			Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top

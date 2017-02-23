@@ -812,6 +812,59 @@
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar').directive('causesChart', function (moment, Platform, Reports, Charts) {
+
+		var causesData = {};
+		var causesChart = {};
+		var causesReady = false;
+
+		function fetchCausesData() {
+			return Reports.query({
+				view: 'linear',
+				entity: 'children',
+				dimension: 'alert_cause_id',
+				filters: {
+					case_status: ['in_progress', 'completed', 'interrupted'],
+					alert_status: ['accepted']
+				}
+			}, function (data) {
+				causesData = data;
+				causesChart = getCausesChart();
+				causesReady = true;
+			});
+		}
+
+		function getCausesChart() {
+			var report = causesData.response.report;
+			var chartName = 'Divisão dos casos por causa de evasão escolar';
+			var labels = causesData.labels ? causesData.labels : {};
+
+			return Charts.generateDimensionChart(report, chartName, labels);
+		}
+
+		function getCausesConfig() {
+			if(!causesReady) return;
+			return causesChart;
+		}
+
+		function init(scope, element, attrs) {
+			scope.getCausesConfig = getCausesConfig;
+		}
+
+		Platform.whenReady(function () {
+			fetchCausesData();
+		});
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/causes_chart.html'
+		};
+	});
+
+})();
+(function() {
+
 	angular.module('BuscaAtivaEscolar').directive('appCitySelect', function (Cities) {
 
 		var $scope;
@@ -854,6 +907,64 @@
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar').directive('lastMonthTimeline', function (moment, Platform, Reports, Charts) {
+
+		var timelineData = {};
+		var timelineChart = {};
+		var timelineReady = false;
+
+		function fetchTimelineData() {
+			var lastMonth = moment().subtract(30, 'days').format('YYYY-MM-DD');
+			var today = moment().format('YYYY-MM-DD');
+
+			return Reports.query({
+				view: 'time_series',
+				entity: 'children',
+				dimension: 'child_status',
+				filters: {
+					date: {from: lastMonth, to: today},
+					case_status: ['in_progress', 'completed', 'interrupted'],
+					alert_status: ['accepted']
+				}
+			}, function (data) {
+				timelineData = data;
+				timelineChart = getTimelineChart();
+				timelineReady = true;
+			});
+		}
+
+		function getTimelineChart() {
+			var report = timelineData.response.report;
+			var chartName = 'Evolução do status dos casos nos últimos 30 dias';
+			var labels = timelineData.labels ? timelineData.labels : {};
+
+			return Charts.generateTimelineChart(report, chartName, labels);
+
+		}
+
+		function getTimelineConfig() {
+			if(!timelineReady) return;
+			return timelineChart;
+		}
+
+		function init(scope, element, attrs) {
+			scope.getTimelineConfig = getTimelineConfig;
+		}
+
+		Platform.whenReady(function () {
+			fetchTimelineData();
+		});
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/last_month_timeline.html'
+		};
+	});
+
+})();
+(function() {
+
 	angular.module('BuscaAtivaEscolar').directive('appLoadingFeedback', function (API) {
 
 		function init(scope, element, attrs) {
@@ -864,6 +975,75 @@
 			link: init,
 			replace: true,
 			templateUrl: '/views/components/loading_feedback.html'
+		};
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('metricsOverview', function (moment, Platform, Reports, Charts) {
+
+		var metrics = {};
+
+		function refreshMetrics() {
+			return Reports.query({
+				view: 'linear',
+				entity: 'children',
+				dimension: 'deadline_status',
+				filters: {
+					case_status: ['in_progress', 'completed', 'interrupted'],
+					alert_status: ['accepted']
+				}
+			}, function (data) {
+				metrics = data.response;
+			});
+		}
+
+		function init(scope, element, attrs) {
+			scope.getMetrics = function() {
+				return metrics;
+			};
+		}
+
+		Platform.whenReady(function () {
+			refreshMetrics();
+		});
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/metrics_overview.html'
+		};
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('myAssignments', function (moment, Identity, Platform, Children, Decorators) {
+
+		var children = {};
+
+		function refresh() {
+			Children.search({assigned_user_id: Identity.getCurrentUserID()}, function(data) {
+				children = data.results;
+			});
+		}
+
+		function init(scope, element, attrs) {
+			scope.Decorators = Decorators;
+			scope.getChildren = function() {
+				return children;
+			};
+		}
+
+		Platform.whenReady(function () {
+			refresh();
+		});
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/my_assignments.html'
 		};
 	});
 
@@ -978,6 +1158,36 @@
 			link: init,
 			replace: true,
 			templateUrl: '/views/components/platform_updates.html'
+		};
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('recentActivity', function (moment, Platform, Tenants) {
+
+		var log = {};
+
+		function refresh() {
+			return Tenants.getRecentActivity({max: 4}, function (data) {
+				log = data.data;
+			});
+		}
+
+		function init(scope, element, attrs) {
+			scope.getActivity = function() {
+				return log;
+			};
+		}
+
+		Platform.whenReady(function () {
+			refresh();
+		});
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/activity_feed.html'
 		};
 	});
 
@@ -1136,18 +1346,17 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $rootScope, $location, Identity, StaticData, Language) {
+	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, moment, Platform, Identity, StaticData, Reports, Charts) {
 
-		if(!Identity.isLoggedIn()) $location.path('/login');
-
-		$rootScope.section = 'dashboard';
 		$scope.identity = Identity;
-		$scope.language = Language;
 		$scope.static = StaticData;
 
-		$scope.numLangStrings = function() {
-			return Language.getNumStrings();
-		}
+		$scope.ready = false;
+
+		Platform.whenReady(function() {
+			$scope.ready = true;
+		})
+
 
 	});
 
@@ -2639,7 +2848,7 @@ if (!Array.prototype.find) {
 				controller: 'ReportViewerCtrl'
 			})
 		})
-		.controller('ReportViewerCtrl', function ($scope, $rootScope, moment, Platform, Utils, Cities, StaticData, Reports, Identity) {
+		.controller('ReportViewerCtrl', function ($scope, $rootScope, moment, Platform, Utils, Cities, StaticData, Reports, Identity, Charts) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -2852,8 +3061,6 @@ if (!Array.prototype.find) {
 
 				if(!$scope.ready) return false;
 
-				console.log("[report.charts] Generating dimension chart: ", entity, dimension, $scope.reportData);
-
 				if(!$scope.reportData) return;
 				if(!$scope.reportData.$resolved) return;
 				if(!$scope.reportData.response) return;
@@ -2863,85 +3070,12 @@ if (!Array.prototype.find) {
 				var seriesName = $scope.totals[$scope.entities[entity].value];
 				var labels = $scope.reportData.labels ? $scope.reportData.labels : {};
 
-				var data = [];
-				var categories = [];
-
-				for(var i in report) {
-					if(!report.hasOwnProperty(i)) continue;
-
-					var category = (labels[i]) ? labels[i] : i;
-
-					data.push( report[i] );
-					categories.push( category );
-
-				}
-
-				return {
-					options: {
-						chart: {
-							type: 'bar'
-						},
-						title: {
-							text: ''
-						},
-						subtitle: {
-							text: ''
-						}
-					},
-					xAxis: {
-						categories: categories,
-						title: {
-							text: null
-						}
-					},
-					yAxis: {
-						min: 0,
-						title: {
-							text: 'Quantidade',
-							align: 'high'
-						},
-						labels: {
-							overflow: 'justify'
-						}
-					},
-					tooltip: {
-						valueSuffix: ' casos'
-					},
-					plotOptions: {
-						bar: {
-							dataLabels: {
-								enabled: true
-							}
-						}
-					},
-					legend: {
-						layout: 'vertical',
-						align: 'right',
-						verticalAlign: 'top',
-						x: -40,
-						y: 80,
-						floating: true,
-						borderWidth: 1,
-						backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-						shadow: true
-					},
-					credits: {
-						enabled: false
-					},
-					series: [
-						{
-							name: seriesName,
-							data: data
-						}
-					]
-				};
+				return Charts.generateDimensionChart(report, seriesName, labels);
 			}
 
 			function generateTimelineChart(entity, dimension) {
 
 				if(!$scope.ready) return false;
-
-				console.log("[report.charts] Generating timeline chart: ", entity, dimension, $scope.reportData);
 
 				if(!$scope.reportData) return;
 				if(!$scope.reportData.$resolved) return;
@@ -2952,73 +3086,8 @@ if (!Array.prototype.find) {
 				var chartName = $scope.totals[$scope.entities[entity].value];
 				var labels = $scope.reportData.labels ? $scope.reportData.labels : {};
 
-				var series = [];
-				var categories = [];
-				var data = {};
-				var dates = Object.keys(report);
+				return Charts.generateTimelineChart(report, chartName, labels);
 
-				// Translates ￿date -> metric to metric -> date; prepares list of categories
-				for(var date in report) {
-					if(!report.hasOwnProperty(date)) continue;
-
-					for(var metric in report[date]) {
-						if(!report[date].hasOwnProperty(metric)) continue;
-
-						if(!data[metric]) data[metric] = {};
-						data[metric][date] = report[date][metric];
-
-						if(categories.indexOf(date) === -1) {
-							categories.push(date);
-						}
-					}
-				}
-
-				// Builds series array
-				for(var m in data) {
-					if(!data.hasOwnProperty(m)) continue;
-
-					var metricData = [];
-
-					// Ensure even metrics with incomplete data (missing dates) show up accurately
-					for(var i in dates) {
-						if(!dates.hasOwnProperty(i)) continue;
-						metricData.push( (data[m][dates[i]]) ? data[m][dates[i]] : null );
-					}
-
-					series.push({
-						name: labels[m] ? labels[m] : m,
-						data: metricData
-					});
-				}
-
-
-				var settings = {
-					options: {
-						chart: {
-							type: 'line'
-						},
-
-						xAxis: {
-							//currentMin: 1,
-							//currentMax: 30,
-							//title: {text: 'Últimos ' + numDays + ' dias'},
-							categories: categories,
-							allowDecimals: false
-						},
-
-						yAxis: {
-							title: {text: chartName}
-						}
-					},
-					series: series,
-					title: {
-						text: ''
-					},
-
-					loading: false
-				};
-
-				return settings;
 			}
 
 			Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top
@@ -3284,6 +3353,7 @@ if (!Array.prototype.find) {
 				all: {url: API.getURI('tenants/all'), method: 'GET', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin'}},
 				getSettings: {url: API.getURI('settings/tenant'), method: 'GET', headers: authHeaders},
 				updateSettings: {url: API.getURI('settings/tenant'), method: 'PUT', headers: authHeaders},
+				getRecentActivity: {url: API.getURI('tenants/recent_activity'), method: 'GET', headers: authHeaders},
 				find: {method: 'GET', headers: headers}
 			});
 
@@ -3297,6 +3367,7 @@ if (!Array.prototype.find) {
 			let headers = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('users/:id'), {id: '@id', with: '@with'}, {
+				myself: {url: API.getURI('users/myself'), method: 'GET', headers: headers},
 				find: {method: 'GET', headers: headers},
 				create: {method: 'POST', headers: headers},
 				update: {method: 'PUT', headers: headers},
@@ -3526,7 +3597,7 @@ if (!Array.prototype.find) {
 			Identity.setUserProvider(function(user_id, callback) {
 				if(!user_id) return;
 
-				var user = Users.find({id: user_id, with: 'tenant'});
+				var user = Users.myself({with: 'tenant'});
 				user.$promise.then(callback);
 
 				return user;
@@ -3534,6 +3605,172 @@ if (!Array.prototype.find) {
 
 			Identity.setup();
 		})
+
+})();
+(function() {
+
+	var app = angular.module('BuscaAtivaEscolar');
+
+	app.service('Charts', function Charts() {
+
+		function generateDimensionChart(report, seriesName, labels, yAxisLabel, valueSuffix) {
+
+			console.log("[charts] Generating dimension chart: ", report, seriesName, labels, yAxisLabel, valueSuffix);
+
+			if(!report || !seriesName || !labels) return;
+			if(!yAxisLabel) yAxisLabel = 'Quantidade';
+			if(!valueSuffix) valueSuffix = 'casos';
+
+			var data = [];
+			var categories = [];
+
+			for(var i in report) {
+				if(!report.hasOwnProperty(i)) continue;
+
+				var category = (labels[i]) ? labels[i] : i;
+
+				data.push( report[i] );
+				categories.push( category );
+
+			}
+
+			return {
+				options: {
+					chart: {
+						type: 'bar'
+					},
+					title: {
+						text: ''
+					},
+					subtitle: {
+						text: ''
+					}
+				},
+				xAxis: {
+					categories: categories,
+					title: {
+						text: null
+					}
+				},
+				yAxis: {
+					min: 0,
+					title: {
+						text: yAxisLabel,
+						align: 'high'
+					},
+					labels: {
+						overflow: 'justify'
+					}
+				},
+				tooltip: {
+					valueSuffix: ' ' + valueSuffix
+				},
+				plotOptions: {
+					bar: {
+						dataLabels: {
+							enabled: true
+						}
+					}
+				},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'top',
+					x: -40,
+					y: 80,
+					floating: true,
+					borderWidth: 1,
+					backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+					shadow: true
+				},
+				credits: {
+					enabled: false
+				},
+				series: [
+					{
+						name: seriesName,
+						data: data
+					}
+				]
+			};
+		}
+
+		function generateTimelineChart(report, chartName, labels) {
+
+			console.log("[charts] Generating timeline chart: ", report, chartName, labels);
+
+			if(!report || !chartName || !labels) return;
+
+			var series = [];
+			var categories = [];
+			var data = {};
+			var dates = Object.keys(report);
+
+			// Translates ￿date -> metric to metric -> date; prepares list of categories
+			for(var date in report) {
+				if(!report.hasOwnProperty(date)) continue;
+
+				for(var metric in report[date]) {
+					if(!report[date].hasOwnProperty(metric)) continue;
+
+					if(!data[metric]) data[metric] = {};
+					data[metric][date] = report[date][metric];
+
+					if(categories.indexOf(date) === -1) {
+						categories.push(date);
+					}
+				}
+			}
+
+			// Builds series array
+			for(var m in data) {
+				if(!data.hasOwnProperty(m)) continue;
+
+				var metricData = [];
+
+				// Ensure even metrics with incomplete data (missing dates) show up accurately
+				for(var i in dates) {
+					if(!dates.hasOwnProperty(i)) continue;
+					metricData.push( (data[m][dates[i]]) ? data[m][dates[i]] : null );
+				}
+
+				series.push({
+					name: labels[m] ? labels[m] : m,
+					data: metricData
+				});
+			}
+
+
+			return {
+				options: {
+					chart: {
+						type: 'line'
+					},
+
+					xAxis: {
+						categories: categories,
+						allowDecimals: false
+					},
+
+					yAxis: {
+						title: {text: chartName}
+					}
+				},
+				series: series,
+				title: {
+					text: ''
+				},
+
+				loading: false
+			};
+		}
+
+		return {
+			generateDimensionChart: generateDimensionChart,
+			generateTimelineChart: generateTimelineChart
+		};
+
+	});
 
 })();
 (function() {

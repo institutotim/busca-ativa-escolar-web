@@ -159,7 +159,7 @@
 			Identity.setUserProvider(function(user_id, callback) {
 				if(!user_id) return;
 
-				var user = Users.find({id: user_id, with: 'tenant'});
+				var user = Users.myself({with: 'tenant'});
 				user.$promise.then(callback);
 
 				return user;

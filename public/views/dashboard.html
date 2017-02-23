@@ -1,17 +1,10 @@
-<!--div ng-if="identity.getType() === 'agente_comunitario'" ng-include="'/views/dashboards/agente_comunitario.html'"></div>
+<div ng-if="identity.getType() === 'agente_comunitario'" ng-include="'/views/dashboards/agente_comunitario.html'"></div>
 <div ng-if="identity.getType() === 'tecnico_verificador'" ng-include="'/views/dashboards/tecnico_verificador.html'"></div>
 <div ng-if="identity.getType() === 'supervisor_institucional'" ng-include="'/views/dashboards/supervisor_institucional.html'"></div>
 <div ng-if="identity.getType() === 'coordenador_operacional'" ng-include="'/views/dashboards/coordenador_operacional.html'"></div>
 <div ng-if="identity.getType() === 'gestor_politico'" ng-include="'/views/dashboards/gestor_politico.html'"></div>
 <div ng-if="identity.getType() === 'gestor_nacional'" ng-include="'/views/dashboards/gestor_nacional.html'"></div>
-<div ng-if="identity.getType() === 'superuser'" ng-include="'/views/dashboards/super_administrador.html'"></div-->
-
-<h2><i class="fa fa-dashboard"></i> Dashboard</h2>
-
-<p><strong>Debug values - post-render:</strong></p>
-<p>User type: {{identity.getType() | lang:'user.type'}}</p>
-<p ng-hide="true">Language service status: <span class="label label-success" ng-show="language.isReady()">Ready ({{language.getNumStrings()}} strings)</span></p>
-<p ng-hide="true">StaticData service status: <span class="label label-success" ng-show="static.isReady()">Ready ({{static.getNumChains()}} chains)</span></p>
+<div ng-if="identity.getType() === 'superuser'" ng-include="'/views/dashboards/super_administrador.html'"></div>
 
 <div>
 	<h3><i class="fa fa-code"></i> Últimas atualizações da plataforma</h3>
