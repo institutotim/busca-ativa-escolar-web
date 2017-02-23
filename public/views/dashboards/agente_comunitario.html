@@ -10,7 +10,7 @@
 
 			<hr />
 
-			<a class="btn btn-raised btn-info pull-right" href="/cases/create_alert">Abrir alerta</a>
+			<a class="btn btn-raised btn-info pull-right" ui-sref="child_create_from_alert">Abrir alerta</a>
 		</div>
 
 		<div class="col-md-8">
@@ -21,75 +21,8 @@
 
 			<hr />
 
-			<table class="table table-hover">
-				<thead>
-				<tr>
-				<th>N&deg;</th>
-				<th>Nome</th>
-				<th>
-					<select class="form-control-table">
-						<option value="volvo">Etapa atual</option>
-						<option value="saab">Pesquisa </option>
-						<option value="mercedes"> Análise Técnica </option>
-						<option value="audi">Gestão do caso </option>
-						<option value="saab"> Dados da escola de(Re)matrícula </option>
-						<option value="saab">1º Período de observação </option>
-						<option value="saab">2º Período de observação</option>
-						<option value="saab">3º Período de observação </option>
-						<option value="saab">4º Período de observação </option>
-					</select>
-				</th>
-				<th>
-					<select class="form-control-table">
-						<option value="volvo">Alertas gerados</option>
-						<option value="saab">Alertas verificados</option>
-						<option value="mercedes">Alertas em andamento</option>
-						<option value="audi">Alertas atrasados</option>
-					</select>
-				</th>
-				<th>Data de abertura</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr ng-repeat="i in [1,2,3]">
-					<td>#{{42 + i}}</td>
-					<td>Edward Doe</td>
-					<td>Pesquisa</td>
-					<td>{{i == 3 ? 'Em atraso' : 'Em andamento'}}</td>
-					<td>25/08/2016</td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
+			<my-alerts></my-alerts>
 
-		<div class="col-md-12">
-			<h2><i class="material-icons">insert_chart</i> Visão geral dos meus alertas <small>São Paulo/SP</small></h2>
-			<div class="row">
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<h1 class="panel-body">13</h1>
-						<div class="panel-footer">alertas gerados</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<h1 class="panel-body">10</h1>
-						<div class="panel-footer">alertas verificados</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<h1 class="panel-body">6</h1>
-						<div class="panel-footer">alertas em andamento</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<h1 class="panel-body">3</h1>
-						<div class="panel-footer">alertas atrasados</div>
-					</div>
-				</div>
-			</div>
 		</div>
 	</div>
 

@@ -52,9 +52,13 @@
 						return;
 					}
 
-					// TODO: check if user can actually view child
-
 					ngToast.success('Alerta registrado com sucesso!');
+
+					if(Identity.getType() === 'agente_comunitario') {
+						$state.go('dashboard');
+						return;
+					}
+
 					$state.go('child_viewer', {child_id: res.child_id});
 				});
 			}
