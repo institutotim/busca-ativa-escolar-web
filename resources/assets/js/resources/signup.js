@@ -17,6 +17,7 @@
 
 				register: {url: API.getURI('signups/register'), method: 'POST', headers: headers},
 				getViaToken: {url: API.getURI('signups/via_token/:id'), method: 'GET', headers: headers},
+				complete: {url: API.getURI('signups/:id/complete'), method: 'POST', headers: headers},
 			});
 
 		});

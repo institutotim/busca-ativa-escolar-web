@@ -1,112 +1,135 @@
-<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3><strong ng-show="!$parent.isEditing">4.</strong> <i class="fa fa-sitemap"></i> Cadastre o coordenador operacional</h3>
-		</div>
+<form class="panel panel-default" ng-submit="provisionTenant()">
+	<div class="panel-heading">
+		<h3><strong ng-bind="(step + '.')"></strong> <i class="fa fa-sitemap"></i> Cadastre o coordenador operacional</h3>
+	</div>
+	<div class="panel-body">
+
 		<div class="col-md-12">
 			<h4>Coordenador Operacional</h4>
 			<p>
 				Essa etapa deve ser preenchida pelo gestor político do município. O objetivo da etapa é indicar o Coordenador Operacional responsável por desempenhar as taredas abaixo:
 			</p>
-			
+
 			<ul style="font-size: 10px"  class="list-group">
-			  <li class="list-group-item"><i font-site class="fa fa-circle-o"></i> Cadastrar os supervisores institucionais, os técnicos verificadores e os agentes comunitários</li>
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Estabelecer os parâmetros do sistema de acordo com a realidade do município. Inclui definir quais atores participarão, quais casos serão resolvidos por quem, os prazos para as tarefas principais etc </li>
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Acessar as estatísticas gerais da cidade </li> 
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Definir, em conjunto com o gestor político, estratégias para a implementação do projeto no âmbito do município</li>
-			  <li class="list-group-item"><i class="fa fa-circle-o"></i> Coordenar as ações de formação das equipes participantes </li> 
+				<li class="list-group-item"><i font-site class="fa fa-circle-o"></i> Cadastrar os supervisores institucionais, os técnicos verificadores e os agentes comunitários</li>
+				<li class="list-group-item"><i class="fa fa-circle-o"></i> Estabelecer os parâmetros do sistema de acordo com a realidade do município. Inclui definir quais atores participarão, quais casos serão resolvidos por quem, os prazos para as tarefas principais etc </li>
+				<li class="list-group-item"><i class="fa fa-circle-o"></i> Acessar as estatísticas gerais da cidade </li>
+				<li class="list-group-item"><i class="fa fa-circle-o"></i> Definir, em conjunto com o gestor político, estratégias para a implementação do projeto no âmbito do município</li>
+				<li class="list-group-item"><i class="fa fa-circle-o"></i> Coordenar as ações de formação das equipes participantes </li>
 			</ul>
 		</div>
 
-		<div ng-show="$parent.isEditing" class="clearfix"><a href="#/users/5" class="btn btn-raised btn-primary"><i class="fa fa-user"></i> Editar usuário do Coordenador Político</a></div>
-		<div ng-show="!$parent.isEditing" class="clearfix">
+		<div class="clearfix">
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-co-name">Nome*</label>
-				<input type="text" class="form-control" id="fld-co-name" value="Aryel Tupinambá">
+				<input type="text" class="form-control" id="fld-co-name" required ng-model="admins.operational.name" >
 			</div>
 
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
-				<input type="text" class="form-control" id="fld-co-dob" value="25/08/1991">
+				<input type="date" class="form-control" id="fld-co-dob" required ng-model="admins.operational.dob" >
 			</div>
 
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-co-cpf">CPF*</label>
-				<input type="text" class="form-control" id="fld-co-cpf" value="123.456.789-00">
+				<input type="tel" ui-br-cpf-mask class="form-control" id="fld-co-cpf" required ng-model="admins.operational.cpf" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-email">E-mail institucional*</label>
-				<input type="email" class="form-control" id="fld-co-email" value="aryel.tupinamba@lqdi.net">
+				<input type="email" class="form-control" id="fld-co-email" required ng-model="admins.operational.email" >
 			</div>
-			
+
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-work-phone">Telefone fixo institucional*</label>
-				<input type="text" class="form-control" id="fld-co-work-phone" value="(11) 2222-3333">
+				<input type="tel" ui-br-phone-number class="form-control" id="fld-co-work-phone" required ng-model="admins.operational.phone" >
 			</div>
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-work-mobile">Telefone celular institucional</label>
-				<input type="text" class="form-control" id="fld-co-work-mobile" value="(11) 98888-4444">
+				<input type="tel" ui-br-phone-number class="form-control" id="fld-co-work-mobile" ng-model="admins.operational.mobile" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-personal-email">E-mail pessoal</label>
-				<input type="email" class="form-control" id="fld-co-personal-email" value="aryel@tupinamba.me">
+				<input type="email" class="form-control" id="fld-co-personal-email" ng-model="admins.operational.personal_email" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-personal-mobile">Telefone celular pessoal</label>
-				<input type="text" class="form-control" id="fld-co-personal-mobile" value="(11) 98888-4444">
+				<input type="tel" ui-br-phone-number class="form-control" id="fld-co-personal-mobile" ng-model="admins.operational.personal_mobile" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-skype-username">Skype</label>
-				<input type="text" class="form-control" id="fld-co-skype-username" value="aryel.tupinamba">
+				<input type="text" class="form-control" id="fld-co-skype-username" ng-model="admins.operational.username" >
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-address">Endereço institucional*</label>
-				<input type="text" class="form-control" id="fld-co-address" value="Av. Dr. Chucri Zaidan, 1550, cj 1712">
+				<label class="control-label" for="fld-co-address">Endereço institucional</label>
+				<input type="text" class="form-control" id="fld-co-address" ng-model="admins.operational.address" >
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-cep">CEP institucional*</label>
-				<input type="text" class="form-control" id="fld-co-cep" value="04583-110">
+				<label class="control-label" for="fld-co-cep">CEP institucional</label>
+				<input type="tel" ui-br-cep-mask class="form-control" id="fld-co-cep" ng-model="admins.operational.cep" >
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-neighborhood">Bairro*</label>
-				<input type="text" class="form-control" id="fld-co-neighborhood" value="Vila Cordeiro">
+				<label class="control-label" for="fld-co-neighborhood">Bairro</label>
+				<input type="text" class="form-control" id="fld-co-neighborhood" ng-model="admins.operational.neighborhood" >
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-uf">Estado*</label>
-				<input type="text" class="form-control" id="fld-co-uf" value="SP">
+				<label class="control-label" for="fld-co-uf">Estado</label>
+				<input type="text" class="form-control" id="fld-co-uf" ng-model="admins.operational.uf" >
 			</div>
 
 			<div class="form-group col-md-8">
-				<label class="control-label" for="fld-co-city">Município*</label>
-				<input type="text" class="form-control" id="fld-co-city" value="São Paulo/SP">
+				<label class="control-label" for="fld-co-city">Município</label>
+				<input type="text" class="form-control" id="fld-co-city" ng-model="admins.operational.city" >
 			</div>
 
 			<hr />
 
 			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-co-institution">Instituição*</label>
-				<input type="text" class="form-control" id="fld-co-institution" value="Secretaria de Assistência Social">
+				<label class="control-label" for="fld-co-institution">Instituição</label>
+				<input type="text" class="form-control" id="fld-co-institution" ng-model="admins.operational.institution" >
 			</div>
 
 			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-co-position">Cargo*</label>
-				<input type="text" class="form-control" id="fld-co-position" value="Diretor de Operações">
+				<label class="control-label" for="fld-co-position">Cargo</label>
+				<input type="text" class="form-control" id="fld-co-position" ng-model="admins.operational.position" >
+			</div>
+
+		</div>
+
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<p><i class="fa fa-key"></i> Escolha uma senha de acesso para o usuário do Coordenador Operacional:</p>
+			</div>
+			<div class="panel-body">
+
+				<p>A senha informada será enviada para o e-mail do Coordenador Operacional.</p>
+
+				<div class="form-group">
+					<label class="control-label" for="fld-gp-password">E-mail</label>
+					<div>
+						<span ng-bind="admins.operational.email" class="label label-default"></span> <span>(o mesmo que o e-mail institucional)</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="fld-gp-password">Senha*</label>
+					<input type="password" class="form-control" id="fld-gp-password" required ng-model="admins.operational.password" >
+				</div>
 			</div>
 		</div>
+
 	</div>
 
 	<div class="panel-footer clearfix">
-		<button ng-show="!$parent.isEditing" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<a class="btn btn-primary btn-raised pull-right" href="#/second_time_setup">Finalizar</a>
-
-		<button ng-show="$parent.isEditing" ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
+		<button type="button" ng-click="prevStep()" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
+		<button type="submit" class="btn btn-primary btn-raised pull-right">Finalizar</button>
 	</div>
-</div>
+
+</form>

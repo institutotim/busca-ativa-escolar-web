@@ -53,12 +53,7 @@
 					controller: 'SignUpCtrl',
 					unauthenticated: true
 				})
-				.state('first_time_setup', {
-					url: '/first_time_setup',
-					templateUrl: '/views/first_time_setup/main.html',
-					controller: 'FirstTimeSetupCtrl',
-					unauthenticated: true
-				});
+
 		});
 
 })();

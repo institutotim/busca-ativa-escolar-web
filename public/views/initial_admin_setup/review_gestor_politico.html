@@ -1,6 +1,6 @@
-<div class="panel panel-default">
+<form class="panel panel-default" ng-submit="nextStep()">
 	<div class="panel-heading">
-		<h3><strong ng-show="!$parent.isEditing">3.</strong> <i class="fa fa-sitemap"></i> Revisão do cadastro</h3>
+		<h3><strong ng-bind="(step + '.')"></strong> <i class="fa fa-sitemap"></i> Revisão do cadastro</h3>
 	</div>
 	<div class="panel-body">
 
@@ -13,94 +13,114 @@
 			</p>
 		</div>
 
-		<div ng-show="$parent.isEditing" class="clearfix"><a href="#/users/5" class="btn btn-raised btn-primary"><i class="fa fa-user"></i> Editar usuário do Gestor Político</a></div>
-		<div ng-show="!$parent.isEditing" class="clearfix">
+		<div class="clearfix">
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-gp-name">Nome*</label>
-				<input type="text" class="form-control" id="fld-gp-name" value="Aryel Tupinambá">
+				<input type="text" class="form-control" id="fld-gp-name" required ng-model="admins.political.name" >
 			</div>
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-gp-dob">Data de nascimento*</label>
-				<input type="text" class="form-control" id="fld-gp-dob" value="25/08/1991">
+				<input type="date" class="form-control" id="fld-gp-dob" required ng-model="admins.political.dob" >
 			</div>
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-gp-cpf">CPF*</label>
-				<input type="text" class="form-control" id="fld-gp-cpf" value="123.456.789-00">
+				<input type="tel" ui-br-cpf-mask class="form-control" id="fld-gp-cpf"  required ng-model="admins.political.cpf" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-email">E-mail institucional*</label>
-				<input type="email" class="form-control" id="fld-gp-email" value="aryel.tupinamba@lqdi.net">
+				<input type="email" class="form-control" id="fld-gp-email" required ng-model="admins.political.email" >
 			</div>
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-work-phone">Telefone fixo institucional*</label>
-				<input type="text" class="form-control" id="fld-gp-work-phone" value="(11) 2222-3333">
+				<input type="tel" ui-br-phone-number class="form-control" required id="fld-gp-work-phone" ng-model="admins.political.phone" >
 			</div>
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-work-mobile">Telefone celular institucional</label>
-				<input type="text" class="form-control" id="fld-gp-work-mobile" value="(11) 98888-4444">
+				<input type="tel" ui-br-phone-number class="form-control" id="fld-gp-work-mobile" ng-model="admins.political.mobile" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-personal-email">E-mail pessoal</label>
-				<input type="email" class="form-control" id="fld-gp-personal-email" value="aryel@tupinamba.me">
+				<input type="email" class="form-control" id="fld-gp-personal-email" ng-model="admins.political.personal_email" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-personal-mobile">Telefone celular pessoal</label>
-				<input type="text" class="form-control" id="fld-gp-personal-mobile" value="(11) 98888-4444">
+				<input type="tel" ui-br-phone-number class="form-control" id="fld-gp-personal-mobile" ng-model="admins.political.personal_mobile" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-skype-username">Skype</label>
-				<input type="text" class="form-control" id="fld-gp-skype-username" value="aryel.tupinamba">
+				<input type="text" class="form-control" id="fld-gp-skype-username" ng-model="admins.political.skype" >
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-address">Endereço institucional*</label>
-				<input type="text" class="form-control" id="fld-gp-address" value="Av. Dr. Chucri Zaidan, 1550, cj 1712">
+				<label class="control-label" for="fld-gp-address">Endereço institucional</label>
+				<input type="text" class="form-control" id="fld-gp-address" ng-model="admins.political.address" >
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-cep">CEP institucional*</label>
-				<input type="text" class="form-control" id="fld-gp-cep" value="04583-110">
+				<label class="control-label" for="fld-gp-cep">CEP institucional</label>
+				<input type="tel" ui-br-cep-mask class="form-control" id="fld-gp-cep" ng-model="admins.political.cep" >
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-neighborhood">Bairro*</label>
-				<input type="text" class="form-control" id="fld-gp-neighborhood" value="Vila Cordeiro">
+				<label class="control-label" for="fld-gp-neighborhood">Bairro</label>
+				<input type="text" class="form-control" id="fld-gp-neighborhood" ng-model="admins.political.neighborhood" >
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-uf">Estado*</label>
-				<input type="text" class="form-control" id="fld-gp-uf" value="SP">
+				<label class="control-label" for="fld-gp-uf">Estado</label>
+				<input type="text" class="form-control" id="fld-gp-uf" ng-model="admins.political.uf" >
 			</div>
 
 			<div class="form-group col-md-8">
-				<label class="control-label" for="fld-gp-city">Município*</label>
-				<input type="text" class="form-control" id="fld-gp-city" value="São Paulo/SP">
+				<label class="control-label" for="fld-gp-city">Município</label>
+				<input type="text" class="form-control" id="fld-gp-city" ng-model="admins.political.city" >
 			</div>
 
 			<hr />
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-gp-institution">Instituição*</label>
-				<input type="text" class="form-control" id="fld-gp-institution" value="Prefeitura de São Paulo">
+				<input type="text" class="form-control" id="fld-gp-institution" required ng-model="admins.political.institution" >
 			</div>
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-gp-position">Cargo*</label>
-				<input type="text" class="form-control" id="fld-gp-position" value="Secretário de Assistência Social">
+				<input type="text" class="form-control" id="fld-gp-position" required ng-model="admins.political.position" >
+			</div>
+
+		</div>
+
+		<br /><br />
+
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<p><i class="fa fa-key"></i> Escolha uma senha de acesso para seu usuário:</p>
+			</div>
+			<div class="panel-body">
+
+				<p>A senha informada será enviada para o seu e-mail.</p>
+
+				<div class="form-group">
+					<label class="control-label" for="fld-gp-password">E-mail</label>
+					<div>
+						<span ng-bind="admins.political.email" class="label label-default"></span> <span>(o mesmo que seu e-mail institucional)</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="fld-gp-password">Senha*</label>
+					<input type="password" class="form-control" id="fld-gp-password" required ng-model="admins.political.password" >
+				</div>
 			</div>
 		</div>
-	</div>
 
 	</div>
 
 	<div class="panel-footer clearfix">
-		<button ng-show="!$parent.isEditing" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<button ng-show="!$parent.isEditing" ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
-		<button ng-show="$parent.isEditing" ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
+		<button type="submit" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
 	</div>
-</div>
+</form>
