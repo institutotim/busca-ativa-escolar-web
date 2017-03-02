@@ -29,7 +29,7 @@
 				REFRESH_EXPIRES_IN: 1209600, // 2 weeks
 
 				ALLOWED_ENDPOINTS: ['local_http', 'homolog_http'],
-				CURRENT_ENDPOINT: 'local_http'
+				CURRENT_ENDPOINT: 'homolog_http'
 
 			};
 
