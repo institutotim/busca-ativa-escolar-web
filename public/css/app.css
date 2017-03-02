@@ -643,4 +643,8 @@ p.agent-panel {
   height: 400px;
 }
 
+#dashboard-map-coordenador-operacional .angular-google-map-container {
+  height: 660px;
+}
+
 /*# sourceMappingURL=app.css.map */

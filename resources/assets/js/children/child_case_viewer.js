@@ -180,7 +180,6 @@
 				$scope.$parent.openStepID = $scope.step.id;
 
 				if(step.fields && step.fields.place_coords) {
-					console.log("setting map center: ", step.fields.place_coords);
 					step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
 				}
 
