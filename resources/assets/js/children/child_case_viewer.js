@@ -169,6 +169,8 @@
 		$scope.checkboxes = {};
 
 		$scope.step = {};
+		$scope.isMapReady = false;
+		$scope.defaultMapZoom = 14;
 
 		function fetchStepData() {
 			$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields,case'});
@@ -176,8 +178,14 @@
 				$scope.fields = step.fields;
 				$scope.case = step.case;
 				$scope.$parent.openStepID = $scope.step.id;
+
+				if(step.fields && step.fields.place_coords) {
+					console.log("setting map center: ", step.fields.place_coords);
+					step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
+				}
+
 			});
-		};
+		}
 
 		fetchStepData();
 
@@ -357,6 +365,19 @@
 			return school.name + ' (' + school.city_name + ' / ' + school.uf + ')';
 		};
 
+		function clearAuxiliaryFields(fields) {
+			var auxiliaryFields = ['place_lat', 'place_lng', 'place_map_center', 'place_map_geocoded_address'];
+			var filtered = {};
+
+			for(var i in fields) {
+				if(!fields.hasOwnProperty(i)) continue;
+				if(auxiliaryFields.indexOf(i) !== -1) continue;
+				filtered[i] = fields[i];
+			}
+
+			return filtered;
+		}
+
 		function unpackTypeaheadField(data, name, model) {
 			if(data[name]) {
 				data[name + '_id'] = model.id;
@@ -369,7 +390,8 @@
 		$scope.save = function() {
 
 			var data = $scope.step.fields;
-			data = filterOutEmptyFields($scope.step.fields);
+			data = filterOutEmptyFields(data);
+			data = clearAuxiliaryFields(data);
 			data = prepareDateFields(data);
 
 			data = unpackTypeaheadField(data, 'place_city', data.place_city);
@@ -393,6 +415,10 @@
 				if(response.status !== "ok") {
 					ngToast.danger("Ocorreu um erro ao salvar os dados da etapa! (status=" + response.status + ", reason=" + response.reason + ")");
 					return;
+				}
+
+				if(response.updated) {
+					fetchStepData(); // Updates data
 				}
 
 				ngToast.success("Os campos da etapa foram salvos com sucesso!");

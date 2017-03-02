@@ -201,7 +201,7 @@
   right: 0;
   width: 60px;
   height: 60px;
-  background-image: url('../images/ico_forbidden.png?1487265342');
+  background-image: url('../images/ico_forbidden.png?1487704365');
   background-size: auto;
   background-position: center center;
   background-repeat: no-repeat;
@@ -637,6 +637,10 @@ p.agent-panel {
 
 .is-suspended {
   color: #d9534f !important;
+}
+
+.angular-google-map-container {
+  height: 400px;
 }
 
 /*# sourceMappingURL=app.css.map */

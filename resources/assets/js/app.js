@@ -18,6 +18,7 @@
 
 			'idf.br-filters',
 			'jsonFormatter',
+			'uiGmapgoogle-maps',
 
 			'ui.router',
 			'ui.bootstrap',

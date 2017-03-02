@@ -47,6 +47,7 @@
     "checklist-model": "^0.10.0",
     "angular-ui-ace": "bower",
     "json-formatter": "^0.6.0",
-    "angular-br-filters": "^0.7.0"
+    "angular-br-filters": "^0.7.0",
+    "angular-google-maps": "^2.4.1"
   }
 }
