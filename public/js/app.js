@@ -806,6 +806,7 @@
 			});
 
 			$scope.getAlertCauseName = function() {
+				if(!$scope.child) return 'err:no_child_open';
 				if(!$scope.child.alert) return 'err:no_alert_data';
 				if(!$scope.child.alert.alert_cause_id) return 'err:no_alert_cause_id';
 				if(!$scope.causes[$scope.child.alert.alert_cause_id]) return 'err:no_cause_with_id';
@@ -2602,26 +2603,6 @@ Highcharts.maps["countries/br/br-all"] = {
 	}]
 };
 (function() {
-	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
-		var Child = {
-			parents: function(child) {
-				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' / ' : '')
-					+ (child.father_name || '');
-			}
-		};
-
-		var Step = {
-
-		};
-
-		return {
-			Child: Child,
-			Step: Step
-		};
-	})
-})();
-(function() {
 	angular
 		.module('BuscaAtivaEscolar')
 		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
@@ -2696,6 +2677,26 @@ Highcharts.maps["countries/br/br-all"] = {
 
 		});
 
+})();
+(function() {
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' / ' : '')
+					+ (child.father_name || '');
+			}
+		};
+
+		var Step = {
+
+		};
+
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
 })();
 (function() {
 
