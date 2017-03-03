@@ -806,15 +806,16 @@
 			});
 
 			$scope.getAlertCauseName = function() {
-				if(!$scope.child.alert) return;
-				if(!$scope.child.alert.alert_cause_id) return;
-				if(!$scope.causes[$scope.child.alert.alert_cause_id]) return;
+				if(!$scope.child.alert) return 'err:no_alert_data';
+				if(!$scope.child.alert.alert_cause_id) return 'err:no_alert_cause_id';
+				if(!$scope.causes[$scope.child.alert.alert_cause_id]) return 'err:no_cause_with_id';
 				return $scope.causes[$scope.child.alert.alert_cause_id].label;
 			};
 
 			$scope.static = StaticData;
 
 			$scope.refresh = function() {
+				$scope.child = null;
 				$scope.children = Alerts.getPending();
 			};
 
