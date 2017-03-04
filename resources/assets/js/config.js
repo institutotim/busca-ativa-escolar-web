@@ -43,6 +43,8 @@
 
 				console.info("[core.config] Setting API endpoint: ", endpoint);
 				config.CURRENT_ENDPOINT = endpoint;
+
+				$cookies.put('FDENP_API_ENDPOINT', config.CURRENT_ENDPOINT);
 			};
 
 			config.getCurrentEndpoint = function() {
