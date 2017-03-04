@@ -647,4 +647,8 @@ p.agent-panel {
   height: 660px;
 }
 
+#dashboard-map-gestor-nacional .angular-google-map-container {
+  height: 550px;
+}
+
 /*# sourceMappingURL=app.css.map */
