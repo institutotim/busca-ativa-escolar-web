@@ -1,7 +1,7 @@
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
-		.service('TrackPendingRequests', function ($q, $rootScope, API) {
+		.service('TrackPendingRequestsInterceptor', function ($q, $rootScope, API) {
 
 			this.request = function (config) {
 

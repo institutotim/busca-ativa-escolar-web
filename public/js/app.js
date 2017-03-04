@@ -1368,7 +1368,8 @@
 	identify('config', 'http.js');
 
 	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
-		$httpProvider.interceptors.push('TrackPendingRequests');
+		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
+		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
 		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
 	});
 
@@ -2696,7 +2697,26 @@ Highcharts.maps["countries/br/br-all"] = {
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
-		.service('TrackPendingRequests', function ($q, $rootScope, API) {
+		.service('InjectAPIEndpointInterceptor', function ($q, $rootScope, Config) {
+
+			this.request = function (config) {
+
+				if(!config.url) return config;
+
+				config.url = config.url.replace(/@@API@@/g, Config.getAPIEndpoint());
+				config.url = config.url.replace(/@@TOKEN@@/g, Config.getTokenEndpoint());
+
+				return config;
+
+			};
+
+		});
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('TrackPendingRequestsInterceptor', function ($q, $rootScope, API) {
 
 			this.request = function (config) {
 
@@ -3536,11 +3556,11 @@ if (!Array.prototype.find) {
 			}
 
 			function getURI(path) {
-				return Config.getAPIEndpoint() + path;
+				return '@@API@@' + path;
 			}
 
 			function getTokenURI() {
-				return Config.getTokenEndpoint();
+				return '@@TOKEN@@';
 			}
 
 			function hasOngoingRequests() {

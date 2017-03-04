@@ -14,11 +14,11 @@
 			}
 
 			function getURI(path) {
-				return Config.getAPIEndpoint() + path;
+				return '@@API@@' + path;
 			}
 
 			function getTokenURI() {
-				return Config.getTokenEndpoint();
+				return '@@TOKEN@@';
 			}
 
 			function hasOngoingRequests() {
