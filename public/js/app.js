@@ -922,7 +922,7 @@
 				hasEnoughData = (
 					causesData &&
 					causesData.response &&
-					angular.equals({}, causesData.response.report)
+					!angular.equals({}, causesData.response.report)
 				);
 			});
 		}
