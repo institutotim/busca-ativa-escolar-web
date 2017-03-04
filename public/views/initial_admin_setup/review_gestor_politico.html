@@ -1,4 +1,4 @@
-<form class="panel panel-default" ng-submit="nextStep()">
+<form class="panel panel-default" ng-submit="nextStep()" autocomplete="off">
 	<div class="panel-heading">
 		<h3><strong ng-bind="(step + '.')"></strong> <i class="fa fa-sitemap"></i> Revisão do cadastro</h3>
 	</div>
@@ -17,80 +17,80 @@
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-gp-name">Nome*</label>
-				<input type="text" class="form-control" id="fld-gp-name" required ng-model="admins.political.name" >
+				<input type="text" class="form-control" id="fld-gp-name" name="gp_name" required ng-model="admins.political.name" >
 			</div>
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-gp-dob">Data de nascimento*</label>
-				<input type="date" class="form-control" id="fld-gp-dob" required ng-model="admins.political.dob" >
+				<input type="date" class="form-control" id="fld-gp-dob" name="gp_dob" required ng-model="admins.political.dob" >
 			</div>
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-gp-cpf">CPF*</label>
-				<input type="tel" ui-br-cpf-mask class="form-control" id="fld-gp-cpf"  required ng-model="admins.political.cpf" >
+				<input type="tel" ui-br-cpf-mask class="form-control" id="fld-gp-cpf" name="gp_cpf" required ng-model="admins.political.cpf" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-email">E-mail institucional*</label>
-				<input type="email" class="form-control" id="fld-gp-email" required ng-model="admins.political.email" >
+				<input type="email" class="form-control" id="fld-gp-email" name="gp_work_email" required ng-model="admins.political.email" >
 			</div>
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-work-phone">Telefone fixo institucional*</label>
-				<input type="tel" ui-br-phone-number class="form-control" required id="fld-gp-work-phone" ng-model="admins.political.phone" >
+				<input type="tel" ui-br-phone-number class="form-control" required id="fld-gp-work-phone" name="gp_work_phone" ng-model="admins.political.phone" >
 			</div>
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-work-mobile">Telefone celular institucional</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-gp-work-mobile" ng-model="admins.political.mobile" >
+				<input type="tel" ui-br-phone-number class="form-control" id="fld-gp-work-mobile" name="gp_work_mobile" ng-model="admins.political.mobile" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-personal-email">E-mail pessoal</label>
-				<input type="email" class="form-control" id="fld-gp-personal-email" ng-model="admins.political.personal_email" >
+				<input type="email" class="form-control" id="fld-gp-personal-email" name="gp_personal_email" ng-model="admins.political.personal_email" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-personal-mobile">Telefone celular pessoal</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-gp-personal-mobile" ng-model="admins.political.personal_mobile" >
+				<input type="tel" ui-br-phone-number class="form-control" id="fld-gp-personal-mobile" name="gp_personal_mobile" ng-model="admins.political.personal_mobile" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-skype-username">Skype</label>
-				<input type="text" class="form-control" id="fld-gp-skype-username" ng-model="admins.political.skype" >
+				<input type="text" class="form-control" id="fld-gp-skype-username" name="gp_skype" ng-model="admins.political.skype" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-address">Endereço institucional</label>
-				<input type="text" class="form-control" id="fld-gp-address" ng-model="admins.political.address" >
+				<input type="text" class="form-control" id="fld-gp-address" name="gp_address" ng-model="admins.political.address" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-cep">CEP institucional</label>
-				<input type="tel" ui-br-cep-mask class="form-control" id="fld-gp-cep" ng-model="admins.political.cep" >
+				<input type="tel" ui-br-cep-mask class="form-control" id="fld-gp-cep" name="gp_cep" ng-model="admins.political.cep" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-neighborhood">Bairro</label>
-				<input type="text" class="form-control" id="fld-gp-neighborhood" ng-model="admins.political.neighborhood" >
+				<input type="text" class="form-control" id="fld-gp-neighborhood" name="gp_neighborhood" ng-model="admins.political.neighborhood" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-uf">Estado</label>
-				<input type="text" class="form-control" id="fld-gp-uf" ng-model="admins.political.uf" >
+				<input type="text" class="form-control" id="fld-gp-uf" name="gp_uf" ng-model="admins.political.uf" >
 			</div>
 
 			<div class="form-group col-md-8">
 				<label class="control-label" for="fld-gp-city">Município</label>
-				<input type="text" class="form-control" id="fld-gp-city" ng-model="admins.political.city" >
+				<input type="text" class="form-control" id="fld-gp-city" name="gp_city" ng-model="admins.political.city" >
 			</div>
 
 			<hr />
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-gp-institution">Instituição*</label>
-				<input type="text" class="form-control" id="fld-gp-institution" required ng-model="admins.political.institution" >
+				<input type="text" class="form-control" id="fld-gp-institution" name="gp_institution" required ng-model="admins.political.institution" >
 			</div>
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-gp-position">Cargo*</label>
-				<input type="text" class="form-control" id="fld-gp-position" required ng-model="admins.political.position" >
+				<input type="text" class="form-control" id="fld-gp-position" name="gp_position" required ng-model="admins.political.position" >
 			</div>
 
 		</div>
@@ -113,7 +113,7 @@
 				</div>
 				<div class="form-group">
 					<label class="control-label" for="fld-gp-password">Senha*</label>
-					<input type="password" class="form-control" id="fld-gp-password" required ng-model="admins.political.password" >
+					<input type="password" class="form-control" id="fld-gp-password" autocomplete="new-password" name="password" required ng-model="admins.political.password" >
 				</div>
 			</div>
 		</div>

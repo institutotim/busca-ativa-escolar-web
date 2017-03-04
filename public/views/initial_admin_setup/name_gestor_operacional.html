@@ -1,4 +1,4 @@
-<form class="panel panel-default" ng-submit="provisionTenant()">
+<form class="panel panel-default" ng-submit="provisionTenant()" autocomplete="off">
 	<div class="panel-heading">
 		<h3><strong ng-bind="(step + '.')"></strong> <i class="fa fa-sitemap"></i> Cadastre o coordenador operacional</h3>
 	</div>
@@ -23,83 +23,83 @@
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-co-name">Nome*</label>
-				<input type="text" class="form-control" id="fld-co-name" required ng-model="admins.operational.name" >
+				<input type="text" class="form-control" name="co_name" id="fld-co-name" required ng-model="admins.operational.name" >
 			</div>
 
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
-				<input type="date" class="form-control" id="fld-co-dob" required ng-model="admins.operational.dob" >
+				<input type="date" class="form-control" name="co_dob" id="fld-co-dob" required ng-model="admins.operational.dob" >
 			</div>
 
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-co-cpf">CPF*</label>
-				<input type="tel" ui-br-cpf-mask class="form-control" id="fld-co-cpf" required ng-model="admins.operational.cpf" >
+				<input type="tel" ui-br-cpf-mask class="form-control" name="co_cpf" id="fld-co-cpf" required ng-model="admins.operational.cpf" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-email">E-mail institucional*</label>
-				<input type="email" class="form-control" id="fld-co-email" required ng-model="admins.operational.email" >
+				<input type="email" class="form-control" name="co_email" id="fld-co-email" required ng-model="admins.operational.email" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-work-phone">Telefone fixo institucional*</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-co-work-phone" required ng-model="admins.operational.phone" >
+				<input type="tel" ui-br-phone-number class="form-control" name="co_phone" id="fld-co-work-phone" required ng-model="admins.operational.phone" >
 			</div>
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-work-mobile">Telefone celular institucional</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-co-work-mobile" ng-model="admins.operational.mobile" >
+				<input type="tel" ui-br-phone-number class="form-control" name="co_mobile" id="fld-co-work-mobile" ng-model="admins.operational.mobile" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-personal-email">E-mail pessoal</label>
-				<input type="email" class="form-control" id="fld-co-personal-email" ng-model="admins.operational.personal_email" >
+				<input type="email" class="form-control" name="co_email" id="fld-co-personal-email" ng-model="admins.operational.personal_email" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-personal-mobile">Telefone celular pessoal</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-co-personal-mobile" ng-model="admins.operational.personal_mobile" >
+				<input type="tel" ui-br-phone-number class="form-control" name="co_mobile" id="fld-co-personal-mobile" ng-model="admins.operational.personal_mobile" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-skype-username">Skype</label>
-				<input type="text" class="form-control" id="fld-co-skype-username" ng-model="admins.operational.username" >
+				<input type="text" class="form-control" name="co_username" id="fld-co-skype-username" ng-model="admins.operational.username" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-address">Endereço institucional</label>
-				<input type="text" class="form-control" id="fld-co-address" ng-model="admins.operational.address" >
+				<input type="text" class="form-control" name="co_address" id="fld-co-address" ng-model="admins.operational.address" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-cep">CEP institucional</label>
-				<input type="tel" ui-br-cep-mask class="form-control" id="fld-co-cep" ng-model="admins.operational.cep" >
+				<input type="tel" ui-br-cep-mask class="form-control" name="co_cep" id="fld-co-cep" ng-model="admins.operational.cep" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-neighborhood">Bairro</label>
-				<input type="text" class="form-control" id="fld-co-neighborhood" ng-model="admins.operational.neighborhood" >
+				<input type="text" class="form-control" name="co_neighborhood" id="fld-co-neighborhood" ng-model="admins.operational.neighborhood" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-uf">Estado</label>
-				<input type="text" class="form-control" id="fld-co-uf" ng-model="admins.operational.uf" >
+				<input type="text" class="form-control" name="co_uf" id="fld-co-uf" ng-model="admins.operational.uf" >
 			</div>
 
 			<div class="form-group col-md-8">
 				<label class="control-label" for="fld-co-city">Município</label>
-				<input type="text" class="form-control" id="fld-co-city" ng-model="admins.operational.city" >
+				<input type="text" class="form-control" name="co_city" id="fld-co-city" ng-model="admins.operational.city" >
 			</div>
 
 			<hr />
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-co-institution">Instituição</label>
-				<input type="text" class="form-control" id="fld-co-institution" ng-model="admins.operational.institution" >
+				<input type="text" class="form-control" name="co_institution" id="fld-co-institution" ng-model="admins.operational.institution" >
 			</div>
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-co-position">Cargo</label>
-				<input type="text" class="form-control" id="fld-co-position" ng-model="admins.operational.position" >
+				<input type="text" class="form-control" name="co_position" id="fld-co-position" ng-model="admins.operational.position" >
 			</div>
 
 		</div>
@@ -113,14 +113,14 @@
 				<p>A senha informada será enviada para o e-mail do Coordenador Operacional.</p>
 
 				<div class="form-group">
-					<label class="control-label" for="fld-gp-password">E-mail</label>
+					<label class="control-label" for="fld-co-password">E-mail</label>
 					<div>
 						<span ng-bind="admins.operational.email" class="label label-default"></span> <span>(o mesmo que o e-mail institucional)</span>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label" for="fld-gp-password">Senha*</label>
-					<input type="password" class="form-control" id="fld-gp-password" required ng-model="admins.operational.password" >
+					<label class="control-label" for="fld-co-password">Senha*</label>
+					<input type="password" class="form-control" name="co_password" autocomplete="new-password" id="fld-co-password" required ng-model="admins.operational.password" >
 				</div>
 			</div>
 		</div>

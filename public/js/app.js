@@ -5296,6 +5296,7 @@ function identify(namespace, file) {
 
 			$scope.step = 1;
 			$scope.numSteps = 4;
+			$scope.ready = false;
 
 			$scope.signup = {};
 			$scope.admins = {
@@ -5341,6 +5342,7 @@ function identify(namespace, file) {
 
 			$scope.fetchSignupDetails = function() {
 				SignUps.getViaToken({id: signupID, token: signupToken}, function (data) {
+					$scope.ready = true;
 					$scope.signup = data;
 					$scope.admins.political = data.data.admin;
 					$scope.admins.political.dob = moment(data.data.admin.dob).toDate();
