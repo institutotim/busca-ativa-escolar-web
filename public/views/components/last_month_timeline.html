@@ -1,3 +1,4 @@
 <div>
-	<highchart id="timeline-chart" config="getTimelineConfig()"></highchart>
+	<highchart ng-show="isReady() && hasEnoughData()" id="timeline-chart" config="getTimelineConfig()"></highchart>
+	<div class="alert alert-info" ng-show="isReady() && !hasEnoughData()">Não há estatísticas diárias o suficiente para exibir a evolução da busca ativa.</div>
 </div>

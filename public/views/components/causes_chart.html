@@ -1,3 +1,4 @@
 <div>
-	<highchart id="causes-chart" config="getCausesConfig()"></highchart>
+	<highchart ng-show="isReady() && hasEnoughData()" id="causes-chart" config="getCausesConfig()"></highchart>
+	<div class="alert alert-info" ng-show="isReady() && !hasEnoughData()">Não há dados o suficiente para exibir o gráfico de causas.</div>
 </div>

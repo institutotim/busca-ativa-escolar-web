@@ -15,6 +15,8 @@
 			var servicesReady = [];
 			var allReady = false;
 
+			var flags = {};
+
 			var whenReadyCallbacks = [];
 
 			function setup() {
@@ -34,6 +36,15 @@
 				$rootScope.$on('$stateChangeStart', clearRegisteredCallbacks);
 				$rootScope.$on('$stateChangeSuccess', checkIfAllServicesReady);
 				$rootScope.$on('Platform.ready', fireRegisteredCallbacks);
+			}
+
+			function setFlag(flag, value) {
+				console.log('[platform.flags] Set flag: ', flag, '->', value);
+				flags[flag] = value;
+			}
+
+			function getFlag(flag) {
+				return flags[flag];
 			}
 
 			function onServiceReady(service) {
@@ -82,6 +93,8 @@
 				setup: setup,
 				isReady: isReady,
 				whenReady: whenReady,
+				setFlag: setFlag,
+				getFlag: getFlag,
 			}
 
 		});

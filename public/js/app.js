@@ -849,41 +849,40 @@
 
 	angular.module('BuscaAtivaEscolar').directive('casesMap', function (moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
 
-		var $scope = null;
-
-
-		uiGmapGoogleMapApi.then(function (maps) {
-			refresh();
-		});
-
-		function refresh() {
-			Children.getMap({}, function(data) {
-				$scope.coordinates = data.coordinates;
-				$scope.mapCenter = data.center;
-				$scope.mapZoom = data.center.zoom;
-				$scope.mapReady = true;
-
-				console.log("[widget.cases_map] Data loaded: ", data.coordinates, data.center);
-			});
-		}
-
-		function onMarkerClick(marker, event, coords) {
-			console.log('[widget.cases_map] Marker clicked: ', marker, event, coords);
-		}
-
 		function init(scope, element, attrs) {
-			$scope = scope;
-			scope.onMarkerClick = onMarkerClick;
+
+			scope.refresh = function() {
+				console.log('[widget.cases_map] Loading data...');
+
+				Children.getMap({}, function(data) {
+					scope.coordinates = data.coordinates;
+					scope.mapCenter = data.center;
+					scope.mapZoom = data.center.zoom;
+					scope.mapReady = true;
+
+					console.log("[widget.cases_map] Data loaded: ", data.coordinates, data.center);
+				});
+			};
+
+			scope.onMarkerClick = function (marker, event, coords) {
+				console.log('[widget.cases_map] Marker clicked: ', marker, event, coords);
+			};
+
 			scope.isMapReady = function() {
-				return $scope.mapReady;
+				return scope.mapReady;
 			};
 
 			scope.reloadMap = function() {
-				$scope.mapReady = false;
+				scope.mapReady = false;
 				$timeout(function() {
-					$scope.mapReady = true;
+					scope.mapReady = true;
 				}, 10);
 			};
+
+			uiGmapGoogleMapApi.then(function (maps) {
+				scope.refresh();
+			});
+
 		}
 
 		return {
@@ -902,6 +901,9 @@
 		var causesChart = {};
 		var causesReady = false;
 
+		var isReady = false;
+		var hasEnoughData = false;
+
 		function fetchCausesData() {
 			return Reports.query({
 				view: 'linear',
@@ -915,6 +917,14 @@
 				causesData = data;
 				causesChart = getCausesChart();
 				causesReady = true;
+
+				isReady = true;
+				hasEnoughData = (
+					causesData &&
+					causesData.response &&
+					causesData.response.report.length &&
+					causesData.response.report.length > 0
+				);
 			});
 		}
 
@@ -933,11 +943,19 @@
 
 		function init(scope, element, attrs) {
 			scope.getCausesConfig = getCausesConfig;
-		}
 
-		Platform.whenReady(function () {
-			fetchCausesData();
-		});
+			scope.isReady = function() {
+				return isReady;
+			};
+
+			scope.hasEnoughData = function() {
+				return hasEnoughData;
+			};
+
+			Platform.whenReady(function () {
+				fetchCausesData();
+			});
+		}
 
 		return {
 			link: init,
@@ -1016,6 +1034,9 @@
 		var timelineChart = {};
 		var timelineReady = false;
 
+		var isReady = false;
+		var hasEnoughData = false;
+
 		function fetchTimelineData() {
 			var lastMonth = moment().subtract(30, 'days').format('YYYY-MM-DD');
 			var today = moment().format('YYYY-MM-DD');
@@ -1033,6 +1054,14 @@
 				timelineData = data;
 				timelineChart = getTimelineChart();
 				timelineReady = true;
+
+				isReady = true;
+				hasEnoughData = (
+					timelineData &&
+					timelineData.response &&
+					timelineData.response.report.length &&
+					timelineData.response.report.length > 0
+				);
 			});
 		}
 
@@ -1052,11 +1081,19 @@
 
 		function init(scope, element, attrs) {
 			scope.getTimelineConfig = getTimelineConfig;
-		}
 
-		Platform.whenReady(function () {
-			fetchTimelineData();
-		});
+			scope.isReady = function() {
+				return isReady;
+			};
+
+			scope.hasEnoughData = function() {
+				return hasEnoughData;
+			};
+
+			Platform.whenReady(function () {
+				fetchTimelineData();
+			});
+		}
 
 		return {
 			link: init,
@@ -1124,23 +1161,34 @@
 
 	angular.module('BuscaAtivaEscolar').directive('myAlerts', function (moment, Identity, Platform, Alerts) {
 
-		var alerts = {};
+		var alerts = [];
+		var isReady = false;
 
 		function refresh() {
 			Alerts.mine({}, function(data) {
 				alerts = data.data;
+				isReady = true;
 			});
 		}
 
 		function init(scope, element, attrs) {
+
 			scope.getAlerts = function() {
 				return alerts;
 			};
-		}
 
-		Platform.whenReady(function () {
-			refresh();
-		});
+			scope.isReady = function() {
+				return isReady;
+			};
+
+			scope.hasAlerts = function() {
+				return (alerts && alerts.length > 0);
+			};
+
+			Platform.whenReady(function () {
+				refresh();
+			});
+		}
 
 		return {
 			link: init,
@@ -1154,7 +1202,9 @@
 
 	angular.module('BuscaAtivaEscolar').directive('myAssignments', function (moment, Identity, Platform, Children, Decorators) {
 
-		var children = {};
+		var children = [];
+
+		var isReady = false;
 
 		function refresh() {
 			Children.search({assigned_user_id: Identity.getCurrentUserID()}, function(data) {
@@ -1164,14 +1214,23 @@
 
 		function init(scope, element, attrs) {
 			scope.Decorators = Decorators;
+			scope.refresh = refresh;
 			scope.getChildren = function() {
 				return children;
 			};
-		}
 
-		Platform.whenReady(function () {
-			refresh();
-		});
+			scope.isReady = function() {
+				return isReady;
+			};
+
+			scope.hasAssignments = function() {
+				return (children && children.length > 0);
+			};
+
+			Platform.whenReady(function () {
+				refresh();
+			});
+		}
 
 		return {
 			link: init,
@@ -1299,11 +1358,13 @@
 
 	angular.module('BuscaAtivaEscolar').directive('recentActivity', function (moment, Platform, Tenants) {
 
-		var log = {};
+		var log = [];
+		var isReady = false;
 
 		function refresh() {
 			return Tenants.getRecentActivity({max: 4}, function (data) {
 				log = data.data;
+				isReady = true;
 			});
 		}
 
@@ -1311,11 +1372,19 @@
 			scope.getActivity = function() {
 				return log;
 			};
-		}
 
-		Platform.whenReady(function () {
-			refresh();
-		});
+			scope.isReady = function() {
+				return isReady;
+			};
+
+			scope.hasRecentActivity = function() {
+				return (log.length > 0);
+			}
+
+			Platform.whenReady(function () {
+				refresh();
+			});
+		}
 
 		return {
 			link: init,
@@ -3605,16 +3674,14 @@ if (!Array.prototype.find) {
 
 			var self = this;
 
-			const DEFAULT_STORAGE = {
+			$localStorage.$default({
 				session: {
 					user_id: null,
 					token: null,
 					token_expires_at: null,
 					refresh_expires_at: null
 				}
-			};
-
-			$localStorage.$default(DEFAULT_STORAGE);
+			});
 
 			function requireLogin(reason) {
 				return Modals.show(Modals.Login(reason, false));
@@ -3715,7 +3782,16 @@ if (!Array.prototype.find) {
 			$rootScope.$on('identity.disconnect', this.logout);
 
 			this.logout = function() {
-				Object.assign($localStorage, DEFAULT_STORAGE);
+				console.log('[auth] Logging out...');
+
+				Object.assign($localStorage, {
+					session: {
+						user_id: null,
+						token: null,
+						token_expires_at: null,
+						refresh_expires_at: null
+					}
+				});
 
 				Identity.disconnect();
 			};
@@ -3942,14 +4018,12 @@ if (!Array.prototype.find) {
 		var tokenProvider = null;
 		var userProvider = null;
 
-		const DEFAULT_STORAGE = {
+		$localStorage.$default({
 			identity: {
 				is_logged_in: false,
 				current_user: {},
 			}
-		};
-
-		$localStorage.$default(DEFAULT_STORAGE);
+		});
 
 		function setup() {
 			console.info("[core.identity] Setting up identity service...");
@@ -4034,7 +4108,10 @@ if (!Array.prototype.find) {
 		}
 
 		function disconnect() {
+			console.log('[identity] Disconnecting identity...');
+
 			clearSession();
+
 			$rootScope.$broadcast('identity.disconnect');
 			$location.path('/login');
 		}
@@ -4042,7 +4119,12 @@ if (!Array.prototype.find) {
 		function clearSession() {
 			console.log("[identity] Clearing current session");
 
-			Object.assign($localStorage, DEFAULT_STORAGE);
+			Object.assign($localStorage, {
+				identity: {
+					is_logged_in: false,
+					current_user: {},
+				}
+			});
 		}
 
 		return {
@@ -4892,6 +4974,8 @@ if (!Array.prototype.find) {
 			var servicesReady = [];
 			var allReady = false;
 
+			var flags = {};
+
 			var whenReadyCallbacks = [];
 
 			function setup() {
@@ -4911,6 +4995,15 @@ if (!Array.prototype.find) {
 				$rootScope.$on('$stateChangeStart', clearRegisteredCallbacks);
 				$rootScope.$on('$stateChangeSuccess', checkIfAllServicesReady);
 				$rootScope.$on('Platform.ready', fireRegisteredCallbacks);
+			}
+
+			function setFlag(flag, value) {
+				console.log('[platform.flags] Set flag: ', flag, '->', value);
+				flags[flag] = value;
+			}
+
+			function getFlag(flag) {
+				return flags[flag];
 			}
 
 			function onServiceReady(service) {
@@ -4959,6 +5052,8 @@ if (!Array.prototype.find) {
 				setup: setup,
 				isReady: isReady,
 				whenReady: whenReady,
+				setFlag: setFlag,
+				getFlag: getFlag,
 			}
 
 		});

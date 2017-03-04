@@ -1,15 +1,18 @@
-<div class="panel panel-default">
-	<div class="panel-body">
-		<div class="list-group" ng-repeat="(i, entry) in getActivity()">
-			<div class="list-group-item timeline-item">
-				<div class="row-action-primary">
-					<i class="material-icons">account_box</i>
-				</div>
-				<div class="row-content">
-					<div class="least-content" ng-bind="entry.created_at | amTimeAgo" uib-tooltip-html="entry.created_at | amCalendar"></div>
-					<p class="list-group-item-text"><strong uib-tooltip-html="entry.user.type | lang:'user.type'" ng-bind="entry.user.name"></strong><br /><span ng-bind="entry.message"></span></p>
+<div>
+	<div ng-show="isReady() && hasRecentActivity()" class="panel panel-default">
+		<div class="panel-body">
+			<div class="list-group" ng-repeat="(i, entry) in getActivity()">
+				<div class="list-group-item timeline-item">
+					<div class="row-action-primary">
+						<i class="material-icons">account_box</i>
+					</div>
+					<div class="row-content">
+						<div class="least-content" ng-bind="entry.created_at | amTimeAgo" uib-tooltip-html="entry.created_at | amCalendar"></div>
+						<p class="list-group-item-text"><strong uib-tooltip-html="entry.user.type | lang:'user.type'" ng-bind="entry.user.name"></strong><br /><span ng-bind="entry.message"></span></p>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<div class="alert alert-info" ng-show="isReady() && !hasRecentActivity()">Nenhuma atividade recente na plataforma.</div>
 </div>

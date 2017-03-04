@@ -6,6 +6,9 @@
 		var timelineChart = {};
 		var timelineReady = false;
 
+		var isReady = false;
+		var hasEnoughData = false;
+
 		function fetchTimelineData() {
 			var lastMonth = moment().subtract(30, 'days').format('YYYY-MM-DD');
 			var today = moment().format('YYYY-MM-DD');
@@ -23,6 +26,14 @@
 				timelineData = data;
 				timelineChart = getTimelineChart();
 				timelineReady = true;
+
+				isReady = true;
+				hasEnoughData = (
+					timelineData &&
+					timelineData.response &&
+					timelineData.response.report.length &&
+					timelineData.response.report.length > 0
+				);
 			});
 		}
 
@@ -42,11 +53,19 @@
 
 		function init(scope, element, attrs) {
 			scope.getTimelineConfig = getTimelineConfig;
-		}
 
-		Platform.whenReady(function () {
-			fetchTimelineData();
-		});
+			scope.isReady = function() {
+				return isReady;
+			};
+
+			scope.hasEnoughData = function() {
+				return hasEnoughData;
+			};
+
+			Platform.whenReady(function () {
+				fetchTimelineData();
+			});
+		}
 
 		return {
 			link: init,

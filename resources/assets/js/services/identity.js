@@ -5,14 +5,12 @@
 		var tokenProvider = null;
 		var userProvider = null;
 
-		const DEFAULT_STORAGE = {
+		$localStorage.$default({
 			identity: {
 				is_logged_in: false,
 				current_user: {},
 			}
-		};
-
-		$localStorage.$default(DEFAULT_STORAGE);
+		});
 
 		function setup() {
 			console.info("[core.identity] Setting up identity service...");
@@ -97,7 +95,10 @@
 		}
 
 		function disconnect() {
+			console.log('[identity] Disconnecting identity...');
+
 			clearSession();
+
 			$rootScope.$broadcast('identity.disconnect');
 			$location.path('/login');
 		}
@@ -105,7 +106,12 @@
 		function clearSession() {
 			console.log("[identity] Clearing current session");
 
-			Object.assign($localStorage, DEFAULT_STORAGE);
+			Object.assign($localStorage, {
+				identity: {
+					is_logged_in: false,
+					current_user: {},
+				}
+			});
 		}
 
 		return {

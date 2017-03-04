@@ -6,6 +6,9 @@
 		var causesChart = {};
 		var causesReady = false;
 
+		var isReady = false;
+		var hasEnoughData = false;
+
 		function fetchCausesData() {
 			return Reports.query({
 				view: 'linear',
@@ -19,6 +22,14 @@
 				causesData = data;
 				causesChart = getCausesChart();
 				causesReady = true;
+
+				isReady = true;
+				hasEnoughData = (
+					causesData &&
+					causesData.response &&
+					causesData.response.report.length &&
+					causesData.response.report.length > 0
+				);
 			});
 		}
 
@@ -37,11 +48,19 @@
 
 		function init(scope, element, attrs) {
 			scope.getCausesConfig = getCausesConfig;
-		}
 
-		Platform.whenReady(function () {
-			fetchCausesData();
-		});
+			scope.isReady = function() {
+				return isReady;
+			};
+
+			scope.hasEnoughData = function() {
+				return hasEnoughData;
+			};
+
+			Platform.whenReady(function () {
+				fetchCausesData();
+			});
+		}
 
 		return {
 			link: init,
