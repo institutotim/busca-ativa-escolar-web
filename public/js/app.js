@@ -922,8 +922,7 @@
 				hasEnoughData = (
 					causesData &&
 					causesData.response &&
-					causesData.response.report.length &&
-					causesData.response.report.length > 0
+					angular.equals({}, causesData.response.report)
 				);
 			});
 		}
