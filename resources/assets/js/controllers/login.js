@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('LoginCtrl', function ($scope, $rootScope, $cookies, $location, Modals, Config, Auth) {
+	angular.module('BuscaAtivaEscolar').controller('LoginCtrl', function ($scope, $rootScope, $cookies, $location, Modals, Config, Auth, Identity) {
 
 		console.log("[core] @Login");
 
@@ -16,9 +16,18 @@
 		};
 
 		function onLoggedIn(session) {
-			console.info("[login_ctrl] Logged in!", session);
-			$location.path('/dashboard');
+
 			$scope.isLoading = false;
+
+			console.info("[login_ctrl] Logged in!", session);
+			console.info("[login_ctrl] Tenant: ", Identity.getCurrentUser().tenant);
+
+			if(!Identity.getCurrentUser().tenant.is_setup) {
+				$location.path('/tenant_setup');
+				return;
+			}
+
+			$location.path('/dashboard');
 		}
 
 		function onError(err) {

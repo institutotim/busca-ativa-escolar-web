@@ -14,6 +14,7 @@
 				reject: {url: API.getURI('signups/:id/reject'), method: 'POST', headers: authHeaders},
 
 				resendNotification: {url: API.getURI('signups/:id/resend_notification'), method: 'POST', headers: authHeaders},
+				completeSetup: {url: API.getURI('signups/complete_setup'), method: 'POST', headers: authHeaders},
 
 				register: {url: API.getURI('signups/register'), method: 'POST', headers: headers},
 				getViaToken: {url: API.getURI('signups/via_token/:id'), method: 'GET', headers: headers},

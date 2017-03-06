@@ -4,7 +4,7 @@
 	</div>
 	<div class="panel-body">
 
-		<div class="col-md-12" ng-hide="adminType === 'gestor_operacional'">
+		<div class="col-md-12" ng-hide="user.type === 'gestor_operacional'">
 			<h4>Gestor Político</h4>
 			<p>
 				O gestor político é o representante direto do governo municipal na plataforma.
@@ -12,7 +12,7 @@
 			</p>
 		</div>
 
-		<div class="col-md-12" ng-show="adminType === 'gestor_operacional'">
+		<div class="col-md-12" ng-show="user.type === 'gestor_operacional'">
 			<h4>Coordenador Operacional</h4>
 			<p>
 				O coordenador operacional deve ser a pessoa responsável por operacionalizar o programa no município no dia-a-dia.
@@ -26,81 +26,81 @@
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-confirm-name">Nome*</label>
-				<input required type="text" class="form-control" id="fld-confirm-name" ng-bind="admin.name">
+				<input required type="text" class="form-control" id="fld-confirm-name" ng-model="user.name">
 			</div>
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-dob">Data de nascimento*</label>
-				<input required type="date" class="form-control" id="fld-confirm-dob" ng-bind="admin.dob">
+				<input required type="date" class="form-control" id="fld-confirm-dob" ng-model="user.dob">
 			</div>
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-cpf">CPF*</label>
-				<input required type="tel" ui-br-cpf-mask class="form-control" id="fld-confirm-cpf" ng-bind="admin.cpf">
+				<input required type="tel" ui-br-cpf-mask class="form-control" id="fld-confirm-cpf" ng-model="user.cpf">
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-confirm-email">E-mail institucional*</label>
-				<input required type="email" class="form-control" id="fld-confirm-email" ng-bind="admin.email">
+				<label class="control-label">E-mail institucional</label>
+				<div ng-bind="user.email"></div>
 			</div>
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-confirm-work-phone">Telefone fixo institucional</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-confirm-work-phone" ng-bind="admin.phone">
+				<input type="tel" ui-br-phone-number class="form-control" id="fld-confirm-work-phone" ng-model="user.phone">
 			</div>
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-confirm-work-mobile">Telefone celular institucional</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-confirm-work-mobile" ng-bind="admin.mobile">
+				<input type="tel" ui-br-phone-number class="form-control" id="fld-confirm-work-mobile" ng-model="user.mobile">
 			</div>
 
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-confirm-personal-email">E-mail pessoal</label>
-				<input type="email" class="form-control" id="fld-confirm-personal-email" ng-bind="admin.email">
+				<input type="email" class="form-control" id="fld-confirm-personal-email" ng-model="user.email">
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-confirm-personal-mobile">Telefone celular pessoal</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-confirm-personal-mobile" ng-bind="admin.mobile">
+				<input type="tel" ui-br-phone-number class="form-control" id="fld-confirm-personal-mobile" ng-model="user.mobile">
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-confirm-skype-username">Skype</label>
-				<input type="text" class="form-control" id="fld-confirm-skype-username" ng-bind="admin.username">
+				<input type="text" class="form-control" id="fld-confirm-skype-username" ng-model="user.username">
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-confirm-address">Endereço institucional</label>
-				<input type="text" class="form-control" id="fld-confirm-address" ng-bind="admin.address">
+				<input type="text" class="form-control" id="fld-confirm-address" ng-model="user.address">
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-confirm-cep">CEP institucional</label>
-				<input type="tel" ui-br-cep-mask class="form-control" id="fld-confirm-cep" ng-bind="admin.cep">
+				<input type="tel" ui-br-cep-mask class="form-control" id="fld-confirm-cep" ng-model="user.cep">
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-confirm-neighborhood">Bairro</label>
-				<input type="text" class="form-control" id="fld-confirm-neighborhood" ng-bind="admin.neighborhood">
+				<input type="text" class="form-control" id="fld-confirm-neighborhood" ng-model="user.neighborhood">
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-confirm-uf">Estado</label>
-				<input type="text" class="form-control" id="fld-confirm-uf" ng-bind="admin.uf">
+				<input type="text" class="form-control" id="fld-confirm-uf" ng-model="user.uf">
 			</div>
 
 			<div class="form-group col-md-8">
 				<label class="control-label" for="fld-confirm-city">Município</label>
-				<input type="text" class="form-control" id="fld-confirm-city" ng-bind="admin.city">
+				<input type="text" class="form-control" id="fld-confirm-city" ng-model="user.city">
 			</div>
 
 			<hr />
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-confirm-institution">Instituição</label>
-				<input type="text" class="form-control" id="fld-confirm-institution" ng-bind="admin.institution">
+				<input type="text" class="form-control" id="fld-confirm-institution" ng-model="user.institution">
 			</div>
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-confirm-position">Cargo</label>
-				<input type="text" class="form-control" id="fld-confirm-position" ng-bind="admin.position">
+				<input type="text" class="form-control" id="fld-confirm-position" ng-model="user.position">
 			</div>
 
 		</div>
@@ -108,8 +108,6 @@
 	</div>
 
 	<div class="panel-footer clearfix">
-		<button ng-show="!$parent.isEditing" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<button ng-show="!$parent.isEditing" ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
-		<button ng-show="$parent.isEditing" ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
+		<button ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
 	</div>
 </div>

@@ -21,6 +21,12 @@
 			show_suspended: true
 		};
 
+		$scope.quickAdd = false;
+
+		$scope.enableQuickAdd = function() {
+			$scope.quickAdd = true;
+		};
+
 		$scope.setMaxResults = function(max) {
 			$scope.query.max = max;
 			$scope.refresh();
@@ -68,8 +74,6 @@
 			$scope.canFilterByTenant = (Identity.getType() === 'gestor_nacional' || Identity.getType() === 'superuser');
 			console.log("[user_browser] Can filter by tenant? ", Identity.getType(), $scope.canFilterByTenant);
 		})
-
-
 
 	});
 
