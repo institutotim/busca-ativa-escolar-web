@@ -2,7 +2,7 @@
 
 	var app = angular.module('BuscaAtivaEscolar');
 
-	app.service('Charts', function Charts() {
+	app.service('Charts', function Charts(Utils) {
 
 		function generateDimensionChart(report, seriesName, labels, yAxisLabel, valueSuffix) {
 
@@ -38,12 +38,14 @@
 					}
 				},
 				xAxis: {
+					id: Utils.generateRandomID(),
 					categories: categories,
 					title: {
 						text: null
 					}
 				},
 				yAxis: {
+					id: Utils.generateRandomID(),
 					min: 0,
 					title: {
 						text: yAxisLabel,
@@ -79,6 +81,7 @@
 				},
 				series: [
 					{
+						id: Utils.generateRandomID(),
 						name: seriesName,
 						data: data
 					}

@@ -5,6 +5,7 @@
 		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
 		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
 		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
 	});
 
 })();

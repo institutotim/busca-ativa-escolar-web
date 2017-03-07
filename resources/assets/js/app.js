@@ -25,5 +25,6 @@
 			'ui.select',
 			'ui.utils.masks',
 			'ui.ace',
+
 		])
 })();

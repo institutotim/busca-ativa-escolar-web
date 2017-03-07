@@ -53,8 +53,8 @@
 		</div>
 
 		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-alert-dob">Data de nascimento (aaaa-mm-dd)</label>
-			<input type="text" ui-date-mask class="form-control" id="fld-alert-dob" ng-readonly="!canEditStep(step)" ng-model="fields.dob">
+			<label class="control-label" for="fld-alert-dob">Data de nascimento (dd/mm/aaaa)</label>
+			<input type="tel" ui-date-mask class="form-control" id="fld-alert-dob" ng-readonly="!canEditStep(step)" ng-model="fields.dob">
 		</div>
 		<div class="form-group col-md-4">
 			<label class="control-label" for="fld-alert-rg">RG</label>
@@ -192,7 +192,7 @@
 			<select id="fld-raca" class="form-control" ng-disabled="!canEditStep(step)" ng-model="fields.race" ng-options="n.slug as n.label for n in static.getRaces()"></select>
 		</div>
 		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-dob">Data de nascimento (aaaa-mm-dd)*</label>
+			<label class="control-label" for="fld-dob">Data de nascimento (dd/mm/aaaa)*</label>
 			<input type="text" ui-date-mask class="form-control" id="fld-dob" ng-readonly="!canEditStep(step)" ng-model="fields.dob">
 		</div>
 		<div class="form-group col-md-6">
@@ -403,7 +403,7 @@
 		</div>
 
 		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-guardian_dob">Data de nascimento do responsável (aaaa-mm-dd)</label>
+			<label class="control-label" for="fld-guardian_dob">Data de nascimento do responsável (dd/mm/aaaa)</label>
 			<input type="text" ui-date-mask class="form-control" id="fld-guardian_dob" ng-readonly="!canEditStep(step)" ng-model="fields.guardian_dob">
 		</div>
 
@@ -640,7 +640,7 @@
 
 		<div class="clearfix">
 			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-enroll-reinsertion_date">Data da (re)matrícula (aaaa-mm-dd)*</label>
+				<label class="control-label" for="fld-enroll-reinsertion_date">Data da (re)matrícula (dd/mm/aaaa)*</label>
 
 				<div class="clearfix">
 					<input type="text" ui-date-mask class="form-control" id="fld-enroll-reinsertion_date" ng-readonly="!canEditStep(step)" ng-model="fields.reinsertion_date" style="float: left; width: 70%;">

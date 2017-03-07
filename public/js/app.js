@@ -25,6 +25,7 @@
 			'ui.select',
 			'ui.utils.masks',
 			'ui.ace',
+
 		])
 })();
 (function() {
@@ -399,7 +400,7 @@
 		function fetchStepData() {
 			$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields,case'});
 			$scope.step.$promise.then(function (step) {
-				$scope.fields = step.fields;
+				$scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
 				$scope.case = step.case;
 				$scope.$parent.openStepID = $scope.step.id;
 
@@ -413,6 +414,7 @@
 		fetchStepData();
 
 		var handicappedCauseIDs = [];
+		var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
 
 		console.log("[core] @ChildCaseStepCtrl", $scope.step);
 
@@ -502,18 +504,6 @@
 			return filtered;
 		}
 
-		function prepareDateFields(data) {
-			var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
-
-			for(var i in data) {
-				if(!data.hasOwnProperty(i)) continue;
-				if(dateOnlyFields.indexOf(i) === -1) continue;
-
-				data[i] = Utils.stripTimeFromTimestamp(data[i]);
-			}
-
-			return data;
-		}
 
 		$scope.assignUser = function() {
 
@@ -615,7 +605,7 @@
 			var data = $scope.step.fields;
 			data = filterOutEmptyFields(data);
 			data = clearAuxiliaryFields(data);
-			data = prepareDateFields(data);
+			data = Utils.prepareDateFields(data, dateOnlyFields);
 
 			data = unpackTypeaheadField(data, 'place_city', data.place_city);
 			data = unpackTypeaheadField(data, 'school_city', data.school_city);
@@ -1461,6 +1451,7 @@
 		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
 		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
 		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
 	});
 
 })();
@@ -2800,6 +2791,36 @@ Highcharts.maps["countries/br/br-all"] = {
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
+		.service('HandleExceptionResponsesInterceptor', function () {
+
+			function handleResponse(response) {
+
+				if(!response) return response;
+				if(!response.data) return response;
+				if(!response.data.reason) return response;
+				if(response.data.reason !== 'exception') return response;
+
+				if(response.data.exception.stack) {
+					console.log('[interceptors.api_exception] [debug=on] API error: ', response.data.exception.message);
+					console.log('[interceptors.api_exception] [debug=on] Error stack: ', response.data.exception.stack);
+					return response;
+				}
+
+				console.log('[interceptors.api_exception] [debug=off] API error: ', response.data.exception);
+
+				return response;
+
+			}
+
+			this.response = handleResponse;
+			this.responseError = handleResponse;
+
+		});
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
 		.service('InjectAPIEndpointInterceptor', function ($q, $rootScope, Config) {
 
 			this.request = function (config) {
@@ -3898,7 +3919,7 @@ if (!Array.prototype.find) {
 
 	var app = angular.module('BuscaAtivaEscolar');
 
-	app.service('Charts', function Charts() {
+	app.service('Charts', function Charts(Utils) {
 
 		function generateDimensionChart(report, seriesName, labels, yAxisLabel, valueSuffix) {
 
@@ -3934,12 +3955,14 @@ if (!Array.prototype.find) {
 					}
 				},
 				xAxis: {
+					id: Utils.generateRandomID(),
 					categories: categories,
 					title: {
 						text: null
 					}
 				},
 				yAxis: {
+					id: Utils.generateRandomID(),
 					min: 0,
 					title: {
 						text: yAxisLabel,
@@ -3975,6 +3998,7 @@ if (!Array.prototype.find) {
 				},
 				series: [
 					{
+						id: Utils.generateRandomID(),
 						name: seriesName,
 						data: data
 					}
@@ -5144,6 +5168,20 @@ if (!Array.prototype.find) {
 		})
 		.factory('Utils', function() {
 
+			function generateRandomID() {
+				return 'rand-' + (new Date()).getTime() + '-' + Math.round(Math.random() * 10000);
+			}
+
+			function convertISOtoBRDate(iso_date) {
+				if(!iso_date) return '';
+				return iso_date.split('-').reverse().join('/');
+			}
+
+			function convertBRtoISODate(br_date) {
+				if(!br_date) return '';
+				return br_date.split('/').reverse().join('-');
+			}
+
 			function prepareDateFields(data, dateOnlyFields) {
 				for(var i in data) {
 					if(!data.hasOwnProperty(i)) continue;
@@ -5155,8 +5193,22 @@ if (!Array.prototype.find) {
 				return data;
 			}
 
+			function unpackDateFields(data, dateOnlyFields) {
+				for(var i in data) {
+					if(!data.hasOwnProperty(i)) continue;
+					if(dateOnlyFields.indexOf(i) === -1) continue;
+
+					data[i] = new Date(data[i] + " 00:00:00");
+				}
+
+				return data;
+			}
+
 			function stripTimeFromTimestamp(timestamp) {
-				if(timestamp instanceof Date) timestamp = timestamp.toISOString();
+				if(timestamp instanceof Date) {
+					if(isNaN(timestamp.getTime())) return null;
+					timestamp = timestamp.toISOString();
+				}
 				return ("" + timestamp).substring(0, 10);
 			}
 
@@ -5211,6 +5263,10 @@ if (!Array.prototype.find) {
 			return {
 				stripTimeFromTimestamp: stripTimeFromTimestamp,
 				prepareDateFields: prepareDateFields,
+				unpackDateFields: unpackDateFields,
+				convertISOtoBRDate: convertISOtoBRDate,
+				convertBRtoISODate: convertBRtoISODate,
+				generateRandomID: generateRandomID,
 				filter: filter,
 				extract: extract,
 				pluck: pluck,

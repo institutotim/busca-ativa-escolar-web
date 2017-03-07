@@ -175,7 +175,7 @@
 		function fetchStepData() {
 			$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields,case'});
 			$scope.step.$promise.then(function (step) {
-				$scope.fields = step.fields;
+				$scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
 				$scope.case = step.case;
 				$scope.$parent.openStepID = $scope.step.id;
 
@@ -189,6 +189,7 @@
 		fetchStepData();
 
 		var handicappedCauseIDs = [];
+		var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
 
 		console.log("[core] @ChildCaseStepCtrl", $scope.step);
 
@@ -278,18 +279,6 @@
 			return filtered;
 		}
 
-		function prepareDateFields(data) {
-			var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
-
-			for(var i in data) {
-				if(!data.hasOwnProperty(i)) continue;
-				if(dateOnlyFields.indexOf(i) === -1) continue;
-
-				data[i] = Utils.stripTimeFromTimestamp(data[i]);
-			}
-
-			return data;
-		}
 
 		$scope.assignUser = function() {
 
@@ -391,7 +380,7 @@
 			var data = $scope.step.fields;
 			data = filterOutEmptyFields(data);
 			data = clearAuxiliaryFields(data);
-			data = prepareDateFields(data);
+			data = Utils.prepareDateFields(data, dateOnlyFields);
 
 			data = unpackTypeaheadField(data, 'place_city', data.place_city);
 			data = unpackTypeaheadField(data, 'school_city', data.school_city);

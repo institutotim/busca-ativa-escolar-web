@@ -23,6 +23,6 @@
     "commit": "b598d6eeaf7981be55840d5fda5541e598eaf04f"
   },
   "_source": "https://github.com/adamwdraper/Numeral-js.git",
-  "_target": "^1.0",
+  "_target": "^1.5.6",
   "_originalSource": "numeral"
 }

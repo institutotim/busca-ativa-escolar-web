@@ -42,11 +42,11 @@
     "bootstrap": "~3.3.6",
     "bootstrap-sass": "~3.3.6"
   },
-  "_release": "e0852fc254",
+  "_release": "72003f7988",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "e0852fc254273cd8633627ebe8e6e53187d74dba"
+    "commit": "72003f79888157e2af58bca394c20192d34ad541"
   },
   "_source": "https://github.com/FezVrasta/bootstrap-material-design.git",
   "_target": "master",

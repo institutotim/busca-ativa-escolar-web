@@ -21,6 +21,20 @@
 		})
 		.factory('Utils', function() {
 
+			function generateRandomID() {
+				return 'rand-' + (new Date()).getTime() + '-' + Math.round(Math.random() * 10000);
+			}
+
+			function convertISOtoBRDate(iso_date) {
+				if(!iso_date) return '';
+				return iso_date.split('-').reverse().join('/');
+			}
+
+			function convertBRtoISODate(br_date) {
+				if(!br_date) return '';
+				return br_date.split('/').reverse().join('-');
+			}
+
 			function prepareDateFields(data, dateOnlyFields) {
 				for(var i in data) {
 					if(!data.hasOwnProperty(i)) continue;
@@ -32,8 +46,22 @@
 				return data;
 			}
 
+			function unpackDateFields(data, dateOnlyFields) {
+				for(var i in data) {
+					if(!data.hasOwnProperty(i)) continue;
+					if(dateOnlyFields.indexOf(i) === -1) continue;
+
+					data[i] = new Date(data[i] + " 00:00:00");
+				}
+
+				return data;
+			}
+
 			function stripTimeFromTimestamp(timestamp) {
-				if(timestamp instanceof Date) timestamp = timestamp.toISOString();
+				if(timestamp instanceof Date) {
+					if(isNaN(timestamp.getTime())) return null;
+					timestamp = timestamp.toISOString();
+				}
 				return ("" + timestamp).substring(0, 10);
 			}
 
@@ -88,6 +116,10 @@
 			return {
 				stripTimeFromTimestamp: stripTimeFromTimestamp,
 				prepareDateFields: prepareDateFields,
+				unpackDateFields: unpackDateFields,
+				convertISOtoBRDate: convertISOtoBRDate,
+				convertBRtoISODate: convertBRtoISODate,
+				generateRandomID: generateRandomID,
 				filter: filter,
 				extract: extract,
 				pluck: pluck,
