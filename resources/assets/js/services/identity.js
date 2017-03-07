@@ -25,6 +25,17 @@
 			userProvider = callback;
 		}
 
+		function isUserType(type) {
+			if(!getCurrentUser()) return false;
+			if(!getCurrentUser().type) return false;
+			return getCurrentUser().type === type;
+		}
+
+		function hasTenant() {
+			if(!getCurrentUser()) return false;
+			return !!getCurrentUser().tenant;
+		}
+
 		function provideToken() {
 
 			if(!tokenProvider) {
@@ -123,6 +134,8 @@
 			isLoggedIn: isLoggedIn,
 			clearSession: clearSession,
 			setup: setup,
+			isUserType: isUserType,
+			hasTenant: hasTenant,
 			setTokenProvider: setTokenProvider,
 			setUserProvider: setUserProvider,
 			provideToken: provideToken,

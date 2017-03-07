@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('LoginCtrl', function ($scope, $rootScope, $cookies, $location, Modals, Config, Auth, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('LoginCtrl', function ($scope, $rootScope, $cookies, $state, $location, Modals, Config, Auth, Identity) {
 
 		console.log("[core] @Login");
 
@@ -15,6 +15,10 @@
 			list: Config.API_ENDPOINTS
 		};
 
+		if(Identity.isLoggedIn()) {
+			$state.go('dashboard');
+		}
+
 		function onLoggedIn(session) {
 
 			$scope.isLoading = false;
@@ -22,12 +26,12 @@
 			console.info("[login_ctrl] Logged in!", session);
 			console.info("[login_ctrl] Tenant: ", Identity.getCurrentUser().tenant);
 
-			if(!Identity.getCurrentUser().tenant.is_setup) {
-				$location.path('/tenant_setup');
-				return;
-			}
+			// Check if user should see tenant first time setup
+			if(!Identity.isUserType('coordenador_operacional')) return $state.go('dashboard');
+			if(!Identity.hasTenant()) return $state.go('dashboard');
+			if(!Identity.getCurrentUser().tenant.is_setup) return $state.go('tenant_setup');
 
-			$location.path('/dashboard');
+			return $state.go('dashboard');
 		}
 
 		function onError(err) {
