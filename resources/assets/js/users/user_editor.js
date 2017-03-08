@@ -21,6 +21,8 @@
 			$scope.tenants = Tenants.find();
 			$scope.quickAdd = !!$stateParams.quick_add;
 
+			var dateOnlyFields = ['dob'];
+
 			if(!$scope.isCreating) {
 				$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
 			}
@@ -45,31 +47,19 @@
 
 			$scope.save = function() {
 
-				$scope.user = prepareDateFields($scope.user);
+				var data = Object.assign({}, $scope.user);
+				data = Utils.prepareDateFields(data, dateOnlyFields);
 
 				if($scope.isCreating) {
-					return Users.create($scope.user).$promise.then(onSaved)
+					return Users.create(data).$promise.then(onSaved)
 				}
 
-				Users.update($scope.user).$promise.then(onSaved);
+				Users.update(data).$promise.then(onSaved);
 
 			};
 
 			function prepareUserModel(user) {
-				user.dob = new Date(user.dob + ' 12:00:00');
-			}
-
-			function prepareDateFields(data) {
-				var dateOnlyFields = ['dob'];
-
-				for(var i in data) {
-					if(!data.hasOwnProperty(i)) continue;
-					if(dateOnlyFields.indexOf(i) === -1) continue;
-
-					data[i] = Utils.stripTimeFromTimestamp(data[i]);
-				}
-
-				return data;
+				return Utils.unpackDateFields(user, dateOnlyFields)
 			}
 
 			function onSaved(res) {

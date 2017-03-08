@@ -22,6 +22,27 @@
 			$scope.numSteps = 4;
 			$scope.ready = false;
 
+			var fieldNames = {
+				cpf: 'CPF',
+				name: 'nome',
+				email: 'e-mail institucional',
+				position: 'posição',
+				institution: 'instituição',
+				password: 'senha',
+				dob: 'data de nascimento',
+				phone: 'telefone institucional',
+				mobile: 'celular institucional',
+				personal_phone: 'telefone pessoal',
+				personal_mobile: 'celular pessoal'
+			};
+
+			var requiredAdminFields = ['email','name','cpf','dob','phone','password'];
+
+			var messages = {
+				invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
+				invalid_co: 'Dados do coordenador operacional incompletos! Campos inválidos: '
+			};
+
 			$scope.signup = {};
 			$scope.admins = {
 				political: {},
@@ -53,6 +74,9 @@
 			$scope.nextStep = function() {
 				if($scope.step >= $scope.numSteps) return;
 
+				if($scope.step === 3 && !Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
+				if($scope.step === 4 && !Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
+
 				$scope.step++;
 				$window.scrollTo(0, 0);
 			};
@@ -75,6 +99,9 @@
 			};
 
 			$scope.provisionTenant = function() {
+
+				if(!Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
+				if(!Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
 
 				Modals.show(Modals.Confirm(
 					'Tem certeza que deseja prosseguir com o cadastro?',

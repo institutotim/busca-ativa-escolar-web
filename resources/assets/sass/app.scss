@@ -148,6 +148,10 @@ p.agent-panel{
 	color: $brand-danger !important;
 }
 
+.form-control.ng-invalid:not(:focus) {
+	color: $brand-danger !important;
+}
+
 .angular-google-map-container { height: 400px; }
 
 #dashboard-map-coordenador-operacional .angular-google-map-container { height: 660px; }

@@ -5166,7 +5166,7 @@ if (!Array.prototype.find) {
 			};
 
 		})
-		.factory('Utils', function() {
+		.factory('Utils', function(ngToast) {
 
 			function generateRandomID() {
 				return 'rand-' + (new Date()).getTime() + '-' + Math.round(Math.random() * 10000);
@@ -5260,6 +5260,35 @@ if (!Array.prototype.find) {
 				return plucked;
 			}
 
+			function validateFields(data, requiredFields) {
+				var invalid = [];
+
+				for(var i in requiredFields) {
+					if(!requiredFields.hasOwnProperty(i)) continue;
+					if(data[requiredFields[i]]) continue;
+
+					invalid.push(requiredFields[i]);
+				}
+
+				return invalid;
+			}
+
+			function isValid(data, requiredFields, fieldNames, message) {
+				var invalidFields = validateFields(data, requiredFields);
+
+				if(invalidFields.length <= 0) return true;
+
+				message += invalidFields
+					.map(function (field) {
+						return fieldNames[field] || field;
+					})
+					.join(", ");
+
+				ngToast.danger(message);
+
+				return false;
+			}
+
 			return {
 				stripTimeFromTimestamp: stripTimeFromTimestamp,
 				prepareDateFields: prepareDateFields,
@@ -5267,6 +5296,8 @@ if (!Array.prototype.find) {
 				convertISOtoBRDate: convertISOtoBRDate,
 				convertBRtoISODate: convertBRtoISODate,
 				generateRandomID: generateRandomID,
+				validateFields: validateFields,
+				isValid: isValid,
 				filter: filter,
 				extract: extract,
 				pluck: pluck,
@@ -5516,6 +5547,27 @@ function identify(namespace, file) {
 			$scope.numSteps = 4;
 			$scope.ready = false;
 
+			var fieldNames = {
+				cpf: 'CPF',
+				name: 'nome',
+				email: 'e-mail institucional',
+				position: 'posição',
+				institution: 'instituição',
+				password: 'senha',
+				dob: 'data de nascimento',
+				phone: 'telefone institucional',
+				mobile: 'celular institucional',
+				personal_phone: 'telefone pessoal',
+				personal_mobile: 'celular pessoal'
+			};
+
+			var requiredAdminFields = ['email','name','cpf','dob','phone','password'];
+
+			var messages = {
+				invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
+				invalid_co: 'Dados do coordenador operacional incompletos! Campos inválidos: '
+			};
+
 			$scope.signup = {};
 			$scope.admins = {
 				political: {},
@@ -5547,6 +5599,9 @@ function identify(namespace, file) {
 			$scope.nextStep = function() {
 				if($scope.step >= $scope.numSteps) return;
 
+				if($scope.step === 3 && !Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
+				if($scope.step === 4 && !Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
+
 				$scope.step++;
 				$window.scrollTo(0, 0);
 			};
@@ -5569,6 +5624,9 @@ function identify(namespace, file) {
 			};
 
 			$scope.provisionTenant = function() {
+
+				if(!Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
+				if(!Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
 
 				Modals.show(Modals.Confirm(
 					'Tem certeza que deseja prosseguir com o cadastro?',
@@ -5622,6 +5680,28 @@ function identify(namespace, file) {
 		};
 		$scope.agreeTOS = 0;
 
+		var fieldNames = {
+			cpf: 'CPF',
+			name: 'nome',
+			email: 'e-mail institucional',
+			position: 'posição',
+			institution: 'instituição',
+			password: 'senha',
+			dob: 'data de nascimento',
+			phone: 'telefone institucional',
+			mobile: 'celular institucional',
+			personal_phone: 'telefone pessoal',
+			personal_mobile: 'celular pessoal'
+		};
+
+		var messages = {
+			invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
+			invalid_mayor: 'Dados do prefeito incompletos! Campos inválidos: '
+		};
+
+		var requiredAdminFields = ['email','name','cpf','dob','phone'];
+		var requiredMayorFields = ['email','name','cpf','dob','phone'];
+
 		$scope.fetchCities = function(query) {
 			var data = {name: query, $hide_loading_feedback: true};
 			if($scope.form.uf) data.uf = $scope.form.uf;
@@ -5646,6 +5726,9 @@ function identify(namespace, file) {
 
 		$scope.nextStep = function() {
 			if($scope.step >= $scope.numSteps) return;
+
+			if($scope.step === 2 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
+			if($scope.step === 3 && !Utils.isValid($scope.form.mayor, requiredMayorFields, fieldNames, messages.invalid_mayor)) return;
 
 			$scope.step++;
 			$window.scrollTo(0, 0);
@@ -5681,6 +5764,9 @@ function identify(namespace, file) {
 				data.admin = Object.assign({}, $scope.form.admin);
 				data.mayor = Object.assign({}, $scope.form.mayor);
 				data.city = Object.assign({}, $scope.form.city);
+
+				if(!Utils.isValid(data.admin, requiredAdminFields, messages.invalid_gp)) return;
+				if(!Utils.isValid(data.mayor, requiredMayorFields, messages.invalid_mayor)) return;
 
 				data.city_id = (data.city) ? data.city.id : null;
 				data.admin = Utils.prepareDateFields(data.admin, ['dob']);
@@ -5732,6 +5818,7 @@ function identify(namespace, file) {
 			};
 
 			$scope.nextStep = function() {
+
 				var step = $scope.step + 1;
 				if($scope.step > 5) {
 					return $scope.completeSetup();
@@ -5942,6 +6029,8 @@ function identify(namespace, file) {
 			$scope.tenants = Tenants.find();
 			$scope.quickAdd = !!$stateParams.quick_add;
 
+			var dateOnlyFields = ['dob'];
+
 			if(!$scope.isCreating) {
 				$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
 			}
@@ -5966,31 +6055,19 @@ function identify(namespace, file) {
 
 			$scope.save = function() {
 
-				$scope.user = prepareDateFields($scope.user);
+				var data = Object.assign({}, $scope.user);
+				data = Utils.prepareDateFields(data, dateOnlyFields);
 
 				if($scope.isCreating) {
-					return Users.create($scope.user).$promise.then(onSaved)
+					return Users.create(data).$promise.then(onSaved)
 				}
 
-				Users.update($scope.user).$promise.then(onSaved);
+				Users.update(data).$promise.then(onSaved);
 
 			};
 
 			function prepareUserModel(user) {
-				user.dob = new Date(user.dob + ' 12:00:00');
-			}
-
-			function prepareDateFields(data) {
-				var dateOnlyFields = ['dob'];
-
-				for(var i in data) {
-					if(!data.hasOwnProperty(i)) continue;
-					if(dateOnlyFields.indexOf(i) === -1) continue;
-
-					data[i] = Utils.stripTimeFromTimestamp(data[i]);
-				}
-
-				return data;
+				return Utils.unpackDateFields(user, dateOnlyFields)
 			}
 
 			function onSaved(res) {

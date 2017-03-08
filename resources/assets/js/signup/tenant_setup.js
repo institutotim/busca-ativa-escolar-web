@@ -27,6 +27,7 @@
 			};
 
 			$scope.nextStep = function() {
+
 				var step = $scope.step + 1;
 				if($scope.step > 5) {
 					return $scope.completeSetup();

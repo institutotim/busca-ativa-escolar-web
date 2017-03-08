@@ -639,6 +639,10 @@ p.agent-panel {
   color: #d9534f !important;
 }
 
+.form-control.ng-invalid:not(:focus) {
+  color: #d9534f !important;
+}
+
 .angular-google-map-container {
   height: 400px;
 }

@@ -19,7 +19,7 @@
 			};
 
 		})
-		.factory('Utils', function() {
+		.factory('Utils', function(ngToast) {
 
 			function generateRandomID() {
 				return 'rand-' + (new Date()).getTime() + '-' + Math.round(Math.random() * 10000);
@@ -113,6 +113,35 @@
 				return plucked;
 			}
 
+			function validateFields(data, requiredFields) {
+				var invalid = [];
+
+				for(var i in requiredFields) {
+					if(!requiredFields.hasOwnProperty(i)) continue;
+					if(data[requiredFields[i]]) continue;
+
+					invalid.push(requiredFields[i]);
+				}
+
+				return invalid;
+			}
+
+			function isValid(data, requiredFields, fieldNames, message) {
+				var invalidFields = validateFields(data, requiredFields);
+
+				if(invalidFields.length <= 0) return true;
+
+				message += invalidFields
+					.map(function (field) {
+						return fieldNames[field] || field;
+					})
+					.join(", ");
+
+				ngToast.danger(message);
+
+				return false;
+			}
+
 			return {
 				stripTimeFromTimestamp: stripTimeFromTimestamp,
 				prepareDateFields: prepareDateFields,
@@ -120,6 +149,8 @@
 				convertISOtoBRDate: convertISOtoBRDate,
 				convertBRtoISODate: convertBRtoISODate,
 				generateRandomID: generateRandomID,
+				validateFields: validateFields,
+				isValid: isValid,
 				filter: filter,
 				extract: extract,
 				pluck: pluck,
