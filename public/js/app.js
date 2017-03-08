@@ -4218,6 +4218,7 @@ if (!Array.prototype.find) {
 			getType: getType,
 			can: can,
 			isLoggedIn: isLoggedIn,
+			refresh: refreshIdentity,
 			clearSession: clearSession,
 			setup: setup,
 			isUserType: isUserType,
@@ -5841,6 +5842,9 @@ function identify(namespace, file) {
 			$scope.completeSetup = function() {
 				SignUps.completeSetup({}, function() {
 					Platform.setFlag('HIDE_NAVBAR', false);
+
+					Identity.refresh();
+
 					$state.go('dashboard');
 				});
 			};

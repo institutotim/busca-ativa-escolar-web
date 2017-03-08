@@ -50,6 +50,9 @@
 			$scope.completeSetup = function() {
 				SignUps.completeSetup({}, function() {
 					Platform.setFlag('HIDE_NAVBAR', false);
+
+					Identity.refresh();
+
 					$state.go('dashboard');
 				});
 			};

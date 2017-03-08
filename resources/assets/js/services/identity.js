@@ -132,6 +132,7 @@
 			getType: getType,
 			can: can,
 			isLoggedIn: isLoggedIn,
+			refresh: refreshIdentity,
 			clearSession: clearSession,
 			setup: setup,
 			isUserType: isUserType,
