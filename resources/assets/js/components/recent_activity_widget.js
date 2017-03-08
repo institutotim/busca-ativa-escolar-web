@@ -22,8 +22,8 @@
 			};
 
 			scope.hasRecentActivity = function() {
-				return (log.length > 0);
-			}
+				return (log && log.length > 0);
+			};
 
 			Platform.whenReady(function () {
 				refresh();

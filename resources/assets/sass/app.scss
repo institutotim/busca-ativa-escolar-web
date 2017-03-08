@@ -158,3 +158,13 @@ p.agent-panel{
 #dashboard-map-gestor-nacional .angular-google-map-container { height: 550px; }
 
 .alert .alert-link { text-decoration: underline; }
+
+.chart-container {
+	position: relative;
+
+	highchart {
+		display: block;
+		width: 100%;
+		max-width: 100%;
+	}
+}

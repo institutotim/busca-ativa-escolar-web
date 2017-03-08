@@ -887,50 +887,15 @@
 
 	angular.module('BuscaAtivaEscolar').directive('causesChart', function (moment, Platform, Reports, Charts) {
 
-		var causesData = {};
-		var causesChart = {};
-		var causesReady = false;
-
-		var isReady = false;
-		var hasEnoughData = false;
-
-		function fetchCausesData() {
-			return Reports.query({
-				view: 'linear',
-				entity: 'children',
-				dimension: 'alert_cause_id',
-				filters: {
-					case_status: ['in_progress', 'completed', 'interrupted'],
-					alert_status: ['accepted']
-				}
-			}, function (data) {
-				causesData = data;
-				causesChart = getCausesChart();
-				causesReady = true;
-
-				isReady = true;
-				hasEnoughData = (
-					causesData &&
-					causesData.response &&
-					!angular.equals({}, causesData.response.report)
-				);
-			});
-		}
-
-		function getCausesChart() {
-			var report = causesData.response.report;
-			var chartName = 'Divisão dos casos por causa de evasão escolar';
-			var labels = causesData.labels ? causesData.labels : {};
-
-			return Charts.generateDimensionChart(report, chartName, labels);
-		}
-
-		function getCausesConfig() {
-			if(!causesReady) return;
-			return causesChart;
-		}
-
 		function init(scope, element, attrs) {
+
+			var causesData = {};
+			var causesChart = {};
+			var causesReady = false;
+
+			var isReady = false;
+			var hasEnoughData = false;
+
 			scope.getCausesConfig = getCausesConfig;
 
 			scope.isReady = function() {
@@ -940,6 +905,45 @@
 			scope.hasEnoughData = function() {
 				return hasEnoughData;
 			};
+
+			function fetchCausesData() {
+				return Reports.query({
+					view: 'linear',
+					entity: 'children',
+					dimension: 'alert_cause_id',
+					filters: {
+						case_status: ['in_progress', 'completed', 'interrupted'],
+						alert_status: ['accepted']
+					}
+				}, function (data) {
+					causesData = data;
+					causesChart = getCausesChart();
+					causesReady = true;
+
+					isReady = true;
+					hasEnoughData = (
+						causesData &&
+						causesData.response &&
+						!angular.equals({}, causesData.response.report)
+					);
+				});
+			}
+
+			function getCausesChart() {
+				var report = causesData.response.report;
+				var chartName = 'Divisão dos casos por causa de evasão escolar';
+				var labels = causesData.labels ? causesData.labels : {};
+
+				var cfg = Charts.generateDimensionChart(report, chartName, labels, 'pie');
+				console.log(cfg);
+
+				return cfg;
+			}
+
+			function getCausesConfig() {
+				if(!causesReady) return;
+				return causesChart;
+			}
 
 			Platform.whenReady(function () {
 				fetchCausesData();
@@ -1062,56 +1066,15 @@
 
 	angular.module('BuscaAtivaEscolar').directive('lastMonthTimeline', function (moment, Platform, Reports, Charts) {
 
-		var timelineData = {};
-		var timelineChart = {};
-		var timelineReady = false;
-
-		var isReady = false;
-		var hasEnoughData = false;
-
-		function fetchTimelineData() {
-			var lastMonth = moment().subtract(30, 'days').format('YYYY-MM-DD');
-			var today = moment().format('YYYY-MM-DD');
-
-			return Reports.query({
-				view: 'time_series',
-				entity: 'children',
-				dimension: 'child_status',
-				filters: {
-					date: {from: lastMonth, to: today},
-					case_status: ['in_progress', 'completed', 'interrupted'],
-					alert_status: ['accepted']
-				}
-			}, function (data) {
-				timelineData = data;
-				timelineChart = getTimelineChart();
-				timelineReady = true;
-
-				isReady = true;
-				hasEnoughData = (
-					timelineData &&
-					timelineData.response &&
-					timelineData.response.report.length &&
-					timelineData.response.report.length > 0
-				);
-			});
-		}
-
-		function getTimelineChart() {
-			var report = timelineData.response.report;
-			var chartName = 'Evolução do status dos casos nos últimos 30 dias';
-			var labels = timelineData.labels ? timelineData.labels : {};
-
-			return Charts.generateTimelineChart(report, chartName, labels);
-
-		}
-
-		function getTimelineConfig() {
-			if(!timelineReady) return;
-			return timelineChart;
-		}
-
 		function init(scope, element, attrs) {
+
+			var timelineData = {};
+			var timelineChart = {};
+			var timelineReady = false;
+
+			var isReady = false;
+			var hasEnoughData = false;
+
 			scope.getTimelineConfig = getTimelineConfig;
 
 			scope.isReady = function() {
@@ -1121,6 +1084,48 @@
 			scope.hasEnoughData = function() {
 				return hasEnoughData;
 			};
+
+			function fetchTimelineData() {
+				var lastMonth = moment().subtract(30, 'days').format('YYYY-MM-DD');
+				var today = moment().format('YYYY-MM-DD');
+
+				return Reports.query({
+					view: 'time_series',
+					entity: 'children',
+					dimension: 'child_status',
+					filters: {
+						date: {from: lastMonth, to: today},
+						case_status: ['in_progress', 'completed', 'interrupted'],
+						alert_status: ['accepted']
+					}
+				}, function (data) {
+					timelineData = data;
+					timelineChart = getTimelineChart();
+					timelineReady = true;
+
+					isReady = true;
+					hasEnoughData = (
+						timelineData &&
+						timelineData.response &&
+						timelineData.response.report.length &&
+						timelineData.response.report.length > 0
+					);
+				});
+			}
+
+			function getTimelineChart() {
+				var report = timelineData.response.report;
+				var chartName = 'Evolução do status dos casos nos últimos 30 dias';
+				var labels = timelineData.labels ? timelineData.labels : {};
+
+				return Charts.generateTimelineChart(report, chartName, labels);
+
+			}
+
+			function getTimelineConfig() {
+				if(!timelineReady) return;
+				return timelineChart;
+			}
 
 			Platform.whenReady(function () {
 				fetchTimelineData();
@@ -1414,8 +1419,8 @@
 			};
 
 			scope.hasRecentActivity = function() {
-				return (log.length > 0);
-			}
+				return (log && log.length > 0);
+			};
 
 			Platform.whenReady(function () {
 				refresh();
@@ -3957,11 +3962,12 @@ if (!Array.prototype.find) {
 
 	app.service('Charts', function Charts(Utils) {
 
-		function generateDimensionChart(report, seriesName, labels, yAxisLabel, valueSuffix) {
+		function generateDimensionChart(report, seriesName, labels, chartType, yAxisLabel, valueSuffix) {
 
-			console.log("[charts] Generating dimension chart: ", report, seriesName, labels, yAxisLabel, valueSuffix);
+			console.log("[charts] Generating dimension chart: ", seriesName, report);
 
 			if(!report || !seriesName || !labels) return;
+			if(!chartType) chartType = 'bar';
 			if(!yAxisLabel) yAxisLabel = 'Quantidade';
 			if(!valueSuffix) valueSuffix = 'casos';
 
@@ -3973,7 +3979,11 @@ if (!Array.prototype.find) {
 
 				var category = (labels[i]) ? labels[i] : i;
 
-				data.push( report[i] );
+				data.push({
+					name: category,
+					y: report[i]
+				});
+
 				categories.push( category );
 
 			}
@@ -3981,7 +3991,7 @@ if (!Array.prototype.find) {
 			return {
 				options: {
 					chart: {
-						type: 'bar'
+						type: chartType
 					},
 					title: {
 						text: ''
@@ -4016,6 +4026,14 @@ if (!Array.prototype.find) {
 						dataLabels: {
 							enabled: true
 						}
+					},
+					pie: {
+						allowPointSelect: true,
+						showInLegend: true,
+						cursor: 'pointer',
+						dataLabels: {
+							enabled: false,
+						}
 					}
 				},
 				legend: {
@@ -4035,6 +4053,7 @@ if (!Array.prototype.find) {
 				series: [
 					{
 						id: Utils.generateRandomID(),
+						colorByPoint: true,
 						name: seriesName,
 						data: data
 					}
@@ -4044,7 +4063,7 @@ if (!Array.prototype.find) {
 
 		function generateTimelineChart(report, chartName, labels) {
 
-			console.log("[charts] Generating timeline chart: ", report, chartName, labels);
+			console.log("[charts] Generating timeline chart: ", chartName, report);
 
 			if(!report || !chartName || !labels) return;
 
@@ -4055,17 +4074,16 @@ if (!Array.prototype.find) {
 
 			// Translates ￿date -> metric to metric -> date; prepares list of categories
 			for(var date in report) {
+
 				if(!report.hasOwnProperty(date)) continue;
+				if(categories.indexOf(date) === -1) categories.push(date);
 
 				for(var metric in report[date]) {
 					if(!report[date].hasOwnProperty(metric)) continue;
-
 					if(!data[metric]) data[metric] = {};
+
 					data[metric][date] = report[date][metric];
 
-					if(categories.indexOf(date) === -1) {
-						categories.push(date);
-					}
 				}
 			}
 

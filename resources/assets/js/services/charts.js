@@ -4,11 +4,12 @@
 
 	app.service('Charts', function Charts(Utils) {
 
-		function generateDimensionChart(report, seriesName, labels, yAxisLabel, valueSuffix) {
+		function generateDimensionChart(report, seriesName, labels, chartType, yAxisLabel, valueSuffix) {
 
-			console.log("[charts] Generating dimension chart: ", report, seriesName, labels, yAxisLabel, valueSuffix);
+			console.log("[charts] Generating dimension chart: ", seriesName, report);
 
 			if(!report || !seriesName || !labels) return;
+			if(!chartType) chartType = 'bar';
 			if(!yAxisLabel) yAxisLabel = 'Quantidade';
 			if(!valueSuffix) valueSuffix = 'casos';
 
@@ -20,7 +21,11 @@
 
 				var category = (labels[i]) ? labels[i] : i;
 
-				data.push( report[i] );
+				data.push({
+					name: category,
+					y: report[i]
+				});
+
 				categories.push( category );
 
 			}
@@ -28,7 +33,7 @@
 			return {
 				options: {
 					chart: {
-						type: 'bar'
+						type: chartType
 					},
 					title: {
 						text: ''
@@ -63,6 +68,14 @@
 						dataLabels: {
 							enabled: true
 						}
+					},
+					pie: {
+						allowPointSelect: true,
+						showInLegend: true,
+						cursor: 'pointer',
+						dataLabels: {
+							enabled: false,
+						}
 					}
 				},
 				legend: {
@@ -82,6 +95,7 @@
 				series: [
 					{
 						id: Utils.generateRandomID(),
+						colorByPoint: true,
 						name: seriesName,
 						data: data
 					}
@@ -91,7 +105,7 @@
 
 		function generateTimelineChart(report, chartName, labels) {
 
-			console.log("[charts] Generating timeline chart: ", report, chartName, labels);
+			console.log("[charts] Generating timeline chart: ", chartName, report);
 
 			if(!report || !chartName || !labels) return;
 
@@ -102,17 +116,16 @@
 
 			// Translates ￿date -> metric to metric -> date; prepares list of categories
 			for(var date in report) {
+
 				if(!report.hasOwnProperty(date)) continue;
+				if(categories.indexOf(date) === -1) categories.push(date);
 
 				for(var metric in report[date]) {
 					if(!report[date].hasOwnProperty(metric)) continue;
-
 					if(!data[metric]) data[metric] = {};
+
 					data[metric][date] = report[date][metric];
 
-					if(categories.indexOf(date) === -1) {
-						categories.push(date);
-					}
 				}
 			}
 

@@ -659,4 +659,13 @@ p.agent-panel {
   text-decoration: underline;
 }
 
+.chart-container {
+  position: relative;
+}
+.chart-container highchart {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+
 /*# sourceMappingURL=app.css.map */
