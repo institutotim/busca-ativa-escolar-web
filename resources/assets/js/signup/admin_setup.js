@@ -125,6 +125,26 @@
 							return;
 						}
 
+						if(res.reason === 'political_admin_email_in_use') {
+							$scope.step = 3;
+							return ngToast.danger('O e-mail indicado para o gestor político já está em uso. Por favor, escolha outro e-mail');
+						}
+
+						if(res.reason === 'operational_admin_email_in_use') {
+							$scope.step = 4;
+							return ngToast.danger('O e-mail indicado para o coordenador já está em uso. Por favor, escolha outro e-mail');
+						}
+
+						if(res.reason === 'invalid_political_admin_data') {
+							$scope.step = 3;
+							return ngToast.danger(messages.invalid_gp + res.fields.join(", "));
+						}
+
+						if(res.reason === 'invalid_operational_admin_data') {
+							$scope.step = 4;
+							return ngToast.danger(messages.invalid_co + res.fields.join(", "));
+						}
+
 						ngToast.danger("Ocorreu um erro ao finalizar a adesão: " + res.reason);
 
 					});
