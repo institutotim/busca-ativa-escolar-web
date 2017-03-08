@@ -15,19 +15,19 @@
 				<th colspan="2">
 					<div class="col-md-4 text-center">
 						<label for="rd-cause-priority-high-{{i}}" uib-tooltip="Alta prioridade">
-							<input id="rd-cause-priority-high-{{i}}" ng-value="'high'" ng-model="tenantSettings.alertPriorities[cause.id]" type="radio" /> <span class="label label-danger">Alta</span>
+							<input id="rd-cause-priority-high-{{i}}" ng-value="'high'" ng-model="settings.alertPriorities[cause.id]" type="radio" /> <span class="label label-danger">Alta</span>
 						</label>
 					</div>
 
 					<div class="col-md-4 text-center">
 						<label for="rd-cause-priority-medium-{{i}}" uib-tooltip="Média prioridade">
-							<input id="rd-cause-priority-medium-{{i}}" ng-value="'medium'" ng-model="tenantSettings.alertPriorities[cause.id]"  type="radio" /> <span class="label label-warning">Média</span>
+							<input id="rd-cause-priority-medium-{{i}}" ng-value="'medium'" ng-model="settings.alertPriorities[cause.id]"  type="radio" /> <span class="label label-warning">Média</span>
 						</label>
 					</div>
 
 					<div class="col-md-4 text-center">
 						<label for="rd-cause-priority-low-{{i}}" uib-tooltip="Baixa prioridade">
-							<input id="rd-cause-priority-low-{{i}}" ng-value="'low'" ng-model="tenantSettings.alertPriorities[cause.id]" type="radio" /> <span class="label label-default">Baixa</span>
+							<input id="rd-cause-priority-low-{{i}}" ng-value="'low'" ng-model="settings.alertPriorities[cause.id]" type="radio" /> <span class="label label-default">Baixa</span>
 						</label>
 					</div>
 				</th>

@@ -6,10 +6,9 @@
 			$scope.static = StaticData;
 
 			$scope.groups = [];
-			$scope.tenantSettings = {};
+			$scope.settings = {};
 
 			$scope.getGroups = function() {
-				if(!$scope.groups) return [];
 				return $scope.groups;
 			};
 
@@ -23,8 +22,8 @@
 					promises.push( Groups.updateSettings($scope.groups[i]).$promise );
 				}
 
-				console.log('\t[manage_case_workflow.save] Update tenant: ', $scope.tenantSettings);
-				promises.push( Tenants.updateSettings($scope.tenantSettings).$promise );
+				console.log('\t[manage_case_workflow.save] Update tenant: ', $scope.settings);
+				promises.push( Tenants.updateSettings($scope.settings).$promise );
 
 				$q.all(promises).then(
 					function (res) {
@@ -45,7 +44,7 @@
 				});
 
 				Tenants.getSettings(function (res) {
-					$scope.tenantSettings = res.settings;
+					$scope.settings = res;
 				});
 			};
 
