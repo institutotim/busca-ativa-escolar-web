@@ -49,10 +49,7 @@
 				var chartName = 'Divisão dos casos por causa de evasão escolar';
 				var labels = causesData.labels ? causesData.labels : {};
 
-				var cfg = Charts.generateDimensionChart(report, chartName, labels, 'pie');
-				console.log(cfg);
-
-				return cfg;
+				return Charts.generateDimensionChart(report, chartName, labels, 'pie');
 			}
 
 			function getCausesConfig() {
