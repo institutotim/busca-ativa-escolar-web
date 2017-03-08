@@ -8,17 +8,13 @@
 				controller: 'PendingAlertsCtrlCtrl'
 			})
 		})
-		.controller('PendingAlertsCtrlCtrl', function ($scope, $rootScope, Identity, Alerts, StaticData) {
+		.controller('PendingAlertsCtrlCtrl', function ($scope, $rootScope, Platform, Identity, Alerts, StaticData) {
 
 			$scope.identity = Identity;
 
 			$scope.children = {};
 			$scope.child = {};
 			$scope.causes = {};
-
-			$scope.$on('StaticData.ready', function() {
-				$scope.causes = StaticData.getAlertCauses()
-			});
 
 			$scope.getAlertCauseName = function() {
 				if(!$scope.child) return 'err:no_child_open';
@@ -53,7 +49,11 @@
 				});
 			};
 
-			$scope.refresh();
+
+			Platform.whenReady(function() {
+				$scope.causes = StaticData.getAlertCauses()
+				$scope.refresh();
+			});
 
 		});
 
