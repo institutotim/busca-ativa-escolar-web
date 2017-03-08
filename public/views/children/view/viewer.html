@@ -19,7 +19,7 @@
 			<div class="pull-right" style="margin: 0 10px;">
 				<label class="control-label panel-header-label" style="margin: 0;">Grau de risco</label>
 				<div>
-					<a class="btn btn-warning btn-raised" style="width: 100%">{{child.risk_level | lang:'risk_level'}}</a>
+					<a class="btn {{child.risk_level | lang:'risk_level.btn_class'}} btn-raised" style="width: 100%">{{child.risk_level | lang:'risk_level'}}</a>
 				</div>
 			</div>
 
