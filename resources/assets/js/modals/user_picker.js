@@ -2,7 +2,7 @@
 
 	angular
 		.module('BuscaAtivaEscolar')
-		.controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, $q, $uibModalInstance, title, message, users, canDismiss) {
+		.controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, $q, ngToast, $uibModalInstance, title, message, users, canDismiss) {
 
 			console.log("[modal] user_picker", title, message);
 
@@ -14,6 +14,11 @@
 			$scope.users = users;
 
 			$scope.onSelect = function() {
+				if(!$scope.selectedUser) {
+					ngToast.danger('Você não selecionou nenhum usuário!');
+					return;
+				}
+
 				$uibModalInstance.close({response: $scope.selectedUser});
 			};
 
