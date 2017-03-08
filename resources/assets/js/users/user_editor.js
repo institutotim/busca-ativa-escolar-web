@@ -8,7 +8,7 @@
 				controller: 'UserEditorCtrl'
 			})
 		})
-		.controller('UserEditorCtrl', function ($rootScope, $scope, $state, $stateParams, ngToast, Platform, Utils, Tenants, Identity, Users, Groups, StaticData) {
+		.controller('UserEditorCtrl', function ($rootScope, $scope, $state, $stateParams, ngToast, Platform, Cities, Utils, Tenants, Identity, Users, Groups, StaticData) {
 
 			$scope.user = {};
 			$scope.isCreating = (!$stateParams.user_id || $stateParams.user_id === "new");
@@ -19,7 +19,7 @@
 
 			$scope.groups = Groups.find();
 			$scope.tenants = Tenants.find();
-			$scope.quickAdd = !!$stateParams.quick_add;
+			$scope.quickAdd = ($stateParams.quick_add === 'true');
 
 			var dateOnlyFields = ['dob'];
 
@@ -49,6 +49,7 @@
 
 				var data = Object.assign({}, $scope.user);
 				data = Utils.prepareDateFields(data, dateOnlyFields);
+				data = Utils.prepareCityFields(data, ['work_city']);
 
 				if($scope.isCreating) {
 					return Users.create(data).$promise.then(onSaved)

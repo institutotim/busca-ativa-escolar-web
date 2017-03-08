@@ -58,28 +58,20 @@
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-address">Endereço institucional</label>
-				<input type="text" class="form-control" id="fld-gp-address" name="gp_address" ng-model="admins.political.address" >
+				<input type="text" class="form-control" id="fld-gp-address" name="gp_address" ng-model="admins.political.work_address" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-cep">CEP institucional</label>
-				<input type="tel" ui-br-cep-mask class="form-control" id="fld-gp-cep" name="gp_cep" ng-model="admins.political.cep" >
+				<input type="tel" ui-br-cep-mask class="form-control" id="fld-gp-cep" name="gp_cep" ng-model="admins.political.work_cep" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-neighborhood">Bairro</label>
-				<input type="text" class="form-control" id="fld-gp-neighborhood" name="gp_neighborhood" ng-model="admins.political.neighborhood" >
+				<input type="text" class="form-control" id="fld-gp-neighborhood" name="gp_neighborhood" ng-model="admins.political.work_neighborhood" >
 			</div>
 
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-uf">Estado</label>
-				<input type="text" class="form-control" id="fld-gp-uf" name="gp_uf" ng-model="admins.political.uf" >
-			</div>
-
-			<div class="form-group col-md-8">
-				<label class="control-label" for="fld-gp-city">Município</label>
-				<input type="text" class="form-control" id="fld-gp-city" name="gp_city" ng-model="admins.political.city" >
-			</div>
+			<app-city-select model="admins.political" uf-field="'work_uf'" city-field="'work_city'" is-uf-required="false" is-city-required="false"></app-city-select>
 
 			<hr />
 

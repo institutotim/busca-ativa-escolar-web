@@ -80,29 +80,21 @@
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-address">Endereço institucional*</label>
+				<label class="control-label" for="fld-address">Endereço institucional</label>
 				<input type="text" class="form-control" id="fld-address" ng-model="user.work_address">
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-cep">CEP institucional*</label>
+				<label class="control-label" for="fld-cep">CEP institucional</label>
 				<input type="text" class="form-control" id="fld-cep" ui-br-cep-mask ng-model="user.work_cep">
 			</div>
 
 			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-neighborhood">Bairro*</label>
+				<label class="control-label" for="fld-neighborhood">Bairro</label>
 				<input type="text" class="form-control" id="fld-neighborhood" ng-model="user.work_neighborhood">
 			</div>
 
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-uf">Estado*</label>
-				<input type="text" class="form-control" id="fld-uf" ng-model="user.work_uf">
-			</div>
-
-			<div class="form-group col-md-8">
-				<label class="control-label" for="fld-city">Município*</label>
-				<input type="text" class="form-control" id="fld-city" ng-model="user.work_city">
-			</div>
+			<app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false" is-city-required="false"></app-city-select>
 
 			<hr />
 
@@ -112,12 +104,12 @@
 			</div>
 
 			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-institution">Instituição*</label>
+				<label class="control-label" for="fld-institution">Instituição</label>
 				<input type="text" class="form-control" id="fld-institution" ng-model="user.institution">
 			</div>
 
 			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-position">Cargo*</label>
+				<label class="control-label" for="fld-position">Cargo</label>
 				<input type="text" class="form-control" id="fld-position" ng-model="user.position">
 			</div>
 

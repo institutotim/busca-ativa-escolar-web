@@ -62,33 +62,25 @@
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-skype-username">Skype</label>
-				<input type="text" class="form-control" name="co_username" id="fld-co-skype-username" ng-model="admins.operational.username" >
+				<input type="text" class="form-control" name="co_username" id="fld-co-skype-username" ng-model="admins.operational.skype" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-address">Endereço institucional</label>
-				<input type="text" class="form-control" name="co_address" id="fld-co-address" ng-model="admins.operational.address" >
+				<input type="text" class="form-control" name="co_address" id="fld-co-address" ng-model="admins.operational.work_address" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-cep">CEP institucional</label>
-				<input type="tel" ui-br-cep-mask class="form-control" name="co_cep" id="fld-co-cep" ng-model="admins.operational.cep" >
+				<input type="tel" ui-br-cep-mask class="form-control" name="co_cep" id="fld-co-cep" ng-model="admins.operational.work_cep" >
 			</div>
 
 			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-co-neighborhood">Bairro</label>
-				<input type="text" class="form-control" name="co_neighborhood" id="fld-co-neighborhood" ng-model="admins.operational.neighborhood" >
+				<input type="text" class="form-control" name="co_neighborhood" id="fld-co-neighborhood" ng-model="admins.operational.work_neighborhood" >
 			</div>
 
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-co-uf">Estado</label>
-				<input type="text" class="form-control" name="co_uf" id="fld-co-uf" ng-model="admins.operational.uf" >
-			</div>
-
-			<div class="form-group col-md-8">
-				<label class="control-label" for="fld-co-city">Município</label>
-				<input type="text" class="form-control" name="co_city" id="fld-co-city" ng-model="admins.operational.city" >
-			</div>
+			<app-city-select model="admins.operational" uf-field="'work_uf'" city-field="'work_city'" is-uf-required="false" is-city-required="false"></app-city-select>
 
 			<hr />
 

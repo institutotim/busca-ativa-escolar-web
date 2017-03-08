@@ -49,20 +49,6 @@
 				operational: {}
 			};
 
-			$scope.fetchCities = function(query) {
-				var data = {name: query, $hide_loading_feedback: true};
-				if($scope.form.uf) data.uf = $scope.form.uf;
-
-				return Cities.search(data).$promise.then(function (res) {
-					return res.results;
-				});
-			};
-
-			$scope.renderSelectedCity = function(city) {
-				if(!city) return '';
-				return city.uf + ' / ' + city.name;
-			};
-
 			$scope.goToStep = function (step) {
 				if($scope.step < 1) return;
 				if($scope.step > $scope.numSteps) return;
@@ -114,9 +100,11 @@
 
 					data.political = Object.assign({}, $scope.admins.political);
 					data.political = Utils.prepareDateFields(data.political, ['dob']);
+					data.political = Utils.prepareCityFields(data.political, ['work_city']);
 
 					data.operational = Object.assign({}, $scope.admins.operational);
 					data.operational = Utils.prepareDateFields(data.operational, ['dob']);
+					data.operational = Utils.prepareCityFields(data.operational, ['work_city']);
 
 					SignUps.complete(data, function (res) {
 						if(res.status === 'ok') {

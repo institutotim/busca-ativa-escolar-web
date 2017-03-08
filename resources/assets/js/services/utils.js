@@ -46,6 +46,18 @@
 				return data;
 			}
 
+			function prepareCityFields(data, cityFields) {
+				for(var i in data) {
+					if(!data.hasOwnProperty(i)) continue;
+					if(cityFields.indexOf(i) === -1) continue;
+
+					data[i + '_id'] = data[i] ? data[i].id : null;
+					data[i + '_name'] = data[i] ? data[i].name : null;
+				}
+
+				return data;
+			}
+
 			function unpackDateFields(data, dateOnlyFields) {
 				for(var i in data) {
 					if(!data.hasOwnProperty(i)) continue;
@@ -145,6 +157,7 @@
 			return {
 				stripTimeFromTimestamp: stripTimeFromTimestamp,
 				prepareDateFields: prepareDateFields,
+				prepareCityFields: prepareCityFields,
 				unpackDateFields: unpackDateFields,
 				convertISOtoBRDate: convertISOtoBRDate,
 				convertBRtoISODate: convertBRtoISODate,

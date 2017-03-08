@@ -956,39 +956,64 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('appCitySelect', function (Cities) {
+	angular.module('BuscaAtivaEscolar').directive('appCitySelect', function (Cities, StaticData) {
 
-		var $scope;
-		var $attrs;
-
-		// TODO: fix this and replace repeated uib-typeaheads with this directive
 
 		function init(scope, element, attrs) {
-			$scope = scope;
-			$attrs = attrs;
+			scope.static = StaticData;
 
-			$scope.$attrs = $attrs;
-			$scope.fetchCities = fetch;
-			$scope.renderSelectedCity = renderSelected;
+			scope.fetch = fetch;
+			scope.renderSelected = renderSelected;
+			scope.onUFChanged = onUFChanged;
+			scope.onCityChanged = onCityChanged;
+
+			function fetch(query) {
+				var data = {name: query, $hide_loading_feedback: true};
+				if(scope.uf) data.uf = scope.uf;
+
+				console.log("[components.city_select] Looking for cities: ", data);
+
+				return Cities.search(data).$promise.then(function (res) {
+					return res.results;
+				});
+			}
+
+			function onUFChanged() {
+				scope.city = null;
+				updateModel(scope.uf, null);
+				if(scope.onSelect) scope.onSelect(scope.uf, scope.city);
+			}
+
+			function onCityChanged(city) {
+				scope.uf = city.uf;
+				updateModel(city.uf, city);
+				if(scope.onSelect) scope.onSelect(scope.uf, city);
+			}
+
+			function updateModel(uf, city) {
+				if(!scope.model) return;
+				if(scope.ufField) scope.model[scope.ufField] = uf;
+				if(scope.cityField) scope.model[scope.cityField] = city;
+			}
+
+			function renderSelected(city) {
+				if(!city) return '';
+				return city.uf + ' / ' + city.name;
+			}
+
 		}
 
-		function fetch(query) {
-			var data = {name: query, $hide_loading_feedback: true};
-			if($attrs.selectedUF) data.uf = $attrs.selectedUF;
-
-			console.log("[create_alert] Looking for cities: ", data);
-
-			return Cities.search(data).$promise.then(function (res) {
-				return res.results;
-			});
-		};
-
-		function renderSelected(city) {
-			if(!city) return '';
-			return city.uf + ' / ' + city.name;
-		};
-
 		return {
+			scope: {
+				'onSelect': '=?',
+				'isUfRequired': '&?',
+				'isCityRequired': '&?',
+				'city': '=?',
+				'uf': '=?',
+				'model': '=?',
+				'ufField': '=?',
+				'cityField': '=?'
+			},
 			link: init,
 			replace: true,
 			templateUrl: '/views/components/city_select.html'
@@ -5194,6 +5219,18 @@ if (!Array.prototype.find) {
 				return data;
 			}
 
+			function prepareCityFields(data, cityFields) {
+				for(var i in data) {
+					if(!data.hasOwnProperty(i)) continue;
+					if(cityFields.indexOf(i) === -1) continue;
+
+					data[i + '_id'] = data[i] ? data[i].id : null;
+					data[i + '_name'] = data[i] ? data[i].name : null;
+				}
+
+				return data;
+			}
+
 			function unpackDateFields(data, dateOnlyFields) {
 				for(var i in data) {
 					if(!data.hasOwnProperty(i)) continue;
@@ -5293,6 +5330,7 @@ if (!Array.prototype.find) {
 			return {
 				stripTimeFromTimestamp: stripTimeFromTimestamp,
 				prepareDateFields: prepareDateFields,
+				prepareCityFields: prepareCityFields,
 				unpackDateFields: unpackDateFields,
 				convertISOtoBRDate: convertISOtoBRDate,
 				convertBRtoISODate: convertBRtoISODate,
@@ -5575,20 +5613,6 @@ function identify(namespace, file) {
 				operational: {}
 			};
 
-			$scope.fetchCities = function(query) {
-				var data = {name: query, $hide_loading_feedback: true};
-				if($scope.form.uf) data.uf = $scope.form.uf;
-
-				return Cities.search(data).$promise.then(function (res) {
-					return res.results;
-				});
-			};
-
-			$scope.renderSelectedCity = function(city) {
-				if(!city) return '';
-				return city.uf + ' / ' + city.name;
-			};
-
 			$scope.goToStep = function (step) {
 				if($scope.step < 1) return;
 				if($scope.step > $scope.numSteps) return;
@@ -5640,9 +5664,11 @@ function identify(namespace, file) {
 
 					data.political = Object.assign({}, $scope.admins.political);
 					data.political = Utils.prepareDateFields(data.political, ['dob']);
+					data.political = Utils.prepareCityFields(data.political, ['work_city']);
 
 					data.operational = Object.assign({}, $scope.admins.operational);
 					data.operational = Utils.prepareDateFields(data.operational, ['dob']);
+					data.operational = Utils.prepareCityFields(data.operational, ['work_city']);
 
 					SignUps.complete(data, function (res) {
 						if(res.status === 'ok') {
@@ -5760,6 +5786,11 @@ function identify(namespace, file) {
 
 			$scope.step--;
 			$window.scrollTo(0, 0);
+		};
+
+		$scope.onCitySelect = function(uf, city) {
+			if(!uf || !city) return;
+			$scope.checkCityAvailability(city);
 		};
 
 		$scope.checkCityAvailability = function(city) {
@@ -6050,7 +6081,7 @@ function identify(namespace, file) {
 				controller: 'UserEditorCtrl'
 			})
 		})
-		.controller('UserEditorCtrl', function ($rootScope, $scope, $state, $stateParams, ngToast, Platform, Utils, Tenants, Identity, Users, Groups, StaticData) {
+		.controller('UserEditorCtrl', function ($rootScope, $scope, $state, $stateParams, ngToast, Platform, Cities, Utils, Tenants, Identity, Users, Groups, StaticData) {
 
 			$scope.user = {};
 			$scope.isCreating = (!$stateParams.user_id || $stateParams.user_id === "new");
@@ -6061,7 +6092,7 @@ function identify(namespace, file) {
 
 			$scope.groups = Groups.find();
 			$scope.tenants = Tenants.find();
-			$scope.quickAdd = !!$stateParams.quick_add;
+			$scope.quickAdd = ($stateParams.quick_add === 'true');
 
 			var dateOnlyFields = ['dob'];
 
@@ -6091,6 +6122,7 @@ function identify(namespace, file) {
 
 				var data = Object.assign({}, $scope.user);
 				data = Utils.prepareDateFields(data, dateOnlyFields);
+				data = Utils.prepareCityFields(data, ['work_city']);
 
 				if($scope.isCreating) {
 					return Users.create(data).$promise.then(onSaved)
