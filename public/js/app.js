@@ -885,7 +885,7 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('causesChart', function (moment, Platform, Reports, Charts) {
+	angular.module('BuscaAtivaEscolar').directive('causesChart', function ($timeout, moment, Platform, Reports, Charts) {
 
 		function init(scope, element, attrs) {
 
@@ -926,6 +926,10 @@
 						causesData.response &&
 						!angular.equals({}, causesData.response.report)
 					);
+
+					$timeout(function() {
+						scope.$broadcast('highchartsng.reflow');
+					}, 500);
 				});
 			}
 
@@ -1061,7 +1065,7 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('lastMonthTimeline', function (moment, Platform, Reports, Charts) {
+	angular.module('BuscaAtivaEscolar').directive('lastMonthTimeline', function ($timeout, moment, Platform, Reports, Charts) {
 
 		function init(scope, element, attrs) {
 
@@ -1107,6 +1111,10 @@
 						timelineData.response.report.length &&
 						timelineData.response.report.length > 0
 					);
+
+					$timeout(function() {
+						scope.$broadcast('highchartsng.reflow');
+					}, 500);
 				});
 			}
 
@@ -4122,7 +4130,6 @@ if (!Array.prototype.find) {
 				title: {
 					text: ''
 				},
-
 				loading: false
 			};
 		}

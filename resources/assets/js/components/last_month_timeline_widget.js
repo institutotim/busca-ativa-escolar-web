@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('lastMonthTimeline', function (moment, Platform, Reports, Charts) {
+	angular.module('BuscaAtivaEscolar').directive('lastMonthTimeline', function ($timeout, moment, Platform, Reports, Charts) {
 
 		function init(scope, element, attrs) {
 
@@ -46,6 +46,10 @@
 						timelineData.response.report.length &&
 						timelineData.response.report.length > 0
 					);
+
+					$timeout(function() {
+						scope.$broadcast('highchartsng.reflow');
+					}, 500);
 				});
 			}
 

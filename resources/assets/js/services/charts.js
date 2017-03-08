@@ -167,7 +167,6 @@
 				title: {
 					text: ''
 				},
-
 				loading: false
 			};
 		}
