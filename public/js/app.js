@@ -512,7 +512,7 @@
 			CaseSteps.assignableUsers({type: $scope.step.step_type, id: $scope.step.id}).$promise
 				.then(function (res) {
 					if(!res.users) return ngToast.danger("Nenhum usuário pode ser atribuído para essa etapa!");
-					return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, false))
+					return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, true))
 				})
 				.then(function (user) {
 					return CaseSteps.assignUser({type: $scope.step.step_type, id: $scope.step.id, user_id: user.id}).$promise;
