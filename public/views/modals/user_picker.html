@@ -2,7 +2,7 @@
 	<div class="modal-header">
 		<h3 class="modal-title">{{title || 'Selecione um usuário:'}}</h3>
 	</div>
-	<div class="modal-body">
+	<div class="modal-body" ng-show="hasUsers()">
 		<div ng-show="message">{{message}}</div>
 		<div class="block">
 			<label class="control-label">Usuário</label>
@@ -14,8 +14,11 @@
 			</ui-select>
 		</div>
 	</div>
+	<div class="modal-body" ng-show="!hasUsers()">
+		<div class="alert alert-warning"><strong>Nenhum usuário disponível! </strong><span ng-bind="noUsersMessage"></span></div>
+	</div>
 	<div class="modal-footer">
-		<button class="btn btn-default" type="button" ng-show="canDismiss" ng-click="close()">Cancelar</button>
-		<button class="btn btn-primary btn-raised" type="button" ng-click="onSelect()">Selecionar</button>
+		<button class="btn btn-default" type="button" ng-show="canDismiss || !hasUsers()" ng-click="close()">Cancelar</button>
+		<button class="btn btn-primary btn-raised" type="button" ng-show="hasUsers()" ng-click="onSelect()">Selecionar</button>
 	</div>
 </div>
