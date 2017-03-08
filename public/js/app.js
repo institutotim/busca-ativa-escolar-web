@@ -194,7 +194,7 @@
 			$scope.Decorators = Decorators;
 			$scope.Children = Children;
 
-			$scope.query = {
+			$scope.defaultQuery = {
 				name: '',
 				step_name: '',
 				cause_name: '',
@@ -211,6 +211,11 @@
 				place_kind_null: true,
 			};
 
+			$scope.resetQuery = function() {
+				return $scope.query = angular.merge({}, $scope.defaultQuery);;
+			};
+
+			$scope.query = $scope.resetQuery();
 			$scope.search = {};
 
 			$scope.refresh = function() {
