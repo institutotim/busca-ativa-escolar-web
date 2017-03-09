@@ -1168,6 +1168,37 @@
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar').directive('metricsCountry', function (moment, Platform, Reports, Charts) {
+
+		function init(scope, element, attrs) {
+			scope.stats = {};
+
+			function refreshMetrics() {
+				return Reports.getCountryStats(function (data) {
+					if(data.status !== 'ok') {
+						ngToast.danger('Ocorreu um erro ao carregar os números gerais da plataforma. (err: ' + data.reason + ')');
+						return;
+					}
+
+					scope.stats = data.stats;
+				});
+			}
+
+			Platform.whenReady(function () {
+				refreshMetrics();
+			});
+		}
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/metrics_country.html'
+		};
+	});
+
+})();
+(function() {
+
 	angular.module('BuscaAtivaEscolar').directive('metricsOverview', function (moment, Platform, Reports, Charts) {
 
 		var metrics = {};
@@ -1777,8 +1808,8 @@
 
 		$rootScope.section = '';
 
-		$scope.email = 'manager_sp@lqdi.net';
-		$scope.password = 'demo';
+		$scope.email = '';
+		$scope.password = '';
 		$scope.isLoading = false;
 
 		$scope.endpoints = {
@@ -3565,6 +3596,7 @@ if (!Array.prototype.find) {
 
 			return $resource(API.getURI('reports/:entity'), {entity: '@entity'}, {
 				query: {method: 'POST', headers: headers},
+				getCountryStats: {method: 'GET', url: API.getURI('reports/country_stats'), headers: headers},
 			});
 		});
 })();

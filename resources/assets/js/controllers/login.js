@@ -6,8 +6,8 @@
 
 		$rootScope.section = '';
 
-		$scope.email = 'manager_sp@lqdi.net';
-		$scope.password = 'demo';
+		$scope.email = '';
+		$scope.password = '';
 		$scope.isLoading = false;
 
 		$scope.endpoints = {
