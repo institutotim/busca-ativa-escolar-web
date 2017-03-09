@@ -1,7 +1,14 @@
 <div class="city-select {{class}}">
 	<div class="form-group col-md-2">
 		<label class="control-label" for="fld-uf">UF{{isUfRequired ? '*' : ''}}</label>
-		<select class="form-control" id="fld-uf" ng-model="uf" ng-change="onUFChanged()" ng-options="uf.code as uf.code for uf in static.getUFs()">
+		<select
+				class="form-control"
+				id="fld-uf"
+				ng-model="uf"
+				ng-required="isUfRequired"
+				ng-change="onUFChanged()"
+				ng-options="uf.code as uf.code for uf in static.getUFs()"
+		>
 			<option value="" ng-if="!isUfRequired"></option>
 		</select>
 	</div>
@@ -17,7 +24,9 @@
 		<label class="control-label" for="fld-city">Município{{isCityRequired ? '*' : ''}}</label>
 		<input type="text" id="fld-city"
 		       class="form-control"
+
 		       ng-model="city"
+		       ng-required="isCityRequired"
 
 		       uib-typeahead="city for city in fetch($viewValue)"
 		       typeahead-on-select="onCityChanged($item)"
