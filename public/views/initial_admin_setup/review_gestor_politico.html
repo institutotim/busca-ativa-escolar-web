@@ -1,4 +1,4 @@
-<form class="panel panel-default" ng-submit="nextStep()" autocomplete="off">
+<form class="panel panel-default" ng-submit="nextStep()">
 	<div class="panel-heading">
 		<h3><strong ng-bind="(step + '.')"></strong> <i class="fa fa-sitemap"></i> Revisão do cadastro</h3>
 	</div>
@@ -13,7 +13,11 @@
 			</p>
 		</div>
 
+		<hr />
+
 		<div class="clearfix">
+
+			<h5>Dados pessoais</h5>
 
 			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-gp-name">Nome*</label>
@@ -28,85 +32,77 @@
 				<input type="tel" ui-br-cpf-mask class="form-control" id="fld-gp-cpf" name="gp_cpf" required ng-model="admins.political.cpf" >
 			</div>
 
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-email">E-mail institucional*</label>
-				<input type="email" class="form-control" id="fld-gp-email" name="gp_work_email" required ng-model="admins.political.email" >
-			</div>
-			<div class="form-group col-md-4">
+			<hr />
+
+			<h5>Contatos</h5>
+
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-gp-work-phone">Telefone fixo institucional*</label>
 				<input type="tel" ui-br-phone-number class="form-control" required id="fld-gp-work-phone" name="gp_work_phone" ng-model="admins.political.phone" >
 			</div>
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-gp-work-mobile">Telefone celular institucional</label>
 				<input type="tel" ui-br-phone-number class="form-control" id="fld-gp-work-mobile" name="gp_work_mobile" ng-model="admins.political.mobile" >
 			</div>
 
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-personal-email">E-mail pessoal</label>
-				<input type="email" class="form-control" id="fld-gp-personal-email" name="gp_personal_email" ng-model="admins.political.personal_email" >
-			</div>
-
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-gp-personal-mobile">Telefone celular pessoal</label>
 				<input type="tel" ui-br-phone-number class="form-control" id="fld-gp-personal-mobile" name="gp_personal_mobile" ng-model="admins.political.personal_mobile" >
 			</div>
 
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-gp-skype-username">Skype</label>
 				<input type="text" class="form-control" id="fld-gp-skype-username" name="gp_skype" ng-model="admins.political.skype" >
 			</div>
 
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-address">Endereço institucional</label>
-				<input type="text" class="form-control" id="fld-gp-address" name="gp_address" ng-model="admins.political.work_address" >
-			</div>
+			<hr />
 
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-cep">CEP institucional</label>
-				<input type="tel" ui-br-cep-mask class="form-control" id="fld-gp-cep" name="gp_cep" ng-model="admins.political.work_cep" >
-			</div>
+			<h5>Endereço institucional <small>(opcional)</small></h5>
 
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-gp-neighborhood">Bairro</label>
-				<input type="text" class="form-control" id="fld-gp-neighborhood" name="gp_neighborhood" ng-model="admins.political.work_neighborhood" >
+			<div class="form-group col-md-12">
+				<label class="control-label" for="fld-gp-address">Logradouro</label>
+				<input type="text" class="form-control" name="gp_address" id="fld-gp-address" ng-model="admins.political.work_address" >
 			</div>
 
 			<app-city-select model="admins.political" uf-field="'work_uf'" city-field="'work_city'" is-uf-required="false" is-city-required="false"></app-city-select>
 
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-cep">CEP</label>
+				<input type="tel" ui-br-cep-mask class="form-control" id="fld-gp-cep" name="gp_cep" ng-model="admins.political.work_cep" >
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-neighborhood">Bairro</label>
+				<input type="text" class="form-control" id="fld-gp-neighborhood" name="gp_neighborhood" ng-model="admins.political.work_neighborhood" >
+			</div>
+
 			<hr />
 
-			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-gp-institution">Instituição*</label>
-				<input type="text" class="form-control" id="fld-gp-institution" name="gp_institution" required ng-model="admins.political.institution" >
+			<h5>Dados organizacionais <small>(opcional)</small></h5>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-institution">Órgão</label>
+				<input type="text" class="form-control" id="fld-gp-institution" name="gp_institution" ng-model="admins.political.institution" >
 			</div>
 
-			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-gp-position">Cargo*</label>
-				<input type="text" class="form-control" id="fld-gp-position" name="gp_position" required ng-model="admins.political.position" >
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-position">Cargo</label>
+				<input type="text" class="form-control" id="fld-gp-position" name="gp_position" ng-model="admins.political.position" >
 			</div>
 
-		</div>
+			<hr />
 
-		<br /><br />
+			<h5>Dados de acesso</h5>
 
-		<div class="panel panel-info">
-			<div class="panel-heading">
-				<p><i class="fa fa-key"></i> Escolha uma senha de acesso para seu usuário:</p>
+			<p>A senha informada será enviada para o seu e-mail.</p>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-email"><i class="fa fa-envelope"></i> E-mail de acesso*</label>
+				<input type="email" class="form-control" id="fld-gp-email" name="gp_email" required ng-model="admins.political.email" >
 			</div>
-			<div class="panel-body">
-
-				<p>A senha informada será enviada para o seu e-mail.</p>
-
-				<div class="form-group">
-					<label class="control-label" for="fld-gp-password">E-mail</label>
-					<div>
-						<span ng-bind="admins.political.email" class="label label-default"></span> <span>(o mesmo que seu e-mail institucional)</span>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label" for="fld-gp-password">Senha*</label>
-					<input type="password" class="form-control" id="fld-gp-password" autocomplete="new-password" name="password" required ng-model="admins.political.password" >
-				</div>
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-password"><i class="fa fa-key"></i> Senha de acesso*</label>
+				<input type="password" class="form-control" id="fld-gp-password" name="gp_password" required ng-model="admins.political.password" >
 			</div>
 		</div>
 

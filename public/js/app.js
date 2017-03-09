@@ -1016,8 +1016,8 @@
 		return {
 			scope: {
 				'onSelect': '=?',
-				'isUfRequired': '&?',
-				'isCityRequired': '&?',
+				'isUfRequired': '=?',
+				'isCityRequired': '=?',
 				'city': '=?',
 				'uf': '=?',
 				'model': '=?',

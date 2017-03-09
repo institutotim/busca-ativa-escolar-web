@@ -4,30 +4,20 @@
 	</div>
 	<div class="panel-body">
 
-		<div class="col-md-12" ng-hide="user.type === 'gestor_operacional'">
-			<h4>Gestor Político</h4>
-			<p>
-				O gestor político é o representante direto do governo municipal na plataforma.
-				Através do acesso de gestor político, você poderá acompanhar métricas e relatórios de evolução do programa e gerenciar os usuários do município.
-			</p>
-		</div>
-
-		<div class="col-md-12" ng-show="user.type === 'gestor_operacional'">
-			<h4>Coordenador Operacional</h4>
-			<p>
-				O coordenador operacional deve ser a pessoa responsável por operacionalizar o programa no município no dia-a-dia.
-				Esse coordenador terá acesso completo à plataforma, podendo visualizar e acompanhar casos, incluir informações, determinar responsáveis, configurar parametrização, cadastrar e gerenciar usuários e extrair relatórios.
-				Esse coordenador também poderá alterar os acessos do Gestor Político e Prefeito, quando ocorrer uma troca de gestão.
-				Por isso, sugerimos que essa pessoa seja um funcionário concursado da Prefeitura, para que possa continuar a dar sequência no programa, independente da continuidade da gestão em exercício.
-			</p>
-		</div>
-
 		<div class="clearfix">
 
-			<div class="form-group col-md-12">
+			<h5>Dados pessoais</h5>
+
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-name">Nome*</label>
 				<input required type="text" class="form-control" id="fld-confirm-name" ng-model="user.name">
 			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label"><i class="fa fa-envelope"></i> E-mail de acesso*</label>
+				<input type="text" class="form-control" readonly="readonly" ng-model="user.email" />
+			</div>
+
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-dob">Data de nascimento*</label>
 				<input required type="tel" ui-date-mask class="form-control" id="fld-confirm-dob" ng-model="user.dob">
@@ -37,60 +27,60 @@
 				<input required type="tel" ui-br-cpf-mask class="form-control" id="fld-confirm-cpf" ng-model="user.cpf">
 			</div>
 
-			<div class="form-group col-md-4">
-				<label class="control-label">E-mail institucional</label>
-				<div ng-bind="user.email"></div>
-			</div>
-			<div class="form-group col-md-4">
+			<hr />
+
+			<h5>Contatos</h5>
+
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-work-phone">Telefone fixo institucional</label>
 				<input type="tel" ui-br-phone-number class="form-control" id="fld-confirm-work-phone" ng-model="user.phone">
 			</div>
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-work-mobile">Telefone celular institucional</label>
 				<input type="tel" ui-br-phone-number class="form-control" id="fld-confirm-work-mobile" ng-model="user.mobile">
 			</div>
 
-
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-confirm-personal-email">E-mail pessoal</label>
-				<input type="email" class="form-control" id="fld-confirm-personal-email" ng-model="user.personal_email">
-			</div>
-
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-personal-mobile">Telefone celular pessoal</label>
 				<input type="tel" ui-br-phone-number class="form-control" id="fld-confirm-personal-mobile" ng-model="user.personal_mobile">
 			</div>
 
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-skype-username">Skype</label>
 				<input type="text" class="form-control" id="fld-confirm-skype-username" ng-model="user.username">
 			</div>
 
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-confirm-address">Endereço institucional</label>
+			<hr />
+
+			<h5>Endereço institucional <small>(opcional)</small></h5>
+
+			<div class="form-group col-md-12">
+				<label class="control-label" for="fld-confirm-address">Endereço</label>
 				<input type="text" class="form-control" id="fld-confirm-address" ng-model="user.address">
 			</div>
 
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-confirm-cep">CEP institucional</label>
-				<input type="tel" ui-br-cep-mask class="form-control" id="fld-confirm-cep" ng-model="user.cep">
-			</div>
-
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-neighborhood">Bairro</label>
 				<input type="text" class="form-control" id="fld-confirm-neighborhood" ng-model="user.neighborhood">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-confirm-cep">CEP</label>
+				<input type="tel" ui-br-cep-mask class="form-control" id="fld-confirm-cep" ng-model="user.cep">
 			</div>
 
 			<app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false" is-city-required="false"></app-city-select>
 
 			<hr />
 
-			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-confirm-institution">Instituição</label>
+			<h5>Dados organizacionais <small>(opcional)</small></h5>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-confirm-institution">Órgão</label>
 				<input type="text" class="form-control" id="fld-confirm-institution" ng-model="user.institution">
 			</div>
 
-			<div class="form-group col-md-12">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-position">Cargo</label>
 				<input type="text" class="form-control" id="fld-confirm-position" ng-model="user.position">
 			</div>

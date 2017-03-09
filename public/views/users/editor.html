@@ -20,31 +20,47 @@
 				<input type="text" class="form-control" id="fld-name" ng-model="user.name">
 			</div>
 
+			<hr />
+
+			<h5>Dados de acesso</h5>
+
 			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-email">E-mail institucional*</label>
+				<label class="control-label" for="fld-email"><i class="fa fa-envelope"></i> E-mail de acesso*</label>
 				<input type="email" class="form-control" id="fld-email" ng-model="user.email" ng-readonly="!isCreating">
 			</div>
 
 			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-password">Senha de acesso*</label>
+				<label class="control-label" for="fld-password"><i class="fa fa-key"></i> Senha de acesso*</label>
 				<input type="password" class="form-control" id="fld-password" ng-model="user.password">
 			</div>
 
-			<hr />
-
-			<div class="form-group col-md-12">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-type">Função ocupada no sistema*</label>
 				<select class="form-control" id="fld-type" ng-model="user.type" ng-options="n as (n | lang:'user.type') for n in static.getUserTypes()"></select>
 			</div>
 
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-group">Grupo*</label>
+				<select class="form-control" id="fld-group" ng-model="user.group_id" ng-options="n.id as n.name for n in groups.data">
+					<option value="">Nenhum</option>
+				</select>
+			</div>
+
+			<hr />
+
 			<div ng-if="canDefineUserTenant()">
+
+				<h5>Dados de plataforma</h5>
+
 				<div class="form-group col-md-12">
-					<label class="control-label" for="fld-tenant_id">Município*</label>
+					<label class="control-label" for="fld-tenant_id"><i class="fa fa-university"></i> Município da plataforma*</label>
 					<select class="form-control" id="fld-tenant_id" ng-model="user.tenant_id" ng-options="n.id as n.name for n in tenants.data"></select>
 				</div>
 
 				<hr />
 			</div>
+
+			<h5>Dados pessoais</h5>
 
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-dob">Data de nascimento*</label>
@@ -54,6 +70,11 @@
 				<label class="control-label" for="fld-cpf">CPF*</label>
 				<input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-model="user.cpf">
 			</div>
+
+			<hr />
+
+			<h5>Contatos</h5>
+
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
 				<input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-model="user.work_phone">
@@ -63,52 +84,47 @@
 				<input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number ng-model="user.work_mobile">
 			</div>
 
-
-			<div class="form-group col-md-4">
-				<label class="control-label" for="fld-personal-email">E-mail pessoal</label>
-				<input type="email" class="form-control" id="fld-personal-email" ng-model="user.personal_email">
-			</div>
-
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-personal-mobile">Telefone celular pessoal</label>
 				<input type="text" class="form-control" id="fld-personal-mobile" ui-br-phone-number ng-model="user.personal_mobile">
 			</div>
 
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-skype-username">Skype</label>
 				<input type="text" class="form-control" id="fld-skype-username" ng-model="user.skype_username">
 			</div>
 
-			<div class="form-group col-md-4">
+			<hr />
+
+			<h5>Endereço institucional</h5>
+
+			<div class="form-group col-md-12">
 				<label class="control-label" for="fld-address">Endereço institucional</label>
 				<input type="text" class="form-control" id="fld-address" ng-model="user.work_address">
 			</div>
 
-			<div class="form-group col-md-4">
+			<app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false" is-city-required="false"></app-city-select>
+
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-cep">CEP institucional</label>
 				<input type="text" class="form-control" id="fld-cep" ui-br-cep-mask ng-model="user.work_cep">
 			</div>
 
-			<div class="form-group col-md-4">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-neighborhood">Bairro</label>
 				<input type="text" class="form-control" id="fld-neighborhood" ng-model="user.work_neighborhood">
 			</div>
 
-			<app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false" is-city-required="false"></app-city-select>
-
 			<hr />
 
-			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-group">Grupo*</label>
-				<select class="form-control" id="fld-group" ng-model="user.group_id" ng-options="n.id as n.name for n in groups.data"></select>
-			</div>
+			<h5>Dados organizacionais</h5>
 
-			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-institution">Instituição</label>
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-institution">Órgão</label>
 				<input type="text" class="form-control" id="fld-institution" ng-model="user.institution">
 			</div>
 
-			<div class="form-group col-md-12">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-position">Cargo</label>
 				<input type="text" class="form-control" id="fld-position" ng-model="user.position">
 			</div>
