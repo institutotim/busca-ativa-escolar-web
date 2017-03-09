@@ -6,6 +6,7 @@
 			scope.identity = Identity;
 			scope.auth = Auth;
 			scope.notifications = Notifications;
+			scope.platform = Platform;
 
 			scope.showNotifications = true;
 

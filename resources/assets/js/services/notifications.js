@@ -7,7 +7,7 @@
 			var seenNotifications = [];
 			var isBusy = false;
 
-			function refresh() {
+			function refresh(isFirstRefresh) {
 				isBusy = true;
 
 				console.log("[notifications] Checking for unread notifications...");
@@ -16,25 +16,26 @@
 					notifications = res.data;
 					console.log("[notifications] Unread notifications: ", notifications);
 					isBusy = false;
-					emitToastsOnNewNotifications();
+					emitToastsOnNewNotifications(isFirstRefresh);
 				});
 			}
 
 			function setup() {
-				refresh();
+				refresh(true);
 				$interval(refresh, Config.NOTIFICATIONS_REFRESH_INTERVAL);
 			}
 
-			function emitToastsOnNewNotifications() {
+			function emitToastsOnNewNotifications(isFirstRefresh) {
 				for(var i in notifications) {
 					if(!notifications.hasOwnProperty(i)) continue;
 					if(seenNotifications.indexOf(notifications[i].id) !== -1) continue;
 
 					seenNotifications.push(notifications[i].id);
 
+					if(isFirstRefresh) return;
+
 					console.info("[notifications.new] ", notifications[i]);
 
-					notifications[i].pushed = true;
 					ngToast.create({
 						className: notifications[i].data.type || 'info',
 						content: notifications[i].data.title
