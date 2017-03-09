@@ -10,13 +10,15 @@
 			<tr>
 				<th width="20%">Data</th>
 				<th width="20%">Usuário</th>
-				<th width="60%">Anotação</th>
+				<th width="10%">Grupo</th>
+				<th width="50%">Anotação</th>
 			</tr>
 			</thead>
 			<tbody>
 			<tr ng-repeat="comment in comments.data">
 				<td><span uib-tooltip-html="comment.created_at | amTimeAgo" ng-bind="comment.created_at | amCalendar"></span></td>
 				<td><i class="fa fa-user"></i> <span uib-tooltip-html="comment.author.type | lang:'user.type'" ng-bind="comment.author.name"></span></td>
+				<td><span ng-bind="comment.author.group.name || 'Nenhum'"></span></td>
 				<td ng-bind="comment.message"></td>
 			</tr>
 			</tbody>
