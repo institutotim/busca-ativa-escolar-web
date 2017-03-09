@@ -143,8 +143,9 @@
 				return CaseSteps.complete({type: step.step_type, id: step.id}).$promise;
 			}).then(function (response) {
 
-				if(response.fields) {
-					ngToast.danger("É necessário preencher todos os campos obrigatórios para concluir essa etapa. Campos incorretos: " + Object.keys(response.fields).join(", "));
+				if(response.messages) {
+					ngToast.danger("É necessário preencher todos os campos obrigatórios para concluir essa etapa.");
+					Utils.displayValidationErrors(response);
 					$state.go('child_viewer.cases.view_step', {step_type: step.step_type, step_id: step.id});
 					return;
 				}
@@ -407,12 +408,9 @@
 			console.info("[child_viewer.step_editor] Saving step data: ", data);
 
 			return CaseSteps.save(data).$promise.then(function (response) {
-				if(response.fields) {
-					ngToast.danger("Por favor, preencha os campos corretamente! Campos incorretos: " + Object.keys(response.fields));
-					return;
+				if(response.messages) {
+					return Utils.displayValidationErrors(response);
 				}
-
-				// TODO: highlight field on error
 
 				if(response.status !== "ok") {
 					ngToast.danger("Ocorreu um erro ao salvar os dados da etapa! (status=" + response.status + ", reason=" + response.reason + ")");

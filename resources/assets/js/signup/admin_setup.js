@@ -125,12 +125,14 @@
 
 						if(res.reason === 'invalid_political_admin_data') {
 							$scope.step = 3;
-							return ngToast.danger(messages.invalid_gp + res.fields.join(", "));
+							ngToast.danger(messages.invalid_gp);
+							return Utils.displayValidationErrors(res);
 						}
 
 						if(res.reason === 'invalid_operational_admin_data') {
 							$scope.step = 4;
-							return ngToast.danger(messages.invalid_co + res.fields.join(", "));
+							ngToast.danger(messages.invalid_co);
+							return Utils.displayValidationErrors(res);
 						}
 
 						ngToast.danger("Ocorreu um erro ao finalizar a adesão: " + res.reason);

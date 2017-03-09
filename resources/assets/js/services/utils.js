@@ -77,6 +77,17 @@
 				return ("" + timestamp).substring(0, 10);
 			}
 
+			function displayValidationErrors(response) {
+				if(!response || !response.messages) return false;
+
+				for(var i in response.messages) {
+					if(!response.messages.hasOwnProperty(i)) continue;
+					ngToast.danger(response.messages[i])
+				}
+
+				return true;
+			}
+
 			function filter(obj, predicate) {
 				if(obj.constructor === Array) return obj.filter(predicate);
 
@@ -160,6 +171,7 @@
 				prepareCityFields: prepareCityFields,
 				unpackDateFields: unpackDateFields,
 				convertISOtoBRDate: convertISOtoBRDate,
+				displayValidationErrors: displayValidationErrors,
 				convertBRtoISODate: convertBRtoISODate,
 				generateRandomID: generateRandomID,
 				validateFields: validateFields,

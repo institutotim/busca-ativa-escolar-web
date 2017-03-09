@@ -73,10 +73,7 @@
 					return;
 				}
 
-				if(res.fields) {
-					ngToast.danger("Por favor, preencha corretamente os campos: " + Object.keys(res.fields).join(", "));
-					return;
-				}
+				if(res.messages) return Utils.displayValidationErrors(res);
 
 				ngToast.danger("Ocorreu um erro ao salvar o usuário: ", res.status);
 			}

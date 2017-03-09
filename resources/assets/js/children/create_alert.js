@@ -41,10 +41,9 @@
 				data.place_city_name = data.place_city ? data.place_city.name : null;
 
 				Children.spawnFromAlert(data).$promise.then(function (res) {
-					if(res.fields) {
-						ngToast.danger('Por favor, preencha todos os campos corretamente!');
-						console.warn("[create_alert] Missing fields: ", res.fields);
-						return;
+					if(res.messages) {
+						console.warn("[create_alert] Failed validation: ", res.messages);
+						return Utils.displayValidationErrors(res);
 					}
 
 					if(!res || !res.child_id) {
