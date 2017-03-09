@@ -8,6 +8,8 @@
 
 				show: function(params) {
 
+					console.log('[modals] Show modal: ', params);
+
 					var def = $q.defer();
 
 					var instance = $uibModal.open(params);

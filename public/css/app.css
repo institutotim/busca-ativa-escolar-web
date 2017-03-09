@@ -686,4 +686,8 @@ hr {
   cursor: not-allowed;
 }
 
+.ng-toast.ng-toast--top {
+  top: 64px;
+}
+
 /*# sourceMappingURL=app.css.map */

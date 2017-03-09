@@ -19,11 +19,6 @@
 					templateUrl: '/views/dashboard.html',
 					controller: 'DashboardCtrl'
 				})
-				.state('preferences', {
-					url: '/preferences',
-					templateUrl: '/views/preferences/manage.html',
-					controller: 'PreferencesCtrl'
-				})
 				.state('developer_mode', {
 					url: '/developer_mode',
 					templateUrl: '/views/developer/developer_dashboard.html',

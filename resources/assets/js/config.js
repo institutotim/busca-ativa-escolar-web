@@ -25,6 +25,8 @@
 					}
 				},
 
+				NOTIFICATIONS_REFRESH_INTERVAL: 30000, // 30 sec
+
 				TOKEN_EXPIRES_IN: 3600, // 1 hour
 				REFRESH_EXPIRES_IN: 1209600, // 2 weeks
 

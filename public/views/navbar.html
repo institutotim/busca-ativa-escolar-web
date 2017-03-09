@@ -29,7 +29,7 @@
 
 
 			<ul class="nav navbar-nav navbar-right logged-user">
-				<li class="dropdown" uib-dropdown>
+				<li class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)">
 					<a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 						<i class="fa fa-user-circle-o"></i>
 						<span class="user-details">
@@ -42,10 +42,16 @@
 						<li><a ng-click="toggleNotifications($event)"><i class="fa fa-envelope-o"></i> Notificações</a></li>
 
 						<li class="notification-center" uib-collapse="!showNotifications">
-							<span ng-show="!notifications.length">Nenhuma notificação recente.</span>
-							<div ng-click="notification.open($event, i)" ng-repeat="(i, notification) in notifications" class="navbar-notification alert alert-{{notification.class}}">
-								<button ng-click="notification.hide($event, i)" type="button" class="close" data-dismiss="alert" aria-label="Esconder"><span aria-hidden="true">&times;</span></button>
-								{{notification.contents}}
+							<div ng-show="!notifications.hasUnread()" class="alert alert-info">Nenhuma notificação recente.</div>
+							<div ng-show="notifications.isLoading()" class="text-center" style="padding: 15px 0"><i class="fa fa-refresh rotate-icon"></i></div>
+
+							<div
+								ng-repeat="(i, notification) in notifications.getUnread()"
+								ng-click="notifications.open(notification)"
+								class="navbar-notification alert alert-{{notification.data.type}}"
+							>
+								<button ng-click="notifications.markAsRead(notification)" type="button" class="close" data-dismiss="alert" aria-label="Esconder"><span aria-hidden="true">&times;</span></button>
+								{{notification.data.title}}
 							</div>
 						</li>
 
@@ -55,7 +61,7 @@
 						<li role="separator" class="divider over-split-btn"></li>
 
 						<li class="has-split-btn" ng-if="identity.can('preferences')">
-							<a class="col-md-7 split-btn" ui-sref="preferences"><i class="fa fa-cog"></i> Preferências</a>
+							<a class="col-md-7 split-btn" ui-sref="user_preferences"><i class="fa fa-cog"></i> Preferências</a>
 							<a class="col-md-5 split-btn" ng-click="auth.logout()"><i class="fa fa-sign-out"></i> Sair</a>
 						</li>
 

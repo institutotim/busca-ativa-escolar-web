@@ -1,52 +1,88 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').service('Notifications', function ($rootScope, $http, $location, ngToast) {
+	angular.module('BuscaAtivaEscolar')
+		.service('Notifications', function ($interval, $location, ngToast, Config, Platform, UserNotifications) {
 
-		$rootScope.notifications = [];
+			var notifications = [];
+			var seenNotifications = [];
+			var isBusy = false;
 
-		function push(messageClass, messageBody) {
-			ngToast.create({
-				className: messageClass,
-				content: messageBody
-			});
+			function refresh() {
+				isBusy = true;
 
-			$rootScope.notifications.push({
-				class: messageClass,
-				contents: messageBody,
-				hide: hide,
-				open: open
-			});
-		}
+				console.log("[notifications] Checking for unread notifications...");
 
-		function open($event, index) {
-			$location.path('/cases');
-			return false;
-		}
+				UserNotifications.getUnread({$hide_loading_feedback: true}, function (res) {
+					notifications = res.data;
+					console.log("[notifications] Unread notifications: ", notifications);
+					isBusy = false;
+					emitToastsOnNewNotifications();
+				});
+			}
 
-		function hide($event, index) {
-			$rootScope.notifications.splice(index, 1);
+			function setup() {
+				refresh();
+				$interval(refresh, Config.NOTIFICATIONS_REFRESH_INTERVAL);
+			}
 
-			$event.stopPropagation();
-			$event.stopImmediatePropagation();
-			$event.preventDefault();
+			function emitToastsOnNewNotifications() {
+				for(var i in notifications) {
+					if(!notifications.hasOwnProperty(i)) continue;
+					if(seenNotifications.indexOf(notifications[i].id) !== -1) continue;
 
-			return false;
-		}
+					seenNotifications.push(notifications[i].id);
 
-		function get() {
-			return $rootScope.notifications;
-		}
+					console.info("[notifications.new] ", notifications[i]);
 
-		function clear() {
-			$rootScope.notifications = [];
-		}
+					notifications[i].pushed = true;
+					ngToast.create({
+						className: notifications[i].data.type || 'info',
+						content: notifications[i].data.title
+					})
+				}
+			}
 
-		return {
-			push: push,
-			get: get,
-			clear: clear
-		}
+			function isLoading() {
+				return isBusy;
+			}
 
-	});
+			function hasUnread() {
+				return (notifications && notifications.length > 0);
+			}
+
+			function markAsRead(notification) {
+				if(!notification) return false;
+				UserNotifications.markAsRead({id: notification.id}, function() {
+					refresh();
+				});
+			}
+
+			function open(notification) {
+				if(!notification) return false;
+				if(!notification.open_url) return false;
+
+				$location.url(notification.open_url);
+
+				return false;
+			}
+
+			function getNotifications() {
+				return notifications;
+			}
+
+			return {
+				getUnread: getNotifications,
+				markAsRead: markAsRead,
+				open: open,
+				refresh: refresh,
+				isBusy: isLoading,
+				hasUnread: hasUnread,
+				setup: setup,
+			}
+
+		})
+		.run(function (Notifications) {
+			Notifications.setup();
+		})
 
 })();
