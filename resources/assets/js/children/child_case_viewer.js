@@ -16,7 +16,7 @@
 				})
 		});
 
-	function ChildCasesCtrl($scope, $state, $stateParams, ngToast, Identity, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
+	function ChildCasesCtrl($q, $scope, $state, $stateParams, ngToast, Identity, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
 
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
@@ -43,6 +43,7 @@
 
 			// Don't try to open a step; UI-Router will already open the one in the URL
 			if($stateParams.step_id) return;
+			if(!$scope.openedCase) return;
 
 			console.log("[child_viewer.cases] Current case: ", $scope.openedCase, "; finding current step to open");
 
@@ -112,6 +113,20 @@
 			return true;
 		};
 
+		$scope.cancelCase = function() {
+
+			Modals.show(Modals.CaseCancel())
+				.then(function (reason) {
+					if(!reason) return $q.reject();
+					return Children.cancelCase({case_id: $scope.openedCase.id, reason: reason})
+				})
+				.then(function (res) {
+					ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
+					$state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
+				});
+
+		}
+
 		$scope.completeStep = function(step) {
 
 			console.log("[child_viewer.cases] Attempting to complete step: ", step);
@@ -151,7 +166,6 @@
 			})
 		};
 
-		// TODO: handle case cancelling
 	}
 
 	function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData) {

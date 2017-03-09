@@ -54,6 +54,7 @@
 			function getUFs() { return (data.UFs) ? data.UFs : []; }
 			function getRegions() { return (data.Regions) ? data.Regions : []; }
 			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
+			function getCaseCancelReasons() { return (data.CaseCancelReasons) ? data.CaseCancelReasons : []; }
 			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
 
 			return {
@@ -74,6 +75,7 @@
 				getUFs: getUFs,
 				getRegions: getRegions,
 				getAPIEndpoints: getAPIEndpoints,
+				getCaseCancelReasons: getCaseCancelReasons,
 				isReady: isReady,
 				getNumChains: getNumChains,
 				getDataFile: getDataFile,

@@ -117,6 +117,14 @@
 					return params;
 				},
 
+				CaseCancel: function() {
+					return {
+						templateUrl: '/views/modals/case_cancel.html',
+						controller: 'CaseCancelModalCtrl',
+						size: 'md'
+					};
+				},
+
 				FileUploader: function(title, message, uploadUrl, uploadParameters) {
 					return {
 						templateUrl: '/views/modals/file_uploader.html',
