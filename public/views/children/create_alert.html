@@ -1,4 +1,4 @@
-<div>
+<form name="newAlert" ng-submit="createAlert()">
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h3><i class="fa fa-bell"></i> Novo alerta</h3>
@@ -10,7 +10,7 @@
 				<div class="panel-body">
 					<div class="form-group col-md-12">
 						<label class="control-label" for="fld-name">Nome da criança ou adolescente*</label>
-						<input type="text" class="form-control" id="fld-name" ng-model="alert.name">
+						<input type="text" class="form-control" id="fld-name" required ng-model="alert.name">
 					</div>
 					<div class="form-grouo col-md-4">
 						<label class="control-label" for="fld-gender">Gênero</label>
@@ -41,7 +41,7 @@
 						<label class="control-label">Por que a criança ou adolescente está fora da escola?* <br />Selecione a principal causa identificada:</label>
 						<div class="radio" ng-repeat="alertCause in static.getAlertCauses()">
 							<label>
-								<input name="alert_cause_id" ng-model="alert.alert_cause_id" ng-value="alertCause.id" type="radio"> {{alertCause.label}}
+								<input name="alert_cause_id" ng-model="alert.alert_cause_id" required ng-value="alertCause.id" type="radio"> {{alertCause.label}}
 							</label>
 						</div>
 					</div>
@@ -53,7 +53,7 @@
 				<div class="panel-body">
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-mother-name">Nome da mãe ou responsável*</label>
-						<input type="text" class="form-control" id="fld-mother-name" ng-model="alert.mother_name">
+						<input type="text" class="form-control" id="fld-mother-name" required ng-model="alert.mother_name">
 					</div>
 
 					<div class="form-group col-md-6">
@@ -86,74 +86,34 @@
 			<div class="panel panel-default">
 				<div class="panel-heading"><i class="material-icons">map</i> Dados de localização</div>
 				<div class="panel-body">
-					<div class="form-group col-md-8">
+					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-address">Endereço*</label>
-						<input type="text" class="form-control" id="fld-address" ng-model="alert.place_address">
+						<input type="text" class="form-control" id="fld-address" required ng-model="alert.place_address">
 					</div>
-					<div class="form-group col-md-4">
-						<label class="control-label" for="fld-cep">CEP</label>
-						<input type="tel" class="form-control" id="fld-cep" ng-model="alert.place_cep" ui-br-cep-mask>
-					</div>
-					<div class="form-group col-md-12">
+					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-reference">Referência geográfica</label>
 						<input type="text" class="form-control" id="fld-reference" ng-model="alert.place_referene">
 					</div>
-					<div class="form-group col-md-5">
+
+					<app-city-select model="alert" uf-field="'place_uf'" city-field="'place_city'" is-uf-required="true" is-city-required="true"></app-city-select>
+
+					<div class="form-group col-md-6">
+						<label class="control-label" for="fld-cep">CEP</label>
+						<input type="tel" class="form-control" id="fld-cep" ng-model="alert.place_cep" ui-br-cep-mask>
+					</div>
+					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-neighborhood">Bairro*</label>
-						<input type="text" class="form-control" id="fld-neighborhood" ng-model="alert.place_neighborhood">
-					</div>
-					<div class="form-group col-md-2">
-						<label class="control-label" for="fld-uf">UF*</label>
-						<select class="form-control" id="fld-uf" ng-model="alert.place_uf" ng-options="uf.code as uf.code for uf in static.getUFs()"></select>
+						<input type="text" class="form-control" id="fld-neighborhood" required ng-model="alert.place_neighborhood">
 					</div>
 
-					<script type="text/ng-template" id="city_item.html">
-						<a>
-							<span ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span>
-							<small ng-bind-html="match.model.uf | uibTypeaheadHighlight:query"></small>
-						</a>
-					</script>
 
-					<div class="form-group col-md-5">
-						<label class="control-label" for="fld-city">Município*</label>
-						<input type="text" id="fld-city"
-						       class="form-control"
-						       ng-model="alert.place_city"
-
-						       uib-typeahead="city for city in fetchCities($viewValue)"
-						       typeahead-editable="false"
-						       typeahead-no-results="noCitiesFound"
-						       typeahead-loading="citiesLoading"
-						       typeahead-focus-first="true"
-						       typeahead-template-url="city_item.html"
-						       typeahead-wait-ms="400"
-						       typeahead-min-length="3"
-						       typeahead-input-formatter="renderSelectedCity($model)"
-
-						>
-
-						<div ng-show="citiesLoading">
-							<i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
-						</div>
-						<div ng-show="noCitiesFound">
-							<i class="fa fa-remove"></i> Nenhuma cidade encontrada
-						</div>
-					</div>
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-phone">Telefone residencial</label>
-						<input type="tel" class="form-control" id="fld-phone" ng-model="alert.place_phone" ui-br-phone-number>
-					</div>
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-mobile">Telefone celular</label>
-						<input type="tel" class="form-control" id="fld-mobile" ng-model="alert.place_mobile" ui-br-phone-number>
-					</div>
 				</div>
 			</div>
 
 			<hr />
 
-			<a class="btn btn-raised btn-info pull-right" ng-click="createAlert()">Criar alerta</a>
+			<button type="submit" class="btn btn-raised btn-info pull-right">Criar alerta</button>
 
 		</div>
 	</div>
-</div>
+</form>
