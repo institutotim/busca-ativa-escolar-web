@@ -45,6 +45,10 @@
 				return $state.go($rootScope.previousState, $rootScope.previousStateParams);
 			};
 
+			$scope.getUserTypes = function() {
+				return StaticData.getPermissions().can_manage_types[ Identity.getCurrentUser().type ];
+			};
+
 			$scope.save = function() {
 
 				var data = Object.assign({}, $scope.user);

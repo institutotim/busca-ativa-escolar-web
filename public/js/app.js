@@ -3226,6 +3226,36 @@ Highcharts.maps["countries/br/br-all"] = {
 		});
 
 })();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('user_preferences', {
+				url: '/user_preferences',
+				templateUrl: '/views/preferences/manage_user_preferences.html',
+				controller: 'ManageUserPreferencesCtrl'
+			})
+		})
+		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, UserPreferences, StaticData) {
+
+			$scope.static = StaticData;
+			$scope.settings = {};
+
+			$scope.refresh = function() {
+				UserPreferences.get({}, function (res) {
+					$scope.settings = res.settings;
+				});
+			};
+
+			$scope.save = function() {
+				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
+			};
+
+			$scope.refresh();
+
+		});
+
+})();
 if (!Array.prototype.find) {
 	Object.defineProperty(Array.prototype, 'find', {
 		value: function(predicate) {
@@ -3269,36 +3299,6 @@ if (!Array.prototype.find) {
 		}
 	});
 }
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('user_preferences', {
-				url: '/user_preferences',
-				templateUrl: '/views/preferences/manage_user_preferences.html',
-				controller: 'ManageUserPreferencesCtrl'
-			})
-		})
-		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, UserPreferences, StaticData) {
-
-			$scope.static = StaticData;
-			$scope.settings = {};
-
-			$scope.refresh = function() {
-				UserPreferences.get({}, function (res) {
-					$scope.settings = res.settings;
-				});
-			};
-
-			$scope.save = function() {
-				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
-			};
-
-			$scope.refresh();
-
-		});
-
-})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
@@ -3780,6 +3780,7 @@ if (!Array.prototype.find) {
 			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
 			function getCaseCancelReasons() { return (data.CaseCancelReasons) ? data.CaseCancelReasons : []; }
 			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
+			function getPermissions() { return (data.Permissions) ? data.Permissions : {}; }
 
 			return {
 				fetchLatestVersion: fetchLatestVersion,
@@ -3803,6 +3804,7 @@ if (!Array.prototype.find) {
 				isReady: isReady,
 				getNumChains: getNumChains,
 				getDataFile: getDataFile,
+				getPermissions: getPermissions,
 			};
 
 		})
@@ -5228,11 +5230,8 @@ if (!Array.prototype.find) {
 
 				isBusy = true;
 
-				console.log("[notifications] Checking for unread notifications...");
-
 				UserNotifications.getUnread({$hide_loading_feedback: true}, function (res) {
 					notifications = res.data;
-					console.log("[notifications] Unread notifications: ", notifications);
 					isBusy = false;
 					emitToastsOnNewNotifications(isFirstRefresh);
 				});
@@ -6276,6 +6275,15 @@ function identify(namespace, file) {
 			$scope.refresh();
 		};
 
+		$scope.canEditUser = function(user) {
+			var currentUser = Identity.getCurrentUser();
+			return (StaticData.getPermissions().can_manage_types[currentUser.type]).indexOf(user.type) !== -1;
+		};
+
+		$scope.isCurrentUser = function(user) {
+			return (Identity.getCurrentUser().id === user.id);
+		};
+
 		$scope.static = StaticData;
 		$scope.tenants = Tenants.find();
 		$scope.groups = Groups.find();
@@ -6367,6 +6375,10 @@ function identify(namespace, file) {
 
 			$scope.goBack = function() {
 				return $state.go($rootScope.previousState, $rootScope.previousStateParams);
+			};
+
+			$scope.getUserTypes = function() {
+				return StaticData.getPermissions().can_manage_types[ Identity.getCurrentUser().type ];
 			};
 
 			$scope.save = function() {

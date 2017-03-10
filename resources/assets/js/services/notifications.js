@@ -13,11 +13,8 @@
 
 				isBusy = true;
 
-				console.log("[notifications] Checking for unread notifications...");
-
 				UserNotifications.getUnread({$hide_loading_feedback: true}, function (res) {
 					notifications = res.data;
-					console.log("[notifications] Unread notifications: ", notifications);
 					isBusy = false;
 					emitToastsOnNewNotifications(isFirstRefresh);
 				});

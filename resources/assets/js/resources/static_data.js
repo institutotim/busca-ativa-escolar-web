@@ -56,6 +56,7 @@
 			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
 			function getCaseCancelReasons() { return (data.CaseCancelReasons) ? data.CaseCancelReasons : []; }
 			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
+			function getPermissions() { return (data.Permissions) ? data.Permissions : {}; }
 
 			return {
 				fetchLatestVersion: fetchLatestVersion,
@@ -79,6 +80,7 @@
 				isReady: isReady,
 				getNumChains: getNumChains,
 				getDataFile: getDataFile,
+				getPermissions: getPermissions,
 			};
 
 		})

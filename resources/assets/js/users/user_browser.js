@@ -32,6 +32,15 @@
 			$scope.refresh();
 		};
 
+		$scope.canEditUser = function(user) {
+			var currentUser = Identity.getCurrentUser();
+			return (StaticData.getPermissions().can_manage_types[currentUser.type]).indexOf(user.type) !== -1;
+		};
+
+		$scope.isCurrentUser = function(user) {
+			return (Identity.getCurrentUser().id === user.id);
+		};
+
 		$scope.static = StaticData;
 		$scope.tenants = Tenants.find();
 		$scope.groups = Groups.find();
