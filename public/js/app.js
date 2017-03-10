@@ -5216,13 +5216,16 @@ if (!Array.prototype.find) {
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
-		.service('Notifications', function ($interval, $location, ngToast, Config, Platform, UserNotifications) {
+		.service('Notifications', function ($interval, $location, ngToast, Identity, Config, Platform, UserNotifications) {
 
 			var notifications = [];
 			var seenNotifications = [];
 			var isBusy = false;
 
 			function refresh(isFirstRefresh) {
+
+				if(!Identity.isLoggedIn()) return;
+
 				isBusy = true;
 
 				console.log("[notifications] Checking for unread notifications...");
