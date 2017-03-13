@@ -7,22 +7,35 @@
 			</div>
 			<div class="panel-body">
 				<div class="alert alert-success" ng-hide="children.data && children.data.length > 0">Nenhum alerta pendente de aprovação!</div>
-				<table class="table" ng-show="children.data && children.data.length > 0">
-					<thead>
-						<tr>
-							<th><column-sorter on-change="refresh" model="sort" field="'alert_submitter_id'">Agente</column-sorter></th>
-							<th><column-sorter on-change="refresh" model="sort" field="'name'">Nome</column-sorter></th>
-							<th><column-sorter on-change="refresh" model="sort" field="'created_at'">Data</column-sorter></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="(i, child) in children.data" ng-click="preview(child)" style="cursor: pointer;">
-							<td><span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span></td>
-							<td><span ng-bind="child.name"></span></td>
-							<td><span ng-bind="child.created_at | amTimeAgo" uib-tooltip-html="child.created_at | amCalendar"></span></td>
-						</tr>
-					</tbody>
-				</table>
+				<div ng-show="children.data && children.data.length > 0">
+					<div class="simple-filter">
+						<h5><i class="fa fa-filter"></i> Filtrar</h5>
+						<div class="form-group col-md-6">
+							<input type="search" class="form-control" ng-model="filter.name" placeholder="Nome..." />
+						</div>
+						<div class="form-group col-md-6">
+							<input type="search" class="form-control" ng-model="filter.submitter_name" placeholder="Agente..." />
+						</div>
+					</div>
+					<table class="table">
+						<thead>
+							<tr>
+								<th><column-sorter on-change="refresh" model="sort" field="'alert_submitter_id'">Agente</column-sorter></th>
+								<th><column-sorter on-change="refresh" model="sort" field="'risk_level'">Prioridade</column-sorter></th>
+								<th><column-sorter on-change="refresh" model="sort" field="'name'">Nome</column-sorter></th>
+								<th><column-sorter on-change="refresh" model="sort" field="'created_at'">Data</column-sorter></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="(i, child) in getFilteredChildren()" ng-click="preview(child)" style="cursor: pointer;">
+								<td><span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span></td>
+								<td><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
+								<td><span ng-bind="child.name"></span></td>
+								<td><span ng-bind="child.created_at | amTimeAgo" uib-tooltip-html="child.created_at | amCalendar"></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>

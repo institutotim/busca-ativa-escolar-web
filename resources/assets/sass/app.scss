@@ -196,3 +196,8 @@ a.column-sorter {
 	cursor: pointer;
 	user-select: none;
 }
+
+.simple-filter {
+	h5 { margin: 0; }
+	.form-group { margin: 0; padding: 0 5px; }
+}

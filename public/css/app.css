@@ -696,4 +696,12 @@ a.column-sorter {
   user-select: none;
 }
 
+.simple-filter h5 {
+  margin: 0;
+}
+.simple-filter .form-group {
+  margin: 0;
+  padding: 0 5px;
+}
+
 /*# sourceMappingURL=app.css.map */

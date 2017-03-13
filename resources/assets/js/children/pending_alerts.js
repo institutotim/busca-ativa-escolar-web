@@ -16,6 +16,23 @@
 			$scope.child = {};
 			$scope.causes = {};
 			$scope.sort = {};
+			$scope.filter = {};
+
+			$scope.getFilteredChildren = function() {
+				var filtered = [];
+
+				for(var i in $scope.children.data) {
+					if(!$scope.children.data.hasOwnProperty(i)) continue;
+					var alert = $scope.children.data[i];
+
+					if($scope.filter.name && alert.name.toLowerCase().indexOf($scope.filter.name.toLowerCase()) === -1) continue;
+					if($scope.filter.submitter_name && alert.submitter.name.toLowerCase().indexOf($scope.filter.submitter_name.toLowerCase()) === -1) continue;
+
+					filtered.push(alert);
+				}
+
+				return filtered;
+			};
 
 			$scope.getAlertCauseName = function() {
 				if(!$scope.child) return 'err:no_child_open';
