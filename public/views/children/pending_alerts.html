@@ -10,9 +10,9 @@
 				<table class="table" ng-show="children.data && children.data.length > 0">
 					<thead>
 						<tr>
-							<th>Agente</th>
-							<th>Nome</th>
-							<th>Data</th>
+							<th><column-sorter on-change="refresh" model="sort" field="'alert_submitter_id'">Agente</column-sorter></th>
+							<th><column-sorter on-change="refresh" model="sort" field="'name'">Nome</column-sorter></th>
+							<th><column-sorter on-change="refresh" model="sort" field="'created_at'">Data</column-sorter></th>
 						</tr>
 					</thead>
 					<tbody>

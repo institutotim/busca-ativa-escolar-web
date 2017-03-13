@@ -15,6 +15,7 @@
 			$scope.children = {};
 			$scope.child = {};
 			$scope.causes = {};
+			$scope.sort = {};
 
 			$scope.getAlertCauseName = function() {
 				if(!$scope.child) return 'err:no_child_open';
@@ -28,7 +29,7 @@
 
 			$scope.refresh = function() {
 				$scope.child = null;
-				$scope.children = Alerts.getPending();
+				$scope.children = Alerts.getPending({sort: $scope.sort});
 			};
 
 			$scope.preview = function(child) {

@@ -190,3 +190,9 @@ hr {
 .ng-toast.ng-toast--top {
 	top: 64px;
 }
+
+a.column-sorter {
+	color: black;
+	cursor: pointer;
+	user-select: none;
+}

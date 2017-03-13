@@ -690,4 +690,10 @@ hr {
   top: 64px;
 }
 
+a.column-sorter {
+  color: black;
+  cursor: pointer;
+  user-select: none;
+}
+
 /*# sourceMappingURL=app.css.map */
