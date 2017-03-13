@@ -18,6 +18,7 @@
 			email: null,
 			max: 128,
 			with: 'tenant',
+			sort: {},
 			show_suspended: true
 		};
 
