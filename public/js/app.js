@@ -1214,31 +1214,33 @@
 
 	angular.module('BuscaAtivaEscolar').directive('metricsOverview', function (moment, Platform, Reports, Charts) {
 
-		var metrics = {};
-
-		function refreshMetrics() {
-			return Reports.query({
-				view: 'linear',
-				entity: 'children',
-				dimension: 'deadline_status',
-				filters: {
-					case_status: ['in_progress', 'completed', 'interrupted'],
-					alert_status: ['accepted']
-				}
-			}, function (data) {
-				metrics = data.response;
-			});
-		}
-
 		function init(scope, element, attrs) {
+
+			var metrics = {};
+
+			function refreshMetrics() {
+				return Reports.query({
+					view: 'linear',
+					entity: 'children',
+					dimension: 'deadline_status',
+					filters: {
+						case_status: ['in_progress', 'completed', 'interrupted'],
+						alert_status: ['accepted']
+					}
+				}, function (data) {
+					metrics = data.response;
+				});
+			}
+
 			scope.getMetrics = function() {
 				return metrics;
 			};
-		}
 
-		Platform.whenReady(function () {
-			refreshMetrics();
-		});
+			Platform.whenReady(function () {
+				refreshMetrics();
+			});
+
+		}
 
 		return {
 			link: init,
@@ -3226,36 +3228,6 @@ Highcharts.maps["countries/br/br-all"] = {
 		});
 
 })();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('user_preferences', {
-				url: '/user_preferences',
-				templateUrl: '/views/preferences/manage_user_preferences.html',
-				controller: 'ManageUserPreferencesCtrl'
-			})
-		})
-		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, UserPreferences, StaticData) {
-
-			$scope.static = StaticData;
-			$scope.settings = {};
-
-			$scope.refresh = function() {
-				UserPreferences.get({}, function (res) {
-					$scope.settings = res.settings;
-				});
-			};
-
-			$scope.save = function() {
-				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
-			};
-
-			$scope.refresh();
-
-		});
-
-})();
 if (!Array.prototype.find) {
 	Object.defineProperty(Array.prototype, 'find', {
 		value: function(predicate) {
@@ -3299,6 +3271,36 @@ if (!Array.prototype.find) {
 		}
 	});
 }
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('user_preferences', {
+				url: '/user_preferences',
+				templateUrl: '/views/preferences/manage_user_preferences.html',
+				controller: 'ManageUserPreferencesCtrl'
+			})
+		})
+		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, UserPreferences, StaticData) {
+
+			$scope.static = StaticData;
+			$scope.settings = {};
+
+			$scope.refresh = function() {
+				UserPreferences.get({}, function (res) {
+					$scope.settings = res.settings;
+				});
+			};
+
+			$scope.save = function() {
+				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
+			};
+
+			$scope.refresh();
+
+		});
+
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar')

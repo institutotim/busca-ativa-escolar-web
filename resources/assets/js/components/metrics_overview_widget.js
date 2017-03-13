@@ -2,31 +2,33 @@
 
 	angular.module('BuscaAtivaEscolar').directive('metricsOverview', function (moment, Platform, Reports, Charts) {
 
-		var metrics = {};
-
-		function refreshMetrics() {
-			return Reports.query({
-				view: 'linear',
-				entity: 'children',
-				dimension: 'deadline_status',
-				filters: {
-					case_status: ['in_progress', 'completed', 'interrupted'],
-					alert_status: ['accepted']
-				}
-			}, function (data) {
-				metrics = data.response;
-			});
-		}
-
 		function init(scope, element, attrs) {
+
+			var metrics = {};
+
+			function refreshMetrics() {
+				return Reports.query({
+					view: 'linear',
+					entity: 'children',
+					dimension: 'deadline_status',
+					filters: {
+						case_status: ['in_progress', 'completed', 'interrupted'],
+						alert_status: ['accepted']
+					}
+				}, function (data) {
+					metrics = data.response;
+				});
+			}
+
 			scope.getMetrics = function() {
 				return metrics;
 			};
-		}
 
-		Platform.whenReady(function () {
-			refreshMetrics();
-		});
+			Platform.whenReady(function () {
+				refreshMetrics();
+			});
+
+		}
 
 		return {
 			link: init,
