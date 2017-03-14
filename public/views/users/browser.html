@@ -1,10 +1,25 @@
 <div>
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
-			<h3 class="pull-left"><i class="fa fa-users"></i> Usuários</h3>
+			<h3 class="pull-left"> <strong ng-show="!$parent.isEditing">3.</strong> <i class="fa fa-users"></i> Usuários</h3>
 			<a ng-show="identity.can('users.manage')" ui-sref="user_editor({quick_add: quickAdd})" class="btn btn-primary btn-raised pull-right"><i class="fa fa-plus"></i> Novo</a>
 		</div>
 		<div class="panel-body">
+				
+				<p>
+				Cadastre aqui os diferentes usuários que vão participar do Busca Ativa Escolar. No momento do cadastro, você deve escolher qual o perfil do usuário.
+				</p>
+
+				<ul style="font-size: 12px"  class="list-group">
+					<li class="list-group-item"><i font-site class="fa fa-circle-o"></i> Prefeito Municipal: Organiza e motiva os trabalhos da iniciativa do Busca Ativa Escolar no município;</li>
+					<li class="list-group-item"><i class="fa fa-circle-o"></i> Gestor Político: Reúne as diversas instituições governamentais e não governamentais da cidade para participar do programa e propõe a criação ou alteração de políticas públicas para combater a exclusão escolar. </li>
+					<li class="list-group-item"><i class="fa fa-circle-o"></i> Coordenador operacional: É responsável pelo planejamento, execução e acompanhamento do plano de trabalho e de todas as ações do projeto; </li>
+					<li class="list-group-item"><i class="fa fa-circle-o"></i> Supervisores institucionais: Indicados pelas secretarias/órgãos envolvidos no projeto;  </li>
+					<li class="list-group-item"><i class="fa fa-circle-o"></i> Técnicos verificadores: São os responsáveis por elaborar o diagnóstico e produzir análise técnica sobre os casos encontrados; </li>
+					<li class="list-group-item"><i class="fa fa-circle-o"></i> Agentes comunitários: São os responsáveis por fazer os primeiros alertas de crianças e adolescentes que estão fora da escola.
+
+ </li>
+				</ul>
 
 			<form ng-submit="refresh()" name="searchUsers" class="clearfix">
 				<div class="row">

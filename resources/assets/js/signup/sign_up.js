@@ -14,7 +14,6 @@
 			admin: {},
 			mayor: {}
 		};
-		$scope.agreeTOS = 0;
 
 		var fieldNames = {
 			cpf: 'CPF',
@@ -97,10 +96,6 @@
 		$scope.finish = function() {
 			if(!$scope.agreeTOS) return;
 
-			Modals.show(Modals.Confirm(
-				'Tem certeza que deseja prosseguir com o cadastro?',
-				'Os dados informados serão enviados para validação e aprovação de nossa equipe. Caso aprovado, você receberá uma mensagem em seu e-mail institucional com os dados para acesso à plataforma, e instruções de como configurá-la.'
-			)).then(function(res) {
 				var data = {};
 				data.admin = Object.assign({}, $scope.form.admin);
 				data.mayor = Object.assign({}, $scope.form.mayor);
@@ -136,7 +131,6 @@
 
 				});
 
-			});
 		};
 
 	});

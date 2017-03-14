@@ -6036,7 +6036,6 @@ function identify(namespace, file) {
 			admin: {},
 			mayor: {}
 		};
-		$scope.agreeTOS = 0;
 
 		var fieldNames = {
 			cpf: 'CPF',
@@ -6119,10 +6118,6 @@ function identify(namespace, file) {
 		$scope.finish = function() {
 			if(!$scope.agreeTOS) return;
 
-			Modals.show(Modals.Confirm(
-				'Tem certeza que deseja prosseguir com o cadastro?',
-				'Os dados informados serão enviados para validação e aprovação de nossa equipe. Caso aprovado, você receberá uma mensagem em seu e-mail institucional com os dados para acesso à plataforma, e instruções de como configurá-la.'
-			)).then(function(res) {
 				var data = {};
 				data.admin = Object.assign({}, $scope.form.admin);
 				data.mayor = Object.assign({}, $scope.form.mayor);
@@ -6158,7 +6153,6 @@ function identify(namespace, file) {
 
 				});
 
-			});
 		};
 
 	});
@@ -6174,7 +6168,7 @@ function identify(namespace, file) {
 				controller: 'TenantSetupCtrl'
 			});
 		})
-		.controller('TenantSetupCtrl', function ($scope, $state, $stateParams, Platform, Identity, SignUps, Tenants) {
+		.controller('TenantSetupCtrl', function ($scope, $state, $stateParams, Platform, Identity, SignUps, Tenants, Modals) {
 
 			if(!$stateParams.step) return $state.go('tenant_setup', {step: 1});
 
@@ -6214,12 +6208,17 @@ function identify(namespace, file) {
 			};
 
 			$scope.completeSetup = function() {
-				SignUps.completeSetup({}, function() {
-					Platform.setFlag('HIDE_NAVBAR', false);
+				Modals.show(Modals.Confirm(
+				'Deseja prosseguir com o cadastro?',
+				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
+				)).then(function(res) {
+					SignUps.completeSetup({}, function() {
+						Platform.setFlag('HIDE_NAVBAR', false);
 
-					Identity.refresh();
+						Identity.refresh();
 
-					$state.go('dashboard');
+						$state.go('dashboard');
+					});
 				});
 			};
 
