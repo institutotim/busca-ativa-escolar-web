@@ -1520,6 +1520,24 @@
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar').directive('appPrintHeader', function (Identity, Platform, Auth) {
+
+		function init(scope, element, attrs) {
+			scope.identity = Identity;
+			scope.auth = Auth;
+			scope.platform = Platform;
+		}
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/print_header.html'
+		};
+	});
+
+})();
+(function() {
+
 	angular.module('BuscaAtivaEscolar').directive('recentActivity', function (moment, Platform, Tenants) {
 
 		var log = [];
@@ -3440,7 +3458,7 @@ if (!Array.prototype.find) {
 							'city',
 							'case_cause_ids'
 						],
-						views: ['chart', 'timeline', 'list'] //['map', 'chart', 'timeline', 'list']
+						views: ['chart', 'timeline'] //['map', 'chart', 'timeline', 'list']
 					}/*,
 					 alerts: {
 					 id: 'alerts',
@@ -3464,7 +3482,7 @@ if (!Array.prototype.find) {
 					map: {id: 'map', name: 'Mapa', allowsDimension: false, viewMode: 'linear'},
 					chart: {id: 'chart', name: 'Gráfico', allowsDimension: true, viewMode: 'linear'},
 					timeline: {id: 'timeline', name: 'Linha do tempo', allowsDimension: true, viewMode: 'time_series'},
-					list: {id: 'list', name: 'Lista', allowsDimension: true, viewMode: 'linear'}
+					//list: {id: 'list', name: 'Lista', allowsDimension: true, viewMode: 'linear'}
 				};
 
 				$scope.totals = {
