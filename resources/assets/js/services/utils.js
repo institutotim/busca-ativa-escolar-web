@@ -136,6 +136,15 @@
 				return plucked;
 			}
 
+			function search(object, callback) {
+				for(var i in object) {
+					if(!object.hasOwnProperty(i)) continue;
+					if(callback(object[i])) return object[i];
+				}
+
+				return false;
+			}
+
 			function validateFields(data, requiredFields) {
 				var invalid = [];
 
@@ -179,6 +188,7 @@
 				filter: filter,
 				extract: extract,
 				pluck: pluck,
+				search: search,
 			};
 		})
 		.directive('stringToNumber', function() {
