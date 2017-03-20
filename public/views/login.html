@@ -47,8 +47,19 @@
 					</div>
 				</div>
 				<div class="panel-footer clearfix">
-					<a type="button" class="btn btn-success" href="/sign_up"><i class="fa fa-edit"></i> Nova cidade participante</a>
-					<button ng-show="!isLoading" type="submit" class="btn btn-primary btn-raised pull-right"><i class="fa fa-sign-in"></i> Entrar</button>
+					<div class="row">
+						<div class="col-lg-6">
+							<a type="button" class="btn btn-success" ui-sref="sign_up"><i class="fa fa-edit"></i> Nova cidade participante</a>
+						</div>
+						<div class="col-lg-6 text-right">
+							<a type="button" class="btn btn-warning" ui-sref="forgot_password"><i class="fa fa-question-circle"></i> Esqueci minha senha</a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<button ng-show="!isLoading" type="submit" class="btn btn-primary btn-raised pull-right"><i class="fa fa-sign-in"></i> Entrar</button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
