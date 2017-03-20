@@ -3,12 +3,12 @@
 		<div class="panel-body">
 			<div class="list-group" ng-repeat="(i, entry) in getActivity()">
 				<div class="list-group-item timeline-item">
-					<div class="row-action-primary">
-						<i class="material-icons">account_box</i>
+					<div class="row">
+						<div class="col-lg-6"><i class="fa fa-user"></i> <strong uib-tooltip-html="entry.user.type | lang:'user.type'" ng-bind="entry.user.name"></strong><br /></div>
+						<div class="col-lg-6 card-detail-text"><span ng-bind="entry.created_at | amTimeAgo" uib-tooltip-html="entry.created_at | amCalendar"></span></div>
 					</div>
-					<div class="row-content">
-						<div class="least-content" ng-bind="entry.created_at | amTimeAgo" uib-tooltip-html="entry.created_at | amCalendar"></div>
-						<p class="list-group-item-text"><strong uib-tooltip-html="entry.user.type | lang:'user.type'" ng-bind="entry.user.name"></strong><br /><span ng-bind="entry.message"></span></p>
+					<div class="row">
+						<p class="col-md-12 list-group-item-text" ng-bind="entry.message"></p>
 					</div>
 				</div>
 			</div>
