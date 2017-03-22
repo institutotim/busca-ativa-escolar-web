@@ -7,7 +7,7 @@
 				ng-model="uf"
 				ng-required="isUfRequired"
 				ng-change="onUFChanged()"
-				ng-options="uf.code as uf.code for uf in static.getUFs()"
+				ng-options="uf.code as uf.code for uf in static.getUFs() | orderObjectBy:'code'"
 		>
 			<option value="" ng-if="!isUfRequired"></option>
 		</select>

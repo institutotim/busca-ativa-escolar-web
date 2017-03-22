@@ -1,6 +1,8 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar')
+	var app = angular.module('BuscaAtivaEscolar');
+
+	app
 		.run(function() {
 			Array.prototype.shuffle = function() {
 				var i = this.length, j, temp;
@@ -12,12 +14,29 @@
 					this[j] = temp;
 				}
 				return this;
-			}
+			};
 
 			Array.prototype.clone = function() {
 				return this.slice(0);
 			};
 
+		})
+		.filter('orderObjectBy', function() {
+			return function(items, field, reverse) {
+				var filtered = [];
+
+				angular.forEach(items, function(item) {
+					filtered.push(item);
+				});
+
+				filtered.sort(function (a, b) {
+					return (a[field] > b[field] ? 1 : -1);
+				});
+
+				if(reverse) filtered.reverse();
+
+				return filtered;
+			};
 		})
 		.factory('Utils', function(ngToast) {
 
