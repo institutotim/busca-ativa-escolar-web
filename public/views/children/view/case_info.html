@@ -218,7 +218,7 @@
 	<div class="panel-heading"><i class="fa fa-graduation-cap"></i> Educação</div>
 	<div class="panel-body">
 		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-has_been_in_school-yes">Já frequentou a escola alguma vez?</label>
+			<label class="control-label" for="fld-has_been_in_school-yes">Já frequentou a escola alguma vez?*</label>
 			<div class="radio">
 				<label><input id="fld-has_been_in_school-yes" ng-disabled="!canEditStep(step)" ng-model="fields.has_been_in_school" ng-value="1" name="has_been_in_school" value="yes" type="radio"> Sim</label>
 			</div>
@@ -228,22 +228,22 @@
 		</div>
 
 		<div class="form-group col-md-12" ng-show="!fields.has_been_in_school">
-		<label class="control-label" for="fld-reason_not_enrolled">Qual a justificativa de não ter frequentado?</label>
+		<label class="control-label" for="fld-reason_not_enrolled">Qual a justificativa de não ter frequentado?*</label>
 			<input type="text" class="form-control" id="fld-reason_not_enrolled" ng-readonly="!canEditStep(step)" ng-model="fields.reason_not_enrolled">
 		</div>
 
 		<div class="form-group col-md-6" ng-show="fields.has_been_in_school">
-			<label class="control-label" for="fld-school_last_grade">Qual o último ano que frequentou?</label>
+			<label class="control-label" for="fld-school_last_grade">Qual o último ano que frequentou?*</label>
 			<select id="fld-school_last_grade" class="form-control" ng-disabled="!canEditStep(step)" ng-model="fields.school_last_grade" ng-options="n.slug as n.label for n in static.getSchoolGrades()"></select>
 		</div>
 
 		<div class="form-group col-md-6" ng-show="fields.has_been_in_school">
-			<label class="control-label" for="fld-school_last_year">Em qual ano foi cursado o último ano escolar?</label>
+			<label class="control-label" for="fld-school_last_year">Em qual ano foi cursado o último ano escolar?*</label>
 			<input type="number" min="1990" max="2100" step="1" class="form-control" id="fld-school_last_year" string-to-number ng-readonly="!canEditStep(step)" ng-model="fields.school_last_year">
 		</div>
 
 		<div class="form-group col-md-12" ng-show="fields.has_been_in_school">
-			<label class="control-label" for="fld-school_last_status-completed">Qual o status do último ano escolar?</label>
+			<label class="control-label" for="fld-school_last_status-completed">Qual o status do último ano escolar?*</label>
 			<div class="radio">
 				<label><input id="fld-school_last_status-completed" name="school_last_status" ng-disabled="!canEditStep(step)" ng-model="fields.school_last_status" value="completed" type="radio"> Completo</label>
 			</div>
@@ -253,12 +253,12 @@
 		</div>
 
 		<div class="form-group col-md-12" ng-show="fields.has_been_in_school">
-			<label class="control-label" for="fld-school_last_age">Com qual idade foi cursado o último ano escolar?</label>
+			<label class="control-label" for="fld-school_last_age">Com qual idade foi cursado o último ano escolar?*</label>
 			<input type="number" min="0" max="18" step="1" class="form-control" id="fld-school_last_age" string-to-number ng-readonly="!canEditStep(step)" ng-model="fields.school_last_age">
 		</div>
 
 		<div class="form-group col-md-12 clearfix" ng-show="fields.has_been_in_school">
-			<label class="control-label" for="fld-school_last">Qual a última escola cursada?</label>
+			<label class="control-label" for="fld-school_last">Qual a última escola cursada?*</label>
 			<!--input type="text" class="form-control" id="fld-school_last_name" ng-readonly="!canEditStep(step)" ng-model="fields.school_last_name"-->
 
 			<input type="text" id="fld-school_last"
@@ -286,7 +286,7 @@
 		</div>
 
 		<div class="form-group col-md-12" ng-show="fields.has_been_in_school">
-			<label class="control-label" for="fld-school_last_address">Endereço da última escola cursada</label>
+			<label class="control-label" for="fld-school_last_address">Endereço da última escola cursada*</label>
 			<input type="text" class="form-control" id="fld-school_last_address" ng-readonly="!canEditStep(step)" ng-model="fields.school_last_address">
 		</div>
 
@@ -305,7 +305,7 @@
 	<div class="panel-body">
 
 		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-is_working-yes">Esta criança ou adolescente está trabalhando?</label>
+			<label class="control-label" for="fld-is_working-yes">Esta criança ou adolescente está trabalhando?*</label>
 			<div class="radio">
 				<label><input id="fld-is_working-yes" ng-disabled="!canEditStep(step)" ng-model="fields.is_working" ng-value="1" name="is_working" value="yes" type="radio" checked> Sim</label>
 			</div>
@@ -315,17 +315,17 @@
 		</div>
 
 		<div class="form-group col-md-12" ng-show="fields.is_working">
-			<label class="control-label" for="fld-work_activity">Qual a atividade econômica?</label>
+			<label class="control-label" for="fld-work_activity">Qual a atividade econômica?*</label>
 			<select ng-disabled="!canEditStep(step)" ng-model="fields.work_activity" class="form-control" id="fld-work_activity" ng-options="n.slug as n.label for n in static.getWorkActivities()"></select>
 		</div>
 
 		<div class="form-group col-md-12"  ng-show="fields.work_activity === 'other'">
-			<label class="control-label" for="fld-work_activity_other">Especifique a atividade econômica no campo abaixo</label>
+			<label class="control-label" for="fld-work_activity_other">Especifique a atividade econômica no campo abaixo*</label>
 			<input type="text" class="form-control" id="fld-work_activity_other" ng-readonly="!canEditStep(step)" ng-model="fields.work_activity_other">
 		</div>
 
 		<div class="form-group col-md-12" ng-show="fields.is_working">
-			<label class="control-label" for="fld-work_is_paid-yes">O trabalho é remunerado?</label>
+			<label class="control-label" for="fld-work_is_paid-yes">O trabalho é remunerado?*</label>
 			<div class="radio">
 				<label><input id="fld-work_is_paid-yes" ng-disabled="!canEditStep(step)" ng-model="fields.work_is_paid" ng-value="1" name="work_is_paid" value="yes" type="radio"> Sim</label>
 			</div>
@@ -335,7 +335,7 @@
 		</div>
 
 		<div class="form-group col-md-12" ng-show="fields.is_working">
-			<label class="control-label" for="fld-work_weekly_hours">Quais as horas semanais trabalhadas?</label>
+			<label class="control-label" for="fld-work_weekly_hours">Quais as horas semanais trabalhadas?*</label>
 			<input type="number" min="0" max="200" step="1" class="form-control" id="fld-work_weekly_hours" string-to-number ng-readonly="!canEditStep(step)" ng-model="fields.work_weekly_hours">
 		</div>
 
@@ -354,7 +354,7 @@
 	<div class="panel-body">
 
 		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-parents_has_mother">Quais são os familiares presentes?</label>
+			<label class="control-label" for="fld-parents_has_mother">Quais são os familiares presentes?*</label>
 			<div class="checkbox">
 				<label><input id="fld-parents_has_father" name="parents_has_father" ng-disabled="!canEditStep(step)" ng-model="fields.parents_has_father" ng-true-value="1" type="checkbox"> Pai</label>
 			</div>
@@ -367,7 +367,7 @@
 		</div>
 
 		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-parents_who_is_guardian-father">Quem é o responsável?</label>
+			<label class="control-label" for="fld-parents_who_is_guardian-father">Quem é o responsável?*</label>
 			<div class="radio">
 				<label><input id="fld-parents_who_is_guardian-father" name="parents_who_is_guardian" ng-disabled="!canEditStep(step)" ng-model="fields.parents_who_is_guardian" value="father" type="radio"> Pai</label>
 			</div>
@@ -467,7 +467,7 @@
 		</div>
 
 		<div class="form-group col-md-12" ng-show="isHandicapped()">
-			<label class="control-label" for="fld-handicapped_at_sus-yes">A criança ou adolescente é atendida pelo SUS (Sistema Único de Saúde)?</label>
+			<label class="control-label" for="fld-handicapped_at_sus-yes">A criança ou adolescente é atendida pelo SUS (Sistema Único de Saúde)?*</label>
 			<div class="radio">
 				<label><input id="fld-handicapped_at_sus-yes" ng-disabled="!canEditStep(step)" ng-model="fields.handicapped_at_sus" name="handicapped_at_sus" ng-value="1" value="yes" type="radio"> Sim</label>
 			</div>
@@ -477,7 +477,7 @@
 		</div>
 
 		<div class="form-group col-md-12" ng-show="isHandicapped()">
-			<label class="control-label" for="fld-handicapped_reason_not_enrolled">Por qual motivo a matrícula não foi realizada?</label>
+			<label class="control-label" for="fld-handicapped_reason_not_enrolled">Por qual motivo a matrícula não foi realizada?*</label>
 			<select type="text" class="form-control" id="fld-handicapped_reason_not_enrolled" ng-disabled="!canEditStep(step)" ng-model="fields.handicapped_reason_not_enrolled" ng-options="n.slug as n.label for n in static.getHandicappedRejectReasons()"></select>
 		</div>
 	</div>

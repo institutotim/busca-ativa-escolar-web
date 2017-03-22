@@ -506,6 +506,22 @@ footer.app-footer a.credits-btn {
 
 .list-group .list-group-item.timeline-item {
   overflow: visible;
+  padding: 0;
+  margin: 10px 0;
+}
+@media (min-width: 1200px) {
+  .list-group .list-group-item.timeline-item .card-detail-text {
+    text-align: right;
+  }
+}
+.list-group .list-group-item.timeline-item .row {
+  padding: 2px 0;
+}
+.list-group .list-group-item.timeline-item:first-child {
+  margin-top: 0;
+}
+.list-group .list-group-item.timeline-item:last-child {
+  margin-bottom: 0;
 }
 
 .panel-header-label {
@@ -702,6 +718,11 @@ a.column-sorter {
 .simple-filter .form-group {
   margin: 0;
   padding: 0 5px;
+}
+
+.card-detail-text {
+  font-size: 14px;
+  color: #999;
 }
 
 /*# sourceMappingURL=app.css.map */
