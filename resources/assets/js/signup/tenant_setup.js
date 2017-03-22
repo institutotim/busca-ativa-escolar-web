@@ -8,7 +8,7 @@
 				controller: 'TenantSetupCtrl'
 			});
 		})
-		.controller('TenantSetupCtrl', function ($scope, $state, $stateParams, Platform, Identity, SignUps, Tenants) {
+		.controller('TenantSetupCtrl', function ($scope, $state, $stateParams, Platform, Identity, SignUps, Tenants, Modals) {
 
 			if(!$stateParams.step) return $state.go('tenant_setup', {step: 1});
 
@@ -48,12 +48,17 @@
 			};
 
 			$scope.completeSetup = function() {
-				SignUps.completeSetup({}, function() {
-					Platform.setFlag('HIDE_NAVBAR', false);
+				Modals.show(Modals.Confirm(
+				'Deseja prosseguir com o cadastro?',
+				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
+				)).then(function(res) {
+					SignUps.completeSetup({}, function() {
+						Platform.setFlag('HIDE_NAVBAR', false);
 
-					Identity.refresh();
+						Identity.refresh();
 
-					$state.go('dashboard');
+						$state.go('dashboard');
+					});
 				});
 			};
 

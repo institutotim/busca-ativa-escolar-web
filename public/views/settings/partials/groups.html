@@ -1,14 +1,11 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<h3><strong ng-show="!$parent.isEditing">4.</strong> <i class="fa fa-users"></i> Cadastre os grupos de trabalho</h3>
+		<h3><strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong> <i class="fa fa-users"></i> Cadastre os grupos de trabalho</h3>
 	</div>
 	<form name="$parent.$parent.groupsEdit" class="panel-body">
 		<p>
-			Os grupos de trabalho são grupos de usuários que respondem por diferentes causas de evasão escolar.
-			Os grupos que você cadastrar aqui poderão ser customizados para receber um ou mais alertas e casos, de acordo com sua causa.
-			Sugerimos que os grupos cadastrados sejam as secretarias municipais ou orgãos da administração pública que irão atuar na (re)matrícula das crianças e adolescentes.
+			Os grupos de trabalho respondem por diferentes causas de evasão escolar. Os grupos que você cadastrar aqui poderão ser personalizados para receber um ou mais alertas e casos, de acordo com a causa. O ideal é que façam parte dos grupos as secretarias municipais ou órgãos da administração pública, pois são eles que irão agir, junto com a secretaria de educação, na (re)matrícula das crianças e dos adolescentes.
 		</p>
-
 		<table class="table sign-up-groups">
 			<thead>
 			<tr>
