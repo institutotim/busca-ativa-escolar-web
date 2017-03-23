@@ -2,21 +2,25 @@
 
 	angular.module('BuscaAtivaEscolar').directive('myAssignments', function (moment, Identity, Platform, Children, Decorators) {
 
-		var children = [];
-
-		var isReady = false;
-
-		function refresh() {
-			Children.search({assigned_user_id: Identity.getCurrentUserID()}, function(data) {
-				children = data.results;
-			});
-		}
-
 		function init(scope, element, attrs) {
 			scope.Decorators = Decorators;
-			scope.refresh = refresh;
+			scope.children = [];
+
+			var isReady = false;
+
+			scope.refresh = function() {
+				console.log("[widget.my_assignments] Loading assignments...");
+				isReady = false;
+
+				Children.search({assigned_user_id: Identity.getCurrentUserID()}, function(data) {
+					scope.children = data.results;
+					console.log("[widget.my_assignments] Loaded: ", scope.children);
+					isReady = true;
+				});
+			};
+
 			scope.getChildren = function() {
-				return children;
+				return scope.children;
 			};
 
 			scope.isReady = function() {
@@ -24,16 +28,17 @@
 			};
 
 			scope.hasAssignments = function() {
-				return (children && children.length > 0);
+				return (scope.children && scope.children.length > 0);
 			};
 
 			Platform.whenReady(function () {
-				refresh();
+				scope.refresh();
 			});
 		}
 
 		return {
 			link: init,
+			scope: true,
 			replace: true,
 			templateUrl: '/views/components/my_assignments.html'
 		};

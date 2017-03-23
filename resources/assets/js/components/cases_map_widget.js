@@ -40,6 +40,7 @@
 
 		return {
 			link: init,
+			scope: true,
 			replace: true,
 			templateUrl: '/views/components/cases_map.html'
 		};
