@@ -21,7 +21,12 @@
 			$scope.tenants = Tenants.find();
 			$scope.quickAdd = ($stateParams.quick_add === 'true');
 
+			var permissions = {}
 			var dateOnlyFields = ['dob'];
+
+			Platform.whenReady(function() {
+				permissions = StaticData.getPermissions();
+			});
 
 			if(!$scope.isCreating) {
 				$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
@@ -46,7 +51,9 @@
 			};
 
 			$scope.getUserTypes = function() {
-				return StaticData.getPermissions().can_manage_types[ Identity.getCurrentUser().type ];
+				if(!permissions) return {};
+				if(!permissions.can_manage_types) return {};
+				return permissions.can_manage_types[ Identity.getCurrentUser().type ];
 			};
 
 			$scope.save = function() {

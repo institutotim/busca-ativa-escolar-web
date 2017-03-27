@@ -13,8 +13,9 @@
 				isReady = false;
 
 				Children.search({assigned_user_id: Identity.getCurrentUserID()}, function(data) {
+					console.log("[widget.my_assignments] Loaded: ", data.results);
+
 					scope.children = data.results;
-					console.log("[widget.my_assignments] Loaded: ", scope.children);
 					isReady = true;
 				});
 			};

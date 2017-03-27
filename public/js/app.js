@@ -1369,8 +1369,9 @@
 				isReady = false;
 
 				Children.search({assigned_user_id: Identity.getCurrentUserID()}, function(data) {
+					console.log("[widget.my_assignments] Loaded: ", data.results);
+
 					scope.children = data.results;
-					console.log("[widget.my_assignments] Loaded: ", scope.children);
 					isReady = true;
 				});
 			};
@@ -6640,7 +6641,12 @@ function identify(namespace, file) {
 			$scope.tenants = Tenants.find();
 			$scope.quickAdd = ($stateParams.quick_add === 'true');
 
+			var permissions = {}
 			var dateOnlyFields = ['dob'];
+
+			Platform.whenReady(function() {
+				permissions = StaticData.getPermissions();
+			});
 
 			if(!$scope.isCreating) {
 				$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
@@ -6665,7 +6671,9 @@ function identify(namespace, file) {
 			};
 
 			$scope.getUserTypes = function() {
-				return StaticData.getPermissions().can_manage_types[ Identity.getCurrentUser().type ];
+				if(!permissions) return {};
+				if(!permissions.can_manage_types) return {};
+				return permissions.can_manage_types[ Identity.getCurrentUser().type ];
 			};
 
 			$scope.save = function() {
