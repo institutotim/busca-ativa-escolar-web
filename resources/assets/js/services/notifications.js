@@ -1,7 +1,7 @@
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
-		.service('Notifications', function ($interval, $location, ngToast, Identity, Config, Platform, UserNotifications) {
+		.service('Notifications', function ($interval, $location, $rootScope, ngToast, Identity, Config, Platform, UserNotifications) {
 
 			var notifications = [];
 			var seenNotifications = [];
@@ -22,7 +22,24 @@
 
 			function setup() {
 				refresh(true);
-				$interval(refresh, Config.NOTIFICATIONS_REFRESH_INTERVAL);
+
+				$interval(checkForNewNotifications, Config.NOTIFICATIONS_REFRESH_INTERVAL);
+
+				$rootScope.$on('auth.logged_in', function() {
+					notifications = [];
+					seenNotifications = [];
+
+					refresh(true);
+				});
+
+				$rootScope.$on('auth.logged_out', function() {
+					notifications = [];
+					seenNotifications = [];
+				});
+			}
+
+			function checkForNewNotifications() {
+				refresh(false);
 			}
 
 			function emitToastsOnNewNotifications(isFirstRefresh) {
@@ -32,7 +49,7 @@
 
 					seenNotifications.push(notifications[i].id);
 
-					if(isFirstRefresh) return;
+					if(isFirstRefresh) continue;
 
 					console.info("[notifications.new] ", notifications[i]);
 
@@ -40,6 +57,10 @@
 						className: notifications[i].data.type || 'info',
 						content: notifications[i].data.title
 					})
+				}
+
+				if(isFirstRefresh) {
+					console.info("[notifications.init] ", notifications.length, " notifications unread");
 				}
 			}
 

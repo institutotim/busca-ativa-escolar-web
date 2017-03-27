@@ -4287,6 +4287,8 @@ if (!Array.prototype.find) {
 
 				validateSessionIntegrity();
 
+				$rootScope.$broadcast('auth.logged_in');
+
 				return $localStorage.session;
 			}
 
@@ -4332,6 +4334,8 @@ if (!Array.prototype.find) {
 				});
 
 				Identity.disconnect();
+
+				$rootScope.$broadcast('auth.logged_out');
 			};
 
 			this.login = function(email, password) {
@@ -5486,7 +5490,7 @@ if (!Array.prototype.find) {
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
-		.service('Notifications', function ($interval, $location, ngToast, Identity, Config, Platform, UserNotifications) {
+		.service('Notifications', function ($interval, $location, $rootScope, ngToast, Identity, Config, Platform, UserNotifications) {
 
 			var notifications = [];
 			var seenNotifications = [];
@@ -5507,7 +5511,24 @@ if (!Array.prototype.find) {
 
 			function setup() {
 				refresh(true);
-				$interval(refresh, Config.NOTIFICATIONS_REFRESH_INTERVAL);
+
+				$interval(checkForNewNotifications, Config.NOTIFICATIONS_REFRESH_INTERVAL);
+
+				$rootScope.$on('auth.logged_in', function() {
+					notifications = [];
+					seenNotifications = [];
+
+					refresh(true);
+				});
+
+				$rootScope.$on('auth.logged_out', function() {
+					notifications = [];
+					seenNotifications = [];
+				});
+			}
+
+			function checkForNewNotifications() {
+				refresh(false);
 			}
 
 			function emitToastsOnNewNotifications(isFirstRefresh) {
@@ -5517,7 +5538,7 @@ if (!Array.prototype.find) {
 
 					seenNotifications.push(notifications[i].id);
 
-					if(isFirstRefresh) return;
+					if(isFirstRefresh) continue;
 
 					console.info("[notifications.new] ", notifications[i]);
 
@@ -5525,6 +5546,10 @@ if (!Array.prototype.find) {
 						className: notifications[i].data.type || 'info',
 						content: notifications[i].data.title
 					})
+				}
+
+				if(isFirstRefresh) {
+					console.info("[notifications.init] ", notifications.length, " notifications unread");
 				}
 			}
 

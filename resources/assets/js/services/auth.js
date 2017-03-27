@@ -80,6 +80,8 @@
 
 				validateSessionIntegrity();
 
+				$rootScope.$broadcast('auth.logged_in');
+
 				return $localStorage.session;
 			}
 
@@ -125,6 +127,8 @@
 				});
 
 				Identity.disconnect();
+
+				$rootScope.$broadcast('auth.logged_out');
 			};
 
 			this.login = function(email, password) {
