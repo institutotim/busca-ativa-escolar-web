@@ -49,7 +49,7 @@
 
 					$timeout(function() {
 						scope.$broadcast('highchartsng.reflow');
-					}, 500);
+					}, 1000);
 				});
 			}
 
