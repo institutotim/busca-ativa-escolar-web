@@ -5,10 +5,10 @@
 		ngToastProvider.configure({
 			verticalPosition: 'top',
 			horizontalPosition: 'right',
-			maxNumber: 3,
+			maxNumber: 8,
 			animation: 'slide',
 			dismissButton: true,
-			timeout: 3000
+			timeout: 6000
 		});
 	});
 
