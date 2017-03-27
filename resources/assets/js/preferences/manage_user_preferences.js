@@ -8,7 +8,7 @@
 				controller: 'ManageUserPreferencesCtrl'
 			})
 		})
-		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, UserPreferences, StaticData) {
+		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, Identity, UserPreferences, PasswordReset, StaticData) {
 
 			$scope.static = StaticData;
 			$scope.settings = {};
@@ -21,6 +21,15 @@
 
 			$scope.save = function() {
 				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
+			};
+
+			$scope.resetPassword = function() {
+				$scope.true = false;
+
+				PasswordReset.begin({email: Identity.getCurrentUser().email}, function (res) {
+					$scope.isLoading = false;
+					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
+				})
 			};
 
 			$scope.refresh();

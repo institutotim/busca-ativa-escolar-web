@@ -5,7 +5,17 @@
 		</div>
 		<div class="panel-body">
 
-			<form name="userPreferences" ng-submit="save()" ng-show="identity.can('preferences')">
+			<form ng-submit="resetPassword()" ng-show="identity.can('preferences')">
+				<h4><i class="fa fa-key"></i> Alterar senha</h4>
+				<p>Clique no botão abaixo para trocar sua senha. Você receberá um e-mail com um link para completar a troca.</p>
+
+				<button type="submit" class="btn btn-warning btn-raised"><i class="fa fa-refresh"></i> Trocar senha</button>
+
+			</form>
+
+			<hr />
+
+			<form ng-submit="save()" ng-show="identity.can('preferences')">
 				<h4><i class="fa fa-envelope"></i> Notificações</h4>
 				<p>Quais tipos de notificações você deseja receber?</p>
 
