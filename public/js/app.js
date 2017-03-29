@@ -3976,7 +3976,7 @@ if (!Array.prototype.find) {
 			return $resource(API.getURI('signups/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: authHeaders},
 
-				getPending: {url: API.getURI('signups/pending'), method: 'GET', isArray: false, headers: authHeaders},
+				getPending: {url: API.getURI('signups/pending'), method: 'POST', isArray: false, headers: authHeaders},
 				approve: {url: API.getURI('signups/:id/approve'), method: 'POST', headers: authHeaders},
 				reject: {url: API.getURI('signups/:id/reject'), method: 'POST', headers: authHeaders},
 
@@ -6510,9 +6510,10 @@ function identify(namespace, file) {
 
 			$scope.signups = {};
 			$scope.signup = {};
+			$scope.query = {sort: {created_at: 'desc'}};
 
 			$scope.refresh = function() {
-				$scope.signups = SignUps.getPending();
+				$scope.signups = SignUps.getPending($scope.query);
 			};
 
 			$scope.preview = function(signup) {

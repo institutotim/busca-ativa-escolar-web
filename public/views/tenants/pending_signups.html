@@ -10,9 +10,9 @@
 				<table class="table" ng-show="signups.data && signups.data.length > 0">
 					<thead>
 					<tr>
-						<th>Município</th>
-						<th>Data</th>
-						<th>Status</th>
+						<th><column-sorter on-change="refresh" model="query.sort" field="'cities.name:city_id'">Município</column-sorter></th>
+						<th><column-sorter on-change="refresh" model="query.sort" field="'created_at'">Data</column-sorter></th>
+						<th><column-sorter on-change="refresh" model="query.sort" field="'status'">Status</column-sorter></th>
 					</tr>
 					</thead>
 					<tbody>

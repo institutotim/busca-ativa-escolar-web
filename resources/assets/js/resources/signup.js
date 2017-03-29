@@ -9,7 +9,7 @@
 			return $resource(API.getURI('signups/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: authHeaders},
 
-				getPending: {url: API.getURI('signups/pending'), method: 'GET', isArray: false, headers: authHeaders},
+				getPending: {url: API.getURI('signups/pending'), method: 'POST', isArray: false, headers: authHeaders},
 				approve: {url: API.getURI('signups/:id/approve'), method: 'POST', headers: authHeaders},
 				reject: {url: API.getURI('signups/:id/reject'), method: 'POST', headers: authHeaders},
 

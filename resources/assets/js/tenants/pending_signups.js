@@ -15,9 +15,10 @@
 
 			$scope.signups = {};
 			$scope.signup = {};
+			$scope.query = {sort: {created_at: 'desc'}};
 
 			$scope.refresh = function() {
-				$scope.signups = SignUps.getPending();
+				$scope.signups = SignUps.getPending($scope.query);
 			};
 
 			$scope.preview = function(signup) {
