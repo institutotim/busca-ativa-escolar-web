@@ -623,7 +623,7 @@
 
 			<div class="form-group col-md-2">
 				<label class="control-label" for="fld-enroll-school_uf">UF*</label>
-				<select class="form-control" id="fld-enroll-school_uf" ng-disabled="!canEditStep(step)" ng-model="fields.school_uf" ng-options="uf.code as uf.code for uf in static.getUFs()"></select>
+				<select class="form-control" id="fld-enroll-school_uf" ng-disabled="!canEditStep(step)" ng-model="fields.school_uf" ng-options="uf.code as uf.code for uf in static.getUFs() | orderObjectBy:'code'""></select>
 			</div>
 			<div class="form-group col-md-4 clearfix">
 				<label class="control-label" for="fld-enroll-school_city">Município*</label>
