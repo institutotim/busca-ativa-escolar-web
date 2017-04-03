@@ -32,10 +32,12 @@
 }
 
 .list-group {
-	i {
-		font-size: 8px;
+
+	&.basic-list {
+		i { font-size: 8px; }
 	}
-	
+
+
 	.list-group-item.timeline-item {
 		overflow: visible;
 		padding: 0;
