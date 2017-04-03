@@ -11,14 +11,12 @@
 				</p>
 
 				<ul style="font-size: 12px"  class="list-group">
-					<li class="list-group-item"><i font-site class="fa fa-circle-o"></i> Prefeito Municipal: organiza e motiva os trabalhos da iniciativa do Busca Ativa Escolar no município;</li>
-					<li class="list-group-item"><i class="fa fa-circle-o"></i> Gestor Político: reúne as diversas instituições governamentais e não governamentais da cidade para participar do programa e propõe a criação ou alteração de políticas públicas para combater a exclusão escolar; </li>
-					<li class="list-group-item"><i class="fa fa-circle-o"></i> Coordenador operacional: é responsável pelo planejamento, execução e acompanhamento do plano de trabalho e de todas as ações do projeto; </li>
-					<li class="list-group-item"><i class="fa fa-circle-o"></i> Supervisores institucionais: indicados pelas secretarias/órgãos envolvidos no projeto;</li>
-					<li class="list-group-item"><i class="fa fa-circle-o"></i> Técnicos verificadores: são os responsáveis por elaborar o diagnóstico e produzir análise técnica sobre os casos encontrados; </li>
-					<li class="list-group-item"><i class="fa fa-circle-o"></i> Agentes comunitários: são os responsáveis por fazer os primeiros alertas de crianças e adolescentes que estão fora da escola.
-
- </li>
+					<li class="list-group-item"><i class="fa fa-circle"></i> Prefeito Municipal: organiza e motiva os trabalhos da iniciativa do Busca Ativa Escolar no município;</li>
+					<li class="list-group-item"><i class="fa fa-circle"></i> Gestor Político: reúne as diversas instituições governamentais e não governamentais da cidade para participar do programa e propõe a criação ou alteração de políticas públicas para combater a exclusão escolar; </li>
+					<li class="list-group-item"><i class="fa fa-circle"></i> Coordenador operacional: é responsável pelo planejamento, execução e acompanhamento do plano de trabalho e de todas as ações do projeto; </li>
+					<li class="list-group-item"><i class="fa fa-circle"></i> Supervisores institucionais: indicados pelas secretarias/órgãos envolvidos no projeto;</li>
+					<li class="list-group-item"><i class="fa fa-circle"></i> Técnicos verificadores: são os responsáveis por elaborar o diagnóstico e produzir análise técnica sobre os casos encontrados; </li>
+					<li class="list-group-item"><i class="fa fa-circle"></i> Agentes comunitários: são os responsáveis por fazer os primeiros alertas de crianças e adolescentes que estão fora da escola.</li>
 				</ul>
 
 			<form ng-submit="refresh()" name="searchUsers" class="clearfix">
@@ -65,7 +63,7 @@
 						</div>
 					</div>
 					<div class="form-group col-md-6">
-						<label><i class="fa fa-list-ol"></i> Limite de exibição</label>
+						<label><i class="fa fa-listl"></i> Limite de exibição</label>
 						<div class="clearfix" style="margin-top: 10px;">
 							<ul class="nav nav-pills adm-max-results-filter">
 								<li ng-class="{active: query.max==16}"><a ng-click="setMaxResults(16)">16</a></li>
@@ -102,7 +100,7 @@
 						<td width="18%">{{user.type | lang:'user.type'}}</td>
 						<td width="21%">{{user.group.name}}</td>
 						<td width="20%" ng-show="identity.can('users.manage')">
-							<a ui-sref="user_editor({user_id: user.id, quick_add: quickAdd})" ng-show="identity.can('users.manage') && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-pencil-square-o"></i> Editar</a>
+							<a ui-sref="user_editor({user_id: user.id, quick_add: quickAdd})" ng-show="identity.can('users.manage') && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-pencil-square"></i> Editar</a>
 							<a ng-click="suspendUser(user)" ng-show="!user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-ban"></i> Desativar</a>
 							<a ng-click="restoreUser(user)" ng-show="user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-check"></i> Ativar</a>
 						</td>
