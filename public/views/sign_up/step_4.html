@@ -30,13 +30,19 @@
 				<div class="radio-inline">
 					<label><input id="fld-agree_tos-no" ng-model="$parent.agreeTOS" ng-value="0" name="agree_tos" value="0" type="radio"> Não</label>
 				</div>
+
+				<div ng-show="$parent.agreeTOS == '0'">
+						Para prosseguir, é preciso concordar com o termo de adesão. Em caso de dúvidas, entre em <a href="http://buscaativaescolar.homolog.lqdi.net/">contato</a>.		
+				</div>
+
 			</div>
 		</div>
 	</div>
 
 	<div class="panel-footer clearfix">
 		<button ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<button type="submit" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
-
+		<div ng-show="$parent.agreeTOS">
+			<button type="submit" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
+		</div>
 	</div>
 </form>
