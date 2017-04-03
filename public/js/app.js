@@ -5532,6 +5532,9 @@ if (!Array.prototype.find) {
 			}
 
 			function emitToastsOnNewNotifications(isFirstRefresh) {
+
+				if(!notifications) return;
+
 				for(var i in notifications) {
 					if(!notifications.hasOwnProperty(i)) continue;
 					if(seenNotifications.indexOf(notifications[i].id) !== -1) continue;
