@@ -510,7 +510,7 @@
 		};
 
 		$scope.fillWithCurrentDate = function (field) {
-			$scope.fields[field] = (new Date()).toISOString().substring(0, 10);
+			$scope.fields[field] = Utils.convertISOtoBRDate(new Date().toISOString().substring(0, 10));
 		};
 
 		function filterOutEmptyFields(data) {

@@ -57,7 +57,7 @@
 }
 #app-navbar .navbar-brand {
   padding: 0;
-  background-image: url('../images/logo_bae_header_v2.png?1488584770');
+  background-image: url('../images/logo_bae_header_v2.png?1489502696');
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -201,7 +201,7 @@
   right: 0;
   width: 60px;
   height: 60px;
-  background-image: url('../images/ico_forbidden.png?1487704365');
+  background-image: url('../images/ico_forbidden.png?1489502696');
   background-size: auto;
   background-position: center center;
   background-repeat: no-repeat;
@@ -504,6 +504,9 @@ footer.app-footer a.credits-btn {
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
+.list-group i {
+  font-size: 8px;
+}
 .list-group .list-group-item.timeline-item {
   overflow: visible;
   padding: 0;
@@ -567,6 +570,10 @@ footer.app-footer a.credits-btn {
   border: 1px solid #eee;
   padding: 4px;
   border-radius: 4px;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+  opacity: 1;
 }
 
 .sign-up-groups tbody tr td {
