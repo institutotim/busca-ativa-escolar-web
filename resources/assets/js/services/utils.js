@@ -93,7 +93,15 @@
 					if(isNaN(timestamp.getTime())) return null;
 					timestamp = timestamp.toISOString();
 				}
-				return ("" + timestamp).substring(0, 10);
+
+				timestamp = ("" + timestamp).substring(0, 10);
+
+				if(timestamp.indexOf('/') !== -1) {
+					return convertBRtoISODate(timestamp);
+				}
+
+				return timestamp;
+
 			}
 
 			function displayValidationErrors(response) {
