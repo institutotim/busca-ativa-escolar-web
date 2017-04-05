@@ -18,8 +18,13 @@
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 
+		$scope.refreshChildData = function(callback) {
+			return $scope.child = Children.find({id: $scope.child_id}, callback);
+		};
+
 		$scope.child_id = $stateParams.child_id;
-		$scope.child = Children.find({id: $scope.child_id});
+		$scope.child = $scope.refreshChildData();
+
 
 		console.log("[core] @ChildViewCtrl", $scope.child);
 

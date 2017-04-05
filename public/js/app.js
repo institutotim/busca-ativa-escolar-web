@@ -401,12 +401,12 @@
 
 	}
 
-	function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData) {
+	function ChildCaseStepCtrl($scope, $state, $stateParams, $timeout, ngToast, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData) {
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 		$scope.CaseSteps = CaseSteps;
 		$scope.static = StaticData;
-
+$
 		$scope.editable = true;
 		$scope.showAll = false;
 		$scope.showTitle = true;
@@ -541,7 +541,7 @@
 				}).
 				then(function (res) {
 					ngToast.success("Usuário atribuído!");
-					fetchStepData();
+					$state.reload();
 				});
 
 		};
@@ -718,8 +718,13 @@
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 
+		$scope.refreshChildData = function(callback) {
+			return $scope.child = Children.find({id: $scope.child_id}, callback);
+		};
+
 		$scope.child_id = $stateParams.child_id;
-		$scope.child = Children.find({id: $scope.child_id});
+		$scope.child = $scope.refreshChildData();
+
 
 		console.log("[core] @ChildViewCtrl", $scope.child);
 
