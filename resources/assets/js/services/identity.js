@@ -83,6 +83,10 @@
 			$localStorage.identity.is_logged_in = true;
 			$localStorage.identity.current_user = user;
 
+			if(window.ga) {
+				window.ga('set', 'userId', user.id);
+			}
+
 			refreshIdentity();
 		}
 
