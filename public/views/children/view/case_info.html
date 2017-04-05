@@ -755,7 +755,7 @@
 		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-obs-report_date">Data de registro do relatório (dd/mm/aaaa)*</label>
 			<div class="clearfix">
-				<input type="text" ui-date-mask class="form-control" id="fld-obs-report_date" ng-readonly="!canEditStep(step)" ng-model="fields.report_date" style="float: left; width: 70%;">
+				<input type="text" ui-date-mask class="form-control" id="fld-obs-report_date" ng-readonly="!canEditStep(step)" ng-model="fields.report_date" style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
 				<button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditStep(step)" ng-click="fillWithCurrentDate('report_date')" style="float: left; width: 25%">Hoje</button>
 			</div>
 		</div>
