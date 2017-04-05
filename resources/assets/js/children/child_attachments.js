@@ -20,11 +20,11 @@
 			};
 
 			$scope.uploadAttachment = function() {
-				Modals.show(Modals.Prompt('Clique aqui para anexar o arquivo desejado!', 'Qual a descrição do anexo que será enviado?', false))
+				Modals.show(Modals.Prompt('Anexando um arquivo ao caso', '', false, 'Qual a descrição do anexo que será enviado?'))
 					.then(function(description) {
 						return Modals.show(Modals.FileUploader(
-							'Anexar arquivo',
-							'Selecione um arquivo para anexar ao perfil da criança',
+							'Anexando um arquivo ao caso',
+							'Selecione abaixo o arquivo que deseja anexar ao caso.',
 							API.getURI('children/' + $stateParams.child_id + '/attachments'),
 							{description: description}
 						))

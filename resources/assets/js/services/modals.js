@@ -56,7 +56,7 @@
 					return params;
 				},
 
-				Prompt: function(question, defaultAnswer, canDismiss) {
+				Prompt: function(question, defaultAnswer, canDismiss, answerPlaceholder) {
 					var params = {
 						templateUrl: '/views/modals/prompt.html',
 						controller: 'PromptModalCtrl',
@@ -64,7 +64,8 @@
 						resolve: {
 							question: function() { return question; },
 							defaultAnswer: function() { return defaultAnswer; },
-							canDismiss: function() { return canDismiss; }
+							canDismiss: function() { return canDismiss; },
+							answerPlaceholder: function() { return answerPlaceholder; }
 						}
 					};
 
