@@ -20,7 +20,7 @@
 			};
 
 			$scope.uploadAttachment = function() {
-				Modals.show(Modals.Prompt('Qual a descrição do anexo que será enviado?', '', false))
+				Modals.show(Modals.Prompt('Clique aqui para anexar o arquivo desejado!', 'Qual a descrição do anexo que será enviado?', false))
 					.then(function(description) {
 						return Modals.show(Modals.FileUploader(
 							'Anexar arquivo',

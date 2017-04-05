@@ -30,10 +30,15 @@
 	</a>
 </script>
 
-<div ng-show="isPendingAssignment()" class="alert alert-warning">
+<div ng-show="isPendingAssignment() && identity.can('cases.assign') " class="alert alert-warning">
 	<h3><i class="fa fa-user-times"></i> Essa etapa está pendente de atribuição!</h3>
 	<p>Não há nenhum usuário responsável por essa etapa!</p>
 	<a ng-show="identity.can('cases.assign')" class="btn btn-raised btn-default" ng-click="assignUser()"><i class="fa fa-user-plus"></i> Atribuir responsável</a>
+</div>
+
+<div ng-show="isPendingAssignment() && isStepOpen('GestaoDoCaso') && identity.getType() === 'tecnico_verificador'" class="alert alert-success">
+	<h3><i class="fa fa-check"></i> Obrigada por sua colaboração! </h3>
+	<p>A gestão do caso agora está sob a responsabilidade do Supervisor Institucional.</p>
 </div>
 
 <div class="panel panel-default" ng-show="isStepOpen('Alerta')">
@@ -135,7 +140,7 @@
 		</div>
 		<div class="form-group col-md-2">
 			<label class="control-label" for="fld-alert-uf">UF*</label>
-			<select class="form-control" id="fld-alert-uf" ng-disabled="!canEditStep(step)" ng-model="fields.place_uf" ng-options="uf.code as uf.code for uf in static.getUFs()"></select>
+			<select class="form-control" id="fld-alert-uf" ng-disabled="!canEditStep(step)" ng-model="fields.place_uf" ng-options="uf.code as uf.code for uf in static.getUFs()| orderObjectBy:'code'"></select>
 		</div>
 		<div class="form-group col-md-5 clearfix">
 			<label class="control-label" for="fld-alert-city">Município*</label>
@@ -579,7 +584,6 @@
 
 		<div ng-show="editable && canEditStep(step)">
 			<hr />
-
 			<a class="btn btn-raised btn-info" ng-show="canEditStep()" ng-click="save()">Salvar</a>
 			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e enviar para o supervisor institucional</a>
 		</div>
@@ -587,7 +591,7 @@
 	</div>
 </div>
 
-<div class="panel panel-default" ng-show="isStepOpen('GestaoDoCaso')">
+<div class="panel panel-default" ng-show="isStepOpen('GestaoDoCaso') && identity.can('cases.assign')">
 	<div class="panel-heading"><i class="fa fa-info-circle"></i> Relatório de gestão do caso</div>
 	<div class="panel-body">
 
@@ -623,7 +627,7 @@
 
 			<div class="form-group col-md-2">
 				<label class="control-label" for="fld-enroll-school_uf">UF*</label>
-				<select class="form-control" id="fld-enroll-school_uf" ng-disabled="!canEditStep(step)" ng-model="fields.school_uf" ng-options="uf.code as uf.code for uf in static.getUFs() | orderObjectBy:'code'""></select>
+				<select class="form-control" id="fld-enroll-school_uf" ng-disabled="!canEditStep(step)" ng-model="fields.school_uf" ng-options="uf.code as uf.code for uf in static.getUFs() | orderObjectBy:'code'"></select>
 			</div>
 			<div class="form-group col-md-4 clearfix">
 				<label class="control-label" for="fld-enroll-school_city">Município*</label>
@@ -751,7 +755,7 @@
 		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-obs-report_date">Data de registro do relatório (dd/mm/aaaa)*</label>
 			<div class="clearfix">
-				<input type="text" ui-date-mask class="form-control" id="fld-obs-report_date" ng-readonly="!canEditStep(step)" ng-model="fields.report_date" style="float: left; width: 70%;">
+				<input type="text" ui-date-mask class="form-control" id="fld-obs-report_date" ng-readonly="!canEditStep(step)" ng-model="fields.report_date" style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
 				<button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditStep(step)" ng-click="fillWithCurrentDate('report_date')" style="float: left; width: 25%">Hoje</button>
 			</div>
 		</div>
