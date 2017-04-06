@@ -60,7 +60,7 @@
 }
 #app-navbar .navbar-brand {
   padding: 0;
-  background-image: url('../images/logo_bae_header_v2.png?1489502696');
+  background-image: url('../images/logo_bae_header_v2.png?1488584770');
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -204,7 +204,7 @@
   right: 0;
   width: 60px;
   height: 60px;
-  background-image: url('../images/ico_forbidden.png?1489502696');
+  background-image: url('../images/ico_forbidden.png?1487704365');
   background-size: auto;
   background-position: center center;
   background-repeat: no-repeat;
@@ -733,6 +733,18 @@ a.column-sorter {
 .card-detail-text {
   font-size: 14px;
   color: #999;
+}
+
+.btn.dashboard-btn {
+  width: 100%;
+}
+.btn.dashboard-btn .btn-icon {
+  font-size: 38px;
+  text-align: center;
+  margin: 40px 0;
+}
+.btn.dashboard-btn .btn-label {
+  text-align: center;
 }
 
 /*# sourceMappingURL=app.css.map */

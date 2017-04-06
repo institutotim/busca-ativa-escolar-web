@@ -227,3 +227,17 @@ a.column-sorter {
 	font-size: 14px;
 	color: #999;
 }
+
+.btn.dashboard-btn {
+
+	width: 100%;
+
+	.btn-icon {
+		font-size: 38px;
+		text-align: center;
+		margin: 40px 0;
+	}
+	.btn-label {
+		text-align: center;
+	}
+}

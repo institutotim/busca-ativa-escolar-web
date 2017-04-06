@@ -1,0 +1,68 @@
+<div>
+	<div class="clearfix">
+		<h3 class="pull-left"><i class="fa fa-upload"></i> Importações</h3>
+		<a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i> Atualizar</a>
+	</div>
+	<div class="col-md-12">
+
+		<div class="panel panel-default">
+			<div class="panel-body clearfix">
+				<div class="row">
+					<div class="col-md-4">
+						<a class="btn btn-default btn-raised text-center dashboard-btn" ng-click="newImport('school_csv')">
+							<div class="btn-icon"><i class="fa fa-graduation-cap"></i></div>
+							<div class="btn-label">Importar escolas</div>
+						</a>
+					</div>
+
+					<div class="col-md-4">
+						<a class="btn disabled btn-default btn-raised text-center dashboard-btn" ng-click="newImport('cities')">
+							<div class="btn-icon"><i class="fa fa-university"></i></div>
+							<div class="btn-label">Importar cidades</div>
+						</a>
+					</div>
+
+					<div class="col-md-4">
+						<a class="btn disabled btn-default btn-raised text-center dashboard-btn" ng-click="newImport('prefilled_cases')">
+							<div class="btn-icon"><i class="fa fa-archive"></i></div>
+							<div class="btn-label">Importar casos do MEC</div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<hr />
+		<table class="table">
+			<thead>
+			<tr>
+				<th>Data</th>
+				<th>Tipo</th>
+				<th>Arquivo</th>
+				<th>Progresso</th>
+				<th>Status</th>
+				<th class="text-center">Opções</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr ng-repeat="job in jobs.data">
+				<td><span ng-bind="job.created_at | amCalendar" uib-tooltip-html="job.created_at | amTimeAgo"></span></td>
+				<td><span ng-bind="job.type"></span></td>
+				<td><span ng-bind="job.path"></span></td>
+				<td>
+					<span class="label label-primary" ng-show="job.status === 'pending'"><i class="fa fa-question-circle"></i> Pronto para processar</span>
+					<span class="label label-warning" ng-show="job.status === 'processing'"><img src="/images/btn_warn_loading.gif" /> Processando</span>
+					<span class="label label-success" ng-show="job.status === 'completed'"><i class="fa fa-check-circle"></i> Processado</span>
+					<span class="label label-danger" ng-show="job.status === 'failed'"><i class="fa fa-exclamation-circle"></i> Falhou</span>
+				</td>
+				<td><span>{{renderProgress(job)}} ({{job.offset}} / {{job.total_records}})</span></td>
+				<td class="text-center">
+					<a ng-click="processJob(job)" ng-show="job.status === 'pending'" class="btn btn-xs btn-raised btn-success" target="_blank"><i class="fa fa-cog"></i> Processar</a>
+					<a ng-click="processJob(job)" ng-show="job.status === 'failed'" class="btn btn-xs btn-raised btn-primary " target="_blank"><i class="fa fa-refresh"></i> Tentar novamente</a>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
