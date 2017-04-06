@@ -201,6 +201,47 @@
 				return false;
 			}
 
+			function basename(str) {
+				var base = ("" + str).substring(str.lastIndexOf('/') + 1);
+
+				if(base.lastIndexOf(".") !== -1) {
+					base = base.substring(0, base.lastIndexOf("."));
+				}
+
+				return base;
+			}
+
+			function renderCallStack(stack, knownRootPaths) {
+				if(!stack) return ['[ empty stack! ]'];
+
+				var messages = [];
+				var maxCalls = 12;
+				var numCalls = 0;
+
+				for(var callNum in stack) {
+
+					if(numCalls++ > maxCalls) {
+						messages.push("[ snip ... other " + (stack.length - numCalls) +  " calls in stack ]");
+						return messages;
+					}
+
+					if(!stack.hasOwnProperty(callNum)) continue;
+					var c = stack[callNum];
+
+					messages.push(
+						'at '
+						+ (c.class ? c.class : '[root]')
+						+ (c.type ? c.type : '@')
+						+ (c.function ? c.function : '[anonymous function]')
+						+ '()'
+						+ ((c.file) ? (" @ " + basename(c.file) + ':' + (c.line ? c.line : '[NL]')) : ' [no file]')
+					);
+				}
+
+				return messages;
+
+			}
+
 			return {
 				stripTimeFromTimestamp: stripTimeFromTimestamp,
 				prepareDateFields: prepareDateFields,
@@ -211,7 +252,9 @@
 				convertBRtoISODate: convertBRtoISODate,
 				generateRandomID: generateRandomID,
 				validateFields: validateFields,
+				renderCallStack: renderCallStack,
 				isValid: isValid,
+				basename: basename,
 				filter: filter,
 				extract: extract,
 				pluck: pluck,

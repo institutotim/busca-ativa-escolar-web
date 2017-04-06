@@ -1713,6 +1713,7 @@ $
 		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
 		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
 		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
+		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
 	});
 
 })();
@@ -3059,7 +3060,44 @@ Highcharts.maps["countries/br/br-all"] = {
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
-		.service('HandleExceptionResponsesInterceptor', function () {
+		.service('HandleErrorResponsesInterceptor', function () {
+
+			function handleResponse(response) {
+
+				if(!response) {
+					console.error('[interceptors.server_error] Empty response received!');
+					return response;
+				}
+
+				if(!response.data) {
+					console.error('[interceptors.server_error] Response missing decoded data: ', response);
+					return response;
+				}
+
+				// Handled by Exception interceptor
+				if(response.data.reason && response.data.reason === 'exception') return response;
+
+				var acceptableErrors = [200, 206, 201, 204, 202, 301, 304, 302, 303, 307, 308, 100];
+
+				if(acceptableErrors.indexOf(response.status) === -1) {
+					console.error('[interceptors.server_error] Error #' + response.status + ': ', response.data, response);
+					return response;
+				}
+
+				return response;
+
+			}
+
+			this.response = handleResponse;
+			this.responseError = handleResponse;
+
+		});
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('HandleExceptionResponsesInterceptor', function (Utils) {
 
 			function handleResponse(response) {
 
@@ -3068,9 +3106,29 @@ Highcharts.maps["countries/br/br-all"] = {
 				if(!response.data.reason) return response;
 				if(response.data.reason !== 'exception') return response;
 
+				var knownRootPaths = [
+					'/home/vagrant/projects/busca-ativa-escolar-api/',
+					'/home/forge/api.busca-ativa-escolar.dev.lqdi.net/'
+				];
+
 				if(response.data.exception.stack) {
-					console.log('[interceptors.api_exception] [debug=on] API error: ', response.data.exception.message);
-					console.log('[interceptors.api_exception] [debug=on] Error stack: ', response.data.exception.stack);
+					console.error('[interceptors.api_exception] [debug=on] API error: ', response.data.exception.message);
+					console.warn('[interceptors.api_exception] [debug=on] Original HTTP call: ', response.config.method, response.config.url, response.config.data);
+
+					var messages = Utils.renderCallStack(response.data.exception.stack, knownRootPaths);
+
+					if(messages) {
+
+						console.group('[interceptors.api_exception] [debug=on] Error stack below: ');
+
+						for(var i in messages) {
+							if(!messages.hasOwnProperty(i)) continue;
+							console.log(messages[i]);
+						}
+
+						console.endGroup();
+					}
+
 					return response;
 				}
 
@@ -5990,6 +6048,47 @@ if (!Array.prototype.find) {
 				return false;
 			}
 
+			function basename(str) {
+				var base = ("" + str).substring(str.lastIndexOf('/') + 1);
+
+				if(base.lastIndexOf(".") !== -1) {
+					base = base.substring(0, base.lastIndexOf("."));
+				}
+
+				return base;
+			}
+
+			function renderCallStack(stack, knownRootPaths) {
+				if(!stack) return ['[ empty stack! ]'];
+
+				var messages = [];
+				var maxCalls = 12;
+				var numCalls = 0;
+
+				for(var callNum in stack) {
+
+					if(numCalls++ > maxCalls) {
+						messages.push("[ snip ... other " + (stack.length - numCalls) +  " calls in stack ]");
+						return messages;
+					}
+
+					if(!stack.hasOwnProperty(callNum)) continue;
+					var c = stack[callNum];
+
+					messages.push(
+						'at '
+						+ (c.class ? c.class : '[root]')
+						+ (c.type ? c.type : '@')
+						+ (c.function ? c.function : '[anonymous function]')
+						+ '()'
+						+ ((c.file) ? (" @ " + basename(c.file) + ':' + (c.line ? c.line : '[NL]')) : ' [no file]')
+					);
+				}
+
+				return messages;
+
+			}
+
 			return {
 				stripTimeFromTimestamp: stripTimeFromTimestamp,
 				prepareDateFields: prepareDateFields,
@@ -6000,7 +6099,9 @@ if (!Array.prototype.find) {
 				convertBRtoISODate: convertBRtoISODate,
 				generateRandomID: generateRandomID,
 				validateFields: validateFields,
+				renderCallStack: renderCallStack,
 				isValid: isValid,
+				basename: basename,
 				filter: filter,
 				extract: extract,
 				pluck: pluck,
