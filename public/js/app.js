@@ -119,7 +119,7 @@
 				})
 		});
 
-	function ChildActivityLogCtrl($scope, $state, $stateParams, Children, Decorators) {
+	function ChildActivityLogCtrl($scope, $state, $stateParams, Children, Decorators, Utils) {
 
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
@@ -5885,6 +5885,23 @@ if (!Array.prototype.find) {
 				return filtered;
 			};
 		})
+		.filter('amDateAndTime', function($filter) {
+			return function(input) {
+				var timeInMs = new Date().getTime();
+				var timeCreated = new Date(input).getTime();
+  				
+  				var one_day=1000*60*60*24;
+
+				var diffence = Math.abs(timeCreated - timeInMs);
+  				var remainder = diffence / one_day; 
+				
+				if (remainder > 1){ 
+  					return $filter("amDateFormat")(input, 'DD/MM/YYYY');}
+  				else{
+					return $filter("amTimeAgo")(input);
+				}
+			};
+		})
 		.factory('Utils', function(ngToast) {
 
 			function generateRandomID() {
@@ -6694,83 +6711,6 @@ function identify(namespace, file) {
 
 	angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
-			$stateProvider.state('pending_signups', {
-				url: '/pending_signups',
-				templateUrl: '/views/tenants/pending_signups.html',
-				controller: 'PendingSignupsCtrl'
-			})
-		})
-		.controller('PendingSignupsCtrl', function ($scope, $rootScope, ngToast, Identity, SignUps, StaticData) {
-
-			$scope.identity = Identity;
-			$scope.static = StaticData;
-
-			$scope.signups = {};
-			$scope.signup = {};
-			$scope.query = {sort: {created_at: 'desc'}};
-
-			$scope.refresh = function() {
-				$scope.signups = SignUps.getPending($scope.query);
-			};
-
-			$scope.preview = function(signup) {
-				$scope.signup = signup;
-			};
-
-			$scope.approve = function(signup) {
-				SignUps.approve({id: signup.id}, function() {
-					$scope.refresh();
-					$scope.signup = {};
-				});
-			};
-
-			$scope.reject = function(signup) {
-				SignUps.reject({id: signup.id}, function() {
-					$scope.refresh();
-					$scope.signup = {};
-				});
-			};
-
-			$scope.resendNotification = function(signup) {
-				SignUps.resendNotification({id: signup.id}, function() {
-					ngToast.success('Notificação reenviada!');
-				});
-			};
-
-			$scope.refresh();
-
-		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function($stateProvider) {
-			$stateProvider.state('tenant_browser', {
-				url: '/tenants',
-				templateUrl: '/views/tenants/list.html',
-				controller: 'TenantBrowserCtrl'
-			})
-		})
-		.controller('TenantBrowserCtrl', function ($scope, $rootScope, Tenants, Identity) {
-
-			$scope.identity = Identity;
-			$scope.tenants = {};
-			$scope.query = {sort: {registered_at: 'asc'}};
-
-			$scope.refresh = function() {
-				$scope.tenants = Tenants.all($scope.query);
-			};
-			
-			$scope.refresh();
-
-		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
 			$stateProvider.state('user_browser', {
 				url: '/users',
 				templateUrl: '/views/users/browser.html',
@@ -6947,6 +6887,83 @@ function identify(namespace, file) {
 
 				ngToast.danger("Ocorreu um erro ao salvar o usuário: ", res.status);
 			}
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('pending_signups', {
+				url: '/pending_signups',
+				templateUrl: '/views/tenants/pending_signups.html',
+				controller: 'PendingSignupsCtrl'
+			})
+		})
+		.controller('PendingSignupsCtrl', function ($scope, $rootScope, ngToast, Identity, SignUps, StaticData) {
+
+			$scope.identity = Identity;
+			$scope.static = StaticData;
+
+			$scope.signups = {};
+			$scope.signup = {};
+			$scope.query = {sort: {created_at: 'desc'}};
+
+			$scope.refresh = function() {
+				$scope.signups = SignUps.getPending($scope.query);
+			};
+
+			$scope.preview = function(signup) {
+				$scope.signup = signup;
+			};
+
+			$scope.approve = function(signup) {
+				SignUps.approve({id: signup.id}, function() {
+					$scope.refresh();
+					$scope.signup = {};
+				});
+			};
+
+			$scope.reject = function(signup) {
+				SignUps.reject({id: signup.id}, function() {
+					$scope.refresh();
+					$scope.signup = {};
+				});
+			};
+
+			$scope.resendNotification = function(signup) {
+				SignUps.resendNotification({id: signup.id}, function() {
+					ngToast.success('Notificação reenviada!');
+				});
+			};
+
+			$scope.refresh();
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function($stateProvider) {
+			$stateProvider.state('tenant_browser', {
+				url: '/tenants',
+				templateUrl: '/views/tenants/list.html',
+				controller: 'TenantBrowserCtrl'
+			})
+		})
+		.controller('TenantBrowserCtrl', function ($scope, $rootScope, Tenants, Identity) {
+
+			$scope.identity = Identity;
+			$scope.tenants = {};
+			$scope.query = {sort: {registered_at: 'asc'}};
+
+			$scope.refresh = function() {
+				$scope.tenants = Tenants.all($scope.query);
+			};
+			
+			$scope.refresh();
 
 		});
 

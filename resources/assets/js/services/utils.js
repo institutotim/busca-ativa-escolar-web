@@ -38,6 +38,23 @@
 				return filtered;
 			};
 		})
+		.filter('amDateAndTime', function($filter) {
+			return function(input) {
+				var timeInMs = new Date().getTime();
+				var timeCreated = new Date(input).getTime();
+  				
+  				var one_day=1000*60*60*24;
+
+				var diffence = Math.abs(timeCreated - timeInMs);
+  				var remainder = diffence / one_day; 
+				
+				if (remainder > 1){ 
+  					return $filter("amDateFormat")(input, 'DD/MM/YYYY');}
+  				else{
+					return $filter("amTimeAgo")(input);
+				}
+			};
+		})
 		.factory('Utils', function(ngToast) {
 
 			function generateRandomID() {

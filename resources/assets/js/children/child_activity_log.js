@@ -12,7 +12,7 @@
 				})
 		});
 
-	function ChildActivityLogCtrl($scope, $state, $stateParams, Children, Decorators) {
+	function ChildActivityLogCtrl($scope, $state, $stateParams, Children, Decorators, Utils) {
 
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
