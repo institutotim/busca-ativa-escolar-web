@@ -133,12 +133,17 @@
 
 			var question = 'Tem certeza que deseja prosseguir para a próxima etapa?';
 			var explanation = 'Ao progredir de etapa, a etapa atual será marcada como concluída. Os dados preenchidos serão salvos.';
-
+				
 			if(step.step_type === "BuscaAtivaEscolar\\CaseSteps\\AnaliseTecnica") {
 				question = 'Tem certeza que deseja concluir a Análise Técnica?';
 				explanation = 'Ao dizer SIM, a Análise Técnica será marcada como concluída e nenhuma informação poderá ser editada. Os dados preenchidos serão salvos.';
 			}
 
+			if(step.step_type === "BuscaAtivaEscolar\\CaseSteps\\Observacao" && step.report_index === 4) {
+				question = 'Tem certeza que deseja concluir a última etapa de observação?';
+				explanation = 'O caso será considerado concluído e os dados preenchidos serão salvos.';
+			}
+			
 			Modals.show(Modals.Confirm(question, explanation)).then(function () {
 				return CaseSteps.complete({type: step.step_type, id: step.id}).$promise;
 			}).then(function (response) {
@@ -174,7 +179,7 @@
 		$scope.Children = Children;
 		$scope.CaseSteps = CaseSteps;
 		$scope.static = StaticData;
-$
+
 		$scope.editable = true;
 		$scope.showAll = false;
 		$scope.showTitle = true;
