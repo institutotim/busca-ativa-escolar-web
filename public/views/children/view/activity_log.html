@@ -16,7 +16,7 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="(i, entry) in entries.data">
-					<td><span ng-bind="entry.created_at | amDateAndTime" uib-tooltip-html="entry.created_at | amCalendar"></span></td>
+					<td><span ng-bind="entry.created_at | amCalendar"></span></td>
 					<td ng-show="entry.user"><span uib-tooltip-html="entry.user.type | lang:'user.type'"><i class="fa fa-user"></i> {{entry.user.name}}</span></td>
 					<td ng-show="entry.user"><span>{{entry.user.group.name || 'Nenhum'}}</span></td>
 					<td ng-show="!entry.user"><i class="fa fa-gear"></i> Sistema</td>
