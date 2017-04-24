@@ -16,7 +16,7 @@
 				})
 		});
 
-	function ChildCasesCtrl($q, $scope, $state, $stateParams, ngToast, Identity, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
+	function ChildCasesCtrl($q, $timeout, $scope, $state, $stateParams, ngToast, Identity, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
 
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
@@ -94,7 +94,11 @@
 
 			console.log("[child_viewer.cases] Opening step: ", selectedStep);
 
-			$state.go('child_viewer.cases.view_step', {step_type: selectedStep.step_type, step_id: selectedStep.id});
+			$state.go('child_viewer.cases.view_step', {step_type: selectedStep.step_type, step_id: selectedStep.id})
+				.then(function() {
+					$timeout(refreshGoogleMap, 1000);
+				});
+
 		};
 
 		$scope.canCompleteStep = function(childCase, step) {
@@ -125,6 +129,15 @@
 					$state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
 				});
 
+		};
+
+		function refreshGoogleMap() {
+			$timeout(function () {
+				$scope.renderMap = false;
+				$timeout(function () {
+					$scope.renderMap = true;
+				});
+			});
 		}
 
 		$scope.completeStep = function(step) {

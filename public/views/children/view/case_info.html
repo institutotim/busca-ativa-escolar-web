@@ -533,7 +533,7 @@
 				<strong>Endereço Identificado: </strong> {{fields.place_map_geocoded_address.streetName}} {{fields.place_map_geocoded_address.streetNumber}} - {{fields.place_map_geocoded_address.postalCode}} - {{fields.place_map_geocoded_address.subLocality}}
 			</div>
 
-			<ui-gmap-google-map center="fields.place_map_center" zoom="defaultMapZoom" draggable="true" style="height: 400px">
+			<ui-gmap-google-map ng-if="renderMap" center="fields.place_map_center" zoom="defaultMapZoom" draggable="true" style="height: 400px">
 				<ui-gmap-marker idKey="'child_coords_' + child.id" coords='fields.place_coords'></ui-gmap-marker>
 			</ui-gmap-google-map>
 
