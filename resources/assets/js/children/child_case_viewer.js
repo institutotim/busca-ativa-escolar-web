@@ -398,14 +398,16 @@
 		$scope.save = function() {
 
 			var data = $scope.step.fields;
-			data = filterOutEmptyFields(data);
-			data = clearAuxiliaryFields(data);
+
 			data = Utils.prepareDateFields(data, dateOnlyFields);
 
 			data = unpackTypeaheadField(data, 'place_city', data.place_city);
 			data = unpackTypeaheadField(data, 'school_city', data.school_city);
 			data = unpackTypeaheadField(data, 'school', data.school);
 			data = unpackTypeaheadField(data, 'school_last', data.school_last);
+
+			data = clearAuxiliaryFields(data);
+			data = filterOutEmptyFields(data);
 
 			data.type = $scope.step.step_type;
 			data.id = $scope.step.id;
