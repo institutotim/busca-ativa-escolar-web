@@ -35,6 +35,16 @@
 					})
 			};
 
+			$scope.removeAttachment = function(attachment) {
+				Modals.show(Modals.Confirm("Tem certeza que deseja remover esse arquivo?"))
+					.then(function () {
+						return Children.removeAttachment({id: $stateParams.child_id, attachment_id: attachment.id})
+					})
+					.then(function() {
+						$scope.refresh();
+					});
+			};
+
 			console.log("[core] @ChildAttachmentsCtrl", $stateParams);
 
 			$scope.refresh();

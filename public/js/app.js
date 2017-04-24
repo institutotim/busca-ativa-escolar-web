@@ -119,7 +119,7 @@
 				})
 		});
 
-	function ChildActivityLogCtrl($scope, $state, $stateParams, Children, Decorators, Utils) {
+	function ChildActivityLogCtrl($scope, $state, $stateParams, Children, Decorators) {
 
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
@@ -172,6 +172,16 @@
 						ngToast.success('Arquivo anexado!');
 						$scope.refresh();
 					})
+			};
+
+			$scope.removeAttachment = function(attachment) {
+				Modals.show(Modals.Confirm("Tem certeza que deseja remover esse arquivo?"))
+					.then(function () {
+						return Children.removeAttachment({id: $stateParams.child_id, attachment_id: attachment.id})
+					})
+					.then(function() {
+						$scope.refresh();
+					});
 			};
 
 			console.log("[core] @ChildAttachmentsCtrl", $stateParams);
@@ -4014,6 +4024,7 @@ if (!Array.prototype.find) {
 				getAttachments: {url: API.getURI('children/:id/attachments'), isArray: false, method: 'GET', headers: headers},
 				getActivity: {url: API.getURI('children/:id/activity'), isArray: false, method: 'GET', headers: headers},
 				postComment: {url: API.getURI('children/:id/comments'), method: 'POST', headers: headers},
+				removeAttachment: {url: API.getURI('children/:id/attachments/:attachment_id'), method: 'DELETE', headers: headers, params: {id: '@id', attachment_id: '@attachment_id'}},
 				spawnFromAlert: {method: 'POST', headers: headers},
 				cancelCase: {url: API.getURI('cases/:id/cancel'), params: {id: '@case_id'}, method: 'POST', headers: headers}
 			});
@@ -5890,23 +5901,6 @@ if (!Array.prototype.find) {
 				if(reverse) filtered.reverse();
 
 				return filtered;
-			};
-		})
-		.filter('amDateAndTime', function($filter) {
-			return function(input) {
-				var timeInMs = new Date().getTime();
-				var timeCreated = new Date(input).getTime();
-  				
-  				var one_day=1000*60*60*24;
-
-				var diffence = Math.abs(timeCreated - timeInMs);
-  				var remainder = diffence / one_day; 
-				
-				if (remainder > 1){ 
-  					return $filter("amDateFormat")(input, 'DD/MM/YYYY');}
-  				else{
-					return $filter("amTimeAgo")(input);
-				}
 			};
 		})
 		.factory('Utils', function(ngToast) {

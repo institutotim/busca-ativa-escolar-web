@@ -24,7 +24,7 @@
 				<td><span ng-bind="attachment.description"></span></td>
 				<td class="text-center">
 					<a class="btn btn-xs btn-raised btn-success" href="{{attachment.url}}" target="_blank"><i class="fa fa-download"></i> Download</a>
-					<a class="btn btn-xs btn-raised btn-danger" href="" target="_blank"><i class="fa fa-close"></i> Remover</a>
+					<a ng-show="identity.can('cases.manage')" ng-click="removeAttachment(attachment)" class="btn btn-xs btn-raised btn-danger" href="" target="_blank"><i class="fa fa-close"></i> Remover</a>
 				</td>
 			</tr>
 			</tbody>

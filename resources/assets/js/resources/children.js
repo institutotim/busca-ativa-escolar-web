@@ -14,6 +14,7 @@
 				getAttachments: {url: API.getURI('children/:id/attachments'), isArray: false, method: 'GET', headers: headers},
 				getActivity: {url: API.getURI('children/:id/activity'), isArray: false, method: 'GET', headers: headers},
 				postComment: {url: API.getURI('children/:id/comments'), method: 'POST', headers: headers},
+				removeAttachment: {url: API.getURI('children/:id/attachments/:attachment_id'), method: 'DELETE', headers: headers, params: {id: '@id', attachment_id: '@attachment_id'}},
 				spawnFromAlert: {method: 'POST', headers: headers},
 				cancelCase: {url: API.getURI('cases/:id/cancel'), params: {id: '@case_id'}, method: 'POST', headers: headers}
 			});
