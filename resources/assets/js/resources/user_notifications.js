@@ -3,7 +3,7 @@
 		.module('BuscaAtivaEscolar')
 		.factory('UserNotifications', function UserNotifications(API, Identity, $resource) {
 
-			let authHeaders = API.REQUIRE_AUTH;
+			var authHeaders = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('notifications/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: authHeaders},

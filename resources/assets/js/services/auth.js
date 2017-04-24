@@ -133,13 +133,13 @@
 
 			this.login = function(email, password) {
 
-				let tokenRequest = {
+				var tokenRequest = {
 					grant_type: 'login',
 					email: email,
 					password: password
 				};
 
-				let options = {
+				var options = {
 					accept: 'application/json',
 				};
 
@@ -150,12 +150,12 @@
 
 			this.refresh = function() {
 
-				let tokenRequest = {
+				var tokenRequest = {
 					grant_type: 'refresh',
 					token: $localStorage.session.token
 				};
 
-				let options = {
+				var options = {
 					accept: 'application/json',
 				};
 

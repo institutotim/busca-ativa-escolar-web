@@ -3,7 +3,7 @@
 		.module('BuscaAtivaEscolar')
 		.factory('Groups', function Groups(API, $resource) {
 
-			let headers = API.REQUIRE_AUTH;
+			var headers = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('groups/:id'), {id: '@id', with: '@with'}, {
 				find: {method: 'GET', headers: headers},

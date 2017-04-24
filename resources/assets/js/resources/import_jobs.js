@@ -3,7 +3,7 @@
 		.module('BuscaAtivaEscolar')
 		.factory('ImportJobs', function ImportJobs(API, Identity, $resource) {
 
-			let authHeaders = API.REQUIRE_AUTH;
+			var authHeaders = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('maintenance/import_jobs/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: authHeaders},

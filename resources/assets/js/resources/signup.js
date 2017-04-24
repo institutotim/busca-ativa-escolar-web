@@ -3,8 +3,8 @@
 		.module('BuscaAtivaEscolar')
 		.factory('SignUps', function SignUps(API, Identity, $resource) {
 
-			let authHeaders = API.REQUIRE_AUTH;
-			let headers = {};
+			var authHeaders = API.REQUIRE_AUTH;
+			var headers = {};
 
 			return $resource(API.getURI('signups/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: authHeaders},

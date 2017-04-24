@@ -4012,7 +4012,7 @@ if (!Array.prototype.find) {
 		.module('BuscaAtivaEscolar')
 		.factory('Cases', function Cases(API, Identity, $resource) {
 
-			let headers = API.REQUIRE_AUTH;
+			var headers = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('cases/:id'), {id: '@id', with: '@with'}, {
 				find: {method: 'GET', headers: headers},
@@ -4050,7 +4050,7 @@ if (!Array.prototype.find) {
 		.module('BuscaAtivaEscolar')
 		.factory('Cities', function Cities(API, Identity, $resource) {
 
-			let headers = {};
+			var headers = {};
 
 			return $resource(API.getURI('cities/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: headers},
@@ -4065,7 +4065,7 @@ if (!Array.prototype.find) {
 		.module('BuscaAtivaEscolar')
 		.factory('Groups', function Groups(API, $resource) {
 
-			let headers = API.REQUIRE_AUTH;
+			var headers = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('groups/:id'), {id: '@id', with: '@with'}, {
 				find: {method: 'GET', headers: headers},
@@ -4082,7 +4082,7 @@ if (!Array.prototype.find) {
 		.module('BuscaAtivaEscolar')
 		.factory('ImportJobs', function ImportJobs(API, Identity, $resource) {
 
-			let authHeaders = API.REQUIRE_AUTH;
+			var authHeaders = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('maintenance/import_jobs/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: authHeaders},
@@ -4098,7 +4098,7 @@ if (!Array.prototype.find) {
 		.module('BuscaAtivaEscolar')
 		.factory('PasswordReset', function Users(API, $resource) {
 
-			let headers = {};
+			var headers = {};
 
 			return $resource(API.getURI('password_reset/:id'), {id: '@id', with: '@with'}, {
 				begin: {url: API.getURI('password_reset/begin'), method: 'POST', headers: headers},
@@ -4125,7 +4125,7 @@ if (!Array.prototype.find) {
 		.module('BuscaAtivaEscolar')
 		.factory('Schools', function Schools(API, Identity, $resource) {
 
-			let headers = API.REQUIRE_AUTH;
+			var headers = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('schools/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: headers},
@@ -4139,8 +4139,8 @@ if (!Array.prototype.find) {
 		.module('BuscaAtivaEscolar')
 		.factory('SignUps', function SignUps(API, Identity, $resource) {
 
-			let authHeaders = API.REQUIRE_AUTH;
-			let headers = {};
+			var authHeaders = API.REQUIRE_AUTH;
+			var headers = {};
 
 			return $resource(API.getURI('signups/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: authHeaders},
@@ -4254,8 +4254,8 @@ if (!Array.prototype.find) {
 		.module('BuscaAtivaEscolar')
 		.factory('Tenants', function Tenants(API, Identity, $resource) {
 
-			let authHeaders = API.REQUIRE_AUTH;
-			let headers = {};
+			var authHeaders = API.REQUIRE_AUTH;
+			var headers = {};
 
 			return $resource(API.getURI('tenants/:id'), {id: '@id'}, {
 				all: {url: API.getURI('tenants/all'), method: 'POST', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin'}},
@@ -4272,7 +4272,7 @@ if (!Array.prototype.find) {
 		.module('BuscaAtivaEscolar')
 		.factory('UserNotifications', function UserNotifications(API, Identity, $resource) {
 
-			let authHeaders = API.REQUIRE_AUTH;
+			var authHeaders = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('notifications/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: authHeaders},
@@ -4288,7 +4288,7 @@ if (!Array.prototype.find) {
 		.module('BuscaAtivaEscolar')
 		.factory('UserPreferences', function UserPreferences(API, Identity, $resource) {
 
-			let authHeaders = API.REQUIRE_AUTH;
+			var authHeaders = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('user_preferences'), {id: '@id'}, {
 				get: {method: 'GET', isArray: false, headers: authHeaders},
@@ -4302,7 +4302,7 @@ if (!Array.prototype.find) {
 		.module('BuscaAtivaEscolar')
 		.factory('Users', function Users(API, $resource) {
 
-			let headers = API.REQUIRE_AUTH;
+			var headers = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('users/:id'), {id: '@id', with: '@with'}, {
 				myself: {url: API.getURI('users/myself'), method: 'GET', headers: headers},
@@ -4509,13 +4509,13 @@ if (!Array.prototype.find) {
 
 			this.login = function(email, password) {
 
-				let tokenRequest = {
+				var tokenRequest = {
 					grant_type: 'login',
 					email: email,
 					password: password
 				};
 
-				let options = {
+				var options = {
 					accept: 'application/json',
 				};
 
@@ -4526,12 +4526,12 @@ if (!Array.prototype.find) {
 
 			this.refresh = function() {
 
-				let tokenRequest = {
+				var tokenRequest = {
 					grant_type: 'refresh',
 					token: $localStorage.session.token
 				};
 
-				let options = {
+				var options = {
 					accept: 'application/json',
 				};
 
