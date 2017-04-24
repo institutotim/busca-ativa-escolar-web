@@ -18,7 +18,7 @@
 
 			<ul class="nav navbar-nav">
 				<li ui-sref-active="active"><a ui-sref="dashboard"><i class="fa fa-tachometer"></i> Painel</a></li>
-				<li ng-show="identitu.can('alerts.spawn')"> <a ui-sref="child_create_from_alert"> <i class="fa fa-bell"></i> Criar alerta</a></li>
+				<li ng-show="identity.can('alerts.spawn')"> <a ui-sref="child_create_from_alert"> <i class="fa fa-bell"></i> Criar alerta</a></li>
 				<li ng-show="identity.can('alerts.pending')"  ui-sref-active="active"><a ui-sref="pending_alerts"><i class="fa fa-bell"></i> Alertas Pendentes</a></li>
 				<li ng-show="identity.can('cases.view')"  ui-sref-active="active"><a ui-sref="child_browser"><i class="fa fa-list"></i> Casos</a></li>
 				<li ng-show="identity.can('reports.view')"  ui-sref-active="active"><a ui-sref="reports"><i class="fa fa-line-chart"></i> Relatórios</a></li>
