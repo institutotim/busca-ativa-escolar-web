@@ -3288,8 +3288,34 @@ Highcharts.maps["countries/br/br-all"] = {
 					return ((job.offset / job.total_records) * 100).toFixed(2) + ' %';
 				};
 
-				$interval($scope.refresh, 5000);
+			}
+		);
+})();
+(function() {
 
+	angular
+		.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('sms_conversations', {
+					url: '/maintenance/sms_conversations',
+					templateUrl: '/views/maintenance/sms_conversations.html',
+					controller: 'SmsConversationsCtrl'
+				})
+		})
+		.controller('SmsConversationsCtrl',
+			function ($scope, $rootScope, $localStorage, $http, $timeout, $interval, StaticData, SmsConversations, Modals, ngToast, API) {
+
+				$scope.static = StaticData;
+
+				$scope.refresh = function() {
+					SmsConversations.all({}, function (conversations) {
+						$scope.conversations = conversations;
+					});
+				};
+
+				$scope.conversations = {};
+				$scope.refresh();
 			}
 		);
 })();
@@ -4155,6 +4181,20 @@ if (!Array.prototype.find) {
 				register: {url: API.getURI('signups/register'), method: 'POST', headers: headers},
 				getViaToken: {url: API.getURI('signups/via_token/:id'), method: 'GET', headers: headers},
 				complete: {url: API.getURI('signups/:id/complete'), method: 'POST', headers: headers},
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('SmsConversations', function SmsConversations(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('maintenance/sms_conversations/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: authHeaders},
+				all: {url: API.getURI('maintenance/sms_conversations'), method: 'GET', headers: authHeaders},
 			});
 
 		});

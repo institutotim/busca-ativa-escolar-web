@@ -51,8 +51,6 @@
 					return ((job.offset / job.total_records) * 100).toFixed(2) + ' %';
 				};
 
-				$interval($scope.refresh, 5000);
-
 			}
 		);
 })();
