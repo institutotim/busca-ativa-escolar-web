@@ -7,7 +7,7 @@
 			var successStatuses = [200, 201, 202, 203];
 			var useableErrorStatuses = [400, 401, 403];
 
-			const REQUIRE_AUTH = {'X-Require-Auth': 'auth-required'};
+			var REQUIRE_AUTH = {'X-Require-Auth': 'auth-required'};
 
 			function isLoading() {
 				return (numPendingRequests > 0);
