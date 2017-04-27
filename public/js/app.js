@@ -70,7 +70,7 @@
 				TOKEN_EXPIRES_IN: 3600, // 1 hour
 				REFRESH_EXPIRES_IN: 1209600, // 2 weeks
 
-				ALLOWED_ENDPOINTS: ['local_http', 'homolog_http', 'prod_http', 'prod_https'], 
+				ALLOWED_ENDPOINTS: ['local_http', 'homolog_http', 'prod_http', 'prod_https'],
 				CURRENT_ENDPOINT: 'prod_https'
 
 			};
