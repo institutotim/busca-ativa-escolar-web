@@ -52,6 +52,16 @@
 						label: 'V1 Homolog - web4-lqdi (Insecure)',
 						api: 'http://api.busca-ativa-escolar.dev.lqdi.net/api/v1/',
 						token: 'http://api.busca-ativa-escolar.dev.lqdi.net/api/auth/token',
+					},
+					prod_http: {
+						label: 'V1 Prod - buscaativaescolar-web1 (Insecure)',
+						api: 'http://api.buscaativaescolar.org.br/api/v1/',
+						token: 'http://api.buscaativaescolar.org.br/api/auth/token',
+					},
+					prod_https: {
+						label: 'V1 Prod - buscaativaescolar-web1 (Secure)',
+						api: 'https://api.buscaativaescolar.org.br/api/v1/',
+						token: 'https://api.buscaativaescolar.org.br/api/auth/token',
 					}
 				},
 
@@ -60,8 +70,8 @@
 				TOKEN_EXPIRES_IN: 3600, // 1 hour
 				REFRESH_EXPIRES_IN: 1209600, // 2 weeks
 
-				ALLOWED_ENDPOINTS: ['local_http', 'homolog_http'],
-				CURRENT_ENDPOINT: 'homolog_http'
+				ALLOWED_ENDPOINTS: ['local_http', 'homolog_http', 'prod_http', 'prod_https'], 
+				CURRENT_ENDPOINT: 'prod_https'
 
 			};
 
