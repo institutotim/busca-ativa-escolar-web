@@ -19,6 +19,7 @@
 
 			$scope.refresh = function() {
 				$scope.signups = SignUps.getPending($scope.query);
+				return $scope.signups.$promise;
 			};
 
 			$scope.preview = function(signup) {
@@ -36,6 +37,17 @@
 				SignUps.reject({id: signup.id}, function() {
 					$scope.refresh();
 					$scope.signup = {};
+				});
+			};
+
+			$scope.updateRegistrationEmail = function(type, signup) {
+				SignUps.updateRegistrationEmail({id: signup.id, type: type, email: signup.data[type].email}, function (res) {
+					if(res.status !== "ok") {
+						ngToast.danger("Falha ao atualizar o e-mail do gestor: " + res.reason);
+						return;
+					}
+
+					ngToast.success("E-mail do gestor atualizado!");
 				});
 			};
 

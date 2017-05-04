@@ -4231,6 +4231,7 @@ if (!Array.prototype.find) {
 				approve: {url: API.getURI('signups/:id/approve'), method: 'POST', headers: authHeaders},
 				reject: {url: API.getURI('signups/:id/reject'), method: 'POST', headers: authHeaders},
 
+				updateRegistrationEmail: {url: API.getURI('signups/:id/update_registration_email'), method: 'POST', headers: authHeaders},
 				resendNotification: {url: API.getURI('signups/:id/resend_notification'), method: 'POST', headers: authHeaders},
 				completeSetup: {url: API.getURI('signups/complete_setup'), method: 'POST', headers: authHeaders},
 
@@ -6851,6 +6852,7 @@ function identify(namespace, file) {
 
 			$scope.refresh = function() {
 				$scope.signups = SignUps.getPending($scope.query);
+				return $scope.signups.$promise;
 			};
 
 			$scope.preview = function(signup) {
@@ -6868,6 +6870,17 @@ function identify(namespace, file) {
 				SignUps.reject({id: signup.id}, function() {
 					$scope.refresh();
 					$scope.signup = {};
+				});
+			};
+
+			$scope.updateRegistrationEmail = function(type, signup) {
+				SignUps.updateRegistrationEmail({id: signup.id, type: type, email: signup.data[type].email}, function (res) {
+					if(res.status !== "ok") {
+						ngToast.danger("Falha ao atualizar o e-mail do gestor: " + res.reason);
+						return;
+					}
+
+					ngToast.success("E-mail do gestor atualizado!");
 				});
 			};
 

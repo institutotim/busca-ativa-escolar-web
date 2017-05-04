@@ -13,6 +13,7 @@
 				approve: {url: API.getURI('signups/:id/approve'), method: 'POST', headers: authHeaders},
 				reject: {url: API.getURI('signups/:id/reject'), method: 'POST', headers: authHeaders},
 
+				updateRegistrationEmail: {url: API.getURI('signups/:id/update_registration_email'), method: 'POST', headers: authHeaders},
 				resendNotification: {url: API.getURI('signups/:id/resend_notification'), method: 'POST', headers: authHeaders},
 				completeSetup: {url: API.getURI('signups/complete_setup'), method: 'POST', headers: authHeaders},
 
