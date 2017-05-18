@@ -8,7 +8,7 @@
 				controller: 'ChildSearchCtrl'
 			})
 		})
-		.controller('ChildSearchCtrl', function ($scope, Children, Decorators) {
+		.controller('ChildSearchCtrl', function ($scope, $anchorScroll, Children, Decorators) {
 
 			$scope.Decorators = Decorators;
 			$scope.Children = Children;
@@ -30,15 +30,18 @@
 				place_kind_null: true,
 			};
 
-			$scope.resetQuery = function() {
-				return $scope.query = angular.merge({}, $scope.defaultQuery);;
-			};
 
-			$scope.query = $scope.resetQuery();
+			$scope.query = angular.merge({}, $scope.defaultQuery);
 			$scope.search = {};
 
 			$scope.refresh = function() {
 				$scope.search = Children.search($scope.query);
+				$anchorScroll('#');
+			};
+
+			$scope.resetQuery = function() {
+				$scope.query = angular.merge({}, $scope.defaultQuery);
+				$scope.refresh();
 			};
 
 			$scope.refresh();
