@@ -1,43 +1,150 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').service('Identity', function () {
+	angular.module('BuscaAtivaEscolar').service('Identity', function ($q, $rootScope, $location, $localStorage) {
 
-		var mockUsers = {
-			'agente_comunitario': {name: 'Mary Smith', type: 'Agente Comunitário', can: ['dashboard']},
-			'tecnico_verificador': {name: 'Paul Atree', type: 'Técnico Verificador', can: ['dashboard','cases']},
-			'supervisor_institucional': {name: 'John Doe', type: 'Supervisor Institucional', can: ['dashboard','cases','reports']},
-			'coordenador_operacional': {name: 'Aryel Tupinambá', type: 'Coordenador Operacional', can: ['dashboard','cases','reports','users', 'users.edit', 'users.create', 'settings']},
-			'gestor_politico': {name: 'João das Neves', type: 'Gestor Político', can: ['dashboard','reports','users']},
-			'unicef': {name: 'Jane Doe', type: 'Gestor UNICEF', can: ['dashboard','reports','cities']},
-			'super_administrador': {name: 'Morgan Freeman', type: 'Super Administrador', can: ['dashboard','reports','cities','cities.edit','users','users.edit', 'users.create', 'settings']}
-		};
+		var tokenProvider = null;
+		var userProvider = null;
 
-		var currentType = 'coordenador_operacional';
-		var currentUser = mockUsers[currentType];
+		$localStorage.$default({
+			identity: {
+				is_logged_in: false,
+				current_user: {},
+			}
+		});
+
+		function setup() {
+			console.info("[core.identity] Setting up identity service...");
+			refreshIdentity();
+		}
+
+		function setTokenProvider(callback) {
+			tokenProvider = callback;
+		}
+
+		function setUserProvider(callback) {
+			userProvider = callback;
+		}
+
+		function isUserType(type) {
+			if(!getCurrentUser()) return false;
+			if(!getCurrentUser().type) return false;
+			return getCurrentUser().type === type;
+		}
+
+		function hasTenant() {
+			if(!getCurrentUser()) return false;
+			return !!getCurrentUser().tenant;
+		}
+
+		function provideToken() {
+
+			if(!tokenProvider) {
+				console.error("[core.identity] No token provider registered! Rejecting...");
+				return $q.reject('no_token_provider');
+			}
+
+			return tokenProvider();
+		}
+
+		function refreshIdentity() {
+			if(!isLoggedIn() || !$localStorage.session.user_id) {
+				console.log("[core.identity] No identity found in session, user is logged out");
+				$rootScope.$broadcast('Identity.ready');
+				return;
+			}
+
+			console.log("[core.identity] Refreshing current identity details...");
+
+			$localStorage.identity.current_user = userProvider($localStorage.session.user_id, function(details) {
+				console.log("[core.identity] Identity details ready: ", details);
+				$rootScope.$broadcast('Identity.ready');
+			})
+		}
 
 		function getCurrentUser() {
-			return currentUser;
+			return ($localStorage.identity.current_user && $localStorage.identity.current_user.id)
+				? $localStorage.identity.current_user
+				: {};
+		}
+
+		function getCurrentUserID() {
+			return ($localStorage.identity.current_user && $localStorage.identity.current_user.id)
+				? $localStorage.identity.current_user.id
+				: null;
+		};
+
+		function setCurrentUser(user) {
+			if(!user) clearSession();
+
+			$rootScope.$broadcast('identity.connected', {user: user});
+
+			console.log("[identity] Connected user: ", user);
+
+			$localStorage.identity.is_logged_in = true;
+			$localStorage.identity.current_user = user;
+
+			if(window.ga) {
+				window.ga('set', 'userId', user.id);
+			}
+
+			refreshIdentity();
 		}
 
 		function can(operation) {
-			if(!currentUser) return false;
-			return getCurrentUser().can.indexOf(operation) !== -1;
+			var user = getCurrentUser();
+
+			if(!isLoggedIn()) return false;
+			if(!user) return false;
+			if(!user.permissions) return false;
+
+			return user.permissions.indexOf(operation) !== -1;
 		}
 
 		function getType() {
-			return currentType;
+			if(isLoggedIn()) return getCurrentUser().type;
+			return 'guest';
 		}
 
-		function setUserType(type) {
-			currentType = type;
-			currentUser = mockUsers[type];
+		function isLoggedIn() {
+			return ($localStorage.identity) ? !!$localStorage.identity.is_logged_in : false;
+		}
+
+		function disconnect() {
+			console.log('[identity] Disconnecting identity...');
+
+			clearSession();
+
+			$rootScope.$broadcast('identity.disconnect');
+			$location.path('/login');
+		}
+
+		function clearSession() {
+			console.log("[identity] Clearing current session");
+
+			Object.assign($localStorage, {
+				identity: {
+					is_logged_in: false,
+					current_user: {},
+				}
+			});
 		}
 
 		return {
 			getCurrentUser: getCurrentUser,
+			getCurrentUserID: getCurrentUserID,
+			setCurrentUser: setCurrentUser,
 			getType: getType,
 			can: can,
-			setUserType: setUserType
+			isLoggedIn: isLoggedIn,
+			refresh: refreshIdentity,
+			clearSession: clearSession,
+			setup: setup,
+			isUserType: isUserType,
+			hasTenant: hasTenant,
+			setTokenProvider: setTokenProvider,
+			setUserProvider: setUserProvider,
+			provideToken: provideToken,
+			disconnect: disconnect
 		}
 
 	});

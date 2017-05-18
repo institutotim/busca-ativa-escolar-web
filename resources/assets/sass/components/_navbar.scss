@@ -1,10 +1,35 @@
 #app-navbar {
+	z-index: 800;
+	a {
+		padding: 20px 10px;
+	}
+	
 	.navbar-brand {
-		padding: 5px 15px;
 
-		strong, small { display: block; color: white; }
-			strong { height: 30px; line-height: 30px; }
-			small { height: 20px; line-height: 20px; }
+		padding: 0;
+
+		background-image: image_url('logo_bae_header_v2.png');
+		background-position: center center;
+		background-size: contain;
+		background-repeat: no-repeat;
+
+		min-width: 170px;
+
+		strong { display: none !important; }
+
+		small {
+			display: block;
+			height: 18px;
+			line-height: 18px;
+
+			-webkit-font-smoothing: antialiased;
+			font-weight: bold;
+			font-size: 10px;
+			color: white;
+
+			margin-top: 47px;
+			text-align: center;
+		}
 
 	}
 
@@ -18,5 +43,42 @@
 
 			strong, small { display: block; }
 		}
+	}
+
+	.dropdown-menu {
+		padding-bottom: 0;
+	}
+
+	.notification-center {
+		border-top: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+
+		padding: 15px;
+		max-height: 250px;
+		overflow-y: scroll;
+
+		box-shadow: inset 3px 3px 5px rgba(black, 0.25);
+		background: #ddd;
+
+		& > span { color: #333; margin: 10px 0; text-align: center;}
+
+		.navbar-notification {
+			cursor: pointer;
+		}
+	}
+
+	.divider.over-split-btn {
+		margin-bottom: 0;
+	}
+
+	.split-btn {
+
+		overflow: hidden;
+		text-align: center;
+		clear: none !important;
+
+		border-right: 1px solid #ccc;
+		&:last-child { border-right: 0; }
+
 	}
 }

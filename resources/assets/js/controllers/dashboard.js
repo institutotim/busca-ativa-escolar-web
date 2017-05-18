@@ -1,12 +1,16 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $rootScope, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, moment, Platform, Identity, StaticData, Reports, Charts) {
 
-		$rootScope.section = 'dashboard';
 		$scope.identity = Identity;
-		$scope.evolutionChart = MockData.evolutionChart;
-		$scope.typesChart = MockData.typesChart;
-		$scope.caseTypesChart = MockData.caseTypesChart;
+		$scope.static = StaticData;
+
+		$scope.ready = false;
+
+		Platform.whenReady(function() {
+			$scope.ready = true;
+		})
+
 
 	});
 

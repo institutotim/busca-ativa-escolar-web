@@ -1,0 +1,12 @@
+<div ng-if="identity.getType() === 'agente_comunitario'" ng-include="'/views/dashboards/agente_comunitario.html'"></div>
+<div ng-if="identity.getType() === 'tecnico_verificador'" ng-include="'/views/dashboards/tecnico_verificador.html'"></div>
+<div ng-if="identity.getType() === 'supervisor_institucional'" ng-include="'/views/dashboards/supervisor_institucional.html'"></div>
+<div ng-if="identity.getType() === 'coordenador_operacional'" ng-include="'/views/dashboards/coordenador_operacional.html'"></div>
+<div ng-if="identity.getType() === 'gestor_politico'" ng-include="'/views/dashboards/gestor_politico.html'"></div>
+<div ng-if="identity.getType() === 'gestor_nacional'" ng-include="'/views/dashboards/gestor_nacional.html'"></div>
+<div ng-if="identity.getType() === 'superuser'" ng-include="'/views/dashboards/super_administrador.html'"></div>
+
+<!--div>
+	<h3><i class="fa fa-code"></i> Últimas atualizações da plataforma</h3>
+	<widget-platform-updates></widget-platform-updates>
+</div-->

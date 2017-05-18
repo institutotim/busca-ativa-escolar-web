@@ -1,0 +1,31 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3><strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong> <i class="fa fa-calendar"></i> Prazos</h3>
+	</div>
+	<div class="panel-body">
+
+		<p>
+			Aqui você define os prazos para cada etapa. Se um caso permanece em uma etapa após seu prazo, ele é considerado "em atraso" e aparece em destaque para o responsável pela etapa.
+		</p>
+
+		<table class="table">
+			<thead>
+			<tr>
+				<th>Etapa do caso</th>
+				<th>Prazo</th>
+			</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="(i, step) in static.getCaseStepSlugs()">
+					<td><span ng-bind="step | lang:'case_step.name_by_slug'"></span></td>
+					<td><span ng-show="tenantSettings.blockedStepDeadlines.indexOf(step) === -1"><input class="deadline-input" type="number" ng-model="tenantSettings.stepDeadlines[step]" min="1" max="365" step="1" placeholder="15" /> dias</span></td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+	<div class="panel-footer clearfix">
+		<button ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
+	</div>
+</div>

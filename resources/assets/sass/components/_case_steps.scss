@@ -1,3 +1,6 @@
+.case-container {
+	.panel-body { padding: 0; }
+}
 .step-list {
 	display: block;
 	position: relative;
@@ -10,7 +13,9 @@
 		width: 100%;
 		height: 60px;
 
-		padding: 10px 10px 10px 40px;
+		cursor: pointer;
+
+		padding: 10px 10px 10px 55px;
 
 		strong, small {
 			display: block;
@@ -19,14 +24,14 @@
 			line-height: 20px;
 		}
 
-		.btn-complete-step { margin: 5px 0; }
+		.btn-under { margin: 5px 0; }
 
 		&.step-pending {
 			strong { height: 40px; line-height: 40px; }
 		}
 
 		&::before {
-			@include place-at(20px, 0, left, top);
+			@include place-at(35px, 0, left, top);
 			width: 1px;
 			height: 60px;
 
@@ -36,7 +41,7 @@
 		}
 
 		&::after {
-			@include place-at(10px, 20px, left, top);
+			@include place-at(25px, 20px, left, top);
 			width: 20px;
 			height: 20px;
 
@@ -47,9 +52,13 @@
 			content: '';
 		}
 
-		&.active {
-			strong { color: dodgerblue; }
-			&::after { box-shadow: 0 2px 5px rgba(black, 0.25); }
+		&.step-open {
+			strong { color: $brand-info; }
+			background-color: rgba($brand-info, 0.15);
+		}
+
+		.btn-under {
+			margin: 2px 0;
 		}
 
 		&:first-child::before { top: 20px; height: 40px; }
@@ -58,6 +67,19 @@
 		&.step-current::after { background: dodgerblue; }
 		&.step-completed::after { background: greenyellow; }
 		&.step-pending::after { background: #ddd; }
+
+		.not-allowed-icon {
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 60px;
+			height: 60px;
+
+			background-image: image_url('ico_forbidden.png');
+			background-size: auto;
+			background-position: center center;
+			background-repeat: no-repeat;
+		}
 
 	}
 }

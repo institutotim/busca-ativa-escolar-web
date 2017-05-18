@@ -6,7 +6,7 @@ require('laravel-elixir-bower');
 elixir(function(mix) {
 
 	var defaultCompassSettings = {
-		modules: ['sass-css-importer', 'susy', 'breakpoint'],
+		modules: ['sass-css-importer'],
 		config_file: "config.rb",
 		style: "expanded",
 		sass: "resources/assets/sass",

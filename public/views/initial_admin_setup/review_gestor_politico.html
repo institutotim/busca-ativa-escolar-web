@@ -1,0 +1,113 @@
+<form class="panel panel-default" ng-submit="nextStep()">
+	<div class="panel-heading">
+		<h3><strong ng-bind="(step + '.')"></strong> <i class="fa fa-sitemap"></i> Revisão do cadastro</h3>
+	</div>
+	<div class="panel-body">
+
+
+		<div class="col-md-12">
+			<h4>Gestor Político</h4>
+			<p>
+				Confira se todas as informações preenchidas sobre o Gestor Político estão corretas.
+			</p>
+		</div>
+
+		<hr />
+
+		<div class="clearfix">
+
+			<h5>Dados pessoais</h5>
+
+			<div class="form-group col-md-12">
+				<label class="control-label" for="fld-gp-name">Nome*</label>
+				<input type="text" class="form-control" id="fld-gp-name" name="gp_name" required ng-model="admins.political.name" >
+			</div>
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-dob">Data de nascimento*</label>
+				<input type="tel" ui-date-mask class="form-control" id="fld-gp-dob" name="gp_dob" required ng-model="admins.political.dob" placeholder="dd/mm/yyyy">
+			</div>
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-cpf">CPF*</label>
+				<input type="tel" ui-br-cpf-mask class="form-control" id="fld-gp-cpf" name="gp_cpf" required ng-model="admins.political.cpf" placeholder="000.000.000-00">
+			</div>
+
+			<hr />
+
+			<h5>Contatos</h5>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-work-phone">Telefone fixo institucional*</label>
+				<input type="tel" ui-br-phone-number class="form-control" required id="fld-gp-work-phone" name="gp_work_phone" ng-model="admins.political.phone" placeholder="(00) 00000-0000">
+			</div>
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-work-mobile">Telefone celular institucional</label>
+				<input type="tel" ui-br-phone-number class="form-control" id="fld-gp-work-mobile" name="gp_work_mobile" ng-model="admins.political.mobile" placeholder="(00) 00000-0000">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-personal-mobile">Telefone celular pessoal</label>
+				<input type="tel" ui-br-phone-number class="form-control" id="fld-gp-personal-mobile" name="gp_personal_mobile" ng-model="admins.political.personal_mobile" placeholder="(00) 00000-0000">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-skype-username">Skype</label>
+				<input type="text" class="form-control" id="fld-gp-skype-username" name="gp_skype" ng-model="admins.political.skype" >
+			</div>
+
+			<hr />
+
+			<h5>Endereço institucional <small>(opcional)</small></h5>
+
+			<div class="form-group col-md-12">
+				<label class="control-label" for="fld-gp-address">Logradouro</label>
+				<input type="text" class="form-control" name="gp_address" id="fld-gp-address" ng-model="admins.political.work_address" >
+			</div>
+
+			<app-city-select model="admins.political" uf-field="'work_uf'" city-field="'work_city'" is-uf-required="false" is-city-required="false"></app-city-select>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-cep">CEP</label>
+				<input type="tel" ui-br-cep-mask class="form-control" id="fld-gp-cep" name="gp_cep" ng-model="admins.political.work_cep" placeholder="00000-000">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-neighborhood">Bairro</label>
+				<input type="text" class="form-control" id="fld-gp-neighborhood" name="gp_neighborhood" ng-model="admins.political.work_neighborhood" >
+			</div>
+
+			<hr />
+
+			<h5>Dados organizacionais <small>(opcional)</small></h5>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-institution">Órgão</label>
+				<input type="text" class="form-control" id="fld-gp-institution" name="gp_institution" ng-model="admins.political.institution" >
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-position">Cargo</label>
+				<input type="text" class="form-control" id="fld-gp-position" name="gp_position" ng-model="admins.political.position" >
+			</div>
+
+			<hr />
+
+			<h5>Dados de acesso</h5>
+
+			<p>A senha informada será enviada para o seu e-mail.</p>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-email"><i class="fa fa-envelope"></i> E-mail de acesso*</label>
+				<input type="email" class="form-control" id="fld-gp-email" name="gp_email" required ng-model="admins.political.email" >
+			</div>
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-gp-password"><i class="fa fa-key"></i> Senha de acesso*</label>
+				<input type="password" class="form-control" id="fld-gp-password" name="gp_password" required ng-model="admins.political.password" >
+			</div>
+		</div>
+
+	</div>
+
+	<div class="panel-footer clearfix">
+		<button type="submit" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
+	</div>
+</form>

@@ -1,0 +1,25 @@
+<div class="row">
+	<div class="col-md-4">
+		<img src="/images/logo_bae_signup.png" title="Busca Ativa Escolar" alt="Busca Ativa Escolar" style="margin: 20px 0;" />
+	</div>
+	<div class="col-md-8 text-right">
+		<h2 style="margin-top: 50px;"><i class="fa fa-cog"></i> 3ª Etapa - Inscrever um novo município</h2>
+	</div>
+</div>
+
+<div ng-if="isReady" ng-include="'/views/initial_tenant_setup/header.html'"></div>
+
+<div class="steps" ng-if="isReady">
+	<div ng-if="step == 1" ng-controller="UserEditorCtrl" ng-init="openUser(getAdminUserID(), true)" ng-include="'/views/settings/partials/review_admin.html'"></div>
+	<div ng-if="step == 2" ng-controller="ManageGroupsCtrl" ng-include="'/views/settings/partials/groups.html'"></div>
+	<div ng-if="step == 3" ng-controller="UserBrowserCtrl" ng-init="enableQuickAdd()" ng-include="'/views/users/browser.html'"></div>
+	<div ng-if="step == 4" ng-controller="ManageCaseWorkflowCtrl" ng-include="'/views/settings/partials/case_workflow.html'"></div>
+	<div ng-if="step == 5" ng-controller="ManageDeadlinesCtrl" ng-include="'/views/settings/partials/deadlines.html'"></div>
+</div>
+
+<div class="clearfix" ng-if="isReady" style="margin: 20px 0">
+	<button ng-show="getCurrentStep() > 1" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
+	<button ng-show="getCurrentStep() < 5" ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
+	<!--button ng-show="getCurrentStep() < 5" ng-click="completeSetup()" type="button" class="btn btn-success btn-raised pull-right">Pular configuração inicial <i class="fa fa-repeat"></i></button-->
+	<button ng-show="getCurrentStep() == 5" ng-click="completeSetup()" type="button" class="btn btn-primary btn-raised pull-right">Concluir <i class="fa fa-check"></i></button>
+</div>

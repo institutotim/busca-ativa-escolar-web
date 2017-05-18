@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 @import 'compass/css3';
 
 @import 'shared/util_mixins';
@@ -8,6 +10,12 @@
 @import 'components/navbar';
 @import 'components/case_steps';
 @import 'components/subnav_tabs';
+@import 'components/app_footer';
+@import 'components/loading_feedback';
+
+@import '../../../public/vendor/json-formatter/dist/json-formatter';
+
+.form-control.ng-invalid { background-image: linear-gradient($brand-danger, $brand-danger), linear-gradient(#D2D2D2, #D2D2D2) !important; }
 
 .form-group { margin-top: 10px; }
 .button-menu .btn { padding: 8px 0; }
@@ -19,4 +27,217 @@
 	}
 }
 
+.btn-raised:focus {
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.list-group {
+
+	&.basic-list {
+		i { font-size: 8px; }
+	}
+
+
+	.list-group-item.timeline-item {
+		overflow: visible;
+		padding: 0;
+		margin: 10px 0;
+
+		@media (min-width: 1200px) {
+			.card-detail-text { text-align: right; }
+		}
+
+		.row { padding: 2px 0; }
+		&:first-child { margin-top: 0; }
+		&:last-child { margin-bottom: 0; }
+	}
+}
+.panel-header-label {
+	color: #777 !important;
+}
+
+.control-label {
+	color: #777 !important;
+}
+
+.form-group .checkbox label, .form-group .radio label, .form-group label {
+	color: #777 !important;
+}
+
 .dropdown .dropdown-menu li > a { cursor: pointer; }
+
+.sign-up-wizard-pills {
+
+	border-radius: 4px;
+	overflow: hidden;
+
+	li { width: calc(100% / 6); margin: 0 !important; }
+	li a { border-radius: 0; text-align: center; color: $brand-info; }
+
+	li.active a { background-color: $brand-info; }
+	li.completed a { background-color: $brand-success; color: white; }
+
+}
+
+.deadline-input {
+	text-align: center;
+	font-weight: bold;
+	border: 1px solid #eee;
+	padding: 4px;
+	border-radius: 4px;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+  opacity: 1;
+}
+
+.sign-up-groups {
+	tbody tr td {
+		border-top: none;
+		padding: 0 8px;
+	}
+}
+
+p.agent-panel{
+     font-size: 18px;
+}
+
+.form-control[readonly] {
+	background-image: none !important;
+}
+
+.form-control-table {
+  color: black;
+  font-weight: bold;
+  border: 0;
+  background: transparent;
+  height: 27px;
+}
+
+.label-yellow{
+  background-color: #eec902;
+}
+
+.btn-fab { padding: 0 !important; text-align: center; }
+	.btn-fab .fa { font-size: 18px;}
+
+.file-drop-area {
+	background: #F8F8F8;
+	border: 5px dashed #DDD;
+	width: 170px;
+	text-align: center;
+	padding: 50px 10px;
+	margin-left: 10px;
+
+	&.file-valid { border: 5px dashed $green-200; }
+	&.file-invalid { border: 5px dashed $red-200; }
+}
+
+.platform-updates-widget {
+	.update-item {
+
+		overflow: visible;
+		border-bottom: 1px solid #ccc;
+		padding: 10px;
+
+		.update-avatar {
+			img { width: 32px; height: 32px; border-radius: 4px; vertical-align: middle; }
+			margin-right: 10px;
+		}
+
+		.update-message {
+			display: inline-block;
+			max-width: calc(100% - 210px);
+			overflow: hidden;
+			white-space: nowrap;
+			vertical-align: middle;
+			padding-left: 10px;
+
+			font-family: monospace;
+		}
+	}
+}
+
+.ace_editor { height: 200px; }
+
+.text-will-remove {
+	color: $brand-danger !important;
+	text-decoration: line-through !important;
+}
+
+.is-suspended {
+	color: $brand-danger !important;
+}
+
+.form-control.ng-invalid:not(:focus) {
+	color: $brand-danger !important;
+}
+
+.angular-google-map-container { height: 400px; }
+
+#dashboard-map-coordenador-operacional .angular-google-map-container { height: 660px; }
+#dashboard-map-gestor-nacional .angular-google-map-container { height: 550px; }
+
+.alert .alert-link { text-decoration: underline; }
+
+.chart-container {
+	position: relative;
+
+	highchart {
+		display: block;
+		width: 100%;
+		max-width: 100%;
+	}
+}
+
+hr {
+	position: relative;
+	margin: 0 !important;
+	padding: 0 !important;
+	margin-bottom: 20px !important;
+	padding-top: 20px !important;
+	left: -15px;
+	width: calc(100% + 30px);
+	height: 0;
+	background: none;
+	border-top: none !important;
+	border-bottom: 1px solid #ddd !important;
+}
+
+.form-control[readonly] {
+	cursor: not-allowed;
+}
+
+.ng-toast.ng-toast--top {
+	top: 64px;
+}
+
+a.column-sorter {
+	color: black;
+	cursor: pointer;
+	user-select: none;
+}
+
+.simple-filter {
+	h5 { margin: 0; }
+	.form-group { margin: 0; padding: 0 5px; }
+}
+
+.card-detail-text {
+	font-size: 14px;
+	color: #999;
+}
+
+.btn.dashboard-btn {
+
+	width: 100%;
+
+	.btn-icon {
+		font-size: 38px;
+		text-align: center;
+		margin: 40px 0;
+	}
+	.btn-label {
+		text-align: center;
+	}
+}

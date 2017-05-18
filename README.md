@@ -1,4 +1,9 @@
-# Busca Ativa Escolar
+# Busca Ativa Escolar - Cliente Web
+
+## Repositórios do projeto
+- [lqdi/busca-ativa-escolar-api](https://github.com/lqdi/busca-ativa-escolar-api) - Back-end / API
+- [lqdi/busca-ativa-escolar-web](https://github.com/lqdi/busca-ativa-escolar-web) - Front-end / Cliente Web (este repositório)
+- [lqdi/busca-ativa-escolar-mobile](https://github.com/lqdi/busca-ativa-escolar-mobile) - Aplicativo móvel (Android/iOS) para o Técnico Verificador
 
 Garantir que cada criança e adolescente dos 4 aos 17 anos esteja na escola – e aprendendo – é, hoje, um dos principais desafios do Brasil. Também é parte da Agenda 2030 das Nações Unidas, um conjunto de programas, ações e diretrizes que devem ser implantados por todos os países nos próximos 15 anos para alcançar o desenvolvimento sustentável.
 
@@ -17,7 +22,7 @@ Assinam a construção do sistema para esse projeto:
 * Colegiado Nacional de Gestores Municipais de Assistência Social (Congemas)
 * Instituto TIM
 
-A plataforma estará em uso em diversos municipios através da url http://foradaescolanaopode.org.br
+A plataforma estará em uso em diversos municipios através da URL [http://foradaescolanaopode.org.br]
 
 ## Sobre a aplicação
 Busca Ativa Escolar é uma aplicação web server-side baseada em linguagem PHP e banco de dados Postgres, com front-end em AngularJS, entre outras tecnologias e componentes, que propicia um ambiente virtual para busca, pesquisa, geolocalização e acompanhamento de caso de crianças e adolescentes que estejam em situação ausência escolar entre 04 e 17 anos de idade. A aplicação
@@ -30,13 +35,11 @@ Toda documentação da aplicação está na pasta [doc](doc). Esta aplicação u
 Lista dos principais softwares que compõe e aplicação. Maiores detalhes, ver documentação de [instalação](doc/deploy.md) ou [guia do desenvolvedor](doc/developer_guide.md).
 
 - [Ubuntu Server >= 16.04](http://www.ubuntu.com) ou [Debian Server >= 8](https://www.debian.org.)
-- [PHP >= 5.6](http://php.net)
+- [PHP >= 7.1](http://php.net)
 	- [Composer](https://getcomposer.org)
 	- [Laravel = 5.3](https://laravel.com)
-- [PostgreSQL >= 9.3](http://www.postgresql.org/)
-- [Postgis >= 2.1](http://postgis.net)
-  - [PostgreSQL-Postgis-Scripts](http://packages.ubuntu.com/trusty/misc/postgresql-9.3-postgis-2.1)
-- [Node.JS >= 4.x](https://nodejs.org/en/)
+- [MariaDB >= 5.5](https://www.mariadb.org/)
+- [Memcached >= 1.4](https://memcached.org)
 
 
 ### [Hardware] Requisitos para instalação
@@ -57,8 +60,8 @@ Vale lembrar que os requisitos de hardware podem variar de acordo com a latênci
 
 
 ### Ambientes de desenvolvimento e teste
-* URL de staging
+[http://busca-ativa-escolar-web.dev.lqdi.net]
 
 ### Licença de uso e desenvolvimento
 
-Busca Ativa Escolar é um software livre licenciado com [GPLv3](http://gplv3.fsf.org).
+Busca Ativa Escolar é um software livre licenciado com [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.en.html).
